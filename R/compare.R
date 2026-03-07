@@ -70,3 +70,58 @@ compare_hd_event <- function(..., start, end = start, probability = 0.68, draws 
   })
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "hd_event", draws = draws, compare = TRUE))
 }
+
+
+#' Compare peak response summaries across models
+#' @param ... Posterior model objects or a named list of model objects.
+#' @param horizon Maximum horizon used when `object` is a posterior model object.
+#' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
+#' @param variable Optional response-variable subset.
+#' @param shock Optional shock subset.
+#' @param absolute If `TRUE`, search for the largest absolute response.
+#' @param probability Equal-tailed interval probability.
+#' @param scale_by Optional scaling mode for CDMs.
+#' @param scale_var Optional scaling variable specification.
+#' @export
+compare_peak_response <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+                                  absolute = FALSE, probability = 0.68,
+                                  scale_by = c("none", "shock_sd"), scale_var = NULL) {
+  type <- match.arg(type)
+  models <- collect_models(...)
+  out <- lapply(names(models), function(nm) {
+    peak_response(models[[nm]], horizon = horizon, type = type, variable = variable, shock = shock,
+                  absolute = absolute, probability = probability, model = nm,
+                  scale_by = scale_by, scale_var = scale_var)
+  })
+  set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("peak_", type), draws = FALSE, compare = TRUE))
+}
+
+#' Compare duration summaries across models
+#' @param ... Posterior model objects or a named list of model objects.
+#' @param horizon Maximum horizon used when `object` is a posterior model object.
+#' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
+#' @param variable Optional response-variable subset.
+#' @param shock Optional shock subset.
+#' @param relation Comparison operator.
+#' @param value Threshold value.
+#' @param absolute If `TRUE`, compare absolute responses.
+#' @param mode Either `"consecutive"` or `"total"`.
+#' @param probability Equal-tailed interval probability.
+#' @param scale_by Optional scaling mode for CDMs.
+#' @param scale_var Optional scaling variable specification.
+#' @export
+compare_duration_response <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+                                      relation = c(">", ">=", "<", "<="), value = 0,
+                                      absolute = FALSE, mode = c("consecutive", "total"), probability = 0.68,
+                                      scale_by = c("none", "shock_sd"), scale_var = NULL) {
+  type <- match.arg(type)
+  relation <- match.arg(relation)
+  mode <- match.arg(mode)
+  models <- collect_models(...)
+  out <- lapply(names(models), function(nm) {
+    duration_response(models[[nm]], horizon = horizon, type = type, variable = variable, shock = shock,
+                      relation = relation, value = value, absolute = absolute, mode = mode,
+                      probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
+  })
+  set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("duration_", type), draws = FALSE, compare = TRUE))
+}

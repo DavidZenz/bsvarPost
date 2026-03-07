@@ -61,8 +61,51 @@ magnitude_audit(post, type = "cdm", variable = 1, shock = 1, horizon = 8, relati
 Response-shape summaries:
 
 ```r
-peak_response(post, type = "irf", horizon = 8, variable = 1, shock = 1)
-duration_response(post, type = "cdm", horizon = 8, variable = 1, shock = 1, relation = ">", value = 0)
+peak_tbl <- peak_response(
+  post,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1
+)
+peak_tbl
+
+duration_tbl <- duration_response(
+  post,
+  type = "cdm",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  relation = ">",
+  value = 0,
+  mode = "total"
+)
+duration_tbl
+```
+
+The same summaries can be compared across several models:
+
+```r
+compare_peak_response(
+  baseline = post,
+  alternative = post,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1
+)
+
+compare_duration_response(
+  baseline = post,
+  alternative = post,
+  type = "cdm",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  relation = ">",
+  value = 0,
+  mode = "total"
+)
 ```
 
 Optional normalization:

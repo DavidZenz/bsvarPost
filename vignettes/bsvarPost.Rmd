@@ -91,8 +91,51 @@ magnitude_audit(post, type = "cdm", variable = 1, shock = 1, horizon = 8, relati
 You can also summarise the shape of the response distribution directly.
 
 ```{r}
-peak_response(post, type = "irf", horizon = 8, variable = 1, shock = 1)
-duration_response(post, type = "cdm", horizon = 8, variable = 1, shock = 1, relation = ">", value = 0)
+peak_tbl <- peak_response(
+  post,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1
+)
+peak_tbl
+
+duration_tbl <- duration_response(
+  post,
+  type = "cdm",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  relation = ">",
+  value = 0,
+  mode = "total"
+)
+duration_tbl
+```
+
+These summaries also support cross-model comparison.
+
+```{r}
+compare_peak_response(
+  p1 = post,
+  p2 = post,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1
+)
+
+compare_duration_response(
+  p1 = post,
+  p2 = post,
+  type = "cdm",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  relation = ">",
+  value = 0,
+  mode = "total"
+)
 ```
 
 ## Example: `bsvarSIGNs`
@@ -201,7 +244,8 @@ shock_ranking(post, start = 1, end = 4, ranking = "absolute")
 These event summaries can also be compared across fitted models.
 
 ```{r}
-compare_hd_event(p1 = post, p2 = post, start = 1, end = 4)
+cmp_hd_event <- compare_hd_event(p1 = post, p2 = post, start = 1, end = 4)
+cmp_hd_event
 ```
 
 ## `tsibble` bridge

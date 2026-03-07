@@ -10,6 +10,7 @@
 - Added `peak_response()` and `duration_response()` for posterior response-shape summaries.
 - Added `compare_restrictions()` for cross-model restriction-audit comparisons.
 - Added `compare_hd_event()` for cross-model event-window historical decomposition comparisons.
+- Added `compare_peak_response()` and `compare_duration_response()` for cross-model response-shape comparisons.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
 
