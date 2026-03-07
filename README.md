@@ -58,6 +58,13 @@ hypothesis_irf(post, variable = 1, shock = 1, horizon = 4, relation = ">", value
 magnitude_audit(post, type = "cdm", variable = 1, shock = 1, horizon = 8, relation = ">", value = 0)
 ```
 
+Response-shape summaries:
+
+```r
+peak_response(post, type = "irf", horizon = 8, variable = 1, shock = 1)
+duration_response(post, type = "cdm", horizon = 8, variable = 1, shock = 1, relation = ">", value = 0)
+```
+
 Optional normalization:
 
 ```r
