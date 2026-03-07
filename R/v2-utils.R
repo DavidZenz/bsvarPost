@@ -266,6 +266,15 @@ make_comparison_key <- function(variable, shock, horizon) {
   paste(variable, shock, horizon, sep = "\r")
 }
 
+selection_combinations <- function(labels) {
+  expand.grid(
+    variable = labels$variable,
+    shock = labels$shock,
+    horizon = as.numeric(labels$horizon),
+    stringsAsFactors = FALSE
+  )
+}
+
 evaluate_draw_predicate <- function(draws, variable, shock, horizon, relation = c("<", "<=", ">", ">=", "=="),
                                     value = 0, compare_to = NULL, absolute = FALSE) {
   relation <- match.arg(relation)
@@ -288,22 +297,21 @@ evaluate_draw_predicate <- function(draws, variable, shock, horizon, relation = 
     )
     rhs_mat <- draw_matrix(rhs_subset$draws)
 
-    lhs_keys <- make_comparison_key(
-      rep(lhs_subset$labels$variable, each = length(lhs_subset$labels$shock) * length(lhs_subset$labels$horizon)),
-      rep(rep(lhs_subset$labels$shock, each = length(lhs_subset$labels$horizon)), times = length(lhs_subset$labels$variable)),
-      rep(lhs_subset$labels$horizon, times = length(lhs_subset$labels$variable) * length(lhs_subset$labels$shock))
-    )
-    rhs_keys <- make_comparison_key(
-      rep(rhs_subset$labels$variable, each = length(rhs_subset$labels$shock) * length(rhs_subset$labels$horizon)),
-      rep(rep(rhs_subset$labels$shock, each = length(rhs_subset$labels$horizon)), times = length(rhs_subset$labels$variable)),
-      rep(rhs_subset$labels$horizon, times = length(rhs_subset$labels$variable) * length(rhs_subset$labels$shock))
-    )
-
-    if (!identical(lhs_keys, rhs_keys)) {
-      stop("`compare_to` must select the same number of response elements as the left-hand side.", call. = FALSE)
+    if (nrow(rhs_mat) == 1L && nrow(lhs_mat) > 1L) {
+      rhs_mat <- rhs_mat[rep(1L, nrow(lhs_mat)), , drop = FALSE]
+      rhs_labels <- list(
+        variable = rep(rhs_subset$labels$variable[1], nrow(lhs_mat)),
+        shock = rep(rhs_subset$labels$shock[1], nrow(lhs_mat)),
+        horizon = rep(rhs_subset$labels$horizon[1], nrow(lhs_mat))
+      )
+    } else if (nrow(rhs_mat) == nrow(lhs_mat)) {
+      rhs_labels <- selection_combinations(rhs_subset$labels)
+    } else {
+      stop("`compare_to` must select either one response element or the same number of elements as the left-hand side.", call. = FALSE)
     }
     rhs_value <- rhs_mat
   } else {
+    rhs_labels <- NULL
     rhs_value <- matrix(value, nrow = nrow(lhs_mat), ncol = ncol(lhs_mat))
   }
 
@@ -323,20 +331,16 @@ evaluate_draw_predicate <- function(draws, variable, shock, horizon, relation = 
   list(
     gap = gap,
     indicator = indicator,
-    labels = lhs_subset$labels
+    labels = lhs_subset$labels,
+    rhs_labels = rhs_labels
   )
 }
 
-summarise_gap_matrix <- function(gap, indicator, labels, object_type, relation, compare_to = NULL, model = "model1", draws = FALSE) {
+summarise_gap_matrix <- function(gap, indicator, labels, object_type, relation, compare_to = NULL, model = "model1", draws = FALSE, probability = 0.68) {
   rows <- vector("list", nrow(gap))
   idx <- 1L
 
-  combos <- expand.grid(
-    variable = labels$variable,
-    shock = labels$shock,
-    horizon = as.numeric(labels$horizon),
-    stringsAsFactors = FALSE
-  )
+  combos <- selection_combinations(labels)
 
   for (i in seq_len(nrow(gap))) {
     if (draws) {
@@ -352,7 +356,7 @@ summarise_gap_matrix <- function(gap, indicator, labels, object_type, relation, 
         satisfied = as.logical(indicator[i, ])
       )
     } else {
-      stats <- summarise_vec(as.numeric(gap[i, ]), 0.68)
+      stats <- summarise_vec(as.numeric(gap[i, ]), probability)
       rows[[idx]] <- tibble::tibble(
         model = model,
         object_type = object_type,
