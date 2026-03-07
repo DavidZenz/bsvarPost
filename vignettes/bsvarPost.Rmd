@@ -1,0 +1,166 @@
+---
+title: "Getting Started with bsvarPost"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with bsvarPost}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+`bsvarPost` is a companion post-estimation package for `bsvars` and
+`bsvarSIGNs`. It does not estimate models itself. Instead, it adds a consistent
+layer for:
+
+- cumulative dynamic multipliers via `cdm()`
+- tidy extraction helpers
+- model comparison utilities
+- `ggplot2` plotting methods
+- bridges to downstream workflows such as `tsibble` and `APRScenario`
+
+## Example: `bsvars`
+
+```{r}
+library(bsvars)
+library(bsvarPost)
+
+data(us_fiscal_lsuw)
+set.seed(1)
+
+spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- estimate(spec, S = 100, thin = 1, show_progress = FALSE)
+```
+
+Compute cumulative dynamic multipliers:
+
+```{r}
+cdm_obj <- cdm(post, horizon = 8)
+summary(cdm_obj)
+plot(cdm_obj)
+```
+
+Normalize by the sample standard deviation of the shocked variable only if that
+is the reporting convention you want:
+
+```{r}
+cdm_scaled <- cdm(post, horizon = 8, scale_by = "shock_sd")
+```
+
+Extract tidy tables for downstream analysis:
+
+```{r}
+irf_tbl <- tidy_irf(post, horizon = 8)
+cdm_tbl <- tidy_cdm(post, horizon = 8)
+fevd_tbl <- tidy_fevd(post, horizon = 8)
+fc_tbl <- tidy_forecast(post, horizon = 8)
+```
+
+Plot tidy outputs with `ggplot2` defaults:
+
+```{r}
+ggplot2::autoplot(irf_tbl)
+ggplot2::autoplot(cdm_tbl)
+```
+
+## Example: `bsvarSIGNs`
+
+`bsvarPost` uses the same post-estimation interface for sign-restricted models.
+
+```{r}
+library(bsvarSIGNs)
+library(bsvarPost)
+
+data(optimism)
+
+sign_irf <- matrix(c(0, 1, rep(NA, 23)), 5, 5)
+
+spec <- specify_bsvarSIGN$new(
+  optimism * 100,
+  p = 4,
+  sign_irf = sign_irf
+)
+
+post <- estimate(spec, S = 100, thin = 1, show_progress = FALSE)
+```
+
+Compute and summarize CDMs:
+
+```{r}
+cdm_obj <- cdm(post, horizon = 12)
+summary(cdm_obj)
+plot(cdm_obj)
+```
+
+Extract tidy summaries:
+
+```{r}
+irf_tbl <- tidy_irf(post, horizon = 12)
+cdm_tbl <- tidy_cdm(post, horizon = 12)
+fevd_tbl <- tidy_fevd(post, horizon = 12)
+```
+
+## Comparing models
+
+Comparison helpers accept several posterior objects and return tidy comparison
+tables.
+
+```{r}
+cmp_irf <- compare_irf(
+  p1 = post,
+  p2 = post,
+  horizon = 8
+)
+
+cmp_cdm <- compare_cdm(
+  p1 = post,
+  p2 = post,
+  horizon = 8
+)
+
+ggplot2::autoplot(cmp_irf)
+ggplot2::autoplot(cmp_cdm)
+```
+
+## `tsibble` bridge
+
+If `tsibble` is installed, tidy outputs can be converted directly:
+
+```{r}
+library(tsibble)
+
+fc_tbl <- tidy_forecast(post, horizon = 8)
+fc_tsbl <- as_tsibble_post(fc_tbl)
+```
+
+For IRF, CDM, and FEVD outputs, `horizon` is used as the index. For forecast,
+shock, and historical decomposition outputs, `time` is used when available.
+
+## APRScenario bridge
+
+`APRScenario` uses forecast summaries with columns `hor`, `variable`, `lower`,
+`center`, and `upper`. `bsvarPost` provides converters in both directions.
+
+```{r}
+fc_tbl <- tidy_forecast(post, horizon = 8)
+
+apr_tbl <- as_apr_cond_forc(
+  fc_tbl,
+  origin = as.Date("2024-01-01"),
+  frequency = "quarter"
+)
+
+back_to_tidy <- tidy_apr_forecast(apr_tbl)
+```
+
+If `APRScenario` is installed, you can also forward to its matrix generator:
+
+```{r}
+mats <- apr_gen_mats(post, specification = spec)
+```

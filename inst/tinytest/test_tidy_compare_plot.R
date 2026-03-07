@@ -1,0 +1,32 @@
+Sys.setenv(KMP_DUPLICATE_LIB_OK = "TRUE")
+
+data(us_fiscal_lsuw, package = "bsvars")
+set.seed(1)
+spec1 <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec1, S = 2, thin = 1, show_progress = FALSE)
+post2 <- bsvars::estimate(spec1, S = 2, thin = 1, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post1, horizon = 2, probability = 0.68)
+expect_true(all(c("model", "object_type", "variable", "shock", "horizon", "median", "lower", "upper") %in% names(irf_tbl)))
+expect_equal(attr(irf_tbl, "object_type"), "irf")
+
+cdm_tbl <- tidy_cdm(post1, horizon = 2)
+fevd_tbl <- tidy_fevd(post1, horizon = 2)
+fc_tbl <- tidy_forecast(post1, horizon = 2)
+sh_tbl <- tidy_shocks(post1)
+hd_tbl <- tidy_hd(post1)
+expect_true(nrow(cdm_tbl) > 0)
+expect_true(nrow(fevd_tbl) > 0)
+expect_true(nrow(fc_tbl) > 0)
+expect_true(nrow(sh_tbl) > 0)
+expect_true(nrow(hd_tbl) > 0)
+
+cmp_irf <- compare_irf(base = post1, alt = post2, horizon = 2)
+cmp_cdm <- compare_cdm(base = post1, alt = post2, horizon = 2)
+expect_equal(sort(unique(cmp_irf$model)), c("alt", "base"))
+expect_equal(sort(unique(cmp_cdm$model)), c("alt", "base"))
+
+p1 <- ggplot2::autoplot(irf_tbl)
+p2 <- ggplot2::autoplot(cmp_cdm)
+expect_true(inherits(p1, "ggplot"))
+expect_true(inherits(p2, "ggplot"))

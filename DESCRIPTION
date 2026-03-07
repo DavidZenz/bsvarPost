@@ -1,0 +1,29 @@
+Package: bsvarPost
+Type: Package
+Title: Post-Estimation Tools for 'bsvars' and 'bsvarSIGNs'
+Version: 0.1.0
+Date: 2026-03-07
+Authors@R: person("David", "Zenz", role = c("aut", "cre"), email = "office@davidzenz.com")
+Author: David Zenz [aut, cre]
+Maintainer: David Zenz <office@davidzenz.com>
+Description: Companion post-estimation tools for Bayesian structural vector autoregressions fitted with the 'bsvars' and 'bsvarSIGNs' packages. It adds cumulative dynamic multipliers, tidy extraction helpers, model comparison utilities, and a 'ggplot2' plotting layer on top of existing posterior objects.
+License: GPL (>= 3)
+Depends: R (>= 4.1.0)
+Imports:
+    bsvars,
+    bsvarSIGNs,
+    ggplot2,
+    tibble,
+    methods
+Suggests:
+    APRScenario,
+    knitr,
+    rmarkdown,
+    tinytest,
+    tsibble
+VignetteBuilder: knitr
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+URL: https://github.com/DavidZenz/bsvarPost
+BugReports: https://github.com/DavidZenz/bsvarPost/issues
