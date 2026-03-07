@@ -129,11 +129,8 @@ hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
 hypothesis_irf_model <- function(object, variable, shock, horizon,
                                  relation = c("<", "<=", ">", ">=", "=="), value = 0,
                                  compare_to = NULL, absolute = FALSE, probability = 0.68,
-                                 draws = FALSE, model = "model1", horizon_irf = NULL, ...) {
-  if (is.null(horizon_irf)) {
-    horizon_irf <- response_fetch_horizon(horizon, compare_to)
-  }
-  irf_draws <- get_irf_draws(object, horizon = horizon_irf, ...)
+                                 draws = FALSE, model = "model1", ...) {
+  irf_draws <- get_irf_draws(object, horizon = response_fetch_horizon(horizon, compare_to), ...)
   hypothesis_irf(
     irf_draws,
     variable = variable,

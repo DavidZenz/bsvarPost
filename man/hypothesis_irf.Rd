@@ -35,7 +35,6 @@ hypothesis_irf(object, ...)
   probability = 0.68,
   draws = FALSE,
   model = "model1",
-  horizon_irf = NULL,
   ...
 )
 }

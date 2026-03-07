@@ -136,11 +136,41 @@ normalise_sign_restrictions <- function(sign_irf) {
 }
 
 get_zero_restriction_Z <- function(sign_irf) {
-  if (inherits(sign_irf, "array")) {
-    bsvarSIGNs:::get_Z(sign_irf)
-  } else {
-    bsvarSIGNs:::get_Z(array(sign_irf, dim = c(dim(sign_irf), 1)))
+  if (!inherits(sign_irf, "array")) {
+    sign_irf <- array(sign_irf, dim = c(dim(sign_irf), 1L))
   }
+
+  h <- dim(sign_irf)[3]
+  if (h >= 2L) {
+    test <- sign_irf[, , 2:h, drop = FALSE]
+    test_values <- test[!is.na(test)]
+    if (length(test_values) > 0L && any(test_values == 0)) {
+      stop("Zero restrictions are not allowed for horizons >= 1", call. = FALSE)
+    }
+  }
+
+  zero_irf <- sign_irf[, , 1, drop = TRUE] == 0
+  zero_irf[is.na(zero_irf)] <- FALSE
+  if (sum(zero_irf) == 0L) {
+    return(NULL)
+  }
+
+  n_shocks <- dim(zero_irf)[2]
+  Z <- vector("list", n_shocks)
+  for (j in seq_len(n_shocks)) {
+    z_j <- diag(zero_irf[, j])
+    nonzero_rows <- rowSums(z_j) > 0
+    z_j <- as.matrix(z_j[nonzero_rows, , drop = FALSE])
+    if (ncol(z_j) == 1L) {
+      z_j <- as.matrix(t(z_j))
+    }
+    if (nrow(z_j) > n_shocks - j) {
+      stop("Too many zero restrictions for shock ", j, call. = FALSE)
+    }
+    Z[[j]] <- z_j
+  }
+
+  Z
 }
 
 reduced_irf_from_structural <- function(structural_irf, Q) {
