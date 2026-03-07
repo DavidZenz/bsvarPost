@@ -24,6 +24,7 @@ Good fits for `bsvarPost`:
 - historical decomposition summaries
 - model comparison
 - plotting/reporting helpers
+- high-quality user-facing documentation and vignettes
 
 Bad fits for `bsvarPost`:
 
@@ -222,6 +223,34 @@ Goal:
 
 - support more rigorous post-estimation inference for identified sets
 
+## Documentation track
+
+Priority: high before any CRAN submission
+
+The package should ship with a stronger vignette set than a single
+getting-started document.
+
+Planned documentation deliverables:
+
+- one introductory vignette focused on the main `bsvars` and `bsvarSIGNs`
+  workflows
+- one applied-workflows vignette covering representative summaries, audits,
+  historical decomposition events, and response-timing summaries
+- clearer interpretation notes for:
+  - `median_target_*()` vs `most_likely_admissible_*()`
+  - `scale_by = "shock_sd"`
+  - `reached_prob` in timing summaries
+  - restriction and magnitude audits as post-estimation tools
+- more realistic comparison examples using genuinely different model
+  specifications rather than self-comparisons
+- more plotting examples for comparison objects and event summaries
+
+Goal:
+
+- make the package read like a standard R community package rather than a
+  developer notebook
+- ensure the vignettes are extensive enough to serve as the main user guide
+
 ## Implementation order
 
 Recommended next implementation order:
@@ -236,6 +265,7 @@ Recommended next implementation order:
 8. `compare_restrictions()`
 9. `acceptance_diagnostics()`
 10. joint inference helpers
+11. expand the vignette set into release-quality user documentation
 
 ## Design principles
 
