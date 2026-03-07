@@ -2,3 +2,4 @@
 (^|/)\.github($|/)
 ^\.github/
 ^ROADMAP\.md$
+^DEVELOPMENT\.md$

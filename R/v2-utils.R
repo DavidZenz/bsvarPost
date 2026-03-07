@@ -1,5 +1,17 @@
+bsvarsigns_native_cache <- new.env(parent = emptyenv())
+
+bsvarsigns_native_symbol <- function(symbol) {
+  cached <- bsvarsigns_native_cache[[symbol]]
+  if (!is.null(cached)) {
+    return(cached)
+  }
+  resolved <- getNativeSymbolInfo(symbol, PACKAGE = "bsvarSIGNs")
+  bsvarsigns_native_cache[[symbol]] <- resolved$address
+  resolved$address
+}
+
 bsvarsigns_native <- function(symbol, ...) {
-  .Call(symbol, ..., PACKAGE = "bsvarSIGNs")
+  do.call(base::.Call, c(list(bsvarsigns_native_symbol(symbol)), list(...)))
 }
 
 bsvarsigns_match_sign <- function(A, sign) {
