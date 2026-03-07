@@ -1,3 +1,14 @@
+# bsvarPost 0.2.0
+
+- Added representative-model selection helpers for IRFs and CDMs:
+  `representative_irf()`, `representative_cdm()`, `median_target_*()`,
+  and `most_likely_admissible_*()`.
+- Added posterior hypothesis helpers: `hypothesis_irf()` and
+  `hypothesis_cdm()`.
+- Added audit helpers: `restriction_audit()` and `magnitude_audit()`.
+- Added restriction constructor helpers for IRF, structural, and narrative
+  audits.
+
 # bsvarPost 0.1.0
 
 - Initial release.

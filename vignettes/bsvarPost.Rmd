@@ -24,6 +24,7 @@ layer for:
 - model comparison utilities
 - `ggplot2` plotting methods
 - bridges to downstream workflows such as `tsibble` and `APRScenario`
+- representative-model summaries and posterior audit helpers
 
 ## Example: `bsvars`
 
@@ -69,6 +70,24 @@ ggplot2::autoplot(irf_tbl)
 ggplot2::autoplot(cdm_tbl)
 ```
 
+Representative-model summaries are useful when you want a single draw
+that is close to the posterior center rather than pointwise medians that need
+not correspond to one structural model.
+
+```{r}
+rep_irf <- median_target_irf(post, horizon = 8)
+summary(rep_irf)
+plot(rep_irf)
+```
+
+Posterior hypothesis and magnitude statements can be evaluated directly from the
+response draws.
+
+```{r}
+hypothesis_irf(post, variable = 1, shock = 1, horizon = 4, relation = ">", value = 0)
+magnitude_audit(post, type = "cdm", variable = 1, shock = 1, horizon = 8, relation = ">", value = 0)
+```
+
 ## Example: `bsvarSIGNs`
 
 `bsvarPost` uses the same post-estimation interface for sign-restricted models.
@@ -104,6 +123,28 @@ Extract tidy summaries:
 irf_tbl <- tidy_irf(post, horizon = 12)
 cdm_tbl <- tidy_cdm(post, horizon = 12)
 fevd_tbl <- tidy_fevd(post, horizon = 12)
+```
+
+`bsvarPost` also supports representative sign-restricted summaries and
+restriction audits. `median_target_*()` selects the stored draw closest to the
+posterior center. `most_likely_admissible_*()` ranks stored admissible draws by
+the reconstructed sign-restriction score available from `bsvarSIGNs`.
+
+```{r}
+rep_median <- median_target_irf(post, horizon = 12)
+rep_mla <- most_likely_admissible_irf(post, horizon = 12)
+summary(rep_median)
+summary(rep_mla)
+
+audit_tbl <- restriction_audit(post)
+audit_tbl
+```
+
+Magnitude restrictions in `bsvarPost` are post-estimation summaries, not
+identification constraints.
+
+```{r}
+magnitude_audit(post, type = "irf", variable = 2, shock = 1, horizon = 0, relation = ">", value = 0)
 ```
 
 ## Comparing models

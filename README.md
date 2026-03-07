@@ -12,6 +12,7 @@ It focuses on the layer after estimation:
 - `ggplot2` plotting for tidy outputs
 - optional `tsibble` conversion for tidy outputs
 - bridge helpers for APRScenario-style forecast tables
+- representative-model summaries and posterior audit helpers
 
 ## Installation
 
@@ -46,6 +47,17 @@ fc_tbl <- tidy_forecast(post, horizon = 8)
 ggplot2::autoplot(cdm_tbl)
 ```
 
+Representative-model summaries and posterior probability statements:
+
+```r
+rep_irf <- median_target_irf(post, horizon = 8)
+summary(rep_irf)
+plot(rep_irf)
+
+hypothesis_irf(post, variable = 1, shock = 1, horizon = 4, relation = ">", value = 0)
+magnitude_audit(post, type = "cdm", variable = 1, shock = 1, horizon = 8, relation = ">", value = 0)
+```
+
 Optional normalization:
 
 ```r
@@ -78,6 +90,16 @@ cdm_tbl <- tidy_cdm(post, horizon = 12)
 
 ggplot2::autoplot(irf_tbl)
 ggplot2::autoplot(cdm_tbl)
+```
+
+Representative sign-restricted summaries and restriction auditing:
+
+```r
+rep_irf <- most_likely_admissible_irf(post, horizon = 12)
+summary(rep_irf)
+
+audit_tbl <- restriction_audit(post)
+audit_tbl
 ```
 
 ## Model comparison
