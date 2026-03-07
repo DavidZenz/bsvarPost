@@ -121,6 +121,14 @@ cmp <- compare_cdm(
 ggplot2::autoplot(cmp)
 ```
 
+Restriction comparisons:
+
+```r
+compare_restrictions(model_a = post, model_b = post, restrictions = list(
+  irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1)
+))
+```
+
 ## Historical decomposition events
 
 ```r

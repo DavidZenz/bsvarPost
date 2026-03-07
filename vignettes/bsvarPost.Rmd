@@ -176,6 +176,16 @@ ggplot2::autoplot(cmp_irf)
 ggplot2::autoplot(cmp_cdm)
 ```
 
+Restriction audits can also be compared directly across models.
+
+```{r}
+compare_restrictions(
+  p1 = post,
+  p2 = post,
+  restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
+)
+```
+
 ## Historical decomposition events
 
 For event studies, `bsvarPost` can aggregate historical decomposition draws

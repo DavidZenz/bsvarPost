@@ -39,3 +39,18 @@ compare_forecast <- function(..., horizon = 10, probability = 0.68, draws = FALS
   out <- lapply(names(models), function(nm) tidy_forecast(models[[nm]], horizon = horizon, probability = probability, draws = draws, model = nm))
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "forecast", draws = draws, compare = TRUE))
 }
+
+
+#' Compare restriction audits across models
+#' @param ... Posterior model objects or a named list of model objects.
+#' @param restrictions Optional list of restriction helper objects applied to each model.
+#' @param zero_tol Numerical tolerance for zero restrictions.
+#' @param probability Equal-tailed interval probability used in summaries.
+#' @export
+compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, probability = 0.68) {
+  models <- collect_models(...)
+  out <- lapply(names(models), function(nm) {
+    restriction_audit(models[[nm]], restrictions = restrictions, zero_tol = zero_tol, probability = probability, model = nm)
+  })
+  set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "restriction_audit", draws = FALSE, compare = TRUE))
+}
