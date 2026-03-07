@@ -251,6 +251,46 @@ Goal:
   developer notebook
 - ensure the vignettes are extensive enough to serve as the main user guide
 
+## Plot customization track
+
+Priority: high for applied and publication workflows
+
+`bsvarPost` should provide a stronger plotting layer for users who need
+publication-ready figures that match journal, institution, or project-specific
+styles.
+
+Planned capabilities:
+
+- themeable plotting wrappers for `bsvars`, `bsvarSIGNs`, and `bsvarPost`
+  outputs
+- explicit support for user-defined:
+  - color palettes
+  - line styles
+  - ribbon fills and interval appearance
+  - facet labels and panel layouts
+  - axis titles, breaks, and limits
+  - typography choices
+  - legend layout and placement
+- reusable plot presets / templates for common use cases such as:
+  - paper figures
+  - slide decks
+  - dashboard/report exports
+  - institution-specific style guides
+- helper functions that return `ggplot2` objects so users can continue
+  modifying them downstream
+- optional convenience layers for:
+  - shock / variable filtering
+  - response comparison overlays
+  - event-window highlighting
+  - annotation of representative draws or posterior probabilities
+
+Goal:
+
+- make `bsvarPost` useful not just for computation but also for final research
+  output
+- reduce the amount of hand-written plotting code researchers need for
+  publication-ready figures
+
 ## Implementation order
 
 Recommended next implementation order:
