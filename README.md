@@ -143,20 +143,3 @@ if (requireNamespace("APRScenario", quietly = TRUE)) {
   mats <- apr_gen_mats(post, specification = spec)
 }
 ```
-
-## `renv` sandbox
-
-The repository includes a local `renv` setup that points to Posit Package
-Manager and keeps project state isolated from local experiments.
-
-Quick checks:
-
-```r
-source("tools/check-renv-binaries.R")
-source("tools/restore-renv.R")
-```
-
-On this machine, Homebrew R reports `pkgType = "source"`, so Posit is used as
-the repository but binary packages are not selected by this interpreter. To
-use precompiled Posit binaries, run the project with an R build that supports
-binary package installs.
