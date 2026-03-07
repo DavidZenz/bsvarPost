@@ -14,7 +14,15 @@ autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, mod
   if (!is.null(shocks) && "shock" %in% names(df)) df <- df[df$shock %in% shocks, , drop = FALSE]
   if (!is.null(models) && "model" %in% names(df)) df <- df[df$model %in% models, , drop = FALSE]
 
-  x_var <- if ("horizon" %in% names(df)) "horizon" else "time"
+  x_var <- if ("horizon" %in% names(df)) {
+    "horizon"
+  } else if ("time" %in% names(df)) {
+    "time"
+  } else if ("event_start" %in% names(df)) {
+    "event_start"
+  } else {
+    names(df)[1]
+  }
   has_shock <- "shock" %in% names(df)
   has_draws <- isTRUE(attr(object, "draws")) || "draw" %in% names(df)
   multi_model <- length(unique(df$model)) > 1L

@@ -136,6 +136,12 @@ hd_event <- tidy_hd_event(post, start = 1, end = 4)
 shock_ranking(post, start = 1, end = 4, ranking = "absolute")
 ```
 
+Event-window comparisons:
+
+```r
+compare_hd_event(model_a = post, model_b = post, start = 1, end = 4)
+```
+
 ## `tsibble` bridge
 
 If `tsibble` is installed:

@@ -9,6 +9,7 @@
 - Added `tidy_hd_event()` and `shock_ranking()` for event-window historical decomposition summaries.
 - Added `peak_response()` and `duration_response()` for posterior response-shape summaries.
 - Added `compare_restrictions()` for cross-model restriction-audit comparisons.
+- Added `compare_hd_event()` for cross-model event-window historical decomposition comparisons.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
 

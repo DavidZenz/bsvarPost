@@ -54,3 +54,19 @@ compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, prob
   })
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "restriction_audit", draws = FALSE, compare = TRUE))
 }
+
+
+#' Compare event-window historical decompositions across models
+#' @param ... Posterior model objects or a named list of model objects.
+#' @param start First time index to include.
+#' @param end Last time index to include. Defaults to `start`.
+#' @param probability Equal-tailed interval probability used in summaries.
+#' @param draws If `TRUE`, return draw-level rows.
+#' @export
+compare_hd_event <- function(..., start, end = start, probability = 0.68, draws = FALSE) {
+  models <- collect_models(...)
+  out <- lapply(names(models), function(nm) {
+    tidy_hd_event(models[[nm]], start = start, end = end, probability = probability, draws = draws, model = nm)
+  })
+  set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "hd_event", draws = draws, compare = TRUE))
+}

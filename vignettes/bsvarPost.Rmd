@@ -198,6 +198,12 @@ hd_event
 shock_ranking(post, start = 1, end = 4, ranking = "absolute")
 ```
 
+These event summaries can also be compared across fitted models.
+
+```{r}
+compare_hd_event(p1 = post, p2 = post, start = 1, end = 4)
+```
+
 ## `tsibble` bridge
 
 If `tsibble` is installed, tidy outputs can be converted directly:
