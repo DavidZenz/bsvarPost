@@ -169,6 +169,18 @@ ggplot2::autoplot(cmp_irf)
 ggplot2::autoplot(cmp_cdm)
 ```
 
+## Historical decomposition events
+
+For event studies, `bsvarPost` can aggregate historical decomposition draws
+over a selected window and rank shocks by their cumulative contribution.
+
+```{r}
+hd_event <- tidy_hd_event(post, start = 1, end = 4)
+hd_event
+
+shock_ranking(post, start = 1, end = 4, ranking = "absolute")
+```
+
 ## `tsibble` bridge
 
 If `tsibble` is installed, tidy outputs can be converted directly:

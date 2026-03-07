@@ -114,6 +114,13 @@ cmp <- compare_cdm(
 ggplot2::autoplot(cmp)
 ```
 
+## Historical decomposition events
+
+```r
+hd_event <- tidy_hd_event(post, start = 1, end = 4)
+shock_ranking(post, start = 1, end = 4, ranking = "absolute")
+```
+
 ## `tsibble` bridge
 
 If `tsibble` is installed:

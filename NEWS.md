@@ -6,6 +6,7 @@
 - Added posterior hypothesis helpers: `hypothesis_irf()` and
   `hypothesis_cdm()`.
 - Added audit helpers: `restriction_audit()` and `magnitude_audit()`.
+- Added `tidy_hd_event()` and `shock_ranking()` for event-window historical decomposition summaries.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
 
