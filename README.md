@@ -81,6 +81,27 @@ duration_tbl <- duration_response(
   mode = "total"
 )
 duration_tbl
+
+half_life_tbl <- half_life_response(
+  post,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  baseline = "peak"
+)
+half_life_tbl
+
+time_tbl <- time_to_threshold(
+  post,
+  type = "cdm",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  relation = ">",
+  value = 0
+)
+time_tbl
 ```
 
 The same summaries can be compared across several models:

@@ -111,9 +111,30 @@ duration_tbl <- duration_response(
   mode = "total"
 )
 duration_tbl
+
+half_life_tbl <- half_life_response(
+  post,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  baseline = "peak"
+)
+half_life_tbl
+
+time_tbl <- time_to_threshold(
+  post,
+  type = "cdm",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  relation = ">",
+  value = 0
+)
+time_tbl
 ```
 
-These summaries also support cross-model comparison.
+These summaries also support cross-model comparison. `half_life_response()` reports the time needed for a response to fall to a chosen fraction of its peak or initial level, while `time_to_threshold()` reports the first horizon at which a threshold condition is met.
 
 ```{r}
 compare_peak_response(
