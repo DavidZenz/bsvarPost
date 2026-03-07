@@ -251,6 +251,28 @@ Goal:
   developer notebook
 - ensure the vignettes are extensive enough to serve as the main user guide
 
+## Package engineering track
+
+Priority: always-on
+
+Every feature tranche should be treated as incomplete until package checks are
+green both locally and in GitHub Actions.
+
+Required discipline:
+
+- run `R CMD build` after substantive package changes
+- run `R CMD check --as-cran` before closing a feature tranche
+- verify the GitHub `R-CMD-check` workflow after each push
+- treat CI failures as blocking issues rather than follow-up cleanup
+- keep workflow configuration and package metadata aligned with the actual
+  dependency and vignette surface
+
+Goal:
+
+- avoid silent regressions between local development and the published
+  repository
+- keep `bsvarPost` in a release-ready state as the feature set grows
+
 ## Plot customization track
 
 Priority: high for applied and publication workflows
