@@ -2,14 +2,164 @@
 % Please edit documentation in R/response-summary.R
 \name{time_to_threshold}
 \alias{time_to_threshold}
+\alias{time_to_threshold.PosteriorIR}
+\alias{time_to_threshold.PosteriorBSVAR}
+\alias{time_to_threshold.PosteriorBSVARMIX}
+\alias{time_to_threshold.PosteriorBSVARMSH}
+\alias{time_to_threshold.PosteriorBSVARSV}
+\alias{time_to_threshold.PosteriorBSVART}
+\alias{time_to_threshold.PosteriorBSVARSIGN}
+\alias{time_to_threshold.PosteriorCDM}
 \title{Time-to-threshold summaries for posterior IRFs and CDMs}
 \usage{
 time_to_threshold(object, ...)
+
+\method{time_to_threshold}{PosteriorIR}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  ...
+)
+
+\method{time_to_threshold}{PosteriorBSVAR}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{time_to_threshold}{PosteriorBSVARMIX}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{time_to_threshold}{PosteriorBSVARMSH}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{time_to_threshold}{PosteriorBSVARSV}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{time_to_threshold}{PosteriorBSVART}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{time_to_threshold}{PosteriorBSVARSIGN}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{time_to_threshold}{PosteriorCDM}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  ...
+)
 }
 \arguments{
 \item{object}{A posterior model object, \code{PosteriorIR}, or \code{PosteriorCDM}.}
 
 \item{...}{Additional arguments passed to computation methods.}
+
+\item{variable}{Optional response-variable subset.}
+
+\item{shock}{Optional shock subset.}
+
+\item{relation}{Comparison operator.}
+
+\item{value}{Threshold value.}
+
+\item{absolute}{If \code{TRUE}, search for the largest absolute response.}
+
+\item{probability}{Equal-tailed interval probability.}
+
+\item{model}{Optional model identifier.}
+
+\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
+
+\item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
+
+\item{scale_by}{Optional scaling mode for CDMs.}
+
+\item{scale_var}{Optional scaling variable specification.}
 }
 \description{
 Summarise the first horizon at which a response satisfies a threshold

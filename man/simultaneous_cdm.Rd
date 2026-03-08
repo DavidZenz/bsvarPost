@@ -2,14 +2,112 @@
 % Please edit documentation in R/joint-inference.R
 \name{simultaneous_cdm}
 \alias{simultaneous_cdm}
+\alias{simultaneous_cdm.PosteriorCDM}
+\alias{simultaneous_cdm.PosteriorBSVAR}
+\alias{simultaneous_cdm.PosteriorBSVARMIX}
+\alias{simultaneous_cdm.PosteriorBSVARMSH}
+\alias{simultaneous_cdm.PosteriorBSVARSV}
+\alias{simultaneous_cdm.PosteriorBSVART}
+\alias{simultaneous_cdm.PosteriorBSVARSIGN}
 \title{Simultaneous posterior bands for cumulative dynamic multipliers}
 \usage{
 simultaneous_cdm(object, ...)
+
+\method{simultaneous_cdm}{PosteriorCDM}(
+  object,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
+
+\method{simultaneous_cdm}{PosteriorBSVAR}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{simultaneous_cdm}{PosteriorBSVARMIX}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{simultaneous_cdm}{PosteriorBSVARMSH}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{simultaneous_cdm}{PosteriorBSVARSV}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{simultaneous_cdm}{PosteriorBSVART}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{simultaneous_cdm}{PosteriorBSVARSIGN}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{A posterior model object or a \code{PosteriorIR} object.}
 
 \item{...}{Additional arguments passed to computation methods.}
+
+\item{probability}{Coverage probability for the simultaneous band.}
+
+\item{variable}{Optional response-variable subset.}
+
+\item{shock}{Optional shock subset.}
+
+\item{model}{Optional model identifier.}
+
+\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 

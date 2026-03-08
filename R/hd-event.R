@@ -56,6 +56,7 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
   tidy_hd_event(hd_draws, start = start, end = end, probability = probability, draws = draws)
 }
 
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.bsvar_post_tbl <- function(object, start, end = start, probability = 0.68, draws = FALSE, ...) {
   if (!identical(attr(object, "object_type"), "hd")) {
@@ -89,6 +90,7 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = "hd_event", draws = FALSE)
  }
 
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.PosteriorHD <- function(object, start, end = start, probability = 0.68, draws = FALSE, model = "model1", ...) {
   tidy_hd_event(tidy_hd(object, probability = probability, draws = TRUE, model = model), start = start, end = end,
@@ -100,16 +102,22 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
                 start = start, end = end, probability = probability, draws = draws)
  }
 
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.PosteriorBSVAR <- tidy_hd_event_model
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.PosteriorBSVARMIX <- tidy_hd_event_model
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.PosteriorBSVARMSH <- tidy_hd_event_model
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.PosteriorBSVARSV <- tidy_hd_event_model
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.PosteriorBSVART <- tidy_hd_event_model
+#' @rdname tidy_hd_event
 #' @export
  tidy_hd_event.PosteriorBSVARSIGN <- tidy_hd_event_model
 

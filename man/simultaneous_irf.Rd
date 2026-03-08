@@ -2,16 +2,90 @@
 % Please edit documentation in R/joint-inference.R
 \name{simultaneous_irf}
 \alias{simultaneous_irf}
+\alias{simultaneous_irf.PosteriorIR}
+\alias{simultaneous_irf.PosteriorBSVAR}
+\alias{simultaneous_irf.PosteriorBSVARMIX}
+\alias{simultaneous_irf.PosteriorBSVARMSH}
+\alias{simultaneous_irf.PosteriorBSVARSV}
+\alias{simultaneous_irf.PosteriorBSVART}
+\alias{simultaneous_irf.PosteriorBSVARSIGN}
 \title{Simultaneous posterior bands for impulse responses}
 \usage{
 simultaneous_irf(object, ...)
+
+\method{simultaneous_irf}{PosteriorIR}(
+  object,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
+
+\method{simultaneous_irf}{PosteriorBSVAR}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
+
+\method{simultaneous_irf}{PosteriorBSVARMIX}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
+
+\method{simultaneous_irf}{PosteriorBSVARMSH}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
+
+\method{simultaneous_irf}{PosteriorBSVARSV}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
+
+\method{simultaneous_irf}{PosteriorBSVART}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
+
+\method{simultaneous_irf}{PosteriorBSVARSIGN}(
+  object,
+  horizon = 10,
+  probability = 0.68,
+  variable = NULL,
+  shock = NULL,
+  model = "model1",
+  ...
+)
 }
 \arguments{
 \item{object}{A posterior model object or a \code{PosteriorIR} object.}
 
 \item{...}{Additional arguments passed to computation methods.}
-
-\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
 
 \item{probability}{Coverage probability for the simultaneous band.}
 
@@ -20,6 +94,8 @@ simultaneous_irf(object, ...)
 \item{shock}{Optional shock subset.}
 
 \item{model}{Optional model identifier.}
+
+\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
 }
 \description{
 Construct simultaneous bands over a selected set of impulse responses using

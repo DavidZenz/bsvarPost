@@ -13,6 +13,7 @@
 #' @param sparse_threshold Share of near-zero admissibility weights above which a
 #'   sparse-support warning flag is raised.
 #' @param model Optional model identifier.
+#' @param ... Reserved for future extensions.
 #' @export
 acceptance_diagnostics <- function(object, ...) {
   UseMethod("acceptance_diagnostics")
@@ -45,6 +46,7 @@ diag_row <- function(model, metric, value, flag = FALSE, message = "") {
   )
 }
 
+#' @rdname acceptance_diagnostics
 #' @export
 acceptance_diagnostics.PosteriorBSVARSIGN <- function(object, kernel_tol = 1e-12,
                                                       ess_threshold = 20,
@@ -85,6 +87,7 @@ acceptance_diagnostics.PosteriorBSVARSIGN <- function(object, kernel_tol = 1e-12
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = "acceptance_diagnostics", draws = FALSE)
 }
 
+#' @rdname acceptance_diagnostics
 #' @export
 acceptance_diagnostics.default <- function(object, ...) {
   stop("`acceptance_diagnostics()` is currently implemented for 'PosteriorBSVARSIGN' only.", call. = FALSE)

@@ -40,6 +40,7 @@ simultaneous_band_impl <- function(draws, object_type, probability = 0.68,
   new_bsvar_post_tbl(out, object_type = paste0("simultaneous_", object_type), draws = FALSE)
 }
 
+#' @rdname simultaneous_irf
 #' @export
 simultaneous_irf.PosteriorIR <- function(object, probability = 0.68,
                                          variable = NULL, shock = NULL,
@@ -55,16 +56,22 @@ simultaneous_irf_model <- function(object, horizon = 10, probability = 0.68,
                    variable = variable, shock = shock, model = model)
 }
 
+#' @rdname simultaneous_irf
 #' @export
 simultaneous_irf.PosteriorBSVAR <- simultaneous_irf_model
+#' @rdname simultaneous_irf
 #' @export
 simultaneous_irf.PosteriorBSVARMIX <- simultaneous_irf_model
+#' @rdname simultaneous_irf
 #' @export
 simultaneous_irf.PosteriorBSVARMSH <- simultaneous_irf_model
+#' @rdname simultaneous_irf
 #' @export
 simultaneous_irf.PosteriorBSVARSV <- simultaneous_irf_model
+#' @rdname simultaneous_irf
 #' @export
 simultaneous_irf.PosteriorBSVART <- simultaneous_irf_model
+#' @rdname simultaneous_irf
 #' @export
 simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 
@@ -78,6 +85,7 @@ simultaneous_cdm <- function(object, ...) {
   UseMethod("simultaneous_cdm")
 }
 
+#' @rdname simultaneous_cdm
 #' @export
 simultaneous_cdm.PosteriorCDM <- function(object, probability = 0.68,
                                           variable = NULL, shock = NULL,
@@ -99,16 +107,22 @@ simultaneous_cdm_model <- function(object, horizon = 10, probability = 0.68,
   )
 }
 
+#' @rdname simultaneous_cdm
 #' @export
 simultaneous_cdm.PosteriorBSVAR <- simultaneous_cdm_model
+#' @rdname simultaneous_cdm
 #' @export
 simultaneous_cdm.PosteriorBSVARMIX <- simultaneous_cdm_model
+#' @rdname simultaneous_cdm
 #' @export
 simultaneous_cdm.PosteriorBSVARMSH <- simultaneous_cdm_model
+#' @rdname simultaneous_cdm
 #' @export
 simultaneous_cdm.PosteriorBSVARSV <- simultaneous_cdm_model
+#' @rdname simultaneous_cdm
 #' @export
 simultaneous_cdm.PosteriorBSVART <- simultaneous_cdm_model
+#' @rdname simultaneous_cdm
 #' @export
 simultaneous_cdm.PosteriorBSVARSIGN <- simultaneous_cdm_model
 

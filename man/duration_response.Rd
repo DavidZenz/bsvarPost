@@ -2,21 +2,175 @@
 % Please edit documentation in R/response-summary.R
 \name{duration_response}
 \alias{duration_response}
+\alias{duration_response.PosteriorIR}
+\alias{duration_response.PosteriorBSVAR}
+\alias{duration_response.PosteriorBSVARMIX}
+\alias{duration_response.PosteriorBSVARMSH}
+\alias{duration_response.PosteriorBSVARSV}
+\alias{duration_response.PosteriorBSVART}
+\alias{duration_response.PosteriorBSVARSIGN}
+\alias{duration_response.PosteriorCDM}
 \title{Duration summaries for posterior IRFs and CDMs}
 \usage{
 duration_response(object, ...)
+
+\method{duration_response}{PosteriorIR}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  ...
+)
+
+\method{duration_response}{PosteriorBSVAR}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{duration_response}{PosteriorBSVARMIX}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{duration_response}{PosteriorBSVARMSH}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{duration_response}{PosteriorBSVARSV}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{duration_response}{PosteriorBSVART}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{duration_response}{PosteriorBSVARSIGN}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{duration_response}{PosteriorCDM}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  relation = c(">", ">=", "<", "<="),
+  value = 0,
+  absolute = FALSE,
+  mode = c("consecutive", "total"),
+  probability = 0.68,
+  model = "model1",
+  ...
+)
 }
 \arguments{
 \item{object}{A posterior model object, \code{PosteriorIR}, or \code{PosteriorCDM}.}
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{mode}{Either \code{"consecutive"} for the duration until first violation or
-\code{"total"} for the total count of satisfying horizons.}
+\item{variable}{Optional response-variable subset.}
+
+\item{shock}{Optional shock subset.}
 
 \item{relation}{Comparison operator.}
 
 \item{value}{Threshold value.}
+
+\item{absolute}{If \code{TRUE}, search for the largest absolute response.}
+
+\item{mode}{Either \code{"consecutive"} for the duration until first violation or
+\code{"total"} for the total count of satisfying horizons.}
+
+\item{probability}{Equal-tailed interval probability.}
+
+\item{model}{Optional model identifier.}
+
+\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
+
+\item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
+
+\item{scale_by}{Optional scaling mode for CDMs.}
+
+\item{scale_var}{Optional scaling variable specification.}
 }
 \description{
 Summarise how long a response satisfies a threshold condition over the

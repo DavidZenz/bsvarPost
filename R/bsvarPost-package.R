@@ -14,4 +14,8 @@
 #' @import bsvarSIGNs
 "_PACKAGE"
 
-utils::globalVariables(c("variable", "shock", "horizon", "median", "lower", "upper"))
+utils::globalVariables(c(
+  "variable", "shock", "horizon", "median", "lower", "upper",
+  "metric", "value", "model", "flag", "posterior_prob",
+  "restriction", "rank_score"
+))

@@ -2,12 +2,27 @@
 % Please edit documentation in R/diagnostics.R
 \name{acceptance_diagnostics}
 \alias{acceptance_diagnostics}
+\alias{acceptance_diagnostics.PosteriorBSVARSIGN}
+\alias{acceptance_diagnostics.default}
 \title{Acceptance and admissibility diagnostics for bsvarSIGNs}
 \usage{
 acceptance_diagnostics(object, ...)
+
+\method{acceptance_diagnostics}{PosteriorBSVARSIGN}(
+  object,
+  kernel_tol = 1e-12,
+  ess_threshold = 20,
+  sparse_threshold = 0.1,
+  model = "model1",
+  ...
+)
+
+\method{acceptance_diagnostics}{default}(object, ...)
 }
 \arguments{
 \item{object}{A \code{PosteriorBSVARSIGN} object.}
+
+\item{...}{Reserved for future extensions.}
 
 \item{kernel_tol}{Numerical tolerance used to classify near-zero admissibility
 weights.}

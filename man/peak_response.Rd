@@ -2,18 +2,126 @@
 % Please edit documentation in R/response-summary.R
 \name{peak_response}
 \alias{peak_response}
+\alias{peak_response.PosteriorIR}
+\alias{peak_response.PosteriorBSVAR}
+\alias{peak_response.PosteriorBSVARMIX}
+\alias{peak_response.PosteriorBSVARMSH}
+\alias{peak_response.PosteriorBSVARSV}
+\alias{peak_response.PosteriorBSVART}
+\alias{peak_response.PosteriorBSVARSIGN}
+\alias{peak_response.PosteriorCDM}
 \title{Peak response summaries for posterior IRFs and CDMs}
 \usage{
 peak_response(object, ...)
+
+\method{peak_response}{PosteriorIR}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  ...
+)
+
+\method{peak_response}{PosteriorBSVAR}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{peak_response}{PosteriorBSVARMIX}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{peak_response}{PosteriorBSVARMSH}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{peak_response}{PosteriorBSVARSV}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{peak_response}{PosteriorBSVART}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{peak_response}{PosteriorBSVARSIGN}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{peak_response}{PosteriorCDM}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  absolute = FALSE,
+  probability = 0.68,
+  model = "model1",
+  ...
+)
 }
 \arguments{
 \item{object}{A posterior model object, \code{PosteriorIR}, or \code{PosteriorCDM}.}
 
 \item{...}{Additional arguments passed to computation methods.}
-
-\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
-
-\item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
 
 \item{variable}{Optional response-variable subset.}
 
@@ -24,6 +132,10 @@ peak_response(object, ...)
 \item{probability}{Equal-tailed interval probability.}
 
 \item{model}{Optional model identifier.}
+
+\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
+
+\item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 

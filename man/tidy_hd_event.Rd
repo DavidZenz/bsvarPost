@@ -2,9 +2,96 @@
 % Please edit documentation in R/hd-event.R
 \name{tidy_hd_event}
 \alias{tidy_hd_event}
+\alias{tidy_hd_event.bsvar_post_tbl}
+\alias{tidy_hd_event.PosteriorHD}
+\alias{tidy_hd_event.PosteriorBSVAR}
+\alias{tidy_hd_event.PosteriorBSVARMIX}
+\alias{tidy_hd_event.PosteriorBSVARMSH}
+\alias{tidy_hd_event.PosteriorBSVARSV}
+\alias{tidy_hd_event.PosteriorBSVART}
+\alias{tidy_hd_event.PosteriorBSVARSIGN}
 \title{Tidy event-window historical decompositions}
 \usage{
 tidy_hd_event(object, ...)
+
+\method{tidy_hd_event}{bsvar_post_tbl}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  ...
+)
+
+\method{tidy_hd_event}{PosteriorHD}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  model = "model1",
+  ...
+)
+
+\method{tidy_hd_event}{PosteriorBSVAR}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  model = "model1",
+  ...
+)
+
+\method{tidy_hd_event}{PosteriorBSVARMIX}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  model = "model1",
+  ...
+)
+
+\method{tidy_hd_event}{PosteriorBSVARMSH}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  model = "model1",
+  ...
+)
+
+\method{tidy_hd_event}{PosteriorBSVARSV}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  model = "model1",
+  ...
+)
+
+\method{tidy_hd_event}{PosteriorBSVART}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  model = "model1",
+  ...
+)
+
+\method{tidy_hd_event}{PosteriorBSVARSIGN}(
+  object,
+  start,
+  end = start,
+  probability = 0.68,
+  draws = FALSE,
+  model = "model1",
+  ...
+)
 }
 \arguments{
 \item{object}{A posterior model object, \code{PosteriorHD}, or tidy historical

@@ -62,6 +62,7 @@ summarise_peak_draws <- function(draws, object_type, variable = NULL, shock = NU
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
 }
 
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorIR <- function(object, variable = NULL, shock = NULL, absolute = FALSE,
                                       probability = 0.68, model = "model1", ...) {
@@ -82,18 +83,25 @@ peak_response_model <- function(object, horizon = 10, type = c("irf", "cdm"), va
                 absolute = absolute, probability = probability, model = model)
 }
 
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorBSVAR <- peak_response_model
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorBSVARMIX <- peak_response_model
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorBSVARMSH <- peak_response_model
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorBSVARSV <- peak_response_model
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorBSVART <- peak_response_model
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorBSVARSIGN <- peak_response_model
+#' @rdname peak_response
 #' @export
 peak_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL, absolute = FALSE,
                                        probability = 0.68, model = "model1", ...) {
@@ -177,6 +185,7 @@ summarise_duration_draws <- function(draws, object_type, variable = NULL, shock 
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
 }
 
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorIR <- function(object, variable = NULL, shock = NULL,
                                           relation = c(">", ">=", "<", "<="), value = 0,
@@ -204,19 +213,26 @@ duration_response_model <- function(object, horizon = 10, type = c("irf", "cdm")
                     probability = probability, model = model)
 }
 
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorBSVAR <- duration_response_model
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorBSVARMIX <- duration_response_model
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorBSVARMSH <- duration_response_model
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorBSVARSV <- duration_response_model
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorBSVART <- duration_response_model
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorBSVARSIGN <- duration_response_model
 
+#' @rdname duration_response
 #' @export
 duration_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
                                            relation = c(">", ">=", "<", "<="), value = 0,
@@ -323,6 +339,7 @@ summarise_half_life_draws <- function(draws, object_type, variable = NULL, shock
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
 }
 
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorIR <- function(object, variable = NULL, shock = NULL,
                                            fraction = 0.5, baseline = c("peak", "initial"),
@@ -348,18 +365,25 @@ half_life_response_model <- function(object, horizon = 10, type = c("irf", "cdm"
                      probability = probability, model = model)
 }
 
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorBSVAR <- half_life_response_model
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorBSVARMIX <- half_life_response_model
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorBSVARMSH <- half_life_response_model
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorBSVARSV <- half_life_response_model
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorBSVART <- half_life_response_model
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorBSVARSIGN <- half_life_response_model
+#' @rdname half_life_response
 #' @export
 half_life_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
                                             fraction = 0.5, baseline = c("peak", "initial"),
@@ -437,6 +461,7 @@ summarise_threshold_draws <- function(draws, object_type, variable = NULL, shock
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
 }
 
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorIR <- function(object, variable = NULL, shock = NULL,
                                           relation = c(">", ">=", "<", "<="), value = 0,
@@ -462,18 +487,25 @@ time_to_threshold_model <- function(object, horizon = 10, type = c("irf", "cdm")
                     probability = probability, model = model)
 }
 
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorBSVAR <- time_to_threshold_model
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorBSVARMIX <- time_to_threshold_model
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorBSVARMSH <- time_to_threshold_model
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorBSVARSV <- time_to_threshold_model
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorBSVART <- time_to_threshold_model
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorBSVARSIGN <- time_to_threshold_model
+#' @rdname time_to_threshold
 #' @export
 time_to_threshold.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
                                            relation = c(">", ">=", "<", "<="), value = 0,

@@ -2,19 +2,165 @@
 % Please edit documentation in R/response-summary.R
 \name{half_life_response}
 \alias{half_life_response}
+\alias{half_life_response.PosteriorIR}
+\alias{half_life_response.PosteriorBSVAR}
+\alias{half_life_response.PosteriorBSVARMIX}
+\alias{half_life_response.PosteriorBSVARMSH}
+\alias{half_life_response.PosteriorBSVARSV}
+\alias{half_life_response.PosteriorBSVART}
+\alias{half_life_response.PosteriorBSVARSIGN}
+\alias{half_life_response.PosteriorCDM}
 \title{Half-life summaries for posterior IRFs and CDMs}
 \usage{
 half_life_response(object, ...)
+
+\method{half_life_response}{PosteriorIR}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  ...
+)
+
+\method{half_life_response}{PosteriorBSVAR}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{half_life_response}{PosteriorBSVARMIX}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{half_life_response}{PosteriorBSVARMSH}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{half_life_response}{PosteriorBSVARSV}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{half_life_response}{PosteriorBSVART}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{half_life_response}{PosteriorBSVARSIGN}(
+  object,
+  horizon = 10,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+
+\method{half_life_response}{PosteriorCDM}(
+  object,
+  variable = NULL,
+  shock = NULL,
+  fraction = 0.5,
+  baseline = c("peak", "initial"),
+  absolute = TRUE,
+  probability = 0.68,
+  model = "model1",
+  ...
+)
 }
 \arguments{
 \item{object}{A posterior model object, \code{PosteriorIR}, or \code{PosteriorCDM}.}
 
 \item{...}{Additional arguments passed to computation methods.}
 
+\item{variable}{Optional response-variable subset.}
+
+\item{shock}{Optional shock subset.}
+
 \item{fraction}{Fraction of the reference level used to define the half-life.}
 
 \item{baseline}{Reference level: \code{"peak"} uses the largest response over the
 available horizons, \code{"initial"} uses the horizon-0 response.}
+
+\item{absolute}{If \code{TRUE}, search for the largest absolute response.}
+
+\item{probability}{Equal-tailed interval probability.}
+
+\item{model}{Optional model identifier.}
+
+\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
+
+\item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
+
+\item{scale_by}{Optional scaling mode for CDMs.}
+
+\item{scale_var}{Optional scaling variable specification.}
 }
 \description{
 Summarise the first horizon at which a response falls to a chosen fraction of
