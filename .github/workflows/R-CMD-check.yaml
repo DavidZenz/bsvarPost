@@ -28,10 +28,32 @@ jobs:
         env:
           _R_CHECK_FORCE_SUGGESTS_: false
 
+      - name: Show check logs on failure
+        if: failure()
+        shell: bash
+        run: |
+          echo "Contents of check/:"
+          find check -maxdepth 4 -type f | sort || true
+          for f in $(find check -type f \( -name '00check.log' -o -name '00install.out' \) 2>/dev/null); do
+            echo "::group::${f}"
+            sed -n '1,240p' "$f" || true
+            echo "::endgroup::"
+          done
+
       - name: Upload check directory
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: r-cmd-check-dir-${{ runner.os }}
           path: check
+          if-no-files-found: warn
+
+      - name: Upload check logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r-cmd-check-logs-${{ runner.os }}
+          path: |
+            check/**/00check.log
+            check/**/00install.out
           if-no-files-found: warn
