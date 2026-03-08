@@ -17,6 +17,7 @@
 - Added `theme_bsvarpost()` and `style_bsvar_plot()` for reusable publication-oriented plot styling.
 - Added `template_bsvar_plot()` and `annotate_bsvar_plot()` for output-family templates and publication annotations.
 - Added `acceptance_diagnostics()` for stored-draw admissibility diagnostics in `bsvarSIGNs`.
+- Added `simultaneous_irf()`, `simultaneous_cdm()`, `joint_hypothesis_irf()`, and `joint_hypothesis_cdm()` for first-pass joint inference support.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
 

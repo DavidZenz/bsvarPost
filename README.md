@@ -68,6 +68,8 @@ plot(rep_irf)
 
 hypothesis_irf(post, variable = 1, shock = 1, horizon = 4, relation = ">", value = 0)
 magnitude_audit(post, type = "cdm", variable = 1, shock = 1, horizon = 8, relation = ">", value = 0)
+joint_hypothesis_irf(post, variable = 1, shock = 1, horizon = 0:2, relation = ">", value = 0)
+simultaneous_irf(post, horizon = 8, variable = 1, shock = 1)
 ```
 
 Response-shape summaries:
