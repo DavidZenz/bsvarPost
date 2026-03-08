@@ -40,6 +40,9 @@ set.seed(1)
 spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- estimate(spec, S = 100, thin = 1, show_progress = FALSE)
 
+spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 2)
+post_alt <- estimate(spec_alt, S = 100, thin = 1, show_progress = FALSE)
+
 cdm_obj <- cdm(post, horizon = 8)
 summary(cdm_obj)
 plot(cdm_obj)
@@ -139,7 +142,7 @@ The same summaries can be compared across several models:
 ```r
 compare_peak_response(
   baseline = post,
-  alternative = post,
+  alternative = post_alt,
   type = "irf",
   horizon = 8,
   variable = 1,
@@ -148,7 +151,7 @@ compare_peak_response(
 
 compare_duration_response(
   baseline = post,
-  alternative = post,
+  alternative = post_alt,
   type = "cdm",
   horizon = 8,
   variable = 1,
@@ -160,7 +163,7 @@ compare_duration_response(
 
 compare_half_life_response(
   baseline = post,
-  alternative = post,
+  alternative = post_alt,
   type = "irf",
   horizon = 8,
   variable = 1,
@@ -170,7 +173,7 @@ compare_half_life_response(
 
 compare_time_to_threshold(
   baseline = post,
-  alternative = post,
+  alternative = post_alt,
   type = "cdm",
   horizon = 8,
   variable = 1,
@@ -204,6 +207,13 @@ spec <- specify_bsvarSIGN$new(
 
 post <- estimate(spec, S = 100, thin = 1, show_progress = FALSE)
 
+spec_alt <- specify_bsvarSIGN$new(
+  optimism * 100,
+  p = 2,
+  sign_irf = sign_irf
+)
+post_alt <- estimate(spec_alt, S = 100, thin = 1, show_progress = FALSE)
+
 cdm_obj <- cdm(post, horizon = 12)
 summary(cdm_obj)
 
@@ -229,7 +239,7 @@ diag_tbl
 
 summary(diag_tbl)
 
-compare_acceptance_diagnostics(baseline = post, alternative = post)
+compare_acceptance_diagnostics(baseline = post, alternative = post_alt)
 plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
 ```
 
