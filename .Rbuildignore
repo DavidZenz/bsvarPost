@@ -3,3 +3,5 @@
 ^\.github/
 ^ROADMAP\.md$
 ^DEVELOPMENT\.md$
+^tools$
+^tools/
