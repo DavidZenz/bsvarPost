@@ -16,8 +16,14 @@ mock_tbl <- bsvarPost:::new_bsvar_post_tbl(
   draws = FALSE
 )
 
-expect_error(
-  as_tsibble_post(mock_tbl),
-  pattern = "tsibble",
-  info = "as_tsibble_post: fails cleanly when tsibble is not installed."
-)
+if (!requireNamespace("tsibble", quietly = TRUE)) {
+  expect_error(
+    as_tsibble_post(mock_tbl),
+    pattern = "tsibble",
+    info = "as_tsibble_post: fails cleanly when tsibble is not installed."
+  )
+} else {
+  tsbl <- as_tsibble_post(mock_tbl)
+  expect_true(inherits(tsbl, "tbl_ts"))
+  expect_equal(nrow(tsbl), 2)
+}
