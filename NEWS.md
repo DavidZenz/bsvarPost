@@ -15,6 +15,7 @@
 - Added `compare_half_life_response()` and `compare_time_to_threshold()` for cross-model timing-summary comparisons.
 - Added `plot_hd_event()` and `plot_shock_ranking()` as dedicated event-study plotting helpers.
 - Added `theme_bsvarpost()` and `style_bsvar_plot()` for reusable publication-oriented plot styling.
+- Added `template_bsvar_plot()` and `annotate_bsvar_plot()` for output-family templates and publication annotations.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
 

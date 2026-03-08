@@ -80,3 +80,103 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 
   plot
 }
+
+#' Apply an output-family template to a bsvarPost plot
+#'
+#' @param plot A `ggplot` object.
+#' @param family One of `"irf"`, `"cdm"`, `"forecast"`, `"hd_event"`,
+#'   `"shock_ranking"`, or `"comparison"`.
+#' @param preset One of `"default"`, `"paper"`, or `"slides"`.
+#' @param base_size Base font size for the applied theme.
+#' @param base_family Base font family for the applied theme.
+#' @export
+template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking", "comparison"),
+                                preset = c("default", "paper", "slides"),
+                                base_size = 11, base_family = "") {
+  if (!inherits(plot, "ggplot")) {
+    stop("`plot` must be a ggplot object.", call. = FALSE)
+  }
+
+  family <- match.arg(family)
+  preset <- match.arg(preset)
+
+  defaults <- switch(
+    family,
+    irf = list(palette = c("#1f78b4", "#a6cee3"), ribbon_alpha = 0.14, legend_position = "bottom"),
+    cdm = list(palette = c("#0b6e4f", "#88c9a1"), ribbon_alpha = 0.14, legend_position = "bottom"),
+    forecast = list(palette = c("#6a3d9a", "#cab2d6"), ribbon_alpha = 0.14, legend_position = "bottom"),
+    hd_event = list(palette = c("#8c510a", "#d8b365"), ribbon_alpha = 0.10, legend_position = "bottom"),
+    shock_ranking = list(palette = c("#b2182b", "#2166ac"), ribbon_alpha = NULL, legend_position = "bottom"),
+    comparison = list(palette = c("#1b9e77", "#d95f02", "#7570b3"), ribbon_alpha = 0.10, legend_position = "bottom")
+  )
+
+  styled <- style_bsvar_plot(
+    plot,
+    preset = preset,
+    palette = defaults$palette,
+    ribbon_alpha = defaults$ribbon_alpha,
+    base_size = base_size,
+    base_family = base_family,
+    legend_position = defaults$legend_position
+  )
+
+  ylabel <- switch(
+    family,
+    irf = "impulse response",
+    cdm = "cumulative dynamic multiplier",
+    forecast = "forecast",
+    hd_event = "event contribution",
+    shock_ranking = "median contribution",
+    comparison = "comparison"
+  )
+
+  styled + ggplot2::labs(y = ylabel)
+}
+
+#' Add publication-oriented annotations to a bsvarPost plot
+#'
+#' @param plot A `ggplot` object.
+#' @param title Optional plot title.
+#' @param subtitle Optional plot subtitle.
+#' @param caption Optional plot caption.
+#' @param yintercept Optional numeric vector of horizontal reference lines.
+#' @param xintercept Optional numeric vector of vertical reference lines.
+#' @param xmin Optional start of a highlighted x-window.
+#' @param xmax Optional end of a highlighted x-window.
+#' @param window_fill Fill colour for the highlighted window.
+#' @param window_alpha Alpha for the highlighted window.
+#' @export
+annotate_bsvar_plot <- function(plot, title = NULL, subtitle = NULL, caption = NULL,
+                                yintercept = NULL, xintercept = NULL,
+                                xmin = NULL, xmax = NULL,
+                                window_fill = "grey70", window_alpha = 0.12) {
+  if (!inherits(plot, "ggplot")) {
+    stop("`plot` must be a ggplot object.", call. = FALSE)
+  }
+
+  if (!is.null(title) || !is.null(subtitle) || !is.null(caption)) {
+    plot <- plot + ggplot2::labs(title = title, subtitle = subtitle, caption = caption)
+  }
+
+  if (!is.null(yintercept)) {
+    plot <- plot + ggplot2::geom_hline(yintercept = yintercept, linetype = 3, colour = "grey40")
+  }
+
+  if (!is.null(xintercept)) {
+    plot <- plot + ggplot2::geom_vline(xintercept = xintercept, linetype = 3, colour = "grey40")
+  }
+
+  if (!is.null(xmin) && !is.null(xmax)) {
+    plot <- plot + ggplot2::annotate(
+      "rect",
+      xmin = xmin,
+      xmax = xmax,
+      ymin = -Inf,
+      ymax = Inf,
+      fill = window_fill,
+      alpha = window_alpha
+    )
+  }
+
+  plot
+}

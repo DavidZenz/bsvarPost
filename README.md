@@ -51,6 +51,12 @@ style_bsvar_plot(
   preset = "paper",
   palette = c("#1b9e77", "#d95f02")
 )
+
+template_bsvar_plot(
+  ggplot2::autoplot(irf_tbl),
+  family = "irf",
+  preset = "paper"
+)
 ```
 
 Representative-model summaries and posterior probability statements:
@@ -232,6 +238,12 @@ plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5)
 style_bsvar_plot(
   plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5),
   preset = "slides"
+)
+
+annotate_bsvar_plot(
+  plot_hd_event(post, start = 1, end = 4),
+  title = "Event-window contributions",
+  xintercept = 1
 )
 ```
 
