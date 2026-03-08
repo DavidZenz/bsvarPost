@@ -85,6 +85,7 @@ plot_joint_hypothesis(
   relation = ">",
   value = 0
 )
+plot_hypothesis(post, type = "irf", variable = 1, shock = 1, horizon = 0:4, relation = ">", value = 0)
 ```
 
 Response-shape summaries:
@@ -221,6 +222,7 @@ summary(rep_irf)
 
 audit_tbl <- restriction_audit(post)
 audit_tbl
+plot_restriction_audit(audit_tbl)
 
 diag_tbl <- acceptance_diagnostics(post)
 diag_tbl

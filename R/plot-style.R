@@ -85,12 +85,14 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 #'
 #' @param plot A `ggplot` object.
 #' @param family One of `"irf"`, `"cdm"`, `"forecast"`, `"hd_event"`,
-#'   `"shock_ranking"`, or `"comparison"`.
+#'   `"shock_ranking"`, `"hypothesis"`, `"restriction_audit"`, or
+#'   `"comparison"`.
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param base_size Base font size for the applied theme.
 #' @param base_family Base font family for the applied theme.
 #' @export
-template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking", "comparison"),
+template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking",
+                                                  "hypothesis", "restriction_audit", "comparison"),
                                 preset = c("default", "paper", "slides"),
                                 base_size = 11, base_family = "") {
   if (!inherits(plot, "ggplot")) {
@@ -107,6 +109,8 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
     forecast = list(palette = c("#6a3d9a", "#cab2d6"), ribbon_alpha = 0.14, legend_position = "bottom"),
     hd_event = list(palette = c("#8c510a", "#d8b365"), ribbon_alpha = 0.10, legend_position = "bottom"),
     shock_ranking = list(palette = c("#b2182b", "#2166ac"), ribbon_alpha = NULL, legend_position = "bottom"),
+    hypothesis = list(palette = c("#1b9e77", "#66a61e", "#d95f02"), ribbon_alpha = NULL, legend_position = "bottom"),
+    restriction_audit = list(palette = c("#4c78a8", "#f58518", "#54a24b"), ribbon_alpha = NULL, legend_position = "bottom"),
     comparison = list(palette = c("#1b9e77", "#d95f02", "#7570b3"), ribbon_alpha = 0.10, legend_position = "bottom")
   )
 
@@ -127,6 +131,8 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
     forecast = "forecast",
     hd_event = "event contribution",
     shock_ranking = "median contribution",
+    hypothesis = "posterior probability",
+    restriction_audit = "posterior probability",
     comparison = "comparison"
   )
 
