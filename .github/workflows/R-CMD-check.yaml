@@ -24,7 +24,8 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          args: --no-manual --as-cran
+          args: 'c("--as-cran")'
+          build_args: 'c("--no-manual")'
         env:
           _R_CHECK_FORCE_SUGGESTS_: false
 
