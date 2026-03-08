@@ -125,3 +125,59 @@ compare_duration_response <- function(..., horizon = 10, type = c("irf", "cdm"),
   })
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("duration_", type), draws = FALSE, compare = TRUE))
 }
+
+#' Compare half-life summaries across models
+#' @param ... Posterior model objects or a named list of model objects.
+#' @param horizon Maximum horizon used when `object` is a posterior model object.
+#' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
+#' @param variable Optional response-variable subset.
+#' @param shock Optional shock subset.
+#' @param fraction Fraction of the reference level used to define the half-life.
+#' @param baseline Reference level: `"peak"` or `"initial"`.
+#' @param absolute If `TRUE`, compute half-lives using absolute responses.
+#' @param probability Equal-tailed interval probability.
+#' @param scale_by Optional scaling mode for CDMs.
+#' @param scale_var Optional scaling variable specification.
+#' @export
+compare_half_life_response <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+                                       fraction = 0.5, baseline = c("peak", "initial"),
+                                       absolute = TRUE, probability = 0.68,
+                                       scale_by = c("none", "shock_sd"), scale_var = NULL) {
+  type <- match.arg(type)
+  baseline <- match.arg(baseline)
+  models <- collect_models(...)
+  out <- lapply(names(models), function(nm) {
+    half_life_response(models[[nm]], horizon = horizon, type = type, variable = variable, shock = shock,
+                       fraction = fraction, baseline = baseline, absolute = absolute,
+                       probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
+  })
+  set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("half_life_", type), draws = FALSE, compare = TRUE))
+}
+
+#' Compare time-to-threshold summaries across models
+#' @param ... Posterior model objects or a named list of model objects.
+#' @param horizon Maximum horizon used when `object` is a posterior model object.
+#' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
+#' @param variable Optional response-variable subset.
+#' @param shock Optional shock subset.
+#' @param relation Comparison operator.
+#' @param value Threshold value.
+#' @param absolute If `TRUE`, compare absolute responses.
+#' @param probability Equal-tailed interval probability.
+#' @param scale_by Optional scaling mode for CDMs.
+#' @param scale_var Optional scaling variable specification.
+#' @export
+compare_time_to_threshold <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+                                      relation = c(">", ">=", "<", "<="), value = 0,
+                                      absolute = FALSE, probability = 0.68,
+                                      scale_by = c("none", "shock_sd"), scale_var = NULL) {
+  type <- match.arg(type)
+  relation <- match.arg(relation)
+  models <- collect_models(...)
+  out <- lapply(names(models), function(nm) {
+    time_to_threshold(models[[nm]], horizon = horizon, type = type, variable = variable, shock = shock,
+                      relation = relation, value = value, absolute = absolute,
+                      probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
+  })
+  set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("time_to_threshold_", type), draws = FALSE, compare = TRUE))
+}

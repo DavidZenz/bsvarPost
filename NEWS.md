@@ -12,6 +12,7 @@
 - Added `compare_hd_event()` for cross-model event-window historical decomposition comparisons.
 - Added `compare_peak_response()` and `compare_duration_response()` for cross-model response-shape comparisons.
 - Added `half_life_response()` and `time_to_threshold()` for response-decay and threshold-timing summaries.
+- Added `compare_half_life_response()` and `compare_time_to_threshold()` for cross-model timing-summary comparisons.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
 

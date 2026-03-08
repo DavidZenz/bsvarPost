@@ -17,7 +17,23 @@ expect_true(inherits(cmp_duration, "bsvar_post_tbl"))
 expect_true(isTRUE(attr(cmp_duration, "compare")))
 expect_true(all(c("median_duration", "mode", "threshold") %in% names(cmp_duration)))
 
+cmp_half <- compare_half_life_response(base = post_a, alt = post_b, type = "irf", horizon = 4,
+                                       variable = 1, shock = 1, baseline = "peak")
+expect_true(inherits(cmp_half, "bsvar_post_tbl"))
+expect_true(isTRUE(attr(cmp_half, "compare")))
+expect_true(all(c("median_half_life", "baseline", "reached_prob") %in% names(cmp_half)))
+
+cmp_time <- compare_time_to_threshold(base = post_a, alt = post_b, type = "cdm", horizon = 4,
+                                      variable = 1, shock = 1, relation = ">", value = 0)
+expect_true(inherits(cmp_time, "bsvar_post_tbl"))
+expect_true(isTRUE(attr(cmp_time, "compare")))
+expect_true(all(c("median_horizon", "threshold", "reached_prob") %in% names(cmp_time)))
+
 p1 <- ggplot2::autoplot(cmp_peak)
 p2 <- ggplot2::autoplot(cmp_duration)
+p3 <- ggplot2::autoplot(cmp_half)
+p4 <- ggplot2::autoplot(cmp_time)
 expect_true(inherits(p1, "ggplot"))
 expect_true(inherits(p2, "ggplot"))
+expect_true(inherits(p3, "ggplot"))
+expect_true(inherits(p4, "ggplot"))

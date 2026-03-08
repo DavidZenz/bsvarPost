@@ -127,6 +127,27 @@ compare_duration_response(
   value = 0,
   mode = "total"
 )
+
+compare_half_life_response(
+  baseline = post,
+  alternative = post,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  baseline = "peak"
+)
+
+compare_time_to_threshold(
+  baseline = post,
+  alternative = post,
+  type = "cdm",
+  horizon = 8,
+  variable = 1,
+  shock = 1,
+  relation = ">",
+  value = 0
+)
 ```
 
 Optional normalization:
