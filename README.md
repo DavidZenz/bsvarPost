@@ -14,6 +14,11 @@ It focuses on the layer after estimation:
 - bridge helpers for APRScenario-style forecast tables
 - representative-model summaries and posterior audit helpers
 
+Package documentation is split into:
+
+- `Getting Started with bsvarPost`
+- `Post-Estimation Workflows in bsvarPost`
+
 ## Installation
 
 From GitHub:
