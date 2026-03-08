@@ -211,6 +211,9 @@ diag_tbl <- acceptance_diagnostics(post)
 diag_tbl
 
 summary(diag_tbl)
+
+compare_acceptance_diagnostics(baseline = post, alternative = post)
+plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
 ```
 
 ## Model comparison

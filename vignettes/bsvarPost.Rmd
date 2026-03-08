@@ -249,6 +249,9 @@ diag_tbl <- acceptance_diagnostics(post)
 diag_tbl
 
 summary(diag_tbl)
+
+compare_acceptance_diagnostics(p1 = post, p2 = post)
+plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
 ```
 
 Magnitude restrictions in `bsvarPost` are post-estimation summaries, not

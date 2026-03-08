@@ -55,6 +55,26 @@ compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, prob
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "restriction_audit", draws = FALSE, compare = TRUE))
 }
 
+#' Compare acceptance diagnostics across models
+#' @param ... Posterior model objects or a named list of model objects.
+#' @param kernel_tol Numerical tolerance used to classify near-zero admissibility
+#'   weights.
+#' @param ess_threshold Effective-sample-size threshold below which a warning
+#'   flag is raised.
+#' @param sparse_threshold Share of near-zero admissibility weights above which a
+#'   sparse-support warning flag is raised.
+#' @export
+compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
+                                           ess_threshold = 20,
+                                           sparse_threshold = 0.1) {
+  models <- collect_models(...)
+  out <- lapply(names(models), function(nm) {
+    acceptance_diagnostics(models[[nm]], kernel_tol = kernel_tol, ess_threshold = ess_threshold,
+                           sparse_threshold = sparse_threshold, model = nm)
+  })
+  set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "acceptance_diagnostics", draws = FALSE, compare = TRUE))
+}
+
 
 #' Compare event-window historical decompositions across models
 #' @param ... Posterior model objects or a named list of model objects.

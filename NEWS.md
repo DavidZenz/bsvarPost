@@ -18,6 +18,7 @@
 - Added `template_bsvar_plot()` and `annotate_bsvar_plot()` for output-family templates and publication annotations.
 - Added `acceptance_diagnostics()` for stored-draw admissibility diagnostics in `bsvarSIGNs`.
 - Added `summary()` and print support for `acceptance_diagnostics()` outputs.
+- Added `compare_acceptance_diagnostics()` and `plot_acceptance_diagnostics()` for cross-model diagnostics workflows.
 - Added `simultaneous_irf()`, `simultaneous_cdm()`, `joint_hypothesis_irf()`, and `joint_hypothesis_cdm()` for first-pass joint inference support.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
