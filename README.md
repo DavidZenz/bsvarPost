@@ -204,6 +204,9 @@ summary(rep_irf)
 
 audit_tbl <- restriction_audit(post)
 audit_tbl
+
+diag_tbl <- acceptance_diagnostics(post)
+diag_tbl
 ```
 
 ## Model comparison
