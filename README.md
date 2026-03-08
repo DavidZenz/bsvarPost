@@ -219,6 +219,9 @@ compare_restrictions(model_a = post, model_b = post, restrictions = list(
 ```r
 hd_event <- tidy_hd_event(post, start = 1, end = 4)
 shock_ranking(post, start = 1, end = 4, ranking = "absolute")
+
+plot_hd_event(post, start = 1, end = 4)
+plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5)
 ```
 
 Event-window comparisons:
