@@ -89,3 +89,60 @@ acceptance_diagnostics.PosteriorBSVARSIGN <- function(object, kernel_tol = 1e-12
 acceptance_diagnostics.default <- function(object, ...) {
   stop("`acceptance_diagnostics()` is currently implemented for 'PosteriorBSVARSIGN' only.", call. = FALSE)
 }
+
+diagnostic_value <- function(object, metric) {
+  row <- object[object$metric == metric, , drop = FALSE]
+  if (!nrow(row)) return(NA)
+  row$value[[1]]
+}
+
+#' @export
+summary.bsvar_post_tbl <- function(object, ...) {
+  if (!identical(attr(object, "object_type"), "acceptance_diagnostics")) {
+    return(object)
+  }
+
+  warnings <- object[isTRUE(object$flag), c("metric", "value", "message"), drop = FALSE]
+  if (!nrow(warnings)) {
+    warnings <- tibble::tibble(metric = character(), value = numeric(), message = character())
+  }
+
+  out <- list(
+    model = unique(object$model),
+    posterior_draws = diagnostic_value(object, "posterior_draws"),
+    effective_sample_size = diagnostic_value(object, "effective_sample_size"),
+    irf_sign_restrictions = diagnostic_value(object, "irf_sign_restrictions"),
+    zero_restrictions = diagnostic_value(object, "zero_restrictions"),
+    structural_sign_restrictions = diagnostic_value(object, "structural_sign_restrictions"),
+    narrative_restrictions = diagnostic_value(object, "narrative_restrictions"),
+    kernel_zero_share = diagnostic_value(object, "kernel_zero_share"),
+    kernel_cv = diagnostic_value(object, "kernel_cv"),
+    warnings = warnings,
+    diagnostics = object
+  )
+  class(out) <- "SummaryAcceptanceDiagnostics"
+  out
+}
+
+#' @export
+print.SummaryAcceptanceDiagnostics <- function(x, ...) {
+  cat("Acceptance diagnostics\n")
+  cat("  model: ", paste(x$model, collapse = ", "), "\n", sep = "")
+  cat("  posterior draws: ", x$posterior_draws, "\n", sep = "")
+  cat("  effective sample size: ", format(x$effective_sample_size, digits = 4), "\n", sep = "")
+  cat("  IRF sign restrictions: ", x$irf_sign_restrictions, "\n", sep = "")
+  cat("  zero restrictions: ", x$zero_restrictions, "\n", sep = "")
+  cat("  structural sign restrictions: ", x$structural_sign_restrictions, "\n", sep = "")
+  cat("  narrative restrictions: ", x$narrative_restrictions, "\n", sep = "")
+  cat("  kernel zero share: ", format(x$kernel_zero_share, digits = 4), "\n", sep = "")
+  cat("  kernel CV: ", format(x$kernel_cv, digits = 4), "\n", sep = "")
+
+  if (nrow(x$warnings) > 0) {
+    cat("\nWarnings\n")
+    for (i in seq_len(nrow(x$warnings))) {
+      cat("  - ", x$warnings$metric[i], ": ", x$warnings$message[i], "\n", sep = "")
+    }
+  }
+
+  invisible(x)
+}

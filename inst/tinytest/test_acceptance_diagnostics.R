@@ -10,6 +10,10 @@ diag_tbl <- acceptance_diagnostics(post)
 expect_true(inherits(diag_tbl, "bsvar_post_tbl"))
 expect_true(all(c("metric", "value", "flag", "message") %in% names(diag_tbl)))
 
+diag_summary <- summary(diag_tbl)
+expect_true(inherits(diag_summary, "SummaryAcceptanceDiagnostics"))
+expect_true(all(c("warnings", "diagnostics") %in% names(diag_summary)))
+
 metrics <- diag_tbl$metric
 expect_true(all(c(
   "posterior_draws",

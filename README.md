@@ -209,6 +209,8 @@ audit_tbl
 
 diag_tbl <- acceptance_diagnostics(post)
 diag_tbl
+
+summary(diag_tbl)
 ```
 
 ## Model comparison
