@@ -45,6 +45,12 @@ fevd_tbl <- tidy_fevd(post, horizon = 8)
 fc_tbl <- tidy_forecast(post, horizon = 8)
 
 ggplot2::autoplot(cdm_tbl)
+
+style_bsvar_plot(
+  ggplot2::autoplot(cdm_tbl),
+  preset = "paper",
+  palette = c("#1b9e77", "#d95f02")
+)
 ```
 
 Representative-model summaries and posterior probability statements:
@@ -222,6 +228,11 @@ shock_ranking(post, start = 1, end = 4, ranking = "absolute")
 
 plot_hd_event(post, start = 1, end = 4)
 plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5)
+
+style_bsvar_plot(
+  plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5),
+  preset = "slides"
+)
 ```
 
 Event-window comparisons:
