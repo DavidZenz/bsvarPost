@@ -20,6 +20,7 @@
 - Added `summary()` and print support for `acceptance_diagnostics()` outputs.
 - Added `compare_acceptance_diagnostics()` and `plot_acceptance_diagnostics()` for cross-model diagnostics workflows.
 - Added `simultaneous_irf()`, `simultaneous_cdm()`, `joint_hypothesis_irf()`, and `joint_hypothesis_cdm()` for first-pass joint inference support.
+- Added `plot_simultaneous()` and `plot_joint_hypothesis()` for direct visualisation of simultaneous bands and joint posterior probability statements.
 - Added a second vignette, `Post-Estimation Workflows in bsvarPost`, to separate workflow/methodology documentation from getting-started material.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
