@@ -27,5 +27,10 @@ as_tsibble_post <- function(object, key = NULL, index = NULL, regular = NULL, va
     key <- intersect(c("model", "variable", "shock", "draw"), names(object))
   }
 
-  tsibble::as_tsibble(object, key = key, index = index, regular = regular, validate = validate)
+  args <- list(object, key = key, index = index, validate = validate)
+  if (!is.null(regular)) {
+    args$regular <- regular
+  }
+
+  do.call(tsibble::as_tsibble, args)
 }
