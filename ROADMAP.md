@@ -251,6 +251,42 @@ Goal:
   developer notebook
 - ensure the vignettes are extensive enough to serve as the main user guide
 
+## pkgdown track
+
+Priority: high before any public release push
+
+`bsvarPost` should ship with a `pkgdown` website.
+
+Reason:
+
+- base R help does not provide a clean, official mechanism for direct
+  package-help-to-vignette linking
+- `pkgdown` solves vignette discoverability, cross-references, and navigation
+  much more cleanly
+- the package now has enough surface area that a website is more usable than
+  relying on `browseVignettes()` and package help pages alone
+
+Planned deliverables:
+
+- `_pkgdown.yml` with a clear site structure
+- articles section for:
+  - getting started
+  - post-estimation workflows
+- reference indexing by feature family:
+  - CDM and tidy extraction
+  - comparison helpers
+  - representative summaries and audits
+  - diagnostics and joint inference
+  - plotting and reporting
+- homepage that positions `bsvarPost` as a post-estimation companion package
+- working cross-links between reference topics and vignettes
+
+Goal:
+
+- make the package documentation navigable in the standard modern R-package way
+- provide reliable direct access to vignettes and cross-referenced help topics
+- reduce dependence on base R help-server behavior for article discovery
+
 ## Package engineering track
 
 Priority: always-on
