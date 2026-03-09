@@ -1,0 +1,77 @@
+# Plot joint posterior probability statements
+
+Plot joint posterior probability statements
+
+## Usage
+
+``` r
+plot_joint_hypothesis(
+  object,
+  type = c("irf", "cdm"),
+  variable = NULL,
+  shock = NULL,
+  horizon = NULL,
+  relation = c("<", "<=", ">", ">=", "=="),
+  value = 0,
+  compare_to = NULL,
+  absolute = FALSE,
+  scale_by = c("none", "shock_sd"),
+  scale_var = NULL,
+  ...
+)
+```
+
+## Arguments
+
+- object:
+
+  A joint-hypothesis table or an object accepted by
+  [`joint_hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_irf.md)
+  /
+  [`joint_hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_cdm.md).
+
+- type:
+
+  One of `"irf"` or `"cdm"` when `object` is not already a joint
+  hypothesis table.
+
+- variable:
+
+  Response variable selection on the left-hand side.
+
+- shock:
+
+  Shock selection on the left-hand side.
+
+- horizon:
+
+  Horizon selection on the left-hand side.
+
+- relation:
+
+  Comparison operator.
+
+- value:
+
+  Scalar comparison value for threshold statements.
+
+- compare_to:
+
+  Optional right-hand-side response specification with elements
+  `variable`, `shock`, and `horizon`.
+
+- absolute:
+
+  If `TRUE`, compare absolute responses.
+
+- scale_by:
+
+  Optional scaling mode for CDMs.
+
+- scale_var:
+
+  Optional scaling variable specification.
+
+- ...:
+
+  Additional arguments passed to computation methods.
