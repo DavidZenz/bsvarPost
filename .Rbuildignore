@@ -5,3 +5,5 @@
 ^DEVELOPMENT\.md$
 ^tools$
 ^tools/
+^_pkgdown\.yml$
+^index\.md$

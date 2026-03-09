@@ -33,6 +33,7 @@
 - Added `publish_bsvar_plot()` for family-aware publication templates across comparison, representative, diagnostics, event-study, and joint-inference outputs.
 - Added publication-facing report-table labels and short family-specific subtitles for representative, diagnostics, event-study, simultaneous-band, and joint-hypothesis plots.
 - Expanded the vignettes with clearer interpretation notes, non-trivial comparison examples, and lightweight rendered table/plot showcases.
+- Added pkgdown site scaffolding, including site configuration, homepage content, reference grouping, and a GitHub Pages deployment workflow.
 - Added a second vignette, `Post-Estimation Workflows in bsvarPost`, to separate workflow/methodology documentation from getting-started material.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.

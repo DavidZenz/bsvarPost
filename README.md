@@ -19,6 +19,10 @@ Package documentation is split into:
 - `Getting Started with bsvarPost`
 - `Post-Estimation Workflows in bsvarPost`
 
+A pkgdown site is configured at:
+
+- <https://davidzenz.github.io/bsvarPost/>
+
 ## Installation
 
 From GitHub:

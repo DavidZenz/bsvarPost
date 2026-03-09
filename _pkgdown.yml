@@ -1,0 +1,103 @@
+url: https://davidzenz.github.io/bsvarPost/
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+home:
+  title: bsvarPost
+  description: >
+    A post-estimation companion package for bsvars and bsvarSIGNs, focused on
+    cumulative responses, tidy extraction, comparison workflows, diagnostics,
+    and publication-ready reporting.
+  sidebar:
+    structure:
+      - links
+      - license
+      - community
+      - citation
+      - authors
+      - dev
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get Started
+      href: articles/bsvarPost.html
+    articles:
+      text: Articles
+      menu:
+        - text: Getting Started
+          href: articles/bsvarPost.html
+        - text: Post-Estimation Workflows
+          href: articles/post-estimation-workflows.html
+    github:
+      icon: fab fa-github
+      href: https://github.com/DavidZenz/bsvarPost
+
+articles:
+  - title: Articles
+    navbar: Articles
+    contents:
+      - bsvarPost
+      - post-estimation-workflows
+
+reference:
+  - title: Core Responses
+    contents:
+      - cdm
+      - starts_with("tidy_")
+      - starts_with("compare_")
+
+  - title: Representative Summaries and Audits
+    contents:
+      - starts_with("representative_")
+      - starts_with("median_target_")
+      - starts_with("most_likely_admissible_")
+      - starts_with("hypothesis_")
+      - restriction_audit
+      - magnitude_audit
+      - irf_restriction
+      - structural_restriction
+      - narrative_restriction
+
+  - title: Historical Decomposition and Timing
+    contents:
+      - tidy_hd_event
+      - shock_ranking
+      - peak_response
+      - duration_response
+      - half_life_response
+      - time_to_threshold
+
+  - title: Diagnostics and Joint Inference
+    contents:
+      - acceptance_diagnostics
+      - simultaneous_irf
+      - simultaneous_cdm
+      - joint_hypothesis_irf
+      - joint_hypothesis_cdm
+
+  - title: Plotting and Reporting
+    contents:
+      - starts_with("plot_")
+      - theme_bsvarpost
+      - style_bsvar_plot
+      - template_bsvar_plot
+      - annotate_bsvar_plot
+      - publish_bsvar_plot
+      - report_bundle
+      - report_table
+      - as_kable
+      - as_gt
+      - as_flextable
+      - write_bsvar_csv
+
+  - title: Bridges
+    contents:
+      - as_tsibble_post
+      - as_apr_cond_forc
+      - tidy_apr_forecast
+      - apr_gen_mats
