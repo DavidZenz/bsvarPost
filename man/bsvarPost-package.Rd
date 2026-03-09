@@ -9,6 +9,20 @@
 Companion post-estimation tools for Bayesian structural vector
 autoregressions fitted with the \code{bsvars} and \code{bsvarSIGNs} packages.
 }
+\section{Vignettes}{
+
+Use \code{\link[utils:browseVignettes]{utils::browseVignettes()}} to open the package articles:
+\itemize{
+\item \code{browseVignettes(package = "bsvarPost")}
+}
+
+The package currently ships with:
+\itemize{
+\item \verb{Getting Started with bsvarPost}
+\item \verb{Post-Estimation Workflows in bsvarPost}
+}
+}
+
 \seealso{
 Useful links:
 \itemize{

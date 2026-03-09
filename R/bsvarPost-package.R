@@ -3,6 +3,16 @@
 #' Companion post-estimation tools for Bayesian structural vector
 #' autoregressions fitted with the `bsvars` and `bsvarSIGNs` packages.
 #'
+#' @section Vignettes:
+#' Use [utils::browseVignettes()] to open the package articles:
+#'
+#' - `browseVignettes(package = "bsvarPost")`
+#'
+#' The package currently ships with:
+#'
+#' - `Getting Started with bsvarPost`
+#' - `Post-Estimation Workflows in bsvarPost`
+#'
 #' @keywords internal
 #' @importFrom tibble tibble as_tibble
 #' @importFrom ggplot2 autoplot ggplot aes geom_line geom_ribbon geom_hline
