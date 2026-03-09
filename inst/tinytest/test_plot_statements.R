@@ -25,6 +25,8 @@ restrictions <- list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign 
 audit_tbl <- restriction_audit(post, restrictions = restrictions)
 p_audit_tbl <- plot_restriction_audit(audit_tbl)
 expect_true(inherits(p_audit_tbl, "ggplot"))
+expect_true(is.null(p_audit_tbl$labels$x))
+expect_equal(p_audit_tbl$labels$y, "posterior satisfaction probability")
 
 p_audit_model <- plot_restriction_audit(post, restrictions = restrictions)
 expect_true(inherits(p_audit_model, "ggplot"))

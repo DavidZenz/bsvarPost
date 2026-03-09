@@ -139,8 +139,8 @@ plot_restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
     ggplot2::geom_col(position = "dodge") +
     ggplot2::coord_flip() +
     ggplot2::labs(
-      x = "restriction",
-      y = "posterior probability",
+      x = NULL,
+      y = "posterior satisfaction probability",
       fill = if (length(unique(df$model)) > 1L) "model" else NULL
     )
 
