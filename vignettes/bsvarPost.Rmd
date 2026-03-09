@@ -40,6 +40,14 @@ lightweight, most of them are shown but not evaluated during the build. A small
 evaluated showcase appears at the end of the vignette so the rendered document
 still includes an actual table and plot.
 
+This example uses two lag specifications of the same fiscal model:
+
+- `post`: a baseline model with `p = 1`
+- `post_alt`: an alternative specification with `p = 2`
+
+That gives a realistic comparison surface for CDMs, IRFs, and reporting
+helpers.
+
 ```{r}
 library(bsvars)
 library(bsvarPost)
@@ -58,8 +66,10 @@ Compute cumulative dynamic multipliers:
 
 ```{r}
 cdm_obj <- cdm(post, horizon = 8)
+cdr_cmp <- compare_cdm(p1 = post, p2 = post_alt, horizon = 8)
 summary(cdm_obj)
 plot(cdm_obj)
+ggplot2::autoplot(cdr_cmp)
 ```
 
 Normalize by the sample standard deviation of the shocked variable only if that
@@ -88,6 +98,7 @@ Plot tidy outputs with `ggplot2` defaults:
 ```{r}
 ggplot2::autoplot(irf_tbl)
 ggplot2::autoplot(cdm_tbl)
+ggplot2::autoplot(compare_irf(p1 = post, p2 = post_alt, horizon = 8))
 
 style_bsvar_plot(
   ggplot2::autoplot(cdm_tbl),
@@ -456,9 +467,9 @@ A practical rule of thumb is:
 
 ## Rendered showcase
 
-These final chunks are intentionally small and evaluated during the vignette
-build so the rendered document includes actual tables and plots for the main
-output families.
+These final chunks reuse the same baseline-versus-alternative `bsvars`
+workflow on a much smaller posterior sample so the rendered document includes
+actual tables and plots without making the build heavy.
 
 ```{r, eval = TRUE}
 library(bsvars)
@@ -466,29 +477,36 @@ library(bsvarPost)
 data(us_fiscal_lsuw)
 set.seed(11)
 demo_spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
-demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
-demo_spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 2)
-demo_post_alt <- estimate(demo_spec_alt, S = 5, thin = 1, show_progress = FALSE)
+demo_post <- estimate(demo_spec, S = 8, thin = 1, show_progress = FALSE)
+demo_spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 3)
+demo_post_alt <- estimate(demo_spec_alt, S = 8, thin = 1, show_progress = FALSE)
+```
+
+```{r, eval = TRUE}
+demo_cmp <- compare_irf(
+  p1 = demo_post,
+  p2 = demo_post_alt,
+  horizon = 3
+)
+demo_cmp_focus <- demo_cmp[
+  demo_cmp$variable == unique(demo_cmp$variable)[1] &
+    demo_cmp$shock == unique(demo_cmp$shock)[1],
+  ,
+  drop = FALSE
+]
+
+as_kable(demo_cmp_focus, preset = "compact", digits = 3)
+template_bsvar_plot(
+  ggplot2::autoplot(demo_cmp_focus),
+  family = "comparison",
+  preset = "paper"
+)
 ```
 
 ```{r, eval = TRUE}
 demo_cdm <- cdm(demo_post, horizon = 3)
-summary(demo_cdm)
+as_kable(summary(demo_cdm), preset = "compact", digits = 3)
 plot(demo_cdm)
-```
-
-```{r, eval = TRUE}
-demo_cmp <- compare_peak_response(
-  base = demo_post,
-  alt = demo_post_alt,
-  type = "irf",
-  horizon = 3,
-  variable = 1,
-  shock = 1
-)
-
-as_kable(demo_cmp, preset = "compact", digits = 3)
-publish_bsvar_plot(demo_cmp, preset = "paper")
 ```
 
 ```{r, eval = TRUE}

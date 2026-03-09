@@ -31,6 +31,15 @@ Most chunks are shown as workflow templates rather than evaluated during the
 build. A small evaluated showcase is included at the end so the rendered
 document still contains a real table and plot.
 
+This example uses one sign-restricted baseline specification and one lighter
+alternative lag specification:
+
+- `post`: `p = 4`
+- `post_alt`: `p = 2`
+
+That gives a meaningful surface for representative summaries, audits, and
+event-window comparisons.
+
 ## Representative-model summaries
 
 For sign-restricted analysis, pointwise posterior medians need not correspond to
@@ -71,6 +80,9 @@ plot(rep_median)
 Use `median_target_*()` when you want the stored draw closest to the posterior
 center. Use `most_likely_admissible_*()` when you want the stored admissible
 draw with the highest reconstructed admissibility score.
+
+The comparison to `post_alt` is useful because it changes the dynamic
+specification while leaving the identifying sign restrictions unchanged.
 
 ## Posterior hypotheses and audits
 
