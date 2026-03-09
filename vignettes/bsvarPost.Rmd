@@ -333,7 +333,9 @@ plot_compare_restrictions(compare_restrictions(
 ## Reporting helpers
 
 Most `bsvarPost` outputs are already tidy tables, so a first reporting layer can
-stay simple: render them directly to `knitr`, `gt`, `flextable`, or CSV.
+stay simple: render them directly to `knitr`, `gt`, `flextable`, or CSV. Use
+`preset = "compact"` when you want a narrower publication-oriented column
+selection.
 
 ```{r}
 cmp_tbl <- compare_irf(
@@ -342,21 +344,23 @@ cmp_tbl <- compare_irf(
   horizon = 8
 )
 
-as_kable(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
-write_bsvar_csv(cmp_tbl, tempfile(fileext = ".csv"))
+report_table(cmp_tbl, preset = "compact", digits = 3)
+as_kable(cmp_tbl, caption = "Impulse-response comparison", digits = 3, preset = "compact")
+write_bsvar_csv(cmp_tbl, tempfile(fileext = ".csv"), preset = "compact")
 
 if (requireNamespace("gt", quietly = TRUE)) {
-  as_gt(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+  as_gt(cmp_tbl, caption = "Impulse-response comparison", digits = 3, preset = "compact")
 }
 
 if (requireNamespace("flextable", quietly = TRUE)) {
-  as_flextable(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+  as_flextable(cmp_tbl, caption = "Impulse-response comparison", digits = 3, preset = "compact")
 }
 
 bundle <- report_bundle(
   cmp_tbl,
   caption = "Impulse-response comparison",
-  digits = 3
+  digits = 3,
+  preset = "compact"
 )
 
 bundle

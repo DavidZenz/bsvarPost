@@ -5,18 +5,26 @@ post <- estimate(spec, S = 5, thin = 1, show_progress = FALSE)
 
 tbl <- compare_irf(base = post, alt = post, horizon = 2)
 
+full_tbl <- report_table(tbl, preset = "default", digits = 4)
+compact_tbl <- report_table(tbl, preset = "compact", digits = 4)
+expect_true(is.data.frame(full_tbl))
+expect_true(is.data.frame(compact_tbl))
+expect_true(ncol(compact_tbl) <= ncol(full_tbl))
+expect_true(identical(names(compact_tbl)[1:4], c("model", "variable", "shock", "horizon")))
+
 kbl <- as_kable(tbl, caption = "IRF comparison", digits = 3)
 expect_true(inherits(kbl, "knitr_kable"))
 
-bundle <- report_bundle(tbl, caption = "IRF comparison", digits = 2)
+bundle <- report_bundle(tbl, caption = "IRF comparison", digits = 2, preset = "compact")
 expect_true(inherits(bundle, "bsvar_report_bundle"))
 expect_true(inherits(bundle$plot, "ggplot"))
+expect_true(identical(names(bundle$table)[1:4], c("model", "variable", "shock", "horizon")))
 
 bundle_kable <- as_kable(bundle)
 expect_true(inherits(bundle_kable, "knitr_kable"))
 
 csv_path <- tempfile(fileext = ".csv")
-written_path <- write_bsvar_csv(tbl, csv_path)
+written_path <- write_bsvar_csv(tbl, csv_path, preset = "compact")
 expect_true(file.exists(csv_path))
 expect_true(identical(normalizePath(csv_path, winslash = "/", mustWork = FALSE), written_path))
 
@@ -51,4 +59,10 @@ expect_error(
   as_kable(1),
   "supports bsvarPost tables and data frames only",
   info = "as_kable: rejects unsupported objects."
+)
+
+expect_error(
+  report_table(1),
+  "supports bsvarPost tables and data frames only",
+  info = "report_table: rejects unsupported objects."
 )

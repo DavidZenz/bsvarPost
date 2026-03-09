@@ -26,6 +26,7 @@
 - Added `plot_compare_response()` and `plot_compare_restrictions()` for dedicated visualisation of comparison-table outputs.
 - Added `as_kable()`, `as_gt()`, `as_flextable()`, and `write_bsvar_csv()` as first-pass reporting and export helpers for tidy `bsvarPost` tables.
 - Added `report_bundle()` as a first-pass plot-and-table bundle for publication workflows.
+- Added `report_table()` and compact/default reporting presets for publication-oriented table layouts.
 - Added a second vignette, `Post-Estimation Workflows in bsvarPost`, to separate workflow/methodology documentation from getting-started material.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.

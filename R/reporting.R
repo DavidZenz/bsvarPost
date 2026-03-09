@@ -13,9 +13,15 @@ NULL
 #' @param object A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param plot Optional `ggplot` object. If omitted, `bsvarPost` will try to
 #'   choose a sensible default plot for the supplied table.
+#' @param caption Optional table caption.
+#' @param digits Optional number of digits used to round numeric columns before
+#'   rendering.
+#' @param preset Reporting preset. Use `"compact"` for a narrower,
+#'   publication-oriented column selection.
 #' @export
-report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL, ...) {
-  table_data <- prepare_report_table(object, digits = digits)
+report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
+                          preset = c("default", "compact"), ...) {
+  table_data <- prepare_report_table(object, digits = digits, preset = preset)
   bundle_plot <- if (!is.null(plot)) plot else infer_report_plot(object, ...)
   structure(
     list(
@@ -29,9 +35,36 @@ report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL, ..
 }
 
 #' @rdname reporting
-#' @param caption Optional table caption.
-#' @param digits Optional number of digits used to round numeric columns before
-#'   rendering.
+#' @export
+report_table <- function(x, ...) {
+  UseMethod("report_table")
+}
+
+#' @rdname reporting
+#' @export
+report_table.bsvar_post_tbl <- function(x, digits = NULL, preset = c("default", "compact"), ...) {
+  prepare_report_table(x, digits = digits, preset = preset)
+}
+
+#' @rdname reporting
+#' @export
+report_table.data.frame <- function(x, digits = NULL, preset = c("default", "compact"), ...) {
+  prepare_report_table(x, digits = digits, preset = preset)
+}
+
+#' @rdname reporting
+#' @export
+report_table.bsvar_report_bundle <- function(x, digits = NULL, preset = c("default", "compact"), ...) {
+  prepare_report_table(x, digits = digits, preset = preset)
+}
+
+#' @rdname reporting
+#' @export
+report_table.default <- function(x, ...) {
+  stop("`report_table()` supports bsvarPost tables and data frames only.", call. = FALSE)
+}
+
+#' @rdname reporting
 #' @export
 as_kable <- function(x, ...) {
   UseMethod("as_kable")
@@ -39,22 +72,25 @@ as_kable <- function(x, ...) {
 
 #' @rdname reporting
 #' @export
-as_kable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL, ...) {
-  report_table <- prepare_report_table(x, digits = digits)
+as_kable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
+                                    preset = c("default", "compact"), ...) {
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   knitr::kable(report_table, caption = caption, ...)
 }
 
 #' @rdname reporting
 #' @export
-as_kable.data.frame <- function(x, caption = NULL, digits = NULL, ...) {
-  report_table <- prepare_report_table(x, digits = digits)
+as_kable.data.frame <- function(x, caption = NULL, digits = NULL,
+                                preset = c("default", "compact"), ...) {
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   knitr::kable(report_table, caption = caption, ...)
 }
 
 #' @rdname reporting
 #' @export
-as_kable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL, ...) {
-  report_table <- prepare_report_table(x, digits = digits)
+as_kable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
+                                         preset = c("default", "compact"), ...) {
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   knitr::kable(report_table, caption = caption %||% x$caption, ...)
 }
 
@@ -72,9 +108,10 @@ as_gt <- function(x, ...) {
 
 #' @rdname reporting
 #' @export
-as_gt.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL, ...) {
+as_gt.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
+                                 preset = c("default", "compact"), ...) {
   ensure_namespace("gt", "as_gt()")
-  report_table <- prepare_report_table(x, digits = digits)
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   out <- gt::gt(report_table, ...)
   if (!is.null(caption)) {
     out <- gt::tab_header(out, title = caption)
@@ -84,9 +121,10 @@ as_gt.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL, ...) {
 
 #' @rdname reporting
 #' @export
-as_gt.data.frame <- function(x, caption = NULL, digits = NULL, ...) {
+as_gt.data.frame <- function(x, caption = NULL, digits = NULL,
+                             preset = c("default", "compact"), ...) {
   ensure_namespace("gt", "as_gt()")
-  report_table <- prepare_report_table(x, digits = digits)
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   out <- gt::gt(report_table, ...)
   if (!is.null(caption)) {
     out <- gt::tab_header(out, title = caption)
@@ -96,9 +134,10 @@ as_gt.data.frame <- function(x, caption = NULL, digits = NULL, ...) {
 
 #' @rdname reporting
 #' @export
-as_gt.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL, ...) {
+as_gt.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
+                                      preset = c("default", "compact"), ...) {
   ensure_namespace("gt", "as_gt()")
-  report_table <- prepare_report_table(x, digits = digits)
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   out <- gt::gt(report_table, ...)
   final_caption <- caption %||% x$caption
   if (!is.null(final_caption)) {
@@ -121,9 +160,10 @@ as_flextable <- function(x, ...) {
 
 #' @rdname reporting
 #' @export
-as_flextable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL, ...) {
+as_flextable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
+                                        preset = c("default", "compact"), ...) {
   ensure_namespace("flextable", "as_flextable()")
-  report_table <- prepare_report_table(x, digits = digits)
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   out <- flextable::flextable(report_table, ...)
   if (!is.null(caption)) {
     out <- flextable::set_caption(out, caption = caption)
@@ -133,9 +173,10 @@ as_flextable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL, ...) {
 
 #' @rdname reporting
 #' @export
-as_flextable.data.frame <- function(x, caption = NULL, digits = NULL, ...) {
+as_flextable.data.frame <- function(x, caption = NULL, digits = NULL,
+                                    preset = c("default", "compact"), ...) {
   ensure_namespace("flextable", "as_flextable()")
-  report_table <- prepare_report_table(x, digits = digits)
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   out <- flextable::flextable(report_table, ...)
   if (!is.null(caption)) {
     out <- flextable::set_caption(out, caption = caption)
@@ -145,9 +186,10 @@ as_flextable.data.frame <- function(x, caption = NULL, digits = NULL, ...) {
 
 #' @rdname reporting
 #' @export
-as_flextable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL, ...) {
+as_flextable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
+                                             preset = c("default", "compact"), ...) {
   ensure_namespace("flextable", "as_flextable()")
-  report_table <- prepare_report_table(x, digits = digits)
+  report_table <- prepare_report_table(x, digits = digits, preset = preset)
   out <- flextable::flextable(report_table, ...)
   final_caption <- caption %||% x$caption
   if (!is.null(final_caption)) {
@@ -166,8 +208,9 @@ as_flextable.default <- function(x, ...) {
 #' @param file Output CSV path.
 #' @param row.names Passed to [utils::write.csv()].
 #' @export
-write_bsvar_csv <- function(x, file, row.names = FALSE, ...) {
-  report_table <- prepare_report_table(x)
+write_bsvar_csv <- function(x, file, row.names = FALSE,
+                            preset = c("default", "compact"), ...) {
+  report_table <- prepare_report_table(x, preset = preset)
   utils::write.csv(report_table, file = file, row.names = row.names, ...)
   invisible(normalizePath(file, winslash = "/", mustWork = FALSE))
 }
@@ -191,7 +234,8 @@ print.bsvar_report_bundle <- function(x, ...) {
   invisible(x)
 }
 
-prepare_report_table <- function(x, digits = NULL) {
+prepare_report_table <- function(x, digits = NULL, preset = c("default", "compact")) {
+  preset <- match.arg(preset)
   if (inherits(x, "bsvar_report_bundle")) {
     out <- x$table
   } else {
@@ -204,7 +248,7 @@ prepare_report_table <- function(x, digits = NULL) {
     numeric_cols <- vapply(out, is.numeric, logical(1))
     out[numeric_cols] <- lapply(out[numeric_cols], round, digits = digits)
   }
-  out
+  format_report_columns(out, preset = preset)
 }
 
 ensure_namespace <- function(pkg, caller) {
@@ -240,4 +284,33 @@ infer_report_plot <- function(object, ...) {
   }
 
   ggplot2::autoplot(object, ...)
+}
+
+format_report_columns <- function(x, preset = c("default", "compact")) {
+  preset <- match.arg(preset)
+
+  preferred <- c(
+    "model", "variable", "shock", "horizon", "time", "event_start", "event_end",
+    "restriction_type", "restriction", "relation", "value", "threshold", "mode", "baseline",
+    "posterior_prob", "reached_prob", "n_constraints", "critical_value",
+    "mean", "median", "lower", "upper",
+    "mean_gap", "median_gap", "lower_gap", "upper_gap",
+    "mean_value", "median_value", "lower_value", "upper_value",
+    "mean_duration", "median_duration", "lower_duration", "upper_duration",
+    "mean_half_life", "median_half_life", "lower_half_life", "upper_half_life",
+    "mean_horizon", "median_horizon", "lower_horizon", "upper_horizon"
+  )
+
+  if (identical(preset, "compact")) {
+    keep <- intersect(preferred, names(x))
+    if (length(keep)) {
+      x <- x[, keep, drop = FALSE]
+    }
+  } else {
+    lead <- intersect(preferred, names(x))
+    tail <- setdiff(names(x), lead)
+    x <- x[, c(lead, tail), drop = FALSE]
+  }
+
+  x
 }

@@ -3,6 +3,11 @@
 \name{reporting}
 \alias{reporting}
 \alias{report_bundle}
+\alias{report_table}
+\alias{report_table.bsvar_post_tbl}
+\alias{report_table.data.frame}
+\alias{report_table.bsvar_report_bundle}
+\alias{report_table.default}
 \alias{as_kable}
 \alias{as_kable.bsvar_post_tbl}
 \alias{as_kable.data.frame}
@@ -22,39 +27,98 @@
 \alias{print.bsvar_report_bundle}
 \title{Export bsvarPost tables as reporting objects}
 \usage{
-report_bundle(object, plot = NULL, caption = NULL, digits = NULL, ...)
+report_bundle(
+  object,
+  plot = NULL,
+  caption = NULL,
+  digits = NULL,
+  preset = c("default", "compact"),
+  ...
+)
+
+report_table(x, ...)
+
+\method{report_table}{bsvar_post_tbl}(x, digits = NULL, preset = c("default", "compact"), ...)
+
+\method{report_table}{data.frame}(x, digits = NULL, preset = c("default", "compact"), ...)
+
+\method{report_table}{bsvar_report_bundle}(x, digits = NULL, preset = c("default", "compact"), ...)
+
+\method{report_table}{default}(x, ...)
 
 as_kable(x, ...)
 
-\method{as_kable}{bsvar_post_tbl}(x, caption = NULL, digits = NULL, ...)
+\method{as_kable}{bsvar_post_tbl}(
+  x,
+  caption = NULL,
+  digits = NULL,
+  preset = c("default", "compact"),
+  ...
+)
 
-\method{as_kable}{data.frame}(x, caption = NULL, digits = NULL, ...)
+\method{as_kable}{data.frame}(
+  x,
+  caption = NULL,
+  digits = NULL,
+  preset = c("default", "compact"),
+  ...
+)
 
-\method{as_kable}{bsvar_report_bundle}(x, caption = NULL, digits = NULL, ...)
+\method{as_kable}{bsvar_report_bundle}(
+  x,
+  caption = NULL,
+  digits = NULL,
+  preset = c("default", "compact"),
+  ...
+)
 
 \method{as_kable}{default}(x, ...)
 
 as_gt(x, ...)
 
-\method{as_gt}{bsvar_post_tbl}(x, caption = NULL, digits = NULL, ...)
+\method{as_gt}{bsvar_post_tbl}(x, caption = NULL, digits = NULL, preset = c("default", "compact"), ...)
 
-\method{as_gt}{data.frame}(x, caption = NULL, digits = NULL, ...)
+\method{as_gt}{data.frame}(x, caption = NULL, digits = NULL, preset = c("default", "compact"), ...)
 
-\method{as_gt}{bsvar_report_bundle}(x, caption = NULL, digits = NULL, ...)
+\method{as_gt}{bsvar_report_bundle}(x, caption = NULL, digits = NULL, preset = c("default", "compact"), ...)
 
 \method{as_gt}{default}(x, ...)
 
 as_flextable(x, ...)
 
-\method{as_flextable}{bsvar_post_tbl}(x, caption = NULL, digits = NULL, ...)
+\method{as_flextable}{bsvar_post_tbl}(
+  x,
+  caption = NULL,
+  digits = NULL,
+  preset = c("default", "compact"),
+  ...
+)
 
-\method{as_flextable}{data.frame}(x, caption = NULL, digits = NULL, ...)
+\method{as_flextable}{data.frame}(
+  x,
+  caption = NULL,
+  digits = NULL,
+  preset = c("default", "compact"),
+  ...
+)
 
-\method{as_flextable}{bsvar_report_bundle}(x, caption = NULL, digits = NULL, ...)
+\method{as_flextable}{bsvar_report_bundle}(
+  x,
+  caption = NULL,
+  digits = NULL,
+  preset = c("default", "compact"),
+  ...
+)
 
 \method{as_flextable}{default}(x, ...)
 
-write_bsvar_csv(x, file, row.names = FALSE, ...)
+write_bsvar_csv(
+  x,
+  file,
+  row.names = FALSE,
+  preset = c("default", "compact"),
+  ...
+)
 
 \method{print}{bsvar_report_bundle}(x, ...)
 }
@@ -68,6 +132,9 @@ choose a sensible default plot for the supplied table.}
 
 \item{digits}{Optional number of digits used to round numeric columns before
 rendering.}
+
+\item{preset}{Reporting preset. Use \code{"compact"} for a narrower,
+publication-oriented column selection.}
 
 \item{...}{Additional arguments passed to the backend formatter.}
 
