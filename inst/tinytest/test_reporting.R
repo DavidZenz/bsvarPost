@@ -10,7 +10,7 @@ compact_tbl <- report_table(tbl, preset = "compact", digits = 4)
 expect_true(is.data.frame(full_tbl))
 expect_true(is.data.frame(compact_tbl))
 expect_true(ncol(compact_tbl) <= ncol(full_tbl))
-expect_true(identical(names(compact_tbl)[1:4], c("model", "variable", "shock", "horizon")))
+expect_true(identical(names(compact_tbl)[1:4], c("Model", "Variable", "Shock", "Horizon")))
 
 kbl <- as_kable(tbl, caption = "IRF comparison", digits = 3)
 expect_true(inherits(kbl, "knitr_kable"))
@@ -18,7 +18,7 @@ expect_true(inherits(kbl, "knitr_kable"))
 bundle <- report_bundle(tbl, caption = "IRF comparison", digits = 2, preset = "compact")
 expect_true(inherits(bundle, "bsvar_report_bundle"))
 expect_true(inherits(bundle$plot, "ggplot"))
-expect_true(identical(names(bundle$table)[1:4], c("model", "variable", "shock", "horizon")))
+expect_true(identical(names(bundle$table)[1:4], c("Model", "Variable", "Shock", "Horizon")))
 
 bundle_kable <- as_kable(bundle)
 expect_true(inherits(bundle_kable, "knitr_kable"))
@@ -27,7 +27,7 @@ rep_obj <- median_target_irf(post, horizon = 2)
 rep_bundle <- report_bundle(rep_obj, caption = "Representative IRF")
 expect_true(inherits(rep_bundle, "bsvar_report_bundle"))
 expect_true(inherits(rep_bundle$plot, "ggplot"))
-expect_true(all(c("draw_index", "method", "score") %in% names(rep_bundle$table)))
+expect_true(all(c("Draw index", "Method", "Score") %in% names(rep_bundle$table)))
 
 diag_tbl <- acceptance_diagnostics(
   estimate(
@@ -39,17 +39,17 @@ diag_tbl <- acceptance_diagnostics(
 )
 diag_bundle <- report_bundle(diag_tbl, caption = "Acceptance diagnostics")
 expect_true(inherits(diag_bundle$plot, "ggplot"))
-expect_true("metric" %in% names(diag_bundle$table))
+expect_true("Metric" %in% names(diag_bundle$table))
 
 sim_tbl <- simultaneous_irf(post, horizon = 2, variable = 1, shock = 1)
 sim_bundle <- report_bundle(sim_tbl, caption = "Simultaneous bands", preset = "compact")
 expect_true(inherits(sim_bundle$plot, "ggplot"))
-expect_true(all(c("median", "lower", "upper", "critical_value") %in% names(sim_bundle$table)))
+expect_true(all(c("Median", "Lower", "Upper", "Critical value") %in% names(sim_bundle$table)))
 
 joint_tbl <- joint_hypothesis_irf(post, variable = 1, shock = 1, horizon = 0:1, relation = ">", value = 0)
 joint_bundle <- report_bundle(joint_tbl, caption = "Joint hypothesis", preset = "compact")
 expect_true(inherits(joint_bundle$plot, "ggplot"))
-expect_true(all(c("posterior_prob", "n_constraints") %in% names(joint_bundle$table)))
+expect_true(all(c("Posterior probability", "Constraints") %in% names(joint_bundle$table)))
 
 hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
 event_start <- hd_times[1]

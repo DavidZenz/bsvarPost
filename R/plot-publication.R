@@ -39,7 +39,7 @@ publish_bsvar_plot <- function(object, family = NULL,
   annotate_bsvar_plot(
     plot,
     title = title %||% default_publication_title(object, detected_family),
-    subtitle = subtitle,
+    subtitle = subtitle %||% default_publication_subtitle(object, detected_family),
     caption = caption
   )
 }
@@ -115,4 +115,34 @@ default_publication_title <- function(object, family) {
     comparison = "Model comparison",
     NULL
   )
+}
+
+default_publication_subtitle <- function(object, family) {
+  if (inherits(object, "RepresentativeResponse")) {
+    return(paste("Method:", object$method))
+  }
+  if (!inherits(object, "bsvar_post_tbl")) {
+    return(NULL)
+  }
+
+  object_type <- attr(object, "object_type") %||% ""
+  if (identical(object_type, "acceptance_diagnostics")) {
+    return("Stored-draw admissibility diagnostics")
+  }
+  if (identical(object_type, "hd_event") && all(c("event_start", "event_end") %in% names(object))) {
+    return(sprintf("Window: %s to %s", object$event_start[1], object$event_end[1]))
+  }
+  if (identical(object_type, "shock_ranking") && all(c("event_start", "event_end") %in% names(object))) {
+    return(sprintf("Window: %s to %s", object$event_start[1], object$event_end[1]))
+  }
+  if (grepl("^joint_", object_type) && "relation" %in% names(object)) {
+    return(sprintf("Relation: %s", object$relation[1]))
+  }
+  if (grepl("^simultaneous_", object_type) && "simultaneous_prob" %in% names(object)) {
+    return(sprintf("Coverage: %.2f", object$simultaneous_prob[1]))
+  }
+  if (identical(object_type, "restriction_audit")) {
+    return("Posterior restriction satisfaction")
+  }
+  NULL
 }

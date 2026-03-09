@@ -251,7 +251,9 @@ prepare_report_table <- function(x, digits = NULL, preset = c("default", "compac
     numeric_cols <- vapply(out, is.numeric, logical(1))
     out[numeric_cols] <- lapply(out[numeric_cols], round, digits = digits)
   }
-  format_report_columns(out, preset = preset)
+  out <- format_report_columns(out, preset = preset)
+  names(out) <- pretty_report_names(names(out))
+  out
 }
 
 ensure_namespace <- function(pkg, caller) {
@@ -357,4 +359,62 @@ format_report_columns <- function(x, preset = c("default", "compact")) {
   }
 
   x
+}
+
+pretty_report_names <- function(x) {
+  map <- c(
+    model = "Model",
+    variable = "Variable",
+    shock = "Shock",
+    horizon = "Horizon",
+    time = "Time",
+    event_start = "Event start",
+    event_end = "Event end",
+    restriction_type = "Restriction type",
+    restriction = "Restriction",
+    relation = "Relation",
+    value = "Value",
+    threshold = "Threshold",
+    mode = "Mode",
+    baseline = "Baseline",
+    posterior_prob = "Posterior probability",
+    reached_prob = "Reached probability",
+    n_constraints = "Constraints",
+    critical_value = "Critical value",
+    mean = "Mean",
+    median = "Median",
+    lower = "Lower",
+    upper = "Upper",
+    mean_gap = "Mean gap",
+    median_gap = "Median gap",
+    lower_gap = "Lower gap",
+    upper_gap = "Upper gap",
+    mean_value = "Mean value",
+    median_value = "Median value",
+    lower_value = "Lower value",
+    upper_value = "Upper value",
+    mean_duration = "Mean duration",
+    median_duration = "Median duration",
+    lower_duration = "Lower duration",
+    upper_duration = "Upper duration",
+    mean_half_life = "Mean half-life",
+    median_half_life = "Median half-life",
+    lower_half_life = "Lower half-life",
+    upper_half_life = "Upper half-life",
+    mean_horizon = "Mean horizon",
+    median_horizon = "Median horizon",
+    lower_horizon = "Lower horizon",
+    upper_horizon = "Upper horizon",
+    draw_index = "Draw index",
+    method = "Method",
+    score = "Score",
+    metric = "Metric",
+    flag = "Flag",
+    message = "Message",
+    rank = "Rank",
+    rank_score = "Ranking score",
+    ranking = "Ranking",
+    simultaneous_prob = "Simultaneous probability"
+  )
+  unname(ifelse(x %in% names(map), map[x], x))
 }

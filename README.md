@@ -349,6 +349,9 @@ hd_bundle$plot
 publish_bsvar_plot(cmp_tbl, preset = "paper")
 publish_bsvar_plot(median_target_irf(post, horizon = 8), preset = "paper")
 publish_bsvar_plot(diag_tbl, preset = "slides")
+
+# report_table() now uses publication-facing column labels such as
+# "Posterior probability", "Median half-life", and "Critical value".
 ```
 
 ## Historical decomposition events

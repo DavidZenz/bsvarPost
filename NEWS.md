@@ -31,6 +31,7 @@
 - Extended `report_bundle()` to support simultaneous-band and joint-hypothesis outputs.
 - Extended `report_bundle()` to support event-study tables and object-family default captions.
 - Added `publish_bsvar_plot()` for family-aware publication templates across comparison, representative, diagnostics, event-study, and joint-inference outputs.
+- Added publication-facing report-table labels and short family-specific subtitles for representative, diagnostics, event-study, simultaneous-band, and joint-hypothesis plots.
 - Added a second vignette, `Post-Estimation Workflows in bsvarPost`, to separate workflow/methodology documentation from getting-started material.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.
