@@ -18,8 +18,8 @@ Use \code{\link[utils:browseVignettes]{utils::browseVignettes()}} to open the pa
 
 The package currently ships with:
 \itemize{
-\item \href{../doc/bsvarPost.html}{Getting Started with bsvarPost}
-\item \href{../doc/post-estimation-workflows.html}{Post-Estimation Workflows in bsvarPost}
+\item \href{/library/bsvarPost/doc/bsvarPost.html}{Getting Started with bsvarPost}
+\item \href{/library/bsvarPost/doc/post-estimation-workflows.html}{Post-Estimation Workflows in bsvarPost}
 }
 }
 

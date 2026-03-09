@@ -10,8 +10,8 @@
 #'
 #' The package currently ships with:
 #'
-#' - \href{../doc/bsvarPost.html}{Getting Started with bsvarPost}
-#' - \href{../doc/post-estimation-workflows.html}{Post-Estimation Workflows in bsvarPost}
+#' - \href{/library/bsvarPost/doc/bsvarPost.html}{Getting Started with bsvarPost}
+#' - \href{/library/bsvarPost/doc/post-estimation-workflows.html}{Post-Estimation Workflows in bsvarPost}
 #'
 #' @keywords internal
 #' @importFrom tibble tibble as_tibble
