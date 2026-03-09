@@ -366,6 +366,22 @@ bundle <- report_bundle(
 bundle
 bundle$plot
 as_kable(bundle)
+
+rep_bundle <- report_bundle(
+  median_target_irf(post, horizon = 8),
+  caption = "Representative impulse response"
+)
+
+rep_bundle$plot
+as_kable(rep_bundle, preset = "compact")
+
+diag_bundle <- report_bundle(
+  acceptance_diagnostics(post),
+  caption = "Acceptance diagnostics",
+  preset = "compact"
+)
+
+diag_bundle$plot
 ```
 
 ## Historical decomposition events

@@ -238,6 +238,8 @@ prepare_report_table <- function(x, digits = NULL, preset = c("default", "compac
   preset <- match.arg(preset)
   if (inherits(x, "bsvar_report_bundle")) {
     out <- x$table
+  } else if (inherits(x, "RepresentativeResponse")) {
+    out <- summary(x)
   } else {
     if (!inherits(x, "data.frame")) {
       stop("Reporting helpers require a bsvarPost table or data frame.", call. = FALSE)
@@ -264,11 +266,17 @@ infer_report_plot <- function(object, ...) {
   if (inherits(object, "bsvar_report_bundle")) {
     return(object$plot %||% NULL)
   }
+  if (inherits(object, "RepresentativeResponse")) {
+    return(build_representative_plot(object))
+  }
   if (!inherits(object, "bsvar_post_tbl")) {
     return(NULL)
   }
 
   object_type <- attr(object, "object_type") %||% ""
+  if (identical(object_type, "acceptance_diagnostics")) {
+    return(plot_acceptance_diagnostics(object, ...))
+  }
   if (isTRUE(attr(object, "compare"))) {
     if (identical(object_type, "restriction_audit")) {
       return(plot_compare_restrictions(object, ...))

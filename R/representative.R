@@ -213,7 +213,7 @@ summary.RepresentativeCDM <- function(object, ...) {
   summary_representative(object)
 }
 
-plot_representative <- function(x, ...) {
+build_representative_plot <- function(x) {
   posterior_tbl <- as_tidy_response_array(
     x$posterior_draws,
     object_type = x$object_type,
@@ -244,7 +244,11 @@ plot_representative <- function(x, ...) {
     p <- p + ggplot2::facet_wrap(ggplot2::vars(variable), scales = "free_y")
   }
 
-  print(p)
+  p
+}
+
+plot_representative <- function(x, ...) {
+  print(build_representative_plot(x))
   invisible(x)
 }
 

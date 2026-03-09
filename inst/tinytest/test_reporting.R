@@ -23,6 +23,24 @@ expect_true(identical(names(bundle$table)[1:4], c("model", "variable", "shock", 
 bundle_kable <- as_kable(bundle)
 expect_true(inherits(bundle_kable, "knitr_kable"))
 
+rep_obj <- median_target_irf(post, horizon = 2)
+rep_bundle <- report_bundle(rep_obj, caption = "Representative IRF")
+expect_true(inherits(rep_bundle, "bsvar_report_bundle"))
+expect_true(inherits(rep_bundle$plot, "ggplot"))
+expect_true(all(c("draw_index", "method", "score") %in% names(rep_bundle$table)))
+
+diag_tbl <- acceptance_diagnostics(
+  estimate(
+    specify_bsvarSIGN$new(us_fiscal_lsuw, p = 1, sign_irf = array(c(1, rep(NA_real_, 8)), dim = c(3, 3, 1))),
+    S = 5,
+    thin = 1,
+    show_progress = FALSE
+  )
+)
+diag_bundle <- report_bundle(diag_tbl, caption = "Acceptance diagnostics")
+expect_true(inherits(diag_bundle$plot, "ggplot"))
+expect_true("metric" %in% names(diag_bundle$table))
+
 csv_path <- tempfile(fileext = ".csv")
 written_path <- write_bsvar_csv(tbl, csv_path, preset = "compact")
 expect_true(file.exists(csv_path))
