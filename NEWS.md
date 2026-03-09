@@ -29,6 +29,7 @@
 - Added `report_table()` and compact/default reporting presets for publication-oriented table layouts.
 - Extended `report_bundle()` to support representative-response and acceptance-diagnostics workflows.
 - Extended `report_bundle()` to support simultaneous-band and joint-hypothesis outputs.
+- Extended `report_bundle()` to support event-study tables and object-family default captions.
 - Added a second vignette, `Post-Estimation Workflows in bsvarPost`, to separate workflow/methodology documentation from getting-started material.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.

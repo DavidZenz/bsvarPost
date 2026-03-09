@@ -23,11 +23,12 @@ report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
                           preset = c("default", "compact"), ...) {
   table_data <- prepare_report_table(object, digits = digits, preset = preset)
   bundle_plot <- if (!is.null(plot)) plot else infer_report_plot(object, ...)
+  bundle_caption <- caption %||% default_report_caption(object)
   structure(
     list(
       table = table_data,
       plot = bundle_plot,
-      caption = caption,
+      caption = bundle_caption,
       object_type = attr(object, "object_type") %||% NULL
     ),
     class = "bsvar_report_bundle"
@@ -277,6 +278,12 @@ infer_report_plot <- function(object, ...) {
   if (identical(object_type, "acceptance_diagnostics")) {
     return(plot_acceptance_diagnostics(object, ...))
   }
+  if (identical(object_type, "hd_event")) {
+    return(plot_hd_event(object, ...))
+  }
+  if (identical(object_type, "shock_ranking")) {
+    return(plot_shock_ranking(object, ...))
+  }
   if (grepl("^simultaneous_", object_type)) {
     return(plot_simultaneous(object, ...))
   }
@@ -298,6 +305,29 @@ infer_report_plot <- function(object, ...) {
   }
 
   ggplot2::autoplot(object, ...)
+}
+
+default_report_caption <- function(object) {
+  if (inherits(object, "bsvar_report_bundle")) {
+    return(object$caption %||% NULL)
+  }
+  if (inherits(object, "RepresentativeIR")) return("Representative impulse responses")
+  if (inherits(object, "RepresentativeCDM")) return("Representative cumulative dynamic multipliers")
+  if (!inherits(object, "bsvar_post_tbl")) return(NULL)
+
+  object_type <- attr(object, "object_type") %||% ""
+  switch(
+    object_type,
+    acceptance_diagnostics = "Acceptance diagnostics",
+    hd_event = "Event-window historical decomposition",
+    shock_ranking = "Shock ranking by event contribution",
+    simultaneous_irf = "Simultaneous impulse-response bands",
+    simultaneous_cdm = "Simultaneous cumulative-dynamic-multiplier bands",
+    joint_irf = "Joint impulse-response posterior statement",
+    joint_cdm = "Joint cumulative-dynamic-multiplier posterior statement",
+    restriction_audit = "Restriction audit",
+    NULL
+  )
 }
 
 format_report_columns <- function(x, preset = c("default", "compact")) {

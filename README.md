@@ -337,6 +337,14 @@ joint_bundle <- report_bundle(
 )
 
 joint_bundle$plot
+
+hd_bundle <- report_bundle(
+  tidy_hd_event(post, start = 1, end = 4),
+  preset = "compact"
+)
+
+hd_bundle$caption
+hd_bundle$plot
 ```
 
 ## Historical decomposition events
