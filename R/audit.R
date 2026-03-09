@@ -80,9 +80,13 @@ extract_default_restrictions <- function(object) {
   if (length(dim(sign_irf)) == 2L) {
     sign_irf <- array(sign_irf, dim = c(dim(sign_irf), 1L))
   }
+  model_names <- infer_model_variable_names(object, n = dim(sign_irf)[1])
+  if (is.null(model_names) || length(model_names) != dim(sign_irf)[1]) {
+    model_names <- paste0("variable", seq_len(dim(sign_irf)[1]))
+  }
   dns <- resolve_array_dimnames(sign_irf, list(
-    paste0("variable", seq_len(dim(sign_irf)[1])),
-    paste0("shock", seq_len(dim(sign_irf)[2])),
+    model_names,
+    model_names[seq_len(min(length(model_names), dim(sign_irf)[2]))],
     as.character(seq_len(dim(sign_irf)[3]) - 1L)
   ))
   for (i in seq_len(dim(sign_irf)[1])) {

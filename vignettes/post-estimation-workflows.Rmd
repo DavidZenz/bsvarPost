@@ -148,7 +148,7 @@ ranked
 Compare event windows across models:
 
 ```{r}
-compare_hd_event(p1 = post, p2 = post_alt, start = 1, end = 4)
+compare_hd_event(baseline = post, alternative = post_alt, start = 1, end = 4)
 ```
 
 Plot the resulting summaries:
@@ -200,14 +200,14 @@ time_to_threshold(
 The same summaries can be compared across alternative specifications.
 
 ```{r}
-compare_peak_response(p1 = post, p2 = post_alt, type = "irf", horizon = 12, variable = 1, shock = 1)
-compare_duration_response(p1 = post, p2 = post_alt, type = "cdm", horizon = 12, variable = 1, shock = 1, relation = ">", value = 0)
-compare_half_life_response(p1 = post, p2 = post_alt, type = "irf", horizon = 12, variable = 1, shock = 1)
-compare_time_to_threshold(p1 = post, p2 = post_alt, type = "cdm", horizon = 12, variable = 1, shock = 1, relation = ">", value = 0)
+compare_peak_response(baseline = post, alternative = post_alt, type = "irf", horizon = 12, variable = 1, shock = 1)
+compare_duration_response(baseline = post, alternative = post_alt, type = "cdm", horizon = 12, variable = 1, shock = 1, relation = ">", value = 0)
+compare_half_life_response(baseline = post, alternative = post_alt, type = "irf", horizon = 12, variable = 1, shock = 1)
+compare_time_to_threshold(baseline = post, alternative = post_alt, type = "cdm", horizon = 12, variable = 1, shock = 1, relation = ">", value = 0)
 
 as_kable(compare_peak_response(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   type = "irf",
   horizon = 12,
   variable = 1,
@@ -230,7 +230,7 @@ summary(diag_tbl)
 Compare diagnostics across models:
 
 ```{r}
-compare_acceptance_diagnostics(p1 = post, p2 = post_alt)
+compare_acceptance_diagnostics(baseline = post, alternative = post_alt)
 plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
 
 as_kable(report_bundle(diag_tbl, preset = "compact"))
