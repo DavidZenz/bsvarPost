@@ -56,3 +56,75 @@ Additional rules:
 There is a helper script for the local portion of this checklist:
 
 - `tools/prepush-check.sh`
+
+## CI Gotchas
+
+The following issues already occurred in this repository and should be treated
+as known failure modes.
+
+### `check-r-package` workflow inputs must be valid R expressions
+
+`r-lib/actions/check-r-package@v2` does not parse shell-style flags. Inputs like
+
+- `args: --no-manual --as-cran`
+
+are wrong. They get injected into R code and can fail with opaque errors such
+as:
+
+- `object 'no' not found`
+
+Use quoted R expressions instead, for example:
+
+- `args: 'c("--as-cran", "--no-manual")'`
+- `build_args: 'character()'`
+
+### Optional-dependency tests must support both branches
+
+Tests for `tsibble`, `APRScenario`, and other suggested packages must not assume
+either presence or absence. CI may install a suggested package even if the local
+machine does not.
+
+Pattern to use:
+
+- if the package is installed, test the successful path
+- otherwise, test the clean failure path
+
+### `tsibble::as_tsibble()` does not accept `regular = NULL`
+
+Do not forward `regular = NULL` directly to `tsibble::as_tsibble()`. Only pass
+`regular` when the caller explicitly supplies it.
+
+### S3 roxygen blocks must share the correct `@rdname`
+
+If a generic has documented arguments and the methods add method-specific
+arguments, the generated Rd file can fail `R CMD check` unless the methods are
+properly tied to the same `@rdname`.
+
+This already affected:
+
+- `acceptance_diagnostics()`
+- `peak_response()`
+- `duration_response()`
+- `half_life_response()`
+- `time_to_threshold()`
+- `simultaneous_irf()`
+- `simultaneous_cdm()`
+- `tidy_hd_event()`
+
+When adding or changing S3 methods, always rerun roxygen and then inspect the
+generated `\usage` sections if CI reports Rd mismatches.
+
+### Upload the real check logs
+
+The workflow should always expose:
+
+- `check/**/00check.log`
+- `check/**/00install.out`
+
+If CI fails and the Actions page is vague, these files are the source of truth.
+
+### `aes_string()` is still deprecated
+
+This currently shows up as a warning in CI, not an error. It should still be
+treated as technical debt and replaced with tidy-eval `aes()` usage in the
+plotting layer when that code is touched again.
