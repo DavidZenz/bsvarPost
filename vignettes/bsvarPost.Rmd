@@ -398,6 +398,10 @@ hd_bundle <- report_bundle(
 
 hd_bundle$caption
 hd_bundle$plot
+
+publish_bsvar_plot(cmp_tbl, preset = "paper")
+publish_bsvar_plot(median_target_irf(post, horizon = 8), preset = "paper")
+publish_bsvar_plot(diag_tbl, preset = "slides")
 ```
 
 ## Historical decomposition events

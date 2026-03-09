@@ -61,9 +61,12 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
   plot <- plot + theme_bsvarpost(preset = preset, base_size = base_size, base_family = base_family)
 
   if (!is.null(palette)) {
-    plot <- plot +
-      ggplot2::scale_colour_manual(values = palette, aesthetics = c("colour")) +
-      ggplot2::scale_fill_manual(values = palette, aesthetics = c("fill"))
+    if (!plot$scales$has_scale("colour")) {
+      plot <- plot + ggplot2::scale_colour_manual(values = palette, aesthetics = c("colour"))
+    }
+    if (!plot$scales$has_scale("fill")) {
+      plot <- plot + ggplot2::scale_fill_manual(values = palette, aesthetics = c("fill"))
+    }
   }
 
   if (!is.null(ribbon_alpha)) {
@@ -85,14 +88,17 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 #'
 #' @param plot A `ggplot` object.
 #' @param family One of `"irf"`, `"cdm"`, `"forecast"`, `"hd_event"`,
-#'   `"shock_ranking"`, `"hypothesis"`, `"restriction_audit"`, or
-#'   `"comparison"`.
+#'   `"shock_ranking"`, `"hypothesis"`, `"restriction_audit"`,
+#'   `"simultaneous"`, `"joint_hypothesis"`, `"acceptance_diagnostics"`,
+#'   `"representative"`, or `"comparison"`.
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param base_size Base font size for the applied theme.
 #' @param base_family Base font family for the applied theme.
 #' @export
 template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking",
-                                                  "hypothesis", "restriction_audit", "comparison"),
+                                                 "hypothesis", "restriction_audit", "simultaneous",
+                                                 "joint_hypothesis", "acceptance_diagnostics",
+                                                 "representative", "comparison"),
                                 preset = c("default", "paper", "slides"),
                                 base_size = 11, base_family = "") {
   if (!inherits(plot, "ggplot")) {
@@ -111,6 +117,10 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
     shock_ranking = list(palette = c("#b2182b", "#2166ac"), ribbon_alpha = NULL, legend_position = "bottom"),
     hypothesis = list(palette = c("#1b9e77", "#66a61e", "#d95f02"), ribbon_alpha = NULL, legend_position = "bottom"),
     restriction_audit = list(palette = c("#4c78a8", "#f58518", "#54a24b"), ribbon_alpha = NULL, legend_position = "bottom"),
+    simultaneous = list(palette = c("#1f78b4", "#a6cee3"), ribbon_alpha = 0.14, legend_position = "bottom"),
+    joint_hypothesis = list(palette = c("#1b9e77", "#66a61e"), ribbon_alpha = NULL, legend_position = "bottom"),
+    acceptance_diagnostics = list(palette = c("#4c78a8", "#e45756"), ribbon_alpha = NULL, legend_position = "bottom"),
+    representative = list(palette = c("#2171b5", "#cb181d"), ribbon_alpha = 0.18, legend_position = "bottom"),
     comparison = list(palette = c("#1b9e77", "#d95f02", "#7570b3"), ribbon_alpha = 0.10, legend_position = "bottom")
   )
 
@@ -133,6 +143,10 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
     shock_ranking = "median contribution",
     hypothesis = "posterior probability",
     restriction_audit = "posterior probability",
+    simultaneous = "response",
+    joint_hypothesis = "joint posterior probability",
+    acceptance_diagnostics = "diagnostic value",
+    representative = "response",
     comparison = "comparison"
   )
 
