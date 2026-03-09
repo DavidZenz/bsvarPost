@@ -269,6 +269,11 @@ demo_spec <- specify_bsvarSIGN$new(
 demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
 demo_diag <- acceptance_diagnostics(demo_post)
 #> Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.
+demo_rep <- median_target_irf(demo_post, horizon = 3)
+#> Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.
+demo_audit <- restriction_audit(demo_post)
+#> Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.
+demo_hd <- tidy_hd_event(demo_post, start = 1, end = 2)
 
 as_kable(report_bundle(demo_diag, preset = "compact"))
 ```
@@ -276,18 +281,18 @@ as_kable(report_bundle(demo_diag, preset = "compact"))
 | Model  |     Value |
 |:-------|----------:|
 | model1 | 5.0000000 |
-| model1 | 1.8101543 |
+| model1 | 2.8063829 |
 | model1 |       Inf |
 | model1 | 1.0000000 |
 | model1 | 1.0000000 |
 | model1 | 0.0000000 |
 | model1 | 0.0000000 |
-| model1 | 0.0053186 |
-| model1 | 0.0066128 |
-| model1 | 0.0033773 |
-| model1 | 0.0066128 |
+| model1 | 0.0051867 |
+| model1 | 0.0059530 |
+| model1 | 0.0033775 |
+| model1 | 0.0066127 |
 | model1 | 0.0000000 |
-| model1 | 0.3332004 |
+| model1 | 0.3226342 |
 
 Acceptance diagnostics
 
@@ -297,3 +302,225 @@ publish_bsvar_plot(demo_diag, preset = "paper")
 ```
 
 ![](post-estimation-workflows_files/figure-html/unnamed-chunk-13-1.png)
+
+``` r
+as_kable(summary(demo_rep), preset = "compact", digits = 3)
+```
+
+| Model  | Variable  | Shock  | Horizon |   Mean | Median |  Lower |  Upper |
+|:-------|:----------|:-------|--------:|-------:|-------:|-------:|-------:|
+| model1 | variable1 | shock1 |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | variable1 | shock1 |       1 | -0.013 | -0.013 | -0.013 | -0.013 |
+| model1 | variable1 | shock1 |       2 | -0.030 | -0.030 | -0.030 | -0.030 |
+| model1 | variable1 | shock1 |       3 | -0.040 | -0.040 | -0.040 | -0.040 |
+| model1 | variable1 | shock2 |       0 | -0.423 | -0.423 | -0.423 | -0.423 |
+| model1 | variable1 | shock2 |       1 | -0.459 | -0.459 | -0.459 | -0.459 |
+| model1 | variable1 | shock2 |       2 | -0.473 | -0.473 | -0.473 | -0.473 |
+| model1 | variable1 | shock2 |       3 | -0.471 | -0.471 | -0.471 | -0.471 |
+| model1 | variable1 | shock3 |       0 |  0.621 |  0.621 |  0.621 |  0.621 |
+| model1 | variable1 | shock3 |       1 |  0.610 |  0.610 |  0.610 |  0.610 |
+| model1 | variable1 | shock3 |       2 |  0.626 |  0.626 |  0.626 |  0.626 |
+| model1 | variable1 | shock3 |       3 |  0.638 |  0.638 |  0.638 |  0.638 |
+| model1 | variable1 | shock4 |       0 | -0.220 | -0.220 | -0.220 | -0.220 |
+| model1 | variable1 | shock4 |       1 | -0.102 | -0.102 | -0.102 | -0.102 |
+| model1 | variable1 | shock4 |       2 | -0.043 | -0.043 | -0.043 | -0.043 |
+| model1 | variable1 | shock4 |       3 | -0.018 | -0.018 | -0.018 | -0.018 |
+| model1 | variable1 | shock5 |       0 | -0.072 | -0.072 | -0.072 | -0.072 |
+| model1 | variable1 | shock5 |       1 | -0.164 | -0.164 | -0.164 | -0.164 |
+| model1 | variable1 | shock5 |       2 | -0.146 | -0.146 | -0.146 | -0.146 |
+| model1 | variable1 | shock5 |       3 | -0.134 | -0.134 | -0.134 | -0.134 |
+| model1 | variable2 | shock1 |       0 |  5.644 |  5.644 |  5.644 |  5.644 |
+| model1 | variable2 | shock1 |       1 |  6.175 |  6.175 |  6.175 |  6.175 |
+| model1 | variable2 | shock1 |       2 |  5.742 |  5.742 |  5.742 |  5.742 |
+| model1 | variable2 | shock1 |       3 |  5.552 |  5.552 |  5.552 |  5.552 |
+| model1 | variable2 | shock2 |       0 | -3.645 | -3.645 | -3.645 | -3.645 |
+| model1 | variable2 | shock2 |       1 | -4.215 | -4.215 | -4.215 | -4.215 |
+| model1 | variable2 | shock2 |       2 | -4.915 | -4.915 | -4.915 | -4.915 |
+| model1 | variable2 | shock2 |       3 | -5.345 | -5.345 | -5.345 | -5.345 |
+| model1 | variable2 | shock3 |       0 | -3.405 | -3.405 | -3.405 | -3.405 |
+| model1 | variable2 | shock3 |       1 | -3.474 | -3.474 | -3.474 | -3.474 |
+| model1 | variable2 | shock3 |       2 | -3.843 | -3.843 | -3.843 | -3.843 |
+| model1 | variable2 | shock3 |       3 | -4.116 | -4.116 | -4.116 | -4.116 |
+| model1 | variable2 | shock4 |       0 | -0.378 | -0.378 | -0.378 | -0.378 |
+| model1 | variable2 | shock4 |       1 | -0.104 | -0.104 | -0.104 | -0.104 |
+| model1 | variable2 | shock4 |       2 | -0.147 | -0.147 | -0.147 | -0.147 |
+| model1 | variable2 | shock4 |       3 | -0.230 | -0.230 | -0.230 | -0.230 |
+| model1 | variable2 | shock5 |       0 | -0.104 | -0.104 | -0.104 | -0.104 |
+| model1 | variable2 | shock5 |       1 | -0.460 | -0.460 | -0.460 | -0.460 |
+| model1 | variable2 | shock5 |       2 | -0.243 | -0.243 | -0.243 | -0.243 |
+| model1 | variable2 | shock5 |       3 | -0.010 | -0.010 | -0.010 | -0.010 |
+| model1 | variable3 | shock1 |       0 | -0.015 | -0.015 | -0.015 | -0.015 |
+| model1 | variable3 | shock1 |       1 |  0.032 |  0.032 |  0.032 |  0.032 |
+| model1 | variable3 | shock1 |       2 |  0.034 |  0.034 |  0.034 |  0.034 |
+| model1 | variable3 | shock1 |       3 |  0.026 |  0.026 |  0.026 |  0.026 |
+| model1 | variable3 | shock2 |       0 | -0.075 | -0.075 | -0.075 | -0.075 |
+| model1 | variable3 | shock2 |       1 | -0.103 | -0.103 | -0.103 | -0.103 |
+| model1 | variable3 | shock2 |       2 | -0.124 | -0.124 | -0.124 | -0.124 |
+| model1 | variable3 | shock2 |       3 | -0.139 | -0.139 | -0.139 | -0.139 |
+| model1 | variable3 | shock3 |       0 | -0.129 | -0.129 | -0.129 | -0.129 |
+| model1 | variable3 | shock3 |       1 | -0.212 | -0.212 | -0.212 | -0.212 |
+| model1 | variable3 | shock3 |       2 | -0.246 | -0.246 | -0.246 | -0.246 |
+| model1 | variable3 | shock3 |       3 | -0.268 | -0.268 | -0.268 | -0.268 |
+| model1 | variable3 | shock4 |       0 | -0.293 | -0.293 | -0.293 | -0.293 |
+| model1 | variable3 | shock4 |       1 | -0.356 | -0.356 | -0.356 | -0.356 |
+| model1 | variable3 | shock4 |       2 | -0.381 | -0.381 | -0.381 | -0.381 |
+| model1 | variable3 | shock4 |       3 | -0.393 | -0.393 | -0.393 | -0.393 |
+| model1 | variable3 | shock5 |       0 | -0.238 | -0.238 | -0.238 | -0.238 |
+| model1 | variable3 | shock5 |       1 | -0.293 | -0.293 | -0.293 | -0.293 |
+| model1 | variable3 | shock5 |       2 | -0.299 | -0.299 | -0.299 | -0.299 |
+| model1 | variable3 | shock5 |       3 | -0.294 | -0.294 | -0.294 | -0.294 |
+| model1 | variable4 | shock1 |       0 | -0.951 | -0.951 | -0.951 | -0.951 |
+| model1 | variable4 | shock1 |       1 | -0.342 | -0.342 | -0.342 | -0.342 |
+| model1 | variable4 | shock1 |       2 | -0.315 | -0.315 | -0.315 | -0.315 |
+| model1 | variable4 | shock1 |       3 | -0.252 | -0.252 | -0.252 | -0.252 |
+| model1 | variable4 | shock2 |       0 | -1.197 | -1.197 | -1.197 | -1.197 |
+| model1 | variable4 | shock2 |       1 | -0.740 | -0.740 | -0.740 | -0.740 |
+| model1 | variable4 | shock2 |       2 | -0.542 | -0.542 | -0.542 | -0.542 |
+| model1 | variable4 | shock2 |       3 | -0.388 | -0.388 | -0.388 | -0.388 |
+| model1 | variable4 | shock3 |       0 | -0.740 | -0.740 | -0.740 | -0.740 |
+| model1 | variable4 | shock3 |       1 | -0.483 | -0.483 | -0.483 | -0.483 |
+| model1 | variable4 | shock3 |       2 | -0.347 | -0.347 | -0.347 | -0.347 |
+| model1 | variable4 | shock3 |       3 | -0.254 | -0.254 | -0.254 | -0.254 |
+| model1 | variable4 | shock4 |       0 | -0.630 | -0.630 | -0.630 | -0.630 |
+| model1 | variable4 | shock4 |       1 | -0.384 | -0.384 | -0.384 | -0.384 |
+| model1 | variable4 | shock4 |       2 | -0.304 | -0.304 | -0.304 | -0.304 |
+| model1 | variable4 | shock4 |       3 | -0.229 | -0.229 | -0.229 | -0.229 |
+| model1 | variable4 | shock5 |       0 |  0.494 |  0.494 |  0.494 |  0.494 |
+| model1 | variable4 | shock5 |       1 |  0.356 |  0.356 |  0.356 |  0.356 |
+| model1 | variable4 | shock5 |       2 |  0.246 |  0.246 |  0.246 |  0.246 |
+| model1 | variable4 | shock5 |       3 |  0.184 |  0.184 |  0.184 |  0.184 |
+| model1 | variable5 | shock1 |       0 |  0.110 |  0.110 |  0.110 |  0.110 |
+| model1 | variable5 | shock1 |       1 |  0.136 |  0.136 |  0.136 |  0.136 |
+| model1 | variable5 | shock1 |       2 |  0.163 |  0.163 |  0.163 |  0.163 |
+| model1 | variable5 | shock1 |       3 |  0.163 |  0.163 |  0.163 |  0.163 |
+| model1 | variable5 | shock2 |       0 |  0.275 |  0.275 |  0.275 |  0.275 |
+| model1 | variable5 | shock2 |       1 |  0.293 |  0.293 |  0.293 |  0.293 |
+| model1 | variable5 | shock2 |       2 |  0.268 |  0.268 |  0.268 |  0.268 |
+| model1 | variable5 | shock2 |       3 |  0.240 |  0.240 |  0.240 |  0.240 |
+| model1 | variable5 | shock3 |       0 | -0.060 | -0.060 | -0.060 | -0.060 |
+| model1 | variable5 | shock3 |       1 | -0.208 | -0.208 | -0.208 | -0.208 |
+| model1 | variable5 | shock3 |       2 | -0.305 | -0.305 | -0.305 | -0.305 |
+| model1 | variable5 | shock3 |       3 | -0.358 | -0.358 | -0.358 | -0.358 |
+| model1 | variable5 | shock4 |       0 | -0.570 | -0.570 | -0.570 | -0.570 |
+| model1 | variable5 | shock4 |       1 | -0.886 | -0.886 | -0.886 | -0.886 |
+| model1 | variable5 | shock4 |       2 | -1.017 | -1.017 | -1.017 | -1.017 |
+| model1 | variable5 | shock4 |       3 | -1.074 | -1.074 | -1.074 | -1.074 |
+| model1 | variable5 | shock5 |       0 |  0.217 |  0.217 |  0.217 |  0.217 |
+| model1 | variable5 | shock5 |       1 |  0.144 |  0.144 |  0.144 |  0.144 |
+| model1 | variable5 | shock5 |       2 |  0.104 |  0.104 |  0.104 |  0.104 |
+| model1 | variable5 | shock5 |       3 |  0.095 |  0.095 |  0.095 |  0.095 |
+
+``` r
+publish_bsvar_plot(demo_rep, preset = "paper")
+```
+
+![](post-estimation-workflows_files/figure-html/unnamed-chunk-14-1.png)
+
+``` r
+as_kable(demo_audit, preset = "compact", digits = 3)
+```
+
+| Model  | Variable  | Shock  | Horizon | Restriction type | Restriction                  | Relation | Posterior probability |  Mean | Median | Lower | Upper |
+|:-------|:----------|:-------|--------:|:-----------------|:-----------------------------|:---------|----------------------:|------:|-------:|------:|------:|
+| model1 | variable1 | shock1 |       0 | irf_zero         | irf\[variable1,shock1,0\]==0 | ==0      |                     1 | 0.000 |  0.000 | 0.000 | 0.000 |
+| model1 | variable2 | shock1 |       0 | irf_sign         | irf\[variable2,shock1,0\]\>0 | \>0      |                     1 | 4.608 |  5.225 | 3.263 | 5.644 |
+
+``` r
+plot_restriction_audit(demo_audit)
+```
+
+![](post-estimation-workflows_files/figure-html/unnamed-chunk-15-1.png)
+
+``` r
+as_kable(demo_hd, preset = "compact", digits = 3)
+```
+
+| Model  | Variable  | Shock  | Event start | Event end |   Mean | Median |  Lower |  Upper |
+|:-------|:----------|:-------|:------------|:----------|-------:|-------:|-------:|-------:|
+| model1 | variable1 | shock1 | 1           | 2         |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | variable2 | shock1 | 1           | 2         |  3.194 |  2.357 |  1.847 |  5.158 |
+| model1 | variable3 | shock1 | 1           | 2         |  0.121 |  0.026 |  0.013 |  0.277 |
+| model1 | variable4 | shock1 | 1           | 2         |  0.117 |  0.123 |  0.005 |  0.196 |
+| model1 | variable5 | shock1 | 1           | 2         | -0.299 | -0.184 | -0.822 |  0.166 |
+| model1 | variable1 | shock2 | 1           | 2         | -0.360 | -0.389 | -0.444 | -0.296 |
+| model1 | variable2 | shock2 | 1           | 2         | -1.749 | -1.359 | -3.331 | -0.642 |
+| model1 | variable3 | shock2 | 1           | 2         |  0.020 |  0.013 | -0.020 |  0.065 |
+| model1 | variable4 | shock2 | 1           | 2         |  0.000 |  0.015 | -0.112 |  0.155 |
+| model1 | variable5 | shock2 | 1           | 2         |  0.297 |  0.414 |  0.052 |  0.463 |
+| model1 | variable1 | shock3 | 1           | 2         |  0.217 |  0.077 | -0.068 |  0.571 |
+| model1 | variable2 | shock3 | 1           | 2         | -0.788 | -0.571 | -3.112 |  1.428 |
+| model1 | variable3 | shock3 | 1           | 2         | -0.004 |  0.013 | -0.129 |  0.111 |
+| model1 | variable4 | shock3 | 1           | 2         |  0.031 |  0.096 | -0.049 |  0.136 |
+| model1 | variable5 | shock3 | 1           | 2         | -0.059 | -0.090 | -0.246 |  0.078 |
+| model1 | variable1 | shock4 | 1           | 2         | -0.123 | -0.099 | -0.202 | -0.068 |
+| model1 | variable2 | shock4 | 1           | 2         |  1.547 | -0.225 | -0.346 |  4.325 |
+| model1 | variable3 | shock4 | 1           | 2         |  0.123 |  0.049 |  0.036 |  0.252 |
+| model1 | variable4 | shock4 | 1           | 2         |  0.118 |  0.082 | -0.025 |  0.224 |
+| model1 | variable5 | shock4 | 1           | 2         |  0.002 |  0.386 | -0.858 |  0.590 |
+| model1 | variable1 | shock5 | 1           | 2         |  0.062 |  0.133 | -0.066 |  0.156 |
+| model1 | variable2 | shock5 | 1           | 2         | -0.265 | -0.095 | -0.947 |  0.211 |
+| model1 | variable3 | shock5 | 1           | 2         |  0.169 |  0.205 |  0.129 |  0.220 |
+| model1 | variable4 | shock5 | 1           | 2         | -0.001 | -0.064 | -0.094 |  0.134 |
+| model1 | variable5 | shock5 | 1           | 2         |  0.338 |  0.327 |  0.225 |  0.421 |
+
+``` r
+plot_hd_event(demo_post, start = 1, end = 2)
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+#> `geom_line()`: Each group consists of only one observation.
+#> ℹ Do you need to adjust the group aesthetic?
+```
+
+![](post-estimation-workflows_files/figure-html/unnamed-chunk-16-1.png)
+
+``` r
+plot_shock_ranking(demo_post, start = 1, end = 2, ranking = "absolute", top_n = 4)
+```
+
+![](post-estimation-workflows_files/figure-html/unnamed-chunk-16-2.png)

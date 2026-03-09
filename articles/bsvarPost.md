@@ -456,9 +456,9 @@ A practical rule of thumb is:
 
 ## Rendered showcase
 
-This final chunk is intentionally small and evaluated during the
-vignette build so the rendered document includes one actual table and
-one actual plot.
+These final chunks are intentionally small and evaluated during the
+vignette build so the rendered document includes actual tables and plots
+for the main output families.
 
 ``` r
 library(bsvars)
@@ -468,11 +468,40 @@ set.seed(11)
 demo_spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
 demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
+demo_spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 2)
+#> The identification is set to the default option of lower-triangular structural matrix.
+demo_post_alt <- estimate(demo_spec_alt, S = 5, thin = 1, show_progress = FALSE)
+```
+
+``` r
+demo_cdm <- cdm(demo_post, horizon = 3)
+summary(demo_cdm)
+#> # A tibble: 36 × 10
+#>    model  object_type variable shock horizon     mean   median     sd    lower
+#>    <chr>  <chr>       <chr>    <chr>   <dbl>    <dbl>    <dbl>  <dbl>    <dbl>
+#>  1 model1 cdm         ttr      ttr         0  0.0531   0.0291  0.0470  0.0284 
+#>  2 model1 cdm         ttr      ttr         1  0.200    0.0565  0.304   0.0551 
+#>  3 model1 cdm         ttr      ttr         2  0.417    0.0833  0.721   0.0811 
+#>  4 model1 cdm         ttr      ttr         3  0.716    0.110   1.33    0.107  
+#>  5 model1 cdm         ttr      gs          0  0        0       0       0      
+#>  6 model1 cdm         ttr      gs          1  0.0902  -0.00483 0.195  -0.00598
+#>  7 model1 cdm         ttr      gs          2  0.254   -0.0134  0.550  -0.0173 
+#>  8 model1 cdm         ttr      gs          3  0.502   -0.0249  1.09   -0.0335 
+#>  9 model1 cdm         ttr      gdp         0  0        0       0       0      
+#> 10 model1 cdm         ttr      gdp         1 -0.00649  0.00201 0.0156 -0.0159 
+#> # ℹ 26 more rows
+#> # ℹ 1 more variable: upper <dbl>
+plot(demo_cdm)
+```
+
+![](bsvarPost_files/figure-html/unnamed-chunk-20-1.png)
+
+``` r
 demo_cmp <- compare_peak_response(
   base = demo_post,
-  alt = demo_post,
+  alt = demo_post_alt,
   type = "irf",
-  horizon = 2,
+  horizon = 3,
   variable = 1,
   shock = 1
 )
@@ -482,14 +511,64 @@ as_kable(demo_cmp, preset = "compact", digits = 3)
 
 | Model | Variable | Shock | Mean value | Median value | Lower value | Upper value | Mean horizon | Median horizon | Lower horizon | Upper horizon |
 |:------|:---------|:------|-----------:|-------------:|------------:|------------:|-------------:|---------------:|--------------:|--------------:|
-| base  | ttr      | ttr   |      0.219 |        0.029 |       0.028 |       0.377 |          0.6 |              0 |             0 |          1.36 |
-| alt   | ttr      | ttr   |      0.219 |        0.029 |       0.028 |       0.377 |          0.6 |              0 |             0 |          1.36 |
+| base  | ttr      | ttr   |      0.303 |        0.029 |       0.028 |       0.528 |          0.8 |              0 |             0 |          1.72 |
+| alt   | ttr      | ttr   |      0.039 |        0.030 |       0.027 |       0.050 |          0.2 |              0 |             0 |          0.36 |
 
 ``` r
 publish_bsvar_plot(demo_cmp, preset = "paper")
 ```
 
-![](bsvarPost_files/figure-html/unnamed-chunk-19-1.png)
+![](bsvarPost_files/figure-html/unnamed-chunk-21-1.png)
+
+``` r
+demo_rep <- median_target_irf(demo_post, horizon = 3)
+as_kable(summary(demo_rep), preset = "compact", digits = 3)
+```
+
+| Model  | Variable | Shock | Horizon |   Mean | Median |  Lower |  Upper |
+|:-------|:---------|:------|--------:|-------:|-------:|-------:|-------:|
+| model1 | ttr      | ttr   |       0 |  0.029 |  0.029 |  0.029 |  0.029 |
+| model1 | ttr      | ttr   |       1 |  0.027 |  0.027 |  0.027 |  0.027 |
+| model1 | ttr      | ttr   |       2 |  0.027 |  0.027 |  0.027 |  0.027 |
+| model1 | ttr      | ttr   |       3 |  0.027 |  0.027 |  0.027 |  0.027 |
+| model1 | ttr      | gs    |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | ttr      | gs    |       1 | -0.006 | -0.006 | -0.006 | -0.006 |
+| model1 | ttr      | gs    |       2 | -0.010 | -0.010 | -0.010 | -0.010 |
+| model1 | ttr      | gs    |       3 | -0.015 | -0.015 | -0.015 | -0.015 |
+| model1 | ttr      | gdp   |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | ttr      | gdp   |       1 |  0.002 |  0.002 |  0.002 |  0.002 |
+| model1 | ttr      | gdp   |       2 |  0.003 |  0.003 |  0.003 |  0.003 |
+| model1 | ttr      | gdp   |       3 |  0.004 |  0.004 |  0.004 |  0.004 |
+| model1 | gs       | ttr   |       0 |  0.001 |  0.001 |  0.001 |  0.001 |
+| model1 | gs       | ttr   |       1 | -0.014 | -0.014 | -0.014 | -0.014 |
+| model1 | gs       | ttr   |       2 | -0.025 | -0.025 | -0.025 | -0.025 |
+| model1 | gs       | ttr   |       3 | -0.034 | -0.034 | -0.034 | -0.034 |
+| model1 | gs       | gs    |       0 |  0.090 |  0.090 |  0.090 |  0.090 |
+| model1 | gs       | gs    |       1 |  0.074 |  0.074 |  0.074 |  0.074 |
+| model1 | gs       | gs    |       2 |  0.061 |  0.061 |  0.061 |  0.061 |
+| model1 | gs       | gs    |       3 |  0.049 |  0.049 |  0.049 |  0.049 |
+| model1 | gs       | gdp   |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | gs       | gdp   |       1 |  0.012 |  0.012 |  0.012 |  0.012 |
+| model1 | gs       | gdp   |       2 |  0.021 |  0.021 |  0.021 |  0.021 |
+| model1 | gs       | gdp   |       3 |  0.028 |  0.028 |  0.028 |  0.028 |
+| model1 | gdp      | ttr   |       0 |  0.004 |  0.004 |  0.004 |  0.004 |
+| model1 | gdp      | ttr   |       1 |  0.014 |  0.014 |  0.014 |  0.014 |
+| model1 | gdp      | ttr   |       2 |  0.023 |  0.023 |  0.023 |  0.023 |
+| model1 | gdp      | ttr   |       3 |  0.032 |  0.032 |  0.032 |  0.032 |
+| model1 | gdp      | gs    |       0 | -0.066 | -0.066 | -0.066 | -0.066 |
+| model1 | gdp      | gs    |       1 | -0.062 | -0.062 | -0.062 | -0.062 |
+| model1 | gdp      | gs    |       2 | -0.059 | -0.059 | -0.059 | -0.059 |
+| model1 | gdp      | gs    |       3 | -0.057 | -0.057 | -0.057 | -0.057 |
+| model1 | gdp      | gdp   |       0 |  0.023 |  0.023 |  0.023 |  0.023 |
+| model1 | gdp      | gdp   |       1 |  0.016 |  0.016 |  0.016 |  0.016 |
+| model1 | gdp      | gdp   |       2 |  0.009 |  0.009 |  0.009 |  0.009 |
+| model1 | gdp      | gdp   |       3 |  0.003 |  0.003 |  0.003 |  0.003 |
+
+``` r
+publish_bsvar_plot(demo_rep, preset = "paper")
+```
+
+![](bsvarPost_files/figure-html/unnamed-chunk-22-1.png)
 
 ## Historical decomposition events
 
