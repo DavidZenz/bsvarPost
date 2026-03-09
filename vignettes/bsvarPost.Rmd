@@ -206,6 +206,15 @@ compare_time_to_threshold(
   relation = ">",
   value = 0
 )
+
+plot_compare_response(compare_peak_response(
+  p1 = post,
+  p2 = post_alt,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1
+))
 ```
 
 ## Example: `bsvarSIGNs`
@@ -313,6 +322,12 @@ compare_restrictions(
   p2 = post,
   restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
 )
+
+plot_compare_restrictions(compare_restrictions(
+  p1 = post,
+  p2 = post,
+  restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
+))
 ```
 
 ## Historical decomposition events

@@ -181,6 +181,15 @@ compare_time_to_threshold(
   relation = ">",
   value = 0
 )
+
+plot_compare_response(compare_peak_response(
+  baseline = post,
+  alternative = post_alt,
+  type = "irf",
+  horizon = 8,
+  variable = 1,
+  shock = 1
+))
 ```
 
 Optional normalization:
@@ -260,6 +269,12 @@ Restriction comparisons:
 ```r
 compare_restrictions(model_a = post, model_b = post, restrictions = list(
   irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1)
+))
+
+plot_compare_restrictions(compare_restrictions(
+  model_a = post,
+  model_b = post,
+  restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
 ))
 ```
 
