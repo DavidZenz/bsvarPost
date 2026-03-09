@@ -41,6 +41,83 @@ resolve_array_dimnames <- function(x, defaults) {
   dns
 }
 
+infer_model_variable_names <- function(model, n = NULL) {
+  y_matrix <- tryCatch(model$last_draw$data_matrices$Y, error = function(e) NULL)
+  if (is.null(y_matrix)) {
+    return(NULL)
+  }
+
+  candidates <- rownames(y_matrix)
+  if (is.null(candidates) || anyNA(candidates) || any(candidates == "")) {
+    candidates <- colnames(y_matrix)
+  }
+  if (is.null(candidates) || anyNA(candidates) || any(candidates == "")) {
+    return(NULL)
+  }
+
+  if (!is.null(n)) {
+    candidates <- candidates[seq_len(min(length(candidates), n))]
+  }
+  unname(candidates)
+}
+
+set_response_dimnames <- function(x, model = NULL) {
+  d <- dim(x)
+  var_names <- infer_model_variable_names(model, n = d[1])
+  if (is.null(var_names) || length(var_names) != d[1]) {
+    var_names <- paste0("variable", seq_len(d[1]))
+  }
+
+  shock_names <- var_names[seq_len(min(length(var_names), d[2]))]
+  if (length(shock_names) != d[2]) {
+    shock_names <- paste0("shock", seq_len(d[2]))
+  }
+
+  dimnames(x) <- resolve_array_dimnames(x, list(
+    var_names,
+    shock_names,
+    as.character(seq_len(d[3]) - 1L),
+    as.character(seq_len(d[4]))
+  ))
+  x
+}
+
+set_time_dimnames <- function(x, model = NULL) {
+  d <- dim(x)
+  var_names <- infer_model_variable_names(model, n = d[1])
+  if (is.null(var_names) || length(var_names) != d[1]) {
+    var_names <- paste0("variable", seq_len(d[1]))
+  }
+
+  dimnames(x) <- resolve_array_dimnames(x, list(
+    var_names,
+    as.character(seq_len(d[2])),
+    as.character(seq_len(d[3]))
+  ))
+  x
+}
+
+set_hd_dimnames <- function(x, model = NULL) {
+  d <- dim(x)
+  var_names <- infer_model_variable_names(model, n = d[1])
+  if (is.null(var_names) || length(var_names) != d[1]) {
+    var_names <- paste0("variable", seq_len(d[1]))
+  }
+
+  shock_names <- var_names[seq_len(min(length(var_names), d[2]))]
+  if (length(shock_names) != d[2]) {
+    shock_names <- paste0("shock", seq_len(d[2]))
+  }
+
+  dimnames(x) <- resolve_array_dimnames(x, list(
+    var_names,
+    shock_names,
+    as.character(seq_len(d[3])),
+    as.character(seq_len(d[4]))
+  ))
+  x
+}
+
 summarise_vec <- function(x, probability) {
   probs <- summary_probs(probability)
   c(
@@ -54,7 +131,7 @@ summarise_vec <- function(x, probability) {
 
 compute_cdm_draws <- function(irf, scale_by = c("none", "shock_sd"), scale_var = NULL, model = NULL) {
   scale_by <- match.arg(scale_by)
-  cdm_draws <- irf
+  cdm_draws <- set_response_dimnames(irf, model = model)
   if (dim(cdm_draws)[3] > 1L) {
     for (h in 2:dim(cdm_draws)[3]) {
       cdm_draws[, , h, ] <- cdm_draws[, , h - 1L, ] + irf[, , h, ]

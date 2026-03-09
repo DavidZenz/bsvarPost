@@ -14,7 +14,8 @@ tidy_irf.PosteriorIR <- function(object, probability = 0.68, draws = FALSE, mode
 }
 
 tidy_irf_model <- function(object, horizon = 10, probability = 0.68, draws = FALSE, model = "model1", ...) {
-  tidy_irf(bsvars::compute_impulse_responses(object, horizon = horizon, ...), probability = probability, draws = draws, model = model)
+  irf <- bsvars::compute_impulse_responses(object, horizon = horizon, ...)
+  tidy_irf(set_response_dimnames(irf, model = object), probability = probability, draws = draws, model = model)
 }
 
 #' @rdname tidy_irf
@@ -79,7 +80,8 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
   as_tidy_response_array(object, object_type = "fevd", model = model, probability = probability, draws = draws)
  }
  tidy_fevd_model <- function(object, horizon = 10, probability = 0.68, draws = FALSE, model = "model1", ...) {
-  tidy_fevd(bsvars::compute_variance_decompositions(object, horizon = horizon, ...), probability = probability, draws = draws, model = model)
+  fevd <- bsvars::compute_variance_decompositions(object, horizon = horizon, ...)
+  tidy_fevd(set_response_dimnames(fevd, model = object), probability = probability, draws = draws, model = model)
  }
 #' @export
  tidy_fevd.PosteriorBSVAR <- tidy_fevd_model
@@ -103,7 +105,8 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
   as_tidy_time_array(object, object_type = "shocks", model = model, probability = probability, draws = draws, time_name = "time")
  }
  tidy_shocks_model <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
-  tidy_shocks(bsvars::compute_structural_shocks(object), probability = probability, draws = draws, model = model)
+  shocks <- bsvars::compute_structural_shocks(object)
+  tidy_shocks(set_time_dimnames(shocks, model = object), probability = probability, draws = draws, model = model)
  }
 #' @export
  tidy_shocks.PosteriorBSVAR <- tidy_shocks_model
@@ -127,7 +130,8 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
   as_tidy_hd_array(object, model = model, probability = probability, draws = draws)
  }
  tidy_hd_model <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
-  tidy_hd(bsvars::compute_historical_decompositions(object, show_progress = FALSE), probability = probability, draws = draws, model = model)
+  hd <- bsvars::compute_historical_decompositions(object, show_progress = FALSE)
+  tidy_hd(set_hd_dimnames(hd, model = object), probability = probability, draws = draws, model = model)
  }
 #' @export
  tidy_hd.PosteriorBSVAR <- tidy_hd_model

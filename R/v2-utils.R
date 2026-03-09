@@ -42,7 +42,10 @@ get_irf_draws <- function(object, horizon = 10, ...) {
   if (inherits(object, "PosteriorIR")) {
     return(object)
   }
-  bsvars::compute_impulse_responses(object, horizon = horizon, ...)
+  set_response_dimnames(
+    bsvars::compute_impulse_responses(object, horizon = horizon, ...),
+    model = object
+  )
 }
 
 get_cdm_draws <- function(object, horizon = 10, probability = 0.68,
