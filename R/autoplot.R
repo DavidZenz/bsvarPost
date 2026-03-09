@@ -29,14 +29,31 @@ autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, mod
 
   if (has_draws) {
     df$group_id <- interaction(df$model, df$draw, drop = TRUE)
-    p <- ggplot2::ggplot(df, ggplot2::aes_string(x = x_var, y = "value",
-                                                 group = "group_id",
-                                                 colour = "model")) +
+    p <- ggplot2::ggplot(
+      df,
+      ggplot2::aes(
+        x = .data[[x_var]],
+        y = .data[["value"]],
+        group = .data[["group_id"]],
+        colour = .data[["model"]]
+      )
+    ) +
       ggplot2::geom_line(alpha = 0.15)
   } else {
-    p <- ggplot2::ggplot(df, ggplot2::aes_string(x = x_var, y = "median",
-                                                 colour = "model", fill = "model")) +
-      ggplot2::geom_ribbon(ggplot2::aes_string(ymin = "lower", ymax = "upper"), alpha = 0.18, colour = NA) +
+    p <- ggplot2::ggplot(
+      df,
+      ggplot2::aes(
+        x = .data[[x_var]],
+        y = .data[["median"]],
+        colour = .data[["model"]],
+        fill = .data[["model"]]
+      )
+    ) +
+      ggplot2::geom_ribbon(
+        ggplot2::aes(ymin = .data[["lower"]], ymax = .data[["upper"]]),
+        alpha = 0.18,
+        colour = NA
+      ) +
       ggplot2::geom_line(linewidth = 0.7)
   }
 

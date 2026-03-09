@@ -9,6 +9,7 @@
 #' @importFrom ggplot2 facet_grid facet_wrap labs theme_minimal scale_x_continuous
 #' @importFrom ggplot2 vars
 #' @importFrom methods is
+#' @importFrom rlang .data
 #' @importFrom utils globalVariables
 #' @import bsvars
 #' @import bsvarSIGNs

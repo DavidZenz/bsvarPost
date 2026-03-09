@@ -13,6 +13,7 @@ Imports:
     bsvars,
     bsvarSIGNs,
     ggplot2,
+    rlang,
     tibble,
     methods
 Suggests:
