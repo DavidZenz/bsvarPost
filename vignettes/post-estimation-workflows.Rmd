@@ -275,7 +275,26 @@ demo_spec <- specify_bsvarSIGN$new(
 )
 demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
 demo_diag <- acceptance_diagnostics(demo_post)
+demo_rep <- median_target_irf(demo_post, horizon = 3)
+demo_audit <- restriction_audit(demo_post)
+demo_hd <- tidy_hd_event(demo_post, start = 1, end = 2)
 
 as_kable(report_bundle(demo_diag, preset = "compact"))
 publish_bsvar_plot(demo_diag, preset = "paper")
+```
+
+```{r, eval = TRUE}
+as_kable(summary(demo_rep), preset = "compact", digits = 3)
+publish_bsvar_plot(demo_rep, preset = "paper")
+```
+
+```{r, eval = TRUE}
+as_kable(demo_audit, preset = "compact", digits = 3)
+plot_restriction_audit(demo_audit)
+```
+
+```{r, eval = TRUE}
+as_kable(demo_hd, preset = "compact", digits = 3)
+plot_hd_event(demo_post, start = 1, end = 2)
+plot_shock_ranking(demo_post, start = 1, end = 2, ranking = "absolute", top_n = 4)
 ```

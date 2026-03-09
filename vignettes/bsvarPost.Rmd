@@ -456,8 +456,9 @@ A practical rule of thumb is:
 
 ## Rendered showcase
 
-This final chunk is intentionally small and evaluated during the vignette build
-so the rendered document includes one actual table and one actual plot.
+These final chunks are intentionally small and evaluated during the vignette
+build so the rendered document includes actual tables and plots for the main
+output families.
 
 ```{r, eval = TRUE}
 library(bsvars)
@@ -466,17 +467,34 @@ data(us_fiscal_lsuw)
 set.seed(11)
 demo_spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
 demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
+demo_spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 2)
+demo_post_alt <- estimate(demo_spec_alt, S = 5, thin = 1, show_progress = FALSE)
+```
+
+```{r, eval = TRUE}
+demo_cdm <- cdm(demo_post, horizon = 3)
+summary(demo_cdm)
+plot(demo_cdm)
+```
+
+```{r, eval = TRUE}
 demo_cmp <- compare_peak_response(
   base = demo_post,
-  alt = demo_post,
+  alt = demo_post_alt,
   type = "irf",
-  horizon = 2,
+  horizon = 3,
   variable = 1,
   shock = 1
 )
 
 as_kable(demo_cmp, preset = "compact", digits = 3)
 publish_bsvar_plot(demo_cmp, preset = "paper")
+```
+
+```{r, eval = TRUE}
+demo_rep <- median_target_irf(demo_post, horizon = 3)
+as_kable(summary(demo_rep), preset = "compact", digits = 3)
+publish_bsvar_plot(demo_rep, preset = "paper")
 ```
 
 ## Historical decomposition events
