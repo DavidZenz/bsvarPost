@@ -27,6 +27,16 @@ p_audit_tbl <- plot_restriction_audit(audit_tbl)
 expect_true(inherits(p_audit_tbl, "ggplot"))
 expect_true(is.null(p_audit_tbl$labels$x))
 expect_equal(p_audit_tbl$labels$y, "posterior satisfaction probability")
+expect_true(identical(p_audit_tbl$data$restriction_display, p_audit_tbl$data$restriction))
+
+p_audit_pretty <- plot_restriction_audit(audit_tbl, label_style = "pretty")
+expect_true(inherits(p_audit_pretty, "ggplot"))
+expect_true(all(grepl("^IRF:|^Structural:|^Narrative ", p_audit_pretty$data$restriction_display)))
+
+custom_labels <- stats::setNames("Impact sign restriction", audit_tbl$restriction[1])
+p_audit_custom <- plot_restriction_audit(audit_tbl, labels = custom_labels)
+expect_true(inherits(p_audit_custom, "ggplot"))
+expect_equal(p_audit_custom$data$restriction_display[1], "Impact sign restriction")
 
 p_audit_model <- plot_restriction_audit(post, restrictions = restrictions)
 expect_true(inherits(p_audit_model, "ggplot"))

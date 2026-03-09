@@ -1,3 +1,53 @@
+#' @keywords internal
+pretty_restriction_label <- function(restriction_type, variable, shock, horizon, relation, raw_label) {
+  if (startsWith(restriction_type, "irf_")) {
+    return(sprintf("IRF: %s response to %s shock at h = %s %s", variable, shock, horizon, relation))
+  }
+  if (identical(restriction_type, "structural_sign")) {
+    return(sprintf("Structural: %s on %s shock %s", variable, shock, relation))
+  }
+  if (startsWith(restriction_type, "narrative_")) {
+    type <- sub("^narrative_", "", restriction_type)
+    if (!is.na(variable) && nzchar(variable)) {
+      return(sprintf("Narrative %s: %s, shock %s, window = %s, %s", type, variable, shock, horizon, relation))
+    }
+    return(sprintf("Narrative %s: shock %s, window = %s, %s", type, shock, horizon, relation))
+  }
+  raw_label
+}
+
+#' @keywords internal
+resolve_restriction_plot_labels <- function(df, label_style = c("raw", "pretty"), labels = NULL) {
+  label_style <- match.arg(label_style)
+  display <- df$restriction
+
+  if (identical(label_style, "pretty")) {
+    display <- vapply(
+      seq_len(nrow(df)),
+      function(i) pretty_restriction_label(
+        restriction_type = df$restriction_type[i],
+        variable = df$variable[i],
+        shock = df$shock[i],
+        horizon = df$horizon[i],
+        relation = df$relation[i],
+        raw_label = df$restriction[i]
+      ),
+      character(1)
+    )
+  }
+
+  if (!is.null(labels)) {
+    if (is.null(names(labels)) || any(names(labels) == "")) {
+      stop("`labels` must be a named character vector keyed by raw restriction labels.", call. = FALSE)
+    }
+    matched <- match(df$restriction, names(labels))
+    has_match <- !is.na(matched)
+    display[has_match] <- unname(labels[matched[has_match]])
+  }
+
+  display
+}
+
 #' Plot posterior probability statements for IRFs or CDMs
 #'
 #' @param object A hypothesis table, a magnitude-audit table, or an object
@@ -102,11 +152,18 @@ plot_hypothesis <- function(object, type = c("irf", "cdm"),
 #' @param zero_tol Numerical tolerance for zero restrictions.
 #' @param probability Equal-tailed interval probability used in summaries.
 #' @param models Optional model filter.
+#' @param label_style Restriction label style: `"raw"` or `"pretty"`.
+#' @param labels Optional named character vector overriding restriction labels by
+#'   raw restriction string.
 #' @param restriction_types Optional restriction-type filter.
 #' @param ... Additional arguments passed to `restriction_audit()`.
 #' @export
 plot_restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
-                                   probability = 0.68, models = NULL, restriction_types = NULL, ...) {
+                                   probability = 0.68, models = NULL,
+                                   label_style = c("raw", "pretty"),
+                                   labels = NULL,
+                                   restriction_types = NULL, ...) {
+  label_style <- match.arg(label_style)
   if (inherits(object, "bsvar_post_tbl")) {
     tbl <- object
   } else {
@@ -131,10 +188,11 @@ plot_restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
   if (!nrow(df)) {
     stop("No restriction-audit rows remain after filtering.", call. = FALSE)
   }
+  df$restriction_display <- resolve_restriction_plot_labels(df, label_style = label_style, labels = labels)
 
   p <- ggplot2::ggplot(
     df,
-    ggplot2::aes(x = stats::reorder(restriction, posterior_prob), y = posterior_prob, fill = model)
+    ggplot2::aes(x = stats::reorder(restriction_display, posterior_prob), y = posterior_prob, fill = model)
   ) +
     ggplot2::geom_col(position = "dodge") +
     ggplot2::coord_flip() +
