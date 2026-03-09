@@ -8,10 +8,13 @@
 #'
 #' - `browseVignettes(package = "bsvarPost")`
 #'
+#' If no vignettes are listed there, reinstall the GitHub package with
+#' `build_vignettes = TRUE`.
+#'
 #' The package currently ships with:
 #'
-#' - \href{/library/bsvarPost/doc/bsvarPost.html}{Getting Started with bsvarPost}
-#' - \href{/library/bsvarPost/doc/post-estimation-workflows.html}{Post-Estimation Workflows in bsvarPost}
+#' - \link{bsvarPost-getting-started}
+#' - \link{bsvarPost-workflows}
 #'
 #' @keywords internal
 #' @importFrom tibble tibble as_tibble

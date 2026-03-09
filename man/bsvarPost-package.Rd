@@ -16,10 +16,13 @@ Use \code{\link[utils:browseVignettes]{utils::browseVignettes()}} to open the pa
 \item \code{browseVignettes(package = "bsvarPost")}
 }
 
+If no vignettes are listed there, reinstall the GitHub package with
+\code{build_vignettes = TRUE}.
+
 The package currently ships with:
 \itemize{
-\item \href{/library/bsvarPost/doc/bsvarPost.html}{Getting Started with bsvarPost}
-\item \href{/library/bsvarPost/doc/post-estimation-workflows.html}{Post-Estimation Workflows in bsvarPost}
+\item \link{bsvarPost-getting-started}
+\item \link{bsvarPost-workflows}
 }
 }
 

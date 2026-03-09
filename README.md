@@ -25,8 +25,11 @@ From GitHub:
 
 ```r
 install.packages(c("bsvars", "bsvarSIGNs"))
-remotes::install_github("DavidZenz/bsvarPost")
+remotes::install_github("DavidZenz/bsvarPost", build_vignettes = TRUE)
 ```
+
+If `browseVignettes("bsvarPost")` shows no entries, the package was installed
+without built vignettes. Reinstall with `build_vignettes = TRUE`.
 
 ## `bsvars` example
 
