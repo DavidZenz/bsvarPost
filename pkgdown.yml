@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   bsvarPost: bsvarPost.html
   post-estimation-workflows: post-estimation-workflows.html
-last_built: 2026-03-09T16:02Z
+last_built: 2026-03-09T16:10Z
 urls:
   reference: https://davidzenz.github.io/bsvarPost/reference
   article: https://davidzenz.github.io/bsvarPost/articles

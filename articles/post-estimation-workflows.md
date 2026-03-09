@@ -293,18 +293,18 @@ as_kable(report_bundle(demo_diag, preset = "compact"))
 | Model  |     Value |
 |:-------|----------:|
 | model1 | 5.0000000 |
-| model1 | 1.8101543 |
+| model1 | 2.8063829 |
 | model1 |       Inf |
 | model1 | 1.0000000 |
 | model1 | 1.0000000 |
 | model1 | 0.0000000 |
 | model1 | 0.0000000 |
-| model1 | 0.0053186 |
-| model1 | 0.0066128 |
-| model1 | 0.0033773 |
-| model1 | 0.0066128 |
+| model1 | 0.0051867 |
+| model1 | 0.0059530 |
+| model1 | 0.0033775 |
+| model1 | 0.0066127 |
 | model1 | 0.0000000 |
-| model1 | 0.3332004 |
+| model1 | 0.3226342 |
 
 Acceptance diagnostics
 
@@ -354,9 +354,9 @@ as_kable(summary(demo_rep), preset = "compact", digits = 3)
 | model1 | stock_prices       | consumption        |       2 | -3.843 | -3.843 | -3.843 | -3.843 |
 | model1 | stock_prices       | consumption        |       3 | -4.116 | -4.116 | -4.116 | -4.116 |
 | model1 | stock_prices       | real_interest_rate |       0 | -0.378 | -0.378 | -0.378 | -0.378 |
-| model1 | stock_prices       | real_interest_rate |       1 | -0.105 | -0.105 | -0.105 | -0.105 |
+| model1 | stock_prices       | real_interest_rate |       1 | -0.104 | -0.104 | -0.104 | -0.104 |
 | model1 | stock_prices       | real_interest_rate |       2 | -0.147 | -0.147 | -0.147 | -0.147 |
-| model1 | stock_prices       | real_interest_rate |       3 | -0.231 | -0.231 | -0.231 | -0.231 |
+| model1 | stock_prices       | real_interest_rate |       3 | -0.230 | -0.230 | -0.230 | -0.230 |
 | model1 | stock_prices       | hours_worked       |       0 | -0.104 | -0.104 | -0.104 | -0.104 |
 | model1 | stock_prices       | hours_worked       |       1 | -0.460 | -0.460 | -0.460 | -0.460 |
 | model1 | stock_prices       | hours_worked       |       2 | -0.243 | -0.243 | -0.243 | -0.243 |
@@ -375,7 +375,7 @@ as_kable(summary(demo_rep), preset = "compact", digits = 3)
 | model1 | consumption        | consumption        |       3 | -0.268 | -0.268 | -0.268 | -0.268 |
 | model1 | consumption        | real_interest_rate |       0 | -0.293 | -0.293 | -0.293 | -0.293 |
 | model1 | consumption        | real_interest_rate |       1 | -0.356 | -0.356 | -0.356 | -0.356 |
-| model1 | consumption        | real_interest_rate |       2 | -0.380 | -0.380 | -0.380 | -0.380 |
+| model1 | consumption        | real_interest_rate |       2 | -0.381 | -0.381 | -0.381 | -0.381 |
 | model1 | consumption        | real_interest_rate |       3 | -0.393 | -0.393 | -0.393 | -0.393 |
 | model1 | consumption        | hours_worked       |       0 | -0.238 | -0.238 | -0.238 | -0.238 |
 | model1 | consumption        | hours_worked       |       1 | -0.293 | -0.293 | -0.293 | -0.293 |
@@ -397,7 +397,7 @@ as_kable(summary(demo_rep), preset = "compact", digits = 3)
 | model1 | real_interest_rate | real_interest_rate |       1 | -0.384 | -0.384 | -0.384 | -0.384 |
 | model1 | real_interest_rate | real_interest_rate |       2 | -0.304 | -0.304 | -0.304 | -0.304 |
 | model1 | real_interest_rate | real_interest_rate |       3 | -0.229 | -0.229 | -0.229 | -0.229 |
-| model1 | real_interest_rate | hours_worked       |       0 |  0.493 |  0.493 |  0.493 |  0.493 |
+| model1 | real_interest_rate | hours_worked       |       0 |  0.494 |  0.494 |  0.494 |  0.494 |
 | model1 | real_interest_rate | hours_worked       |       1 |  0.356 |  0.356 |  0.356 |  0.356 |
 | model1 | real_interest_rate | hours_worked       |       2 |  0.246 |  0.246 |  0.246 |  0.246 |
 | model1 | real_interest_rate | hours_worked       |       3 |  0.184 |  0.184 |  0.184 |  0.184 |
@@ -411,14 +411,14 @@ as_kable(summary(demo_rep), preset = "compact", digits = 3)
 | model1 | hours_worked       | stock_prices       |       3 |  0.240 |  0.240 |  0.240 |  0.240 |
 | model1 | hours_worked       | consumption        |       0 | -0.060 | -0.060 | -0.060 | -0.060 |
 | model1 | hours_worked       | consumption        |       1 | -0.208 | -0.208 | -0.208 | -0.208 |
-| model1 | hours_worked       | consumption        |       2 | -0.304 | -0.304 | -0.304 | -0.304 |
+| model1 | hours_worked       | consumption        |       2 | -0.305 | -0.305 | -0.305 | -0.305 |
 | model1 | hours_worked       | consumption        |       3 | -0.358 | -0.358 | -0.358 | -0.358 |
-| model1 | hours_worked       | real_interest_rate |       0 | -0.569 | -0.569 | -0.569 | -0.569 |
+| model1 | hours_worked       | real_interest_rate |       0 | -0.570 | -0.570 | -0.570 | -0.570 |
 | model1 | hours_worked       | real_interest_rate |       1 | -0.886 | -0.886 | -0.886 | -0.886 |
-| model1 | hours_worked       | real_interest_rate |       2 | -1.016 | -1.016 | -1.016 | -1.016 |
-| model1 | hours_worked       | real_interest_rate |       3 | -1.073 | -1.073 | -1.073 | -1.073 |
+| model1 | hours_worked       | real_interest_rate |       2 | -1.017 | -1.017 | -1.017 | -1.017 |
+| model1 | hours_worked       | real_interest_rate |       3 | -1.074 | -1.074 | -1.074 | -1.074 |
 | model1 | hours_worked       | hours_worked       |       0 |  0.217 |  0.217 |  0.217 |  0.217 |
-| model1 | hours_worked       | hours_worked       |       1 |  0.145 |  0.145 |  0.145 |  0.145 |
+| model1 | hours_worked       | hours_worked       |       1 |  0.144 |  0.144 |  0.144 |  0.144 |
 | model1 | hours_worked       | hours_worked       |       2 |  0.104 |  0.104 |  0.104 |  0.104 |
 | model1 | hours_worked       | hours_worked       |       3 |  0.095 |  0.095 |  0.095 |  0.095 |
 
@@ -435,7 +435,7 @@ as_kable(demo_audit, preset = "compact", digits = 3)
 | Model  | Variable     | Shock        | Horizon | Restriction type | Restriction                           | Relation | Posterior probability |  Mean | Median | Lower | Upper |
 |:-------|:-------------|:-------------|--------:|:-----------------|:--------------------------------------|:---------|----------------------:|------:|-------:|------:|------:|
 | model1 | productivity | productivity |       0 | irf_zero         | irf\[productivity,productivity,0\]==0 | ==0      |                     1 | 0.000 |  0.000 | 0.000 | 0.000 |
-| model1 | stock_prices | productivity |       0 | irf_sign         | irf\[stock_prices,productivity,0\]\>0 | \>0      |                     1 | 4.692 |  5.644 | 3.263 | 5.644 |
+| model1 | stock_prices | productivity |       0 | irf_sign         | irf\[stock_prices,productivity,0\]\>0 | \>0      |                     1 | 4.608 |  5.225 | 3.263 | 5.644 |
 
 ``` r
 plot_restriction_audit(demo_audit)
@@ -449,31 +449,31 @@ as_kable(demo_hd, preset = "compact", digits = 3)
 
 | Model  | Variable           | Shock              | Event start | Event end |   Mean | Median |  Lower |  Upper |
 |:-------|:-------------------|:-------------------|:------------|:----------|-------:|-------:|-------:|-------:|
-| model1 | consumption        | consumption        | 1           | 2         |  0.015 |  0.111 | -0.129 |  0.111 |
-| model1 | hours_worked       | consumption        | 1           | 2         | -0.152 | -0.090 | -0.246 | -0.090 |
-| model1 | productivity       | consumption        | 1           | 2         |  0.315 |  0.571 | -0.068 |  0.571 |
-| model1 | real_interest_rate | consumption        | 1           | 2         |  0.112 |  0.096 |  0.096 |  0.136 |
-| model1 | stock_prices       | consumption        | 1           | 2         | -1.296 | -3.112 | -3.112 |  1.428 |
-| model1 | consumption        | hours_worked       | 1           | 2         |  0.211 |  0.205 |  0.205 |  0.220 |
-| model1 | hours_worked       | hours_worked       | 1           | 2         |  0.286 |  0.328 |  0.225 |  0.328 |
-| model1 | productivity       | hours_worked       | 1           | 2         |  0.022 | -0.066 | -0.066 |  0.156 |
-| model1 | real_interest_rate | hours_worked       | 1           | 2         |  0.015 | -0.064 | -0.064 |  0.134 |
-| model1 | stock_prices       | hours_worked       | 1           | 2         | -0.436 | -0.095 | -0.947 | -0.095 |
-| model1 | consumption        | productivity       | 1           | 2         |  0.118 |  0.013 |  0.013 |  0.277 |
-| model1 | hours_worked       | productivity       | 1           | 2         | -0.229 |  0.166 | -0.821 |  0.166 |
+| model1 | consumption        | consumption        | 1           | 2         | -0.004 |  0.013 | -0.129 |  0.111 |
+| model1 | hours_worked       | consumption        | 1           | 2         | -0.059 | -0.090 | -0.246 |  0.078 |
+| model1 | productivity       | consumption        | 1           | 2         |  0.217 |  0.077 | -0.068 |  0.571 |
+| model1 | real_interest_rate | consumption        | 1           | 2         |  0.031 |  0.096 | -0.049 |  0.136 |
+| model1 | stock_prices       | consumption        | 1           | 2         | -0.788 | -0.571 | -3.112 |  1.428 |
+| model1 | consumption        | hours_worked       | 1           | 2         |  0.169 |  0.205 |  0.129 |  0.220 |
+| model1 | hours_worked       | hours_worked       | 1           | 2         |  0.338 |  0.327 |  0.225 |  0.421 |
+| model1 | productivity       | hours_worked       | 1           | 2         |  0.062 |  0.133 | -0.066 |  0.156 |
+| model1 | real_interest_rate | hours_worked       | 1           | 2         | -0.001 | -0.064 | -0.094 |  0.134 |
+| model1 | stock_prices       | hours_worked       | 1           | 2         | -0.265 | -0.095 | -0.947 |  0.211 |
+| model1 | consumption        | productivity       | 1           | 2         |  0.121 |  0.026 |  0.013 |  0.277 |
+| model1 | hours_worked       | productivity       | 1           | 2         | -0.299 | -0.184 | -0.822 |  0.166 |
 | model1 | productivity       | productivity       | 1           | 2         |  0.000 |  0.000 |  0.000 |  0.000 |
-| model1 | real_interest_rate | productivity       | 1           | 2         |  0.076 |  0.123 |  0.005 |  0.123 |
-| model1 | stock_prices       | productivity       | 1           | 2         |  4.037 |  5.158 |  2.357 |  5.158 |
-| model1 | consumption        | real_interest_rate | 1           | 2         |  0.171 |  0.252 |  0.049 |  0.252 |
-| model1 | hours_worked       | real_interest_rate | 1           | 2         | -0.360 | -0.858 | -0.858 |  0.386 |
-| model1 | productivity       | real_interest_rate | 1           | 2         | -0.161 | -0.202 | -0.202 | -0.099 |
-| model1 | real_interest_rate | real_interest_rate | 1           | 2         |  0.039 |  0.082 | -0.025 |  0.082 |
-| model1 | stock_prices       | real_interest_rate | 1           | 2         |  1.522 | -0.346 | -0.346 |  4.324 |
-| model1 | consumption        | stock_prices       | 1           | 2         |  0.031 |  0.065 | -0.020 |  0.065 |
-| model1 | hours_worked       | stock_prices       | 1           | 2         |  0.270 |  0.414 |  0.052 |  0.414 |
-| model1 | productivity       | stock_prices       | 1           | 2         | -0.411 | -0.389 | -0.444 | -0.389 |
-| model1 | real_interest_rate | stock_prices       | 1           | 2         |  0.099 |  0.155 |  0.015 |  0.155 |
-| model1 | stock_prices       | stock_prices       | 1           | 2         | -2.542 | -3.331 | -3.331 | -1.359 |
+| model1 | real_interest_rate | productivity       | 1           | 2         |  0.117 |  0.123 |  0.005 |  0.196 |
+| model1 | stock_prices       | productivity       | 1           | 2         |  3.194 |  2.357 |  1.847 |  5.158 |
+| model1 | consumption        | real_interest_rate | 1           | 2         |  0.123 |  0.049 |  0.036 |  0.252 |
+| model1 | hours_worked       | real_interest_rate | 1           | 2         |  0.002 |  0.386 | -0.858 |  0.590 |
+| model1 | productivity       | real_interest_rate | 1           | 2         | -0.123 | -0.099 | -0.202 | -0.068 |
+| model1 | real_interest_rate | real_interest_rate | 1           | 2         |  0.118 |  0.082 | -0.025 |  0.224 |
+| model1 | stock_prices       | real_interest_rate | 1           | 2         |  1.547 | -0.225 | -0.346 |  4.325 |
+| model1 | consumption        | stock_prices       | 1           | 2         |  0.020 |  0.013 | -0.020 |  0.065 |
+| model1 | hours_worked       | stock_prices       | 1           | 2         |  0.297 |  0.414 |  0.052 |  0.463 |
+| model1 | productivity       | stock_prices       | 1           | 2         | -0.360 | -0.389 | -0.444 | -0.296 |
+| model1 | real_interest_rate | stock_prices       | 1           | 2         |  0.000 |  0.015 | -0.112 |  0.155 |
+| model1 | stock_prices       | stock_prices       | 1           | 2         | -1.749 | -1.359 | -3.331 | -0.642 |
 
 ``` r
 plot_hd_event(demo_post, start = 1, end = 2)
