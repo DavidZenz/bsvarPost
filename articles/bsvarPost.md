@@ -26,6 +26,14 @@ vignette lightweight, most of them are shown but not evaluated during
 the build. A small evaluated showcase appears at the end of the vignette
 so the rendered document still includes an actual table and plot.
 
+This example uses two lag specifications of the same fiscal model:
+
+- `post`: a baseline model with `p = 1`
+- `post_alt`: an alternative specification with `p = 2`
+
+That gives a realistic comparison surface for CDMs, IRFs, and reporting
+helpers.
+
 ``` r
 library(bsvars)
 library(bsvarPost)
@@ -44,8 +52,10 @@ Compute cumulative dynamic multipliers:
 
 ``` r
 cdm_obj <- cdm(post, horizon = 8)
+cdr_cmp <- compare_cdm(p1 = post, p2 = post_alt, horizon = 8)
 summary(cdm_obj)
 plot(cdm_obj)
+ggplot2::autoplot(cdr_cmp)
 ```
 
 Normalize by the sample standard deviation of the shocked variable only
@@ -74,6 +84,7 @@ Plot tidy outputs with `ggplot2` defaults:
 ``` r
 ggplot2::autoplot(irf_tbl)
 ggplot2::autoplot(cdm_tbl)
+ggplot2::autoplot(compare_irf(p1 = post, p2 = post_alt, horizon = 8))
 
 style_bsvar_plot(
   ggplot2::autoplot(cdm_tbl),
@@ -456,9 +467,9 @@ A practical rule of thumb is:
 
 ## Rendered showcase
 
-These final chunks are intentionally small and evaluated during the
-vignette build so the rendered document includes actual tables and plots
-for the main output families.
+These final chunks reuse the same baseline-versus-alternative `bsvars`
+workflow on a much smaller posterior sample so the rendered document
+includes actual tables and plots without making the build heavy.
 
 ``` r
 library(bsvars)
@@ -467,55 +478,95 @@ data(us_fiscal_lsuw)
 set.seed(11)
 demo_spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
-demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
-demo_spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 2)
+demo_post <- estimate(demo_spec, S = 8, thin = 1, show_progress = FALSE)
+demo_spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 3)
 #> The identification is set to the default option of lower-triangular structural matrix.
-demo_post_alt <- estimate(demo_spec_alt, S = 5, thin = 1, show_progress = FALSE)
+demo_post_alt <- estimate(demo_spec_alt, S = 8, thin = 1, show_progress = FALSE)
 ```
 
 ``` r
-demo_cdm <- cdm(demo_post, horizon = 3)
-summary(demo_cdm)
-#> # A tibble: 36 × 10
-#>    model  object_type variable shock horizon     mean   median     sd    lower
-#>    <chr>  <chr>       <chr>    <chr>   <dbl>    <dbl>    <dbl>  <dbl>    <dbl>
-#>  1 model1 cdm         ttr      ttr         0  0.0531   0.0291  0.0470  0.0284 
-#>  2 model1 cdm         ttr      ttr         1  0.200    0.0565  0.304   0.0551 
-#>  3 model1 cdm         ttr      ttr         2  0.417    0.0833  0.721   0.0811 
-#>  4 model1 cdm         ttr      ttr         3  0.716    0.110   1.33    0.107  
-#>  5 model1 cdm         ttr      gs          0  0        0       0       0      
-#>  6 model1 cdm         ttr      gs          1  0.0902  -0.00483 0.195  -0.00598
-#>  7 model1 cdm         ttr      gs          2  0.254   -0.0134  0.550  -0.0173 
-#>  8 model1 cdm         ttr      gs          3  0.502   -0.0249  1.09   -0.0335 
-#>  9 model1 cdm         ttr      gdp         0  0        0       0       0      
-#> 10 model1 cdm         ttr      gdp         1 -0.00649  0.00201 0.0156 -0.0159 
-#> # ℹ 26 more rows
-#> # ℹ 1 more variable: upper <dbl>
-plot(demo_cdm)
+demo_cmp <- compare_irf(
+  p1 = demo_post,
+  p2 = demo_post_alt,
+  horizon = 3
+)
+demo_cmp_focus <- demo_cmp[
+  demo_cmp$variable == unique(demo_cmp$variable)[1] &
+    demo_cmp$shock == unique(demo_cmp$shock)[1],
+  ,
+  drop = FALSE
+]
+
+as_kable(demo_cmp_focus, preset = "compact", digits = 3)
+```
+
+| Model | Variable | Shock | Horizon |  Mean | Median | Lower | Upper |
+|:------|:---------|:------|--------:|------:|-------:|------:|------:|
+| p1    | ttr      | ttr   |       0 | 0.044 |  0.029 | 0.028 | 0.042 |
+| p1    | ttr      | ttr   |       1 | 0.102 |  0.028 | 0.026 | 0.045 |
+| p1    | ttr      | ttr   |       2 | 0.145 |  0.027 | 0.025 | 0.042 |
+| p1    | ttr      | ttr   |       3 | 0.197 |  0.027 | 0.025 | 0.033 |
+| p2    | ttr      | ttr   |       0 | 0.050 |  0.048 | 0.032 | 0.063 |
+| p2    | ttr      | ttr   |       1 | 0.041 |  0.042 | 0.024 | 0.067 |
+| p2    | ttr      | ttr   |       2 | 0.044 |  0.039 | 0.027 | 0.066 |
+| p2    | ttr      | ttr   |       3 | 0.030 |  0.024 | 0.021 | 0.045 |
+
+``` r
+template_bsvar_plot(
+  ggplot2::autoplot(demo_cmp_focus),
+  family = "comparison",
+  preset = "paper"
+)
 ```
 
 ![](bsvarPost_files/figure-html/unnamed-chunk-20-1.png)
 
 ``` r
-demo_cmp <- compare_peak_response(
-  base = demo_post,
-  alt = demo_post_alt,
-  type = "irf",
-  horizon = 3,
-  variable = 1,
-  shock = 1
-)
-
-as_kable(demo_cmp, preset = "compact", digits = 3)
+demo_cdm <- cdm(demo_post, horizon = 3)
+as_kable(summary(demo_cdm), preset = "compact", digits = 3)
 ```
 
-| Model | Variable | Shock | Mean value | Median value | Lower value | Upper value | Mean horizon | Median horizon | Lower horizon | Upper horizon |
-|:------|:---------|:------|-----------:|-------------:|------------:|------------:|-------------:|---------------:|--------------:|--------------:|
-| base  | ttr      | ttr   |      0.303 |        0.029 |       0.028 |       0.528 |          0.8 |              0 |             0 |          1.72 |
-| alt   | ttr      | ttr   |      0.039 |        0.030 |       0.027 |       0.050 |          0.2 |              0 |             0 |          0.36 |
+| Model  | Variable | Shock | Horizon |   Mean | Median |  Lower |  Upper |
+|:-------|:---------|:------|--------:|-------:|-------:|-------:|-------:|
+| model1 | ttr      | ttr   |       0 |  0.044 |  0.029 |  0.028 |  0.042 |
+| model1 | ttr      | ttr   |       1 |  0.146 |  0.057 |  0.054 |  0.087 |
+| model1 | ttr      | ttr   |       2 |  0.291 |  0.084 |  0.079 |  0.128 |
+| model1 | ttr      | ttr   |       3 |  0.488 |  0.111 |  0.105 |  0.161 |
+| model1 | ttr      | gs    |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | ttr      | gs    |       1 |  0.055 | -0.005 | -0.006 |  0.026 |
+| model1 | ttr      | gs    |       2 |  0.153 | -0.014 | -0.016 |  0.074 |
+| model1 | ttr      | gs    |       3 |  0.303 | -0.028 | -0.031 |  0.138 |
+| model1 | ttr      | gdp   |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | ttr      | gdp   |       1 | -0.003 |  0.002 | -0.005 |  0.002 |
+| model1 | ttr      | gdp   |       2 | -0.005 |  0.005 | -0.010 |  0.006 |
+| model1 | ttr      | gdp   |       3 | -0.003 |  0.009 | -0.011 |  0.011 |
+| model1 | gs       | ttr   |       0 |  0.085 | -0.001 | -0.002 |  0.002 |
+| model1 | gs       | ttr   |       1 |  0.205 | -0.014 | -0.016 | -0.013 |
+| model1 | gs       | ttr   |       2 |  0.373 | -0.038 | -0.045 | -0.034 |
+| model1 | gs       | ttr   |       3 |  0.616 | -0.072 | -0.082 | -0.065 |
+| model1 | gs       | gs    |       0 |  0.146 |  0.088 |  0.077 |  0.090 |
+| model1 | gs       | gs    |       1 |  0.328 |  0.159 |  0.152 |  0.171 |
+| model1 | gs       | gs    |       2 |  0.555 |  0.228 |  0.202 |  0.245 |
+| model1 | gs       | gs    |       3 |  0.850 |  0.302 |  0.240 |  0.316 |
+| model1 | gs       | gdp   |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
+| model1 | gs       | gdp   |       1 |  0.009 |  0.009 |  0.006 |  0.014 |
+| model1 | gs       | gdp   |       2 |  0.026 |  0.025 |  0.016 |  0.036 |
+| model1 | gs       | gdp   |       3 |  0.051 |  0.048 |  0.032 |  0.064 |
+| model1 | gdp      | ttr   |       0 | -0.093 |  0.006 |  0.004 |  0.008 |
+| model1 | gdp      | ttr   |       1 | -0.073 |  0.020 |  0.017 |  0.024 |
+| model1 | gdp      | ttr   |       2 | -0.002 |  0.042 |  0.034 |  0.050 |
+| model1 | gdp      | ttr   |       3 |  0.104 |  0.077 |  0.066 |  0.139 |
+| model1 | gdp      | gs    |       0 | -0.145 | -0.063 | -0.084 | -0.043 |
+| model1 | gdp      | gs    |       1 | -0.204 | -0.124 | -0.148 | -0.091 |
+| model1 | gdp      | gs    |       2 | -0.218 | -0.178 | -0.187 | -0.144 |
+| model1 | gdp      | gs    |       3 | -0.197 | -0.207 | -0.243 | -0.172 |
+| model1 | gdp      | gdp   |       0 |  0.037 |  0.023 |  0.018 |  0.033 |
+| model1 | gdp      | gdp   |       1 |  0.049 |  0.037 |  0.033 |  0.049 |
+| model1 | gdp      | gdp   |       2 |  0.051 |  0.047 |  0.045 |  0.049 |
+| model1 | gdp      | gdp   |       3 |  0.050 |  0.052 |  0.044 |  0.056 |
 
 ``` r
-publish_bsvar_plot(demo_cmp, preset = "paper")
+plot(demo_cdm)
 ```
 
 ![](bsvarPost_files/figure-html/unnamed-chunk-21-1.png)
@@ -532,37 +583,37 @@ as_kable(summary(demo_rep), preset = "compact", digits = 3)
 | model1 | ttr      | ttr   |       2 |  0.027 |  0.027 |  0.027 |  0.027 |
 | model1 | ttr      | ttr   |       3 |  0.027 |  0.027 |  0.027 |  0.027 |
 | model1 | ttr      | gs    |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
-| model1 | ttr      | gs    |       1 | -0.006 | -0.006 | -0.006 | -0.006 |
-| model1 | ttr      | gs    |       2 | -0.010 | -0.010 | -0.010 | -0.010 |
-| model1 | ttr      | gs    |       3 | -0.015 | -0.015 | -0.015 | -0.015 |
+| model1 | ttr      | gs    |       1 | -0.007 | -0.007 | -0.007 | -0.007 |
+| model1 | ttr      | gs    |       2 | -0.013 | -0.013 | -0.013 | -0.013 |
+| model1 | ttr      | gs    |       3 | -0.018 | -0.018 | -0.018 | -0.018 |
 | model1 | ttr      | gdp   |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
 | model1 | ttr      | gdp   |       1 |  0.002 |  0.002 |  0.002 |  0.002 |
-| model1 | ttr      | gdp   |       2 |  0.003 |  0.003 |  0.003 |  0.003 |
+| model1 | ttr      | gdp   |       2 |  0.004 |  0.004 |  0.004 |  0.004 |
 | model1 | ttr      | gdp   |       3 |  0.004 |  0.004 |  0.004 |  0.004 |
-| model1 | gs       | ttr   |       0 |  0.001 |  0.001 |  0.001 |  0.001 |
-| model1 | gs       | ttr   |       1 | -0.014 | -0.014 | -0.014 | -0.014 |
-| model1 | gs       | ttr   |       2 | -0.025 | -0.025 | -0.025 | -0.025 |
-| model1 | gs       | ttr   |       3 | -0.034 | -0.034 | -0.034 | -0.034 |
+| model1 | gs       | ttr   |       0 | -0.001 | -0.001 | -0.001 | -0.001 |
+| model1 | gs       | ttr   |       1 | -0.013 | -0.013 | -0.013 | -0.013 |
+| model1 | gs       | ttr   |       2 | -0.024 | -0.024 | -0.024 | -0.024 |
+| model1 | gs       | ttr   |       3 | -0.032 | -0.032 | -0.032 | -0.032 |
 | model1 | gs       | gs    |       0 |  0.090 |  0.090 |  0.090 |  0.090 |
-| model1 | gs       | gs    |       1 |  0.074 |  0.074 |  0.074 |  0.074 |
-| model1 | gs       | gs    |       2 |  0.061 |  0.061 |  0.061 |  0.061 |
-| model1 | gs       | gs    |       3 |  0.049 |  0.049 |  0.049 |  0.049 |
+| model1 | gs       | gs    |       1 |  0.082 |  0.082 |  0.082 |  0.082 |
+| model1 | gs       | gs    |       2 |  0.075 |  0.075 |  0.075 |  0.075 |
+| model1 | gs       | gs    |       3 |  0.070 |  0.070 |  0.070 |  0.070 |
 | model1 | gs       | gdp   |       0 |  0.000 |  0.000 |  0.000 |  0.000 |
-| model1 | gs       | gdp   |       1 |  0.012 |  0.012 |  0.012 |  0.012 |
-| model1 | gs       | gdp   |       2 |  0.021 |  0.021 |  0.021 |  0.021 |
-| model1 | gs       | gdp   |       3 |  0.028 |  0.028 |  0.028 |  0.028 |
-| model1 | gdp      | ttr   |       0 |  0.004 |  0.004 |  0.004 |  0.004 |
-| model1 | gdp      | ttr   |       1 |  0.014 |  0.014 |  0.014 |  0.014 |
-| model1 | gdp      | ttr   |       2 |  0.023 |  0.023 |  0.023 |  0.023 |
+| model1 | gs       | gdp   |       1 |  0.010 |  0.010 |  0.010 |  0.010 |
+| model1 | gs       | gdp   |       2 |  0.018 |  0.018 |  0.018 |  0.018 |
+| model1 | gs       | gdp   |       3 |  0.024 |  0.024 |  0.024 |  0.024 |
+| model1 | gdp      | ttr   |       0 |  0.008 |  0.008 |  0.008 |  0.008 |
+| model1 | gdp      | ttr   |       1 |  0.016 |  0.016 |  0.016 |  0.016 |
+| model1 | gdp      | ttr   |       2 |  0.025 |  0.025 |  0.025 |  0.025 |
 | model1 | gdp      | ttr   |       3 |  0.032 |  0.032 |  0.032 |  0.032 |
-| model1 | gdp      | gs    |       0 | -0.066 | -0.066 | -0.066 | -0.066 |
-| model1 | gdp      | gs    |       1 | -0.062 | -0.062 | -0.062 | -0.062 |
-| model1 | gdp      | gs    |       2 | -0.059 | -0.059 | -0.059 | -0.059 |
-| model1 | gdp      | gs    |       3 | -0.057 | -0.057 | -0.057 | -0.057 |
-| model1 | gdp      | gdp   |       0 |  0.023 |  0.023 |  0.023 |  0.023 |
-| model1 | gdp      | gdp   |       1 |  0.016 |  0.016 |  0.016 |  0.016 |
-| model1 | gdp      | gdp   |       2 |  0.009 |  0.009 |  0.009 |  0.009 |
-| model1 | gdp      | gdp   |       3 |  0.003 |  0.003 |  0.003 |  0.003 |
+| model1 | gdp      | gs    |       0 | -0.061 | -0.061 | -0.061 | -0.061 |
+| model1 | gdp      | gs    |       1 | -0.061 | -0.061 | -0.061 | -0.061 |
+| model1 | gdp      | gs    |       2 | -0.062 | -0.062 | -0.062 | -0.062 |
+| model1 | gdp      | gs    |       3 | -0.064 | -0.064 | -0.064 | -0.064 |
+| model1 | gdp      | gdp   |       0 |  0.022 |  0.022 |  0.022 |  0.022 |
+| model1 | gdp      | gdp   |       1 |  0.015 |  0.015 |  0.015 |  0.015 |
+| model1 | gdp      | gdp   |       2 |  0.010 |  0.010 |  0.010 |  0.010 |
+| model1 | gdp      | gdp   |       3 |  0.005 |  0.005 |  0.005 |  0.005 |
 
 ``` r
 publish_bsvar_plot(demo_rep, preset = "paper")
