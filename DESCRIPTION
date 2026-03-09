@@ -29,5 +29,5 @@ VignetteBuilder: knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-URL: https://davidzenz.github.io/bsvarPost/, https://github.com/DavidZenz/bsvarPost
+URL: https://github.com/DavidZenz/bsvarPost
 BugReports: https://github.com/DavidZenz/bsvarPost/issues

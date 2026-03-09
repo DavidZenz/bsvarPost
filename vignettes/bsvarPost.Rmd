@@ -460,6 +460,8 @@ This final chunk is intentionally small and evaluated during the vignette build
 so the rendered document includes one actual table and one actual plot.
 
 ```{r, eval = TRUE}
+library(bsvars)
+library(bsvarPost)
 data(us_fiscal_lsuw)
 set.seed(11)
 demo_spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)

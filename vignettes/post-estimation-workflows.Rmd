@@ -263,6 +263,8 @@ needed to bring posterior outputs into publication-ready form.
 ## Rendered showcase
 
 ```{r, eval = TRUE}
+library(bsvarSIGNs)
+library(bsvarPost)
 data(optimism)
 sign_irf_demo <- matrix(c(0, 1, rep(NA, 23)), 5, 5)
 set.seed(12)
