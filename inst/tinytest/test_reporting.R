@@ -41,6 +41,16 @@ diag_bundle <- report_bundle(diag_tbl, caption = "Acceptance diagnostics")
 expect_true(inherits(diag_bundle$plot, "ggplot"))
 expect_true("metric" %in% names(diag_bundle$table))
 
+sim_tbl <- simultaneous_irf(post, horizon = 2, variable = 1, shock = 1)
+sim_bundle <- report_bundle(sim_tbl, caption = "Simultaneous bands", preset = "compact")
+expect_true(inherits(sim_bundle$plot, "ggplot"))
+expect_true(all(c("median", "lower", "upper", "critical_value") %in% names(sim_bundle$table)))
+
+joint_tbl <- joint_hypothesis_irf(post, variable = 1, shock = 1, horizon = 0:1, relation = ">", value = 0)
+joint_bundle <- report_bundle(joint_tbl, caption = "Joint hypothesis", preset = "compact")
+expect_true(inherits(joint_bundle$plot, "ggplot"))
+expect_true(all(c("posterior_prob", "n_constraints") %in% names(joint_bundle$table)))
+
 csv_path <- tempfile(fileext = ".csv")
 written_path <- write_bsvar_csv(tbl, csv_path, preset = "compact")
 expect_true(file.exists(csv_path))

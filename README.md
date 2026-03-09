@@ -329,6 +329,14 @@ diag_bundle <- report_bundle(
 )
 
 diag_bundle$plot
+
+joint_bundle <- report_bundle(
+  joint_hypothesis_irf(post, variable = 1, shock = 1, horizon = 0:2, relation = ">", value = 0),
+  caption = "Joint posterior statement",
+  preset = "compact"
+)
+
+joint_bundle$plot
 ```
 
 ## Historical decomposition events

@@ -277,6 +277,12 @@ infer_report_plot <- function(object, ...) {
   if (identical(object_type, "acceptance_diagnostics")) {
     return(plot_acceptance_diagnostics(object, ...))
   }
+  if (grepl("^simultaneous_", object_type)) {
+    return(plot_simultaneous(object, ...))
+  }
+  if (grepl("^joint_", object_type)) {
+    return(plot_joint_hypothesis(object, ...))
+  }
   if (isTRUE(attr(object, "compare"))) {
     if (identical(object_type, "restriction_audit")) {
       return(plot_compare_restrictions(object, ...))
