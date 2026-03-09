@@ -52,7 +52,7 @@ Compute cumulative dynamic multipliers:
 
 ``` r
 cdm_obj <- cdm(post, horizon = 8)
-cdr_cmp <- compare_cdm(p1 = post, p2 = post_alt, horizon = 8)
+cdr_cmp <- compare_cdm(baseline = post, alternative = post_alt, horizon = 8)
 summary(cdm_obj)
 plot(cdm_obj)
 ggplot2::autoplot(cdr_cmp)
@@ -84,7 +84,7 @@ Plot tidy outputs with `ggplot2` defaults:
 ``` r
 ggplot2::autoplot(irf_tbl)
 ggplot2::autoplot(cdm_tbl)
-ggplot2::autoplot(compare_irf(p1 = post, p2 = post_alt, horizon = 8))
+ggplot2::autoplot(compare_irf(baseline = post, alternative = post_alt, horizon = 8))
 
 style_bsvar_plot(
   ggplot2::autoplot(cdm_tbl),
@@ -192,8 +192,8 @@ reports the first horizon at which a threshold condition is met.
 
 ``` r
 compare_peak_response(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   type = "irf",
   horizon = 8,
   variable = 1,
@@ -201,8 +201,8 @@ compare_peak_response(
 )
 
 compare_duration_response(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   type = "cdm",
   horizon = 8,
   variable = 1,
@@ -213,8 +213,8 @@ compare_duration_response(
 )
 
 compare_half_life_response(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   type = "irf",
   horizon = 8,
   variable = 1,
@@ -223,8 +223,8 @@ compare_half_life_response(
 )
 
 compare_time_to_threshold(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   type = "cdm",
   horizon = 8,
   variable = 1,
@@ -234,8 +234,8 @@ compare_time_to_threshold(
 )
 
 plot_compare_response(compare_peak_response(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   type = "irf",
   horizon = 8,
   variable = 1,
@@ -316,7 +316,7 @@ diag_tbl
 
 summary(diag_tbl)
 
-compare_acceptance_diagnostics(p1 = post, p2 = post_alt)
+compare_acceptance_diagnostics(baseline = post, alternative = post_alt)
 plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
 ```
 
@@ -344,14 +344,14 @@ comparison tables.
 
 ``` r
 cmp_irf <- compare_irf(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   horizon = 8
 )
 
 cmp_cdm <- compare_cdm(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   horizon = 8
 )
 
@@ -363,14 +363,14 @@ Restriction audits can also be compared directly across models.
 
 ``` r
 compare_restrictions(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
 )
 
 plot_compare_restrictions(compare_restrictions(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
 ))
 ```
@@ -384,8 +384,8 @@ publication-oriented column selection.
 
 ``` r
 cmp_tbl <- compare_irf(
-  p1 = post,
-  p2 = post_alt,
+  baseline = post,
+  alternative = post_alt,
   horizon = 8
 )
 
@@ -486,8 +486,8 @@ demo_post_alt <- estimate(demo_spec_alt, S = 8, thin = 1, show_progress = FALSE)
 
 ``` r
 demo_cmp <- compare_irf(
-  p1 = demo_post,
-  p2 = demo_post_alt,
+  baseline = demo_post,
+  alternative = demo_post_alt,
   horizon = 3
 )
 demo_cmp_focus <- demo_cmp[
@@ -500,16 +500,16 @@ demo_cmp_focus <- demo_cmp[
 as_kable(demo_cmp_focus, preset = "compact", digits = 3)
 ```
 
-| Model | Variable | Shock | Horizon |  Mean | Median | Lower | Upper |
-|:------|:---------|:------|--------:|------:|-------:|------:|------:|
-| p1    | ttr      | ttr   |       0 | 0.044 |  0.029 | 0.028 | 0.042 |
-| p1    | ttr      | ttr   |       1 | 0.102 |  0.028 | 0.026 | 0.045 |
-| p1    | ttr      | ttr   |       2 | 0.145 |  0.027 | 0.025 | 0.042 |
-| p1    | ttr      | ttr   |       3 | 0.197 |  0.027 | 0.025 | 0.033 |
-| p2    | ttr      | ttr   |       0 | 0.050 |  0.048 | 0.032 | 0.063 |
-| p2    | ttr      | ttr   |       1 | 0.041 |  0.042 | 0.024 | 0.067 |
-| p2    | ttr      | ttr   |       2 | 0.044 |  0.039 | 0.027 | 0.066 |
-| p2    | ttr      | ttr   |       3 | 0.030 |  0.024 | 0.021 | 0.045 |
+| Model       | Variable | Shock | Horizon |  Mean | Median | Lower | Upper |
+|:------------|:---------|:------|--------:|------:|-------:|------:|------:|
+| baseline    | ttr      | ttr   |       0 | 0.044 |  0.029 | 0.028 | 0.042 |
+| baseline    | ttr      | ttr   |       1 | 0.102 |  0.028 | 0.026 | 0.045 |
+| baseline    | ttr      | ttr   |       2 | 0.145 |  0.027 | 0.025 | 0.042 |
+| baseline    | ttr      | ttr   |       3 | 0.197 |  0.027 | 0.025 | 0.033 |
+| alternative | ttr      | ttr   |       0 | 0.050 |  0.048 | 0.032 | 0.063 |
+| alternative | ttr      | ttr   |       1 | 0.041 |  0.042 | 0.024 | 0.067 |
+| alternative | ttr      | ttr   |       2 | 0.044 |  0.039 | 0.027 | 0.066 |
+| alternative | ttr      | ttr   |       3 | 0.030 |  0.024 | 0.021 | 0.045 |
 
 ``` r
 template_bsvar_plot(
@@ -621,6 +621,12 @@ publish_bsvar_plot(demo_rep, preset = "paper")
 
 ![](bsvarPost_files/figure-html/unnamed-chunk-22-1.png)
 
+For the website, `bsvarPost` also ships a small set of pre-rendered
+showcase figures generated from larger posterior samples and slightly
+longer horizons. These are not rebuilt during every vignette render,
+which keeps CI stable while still showing what the publication-oriented
+plots look like in a less toy-like setting.
+
 ## Historical decomposition events
 
 For event studies, `bsvarPost` can aggregate historical decomposition
@@ -651,7 +657,7 @@ annotate_bsvar_plot(
 These event summaries can also be compared across fitted models.
 
 ``` r
-cmp_hd_event <- compare_hd_event(p1 = post, p2 = post_alt, start = 1, end = 4)
+cmp_hd_event <- compare_hd_event(baseline = post, alternative = post_alt, start = 1, end = 4)
 cmp_hd_event
 ```
 

@@ -196,7 +196,7 @@ over a window and then rank shocks by contribution size.</p>
 <span><span class="va">ranked</span></span></code></pre></div>
 <p>Compare event windows across models:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_hd_event.html">compare_hd_event</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_hd_event.html">compare_hd_event</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <p>Plot the resulting summaries:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event.html">plot_hd_event</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
@@ -242,14 +242,14 @@ often compute manually for papers and presentations.</p>
 <p>The same summaries can be compared across alternative
 specifications.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/compare_duration_response.html">compare_duration_response</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"cdm"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/compare_half_life_response.html">compare_half_life_response</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/compare_time_to_threshold.html">compare_time_to_threshold</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"cdm"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/compare_duration_response.html">compare_duration_response</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"cdm"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/compare_half_life_response.html">compare_half_life_response</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/compare_time_to_threshold.html">compare_time_to_threshold</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"cdm"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -268,7 +268,7 @@ diagnostics layer for <code>PosteriorBSVARSIGN</code> objects.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">diag_tbl</span><span class="op">)</span></span></code></pre></div>
 <p>Compare diagnostics across models:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span><span class="va">diag_tbl</span>, metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/reporting.html">report_bundle</a></span><span class="op">(</span><span class="va">diag_tbl</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -401,7 +401,17 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="700"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">demo_rep</span><span class="op">)</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="8%">
+<col width="23%">
+<col width="23%">
+<col width="9%">
+<col width="8%">
+<col width="8%">
+<col width="8%">
+<col width="8%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">Model</th>
 <th align="left">Variable</th>
@@ -415,8 +425,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <tbody>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock1</td>
+<td align="left">productivity</td>
+<td align="left">productivity</td>
 <td align="right">0</td>
 <td align="right">0.000</td>
 <td align="right">0.000</td>
@@ -425,8 +435,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock1</td>
+<td align="left">productivity</td>
+<td align="left">productivity</td>
 <td align="right">1</td>
 <td align="right">-0.013</td>
 <td align="right">-0.013</td>
@@ -435,8 +445,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock1</td>
+<td align="left">productivity</td>
+<td align="left">productivity</td>
 <td align="right">2</td>
 <td align="right">-0.030</td>
 <td align="right">-0.030</td>
@@ -445,8 +455,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock1</td>
+<td align="left">productivity</td>
+<td align="left">productivity</td>
 <td align="right">3</td>
 <td align="right">-0.040</td>
 <td align="right">-0.040</td>
@@ -455,8 +465,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock2</td>
+<td align="left">productivity</td>
+<td align="left">stock_prices</td>
 <td align="right">0</td>
 <td align="right">-0.423</td>
 <td align="right">-0.423</td>
@@ -465,8 +475,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock2</td>
+<td align="left">productivity</td>
+<td align="left">stock_prices</td>
 <td align="right">1</td>
 <td align="right">-0.459</td>
 <td align="right">-0.459</td>
@@ -475,8 +485,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock2</td>
+<td align="left">productivity</td>
+<td align="left">stock_prices</td>
 <td align="right">2</td>
 <td align="right">-0.473</td>
 <td align="right">-0.473</td>
@@ -485,8 +495,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock2</td>
+<td align="left">productivity</td>
+<td align="left">stock_prices</td>
 <td align="right">3</td>
 <td align="right">-0.471</td>
 <td align="right">-0.471</td>
@@ -495,8 +505,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock3</td>
+<td align="left">productivity</td>
+<td align="left">consumption</td>
 <td align="right">0</td>
 <td align="right">0.621</td>
 <td align="right">0.621</td>
@@ -505,8 +515,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock3</td>
+<td align="left">productivity</td>
+<td align="left">consumption</td>
 <td align="right">1</td>
 <td align="right">0.610</td>
 <td align="right">0.610</td>
@@ -515,8 +525,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock3</td>
+<td align="left">productivity</td>
+<td align="left">consumption</td>
 <td align="right">2</td>
 <td align="right">0.626</td>
 <td align="right">0.626</td>
@@ -525,8 +535,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock3</td>
+<td align="left">productivity</td>
+<td align="left">consumption</td>
 <td align="right">3</td>
 <td align="right">0.638</td>
 <td align="right">0.638</td>
@@ -535,8 +545,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock4</td>
+<td align="left">productivity</td>
+<td align="left">real_interest_rate</td>
 <td align="right">0</td>
 <td align="right">-0.220</td>
 <td align="right">-0.220</td>
@@ -545,8 +555,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock4</td>
+<td align="left">productivity</td>
+<td align="left">real_interest_rate</td>
 <td align="right">1</td>
 <td align="right">-0.102</td>
 <td align="right">-0.102</td>
@@ -555,8 +565,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock4</td>
+<td align="left">productivity</td>
+<td align="left">real_interest_rate</td>
 <td align="right">2</td>
 <td align="right">-0.043</td>
 <td align="right">-0.043</td>
@@ -565,8 +575,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock4</td>
+<td align="left">productivity</td>
+<td align="left">real_interest_rate</td>
 <td align="right">3</td>
 <td align="right">-0.018</td>
 <td align="right">-0.018</td>
@@ -575,8 +585,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock5</td>
+<td align="left">productivity</td>
+<td align="left">hours_worked</td>
 <td align="right">0</td>
 <td align="right">-0.072</td>
 <td align="right">-0.072</td>
@@ -585,8 +595,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock5</td>
+<td align="left">productivity</td>
+<td align="left">hours_worked</td>
 <td align="right">1</td>
 <td align="right">-0.164</td>
 <td align="right">-0.164</td>
@@ -595,8 +605,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock5</td>
+<td align="left">productivity</td>
+<td align="left">hours_worked</td>
 <td align="right">2</td>
 <td align="right">-0.146</td>
 <td align="right">-0.146</td>
@@ -605,8 +615,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock5</td>
+<td align="left">productivity</td>
+<td align="left">hours_worked</td>
 <td align="right">3</td>
 <td align="right">-0.134</td>
 <td align="right">-0.134</td>
@@ -615,8 +625,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock1</td>
+<td align="left">stock_prices</td>
+<td align="left">productivity</td>
 <td align="right">0</td>
 <td align="right">5.644</td>
 <td align="right">5.644</td>
@@ -625,8 +635,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock1</td>
+<td align="left">stock_prices</td>
+<td align="left">productivity</td>
 <td align="right">1</td>
 <td align="right">6.175</td>
 <td align="right">6.175</td>
@@ -635,8 +645,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock1</td>
+<td align="left">stock_prices</td>
+<td align="left">productivity</td>
 <td align="right">2</td>
 <td align="right">5.742</td>
 <td align="right">5.742</td>
@@ -645,8 +655,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock1</td>
+<td align="left">stock_prices</td>
+<td align="left">productivity</td>
 <td align="right">3</td>
 <td align="right">5.552</td>
 <td align="right">5.552</td>
@@ -655,8 +665,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock2</td>
+<td align="left">stock_prices</td>
+<td align="left">stock_prices</td>
 <td align="right">0</td>
 <td align="right">-3.645</td>
 <td align="right">-3.645</td>
@@ -665,8 +675,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock2</td>
+<td align="left">stock_prices</td>
+<td align="left">stock_prices</td>
 <td align="right">1</td>
 <td align="right">-4.215</td>
 <td align="right">-4.215</td>
@@ -675,8 +685,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock2</td>
+<td align="left">stock_prices</td>
+<td align="left">stock_prices</td>
 <td align="right">2</td>
 <td align="right">-4.915</td>
 <td align="right">-4.915</td>
@@ -685,8 +695,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock2</td>
+<td align="left">stock_prices</td>
+<td align="left">stock_prices</td>
 <td align="right">3</td>
 <td align="right">-5.345</td>
 <td align="right">-5.345</td>
@@ -695,8 +705,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock3</td>
+<td align="left">stock_prices</td>
+<td align="left">consumption</td>
 <td align="right">0</td>
 <td align="right">-3.405</td>
 <td align="right">-3.405</td>
@@ -705,8 +715,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock3</td>
+<td align="left">stock_prices</td>
+<td align="left">consumption</td>
 <td align="right">1</td>
 <td align="right">-3.474</td>
 <td align="right">-3.474</td>
@@ -715,8 +725,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock3</td>
+<td align="left">stock_prices</td>
+<td align="left">consumption</td>
 <td align="right">2</td>
 <td align="right">-3.843</td>
 <td align="right">-3.843</td>
@@ -725,8 +735,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock3</td>
+<td align="left">stock_prices</td>
+<td align="left">consumption</td>
 <td align="right">3</td>
 <td align="right">-4.116</td>
 <td align="right">-4.116</td>
@@ -735,8 +745,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock4</td>
+<td align="left">stock_prices</td>
+<td align="left">real_interest_rate</td>
 <td align="right">0</td>
 <td align="right">-0.378</td>
 <td align="right">-0.378</td>
@@ -745,8 +755,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock4</td>
+<td align="left">stock_prices</td>
+<td align="left">real_interest_rate</td>
 <td align="right">1</td>
 <td align="right">-0.105</td>
 <td align="right">-0.105</td>
@@ -755,8 +765,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock4</td>
+<td align="left">stock_prices</td>
+<td align="left">real_interest_rate</td>
 <td align="right">2</td>
 <td align="right">-0.147</td>
 <td align="right">-0.147</td>
@@ -765,8 +775,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock4</td>
+<td align="left">stock_prices</td>
+<td align="left">real_interest_rate</td>
 <td align="right">3</td>
 <td align="right">-0.231</td>
 <td align="right">-0.231</td>
@@ -775,8 +785,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock5</td>
+<td align="left">stock_prices</td>
+<td align="left">hours_worked</td>
 <td align="right">0</td>
 <td align="right">-0.104</td>
 <td align="right">-0.104</td>
@@ -785,8 +795,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock5</td>
+<td align="left">stock_prices</td>
+<td align="left">hours_worked</td>
 <td align="right">1</td>
 <td align="right">-0.460</td>
 <td align="right">-0.460</td>
@@ -795,8 +805,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock5</td>
+<td align="left">stock_prices</td>
+<td align="left">hours_worked</td>
 <td align="right">2</td>
 <td align="right">-0.243</td>
 <td align="right">-0.243</td>
@@ -805,8 +815,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock5</td>
+<td align="left">stock_prices</td>
+<td align="left">hours_worked</td>
 <td align="right">3</td>
 <td align="right">-0.010</td>
 <td align="right">-0.010</td>
@@ -815,8 +825,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock1</td>
+<td align="left">consumption</td>
+<td align="left">productivity</td>
 <td align="right">0</td>
 <td align="right">-0.015</td>
 <td align="right">-0.015</td>
@@ -825,8 +835,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock1</td>
+<td align="left">consumption</td>
+<td align="left">productivity</td>
 <td align="right">1</td>
 <td align="right">0.032</td>
 <td align="right">0.032</td>
@@ -835,8 +845,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock1</td>
+<td align="left">consumption</td>
+<td align="left">productivity</td>
 <td align="right">2</td>
 <td align="right">0.034</td>
 <td align="right">0.034</td>
@@ -845,8 +855,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock1</td>
+<td align="left">consumption</td>
+<td align="left">productivity</td>
 <td align="right">3</td>
 <td align="right">0.026</td>
 <td align="right">0.026</td>
@@ -855,8 +865,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock2</td>
+<td align="left">consumption</td>
+<td align="left">stock_prices</td>
 <td align="right">0</td>
 <td align="right">-0.075</td>
 <td align="right">-0.075</td>
@@ -865,8 +875,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock2</td>
+<td align="left">consumption</td>
+<td align="left">stock_prices</td>
 <td align="right">1</td>
 <td align="right">-0.103</td>
 <td align="right">-0.103</td>
@@ -875,8 +885,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock2</td>
+<td align="left">consumption</td>
+<td align="left">stock_prices</td>
 <td align="right">2</td>
 <td align="right">-0.124</td>
 <td align="right">-0.124</td>
@@ -885,8 +895,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock2</td>
+<td align="left">consumption</td>
+<td align="left">stock_prices</td>
 <td align="right">3</td>
 <td align="right">-0.139</td>
 <td align="right">-0.139</td>
@@ -895,8 +905,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock3</td>
+<td align="left">consumption</td>
+<td align="left">consumption</td>
 <td align="right">0</td>
 <td align="right">-0.129</td>
 <td align="right">-0.129</td>
@@ -905,8 +915,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock3</td>
+<td align="left">consumption</td>
+<td align="left">consumption</td>
 <td align="right">1</td>
 <td align="right">-0.212</td>
 <td align="right">-0.212</td>
@@ -915,8 +925,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock3</td>
+<td align="left">consumption</td>
+<td align="left">consumption</td>
 <td align="right">2</td>
 <td align="right">-0.246</td>
 <td align="right">-0.246</td>
@@ -925,8 +935,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock3</td>
+<td align="left">consumption</td>
+<td align="left">consumption</td>
 <td align="right">3</td>
 <td align="right">-0.268</td>
 <td align="right">-0.268</td>
@@ -935,8 +945,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock4</td>
+<td align="left">consumption</td>
+<td align="left">real_interest_rate</td>
 <td align="right">0</td>
 <td align="right">-0.293</td>
 <td align="right">-0.293</td>
@@ -945,8 +955,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock4</td>
+<td align="left">consumption</td>
+<td align="left">real_interest_rate</td>
 <td align="right">1</td>
 <td align="right">-0.356</td>
 <td align="right">-0.356</td>
@@ -955,8 +965,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock4</td>
+<td align="left">consumption</td>
+<td align="left">real_interest_rate</td>
 <td align="right">2</td>
 <td align="right">-0.380</td>
 <td align="right">-0.380</td>
@@ -965,8 +975,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock4</td>
+<td align="left">consumption</td>
+<td align="left">real_interest_rate</td>
 <td align="right">3</td>
 <td align="right">-0.393</td>
 <td align="right">-0.393</td>
@@ -975,8 +985,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock5</td>
+<td align="left">consumption</td>
+<td align="left">hours_worked</td>
 <td align="right">0</td>
 <td align="right">-0.238</td>
 <td align="right">-0.238</td>
@@ -985,8 +995,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock5</td>
+<td align="left">consumption</td>
+<td align="left">hours_worked</td>
 <td align="right">1</td>
 <td align="right">-0.293</td>
 <td align="right">-0.293</td>
@@ -995,8 +1005,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock5</td>
+<td align="left">consumption</td>
+<td align="left">hours_worked</td>
 <td align="right">2</td>
 <td align="right">-0.299</td>
 <td align="right">-0.299</td>
@@ -1005,8 +1015,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock5</td>
+<td align="left">consumption</td>
+<td align="left">hours_worked</td>
 <td align="right">3</td>
 <td align="right">-0.294</td>
 <td align="right">-0.294</td>
@@ -1015,8 +1025,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">productivity</td>
 <td align="right">0</td>
 <td align="right">-0.951</td>
 <td align="right">-0.951</td>
@@ -1025,8 +1035,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">productivity</td>
 <td align="right">1</td>
 <td align="right">-0.342</td>
 <td align="right">-0.342</td>
@@ -1035,8 +1045,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">productivity</td>
 <td align="right">2</td>
 <td align="right">-0.315</td>
 <td align="right">-0.315</td>
@@ -1045,8 +1055,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">productivity</td>
 <td align="right">3</td>
 <td align="right">-0.252</td>
 <td align="right">-0.252</td>
@@ -1055,8 +1065,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock2</td>
+<td align="left">real_interest_rate</td>
+<td align="left">stock_prices</td>
 <td align="right">0</td>
 <td align="right">-1.197</td>
 <td align="right">-1.197</td>
@@ -1065,8 +1075,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock2</td>
+<td align="left">real_interest_rate</td>
+<td align="left">stock_prices</td>
 <td align="right">1</td>
 <td align="right">-0.740</td>
 <td align="right">-0.740</td>
@@ -1075,8 +1085,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock2</td>
+<td align="left">real_interest_rate</td>
+<td align="left">stock_prices</td>
 <td align="right">2</td>
 <td align="right">-0.542</td>
 <td align="right">-0.542</td>
@@ -1085,8 +1095,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock2</td>
+<td align="left">real_interest_rate</td>
+<td align="left">stock_prices</td>
 <td align="right">3</td>
 <td align="right">-0.388</td>
 <td align="right">-0.388</td>
@@ -1095,8 +1105,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock3</td>
+<td align="left">real_interest_rate</td>
+<td align="left">consumption</td>
 <td align="right">0</td>
 <td align="right">-0.740</td>
 <td align="right">-0.740</td>
@@ -1105,8 +1115,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock3</td>
+<td align="left">real_interest_rate</td>
+<td align="left">consumption</td>
 <td align="right">1</td>
 <td align="right">-0.483</td>
 <td align="right">-0.483</td>
@@ -1115,8 +1125,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock3</td>
+<td align="left">real_interest_rate</td>
+<td align="left">consumption</td>
 <td align="right">2</td>
 <td align="right">-0.347</td>
 <td align="right">-0.347</td>
@@ -1125,8 +1135,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock3</td>
+<td align="left">real_interest_rate</td>
+<td align="left">consumption</td>
 <td align="right">3</td>
 <td align="right">-0.254</td>
 <td align="right">-0.254</td>
@@ -1135,8 +1145,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock4</td>
+<td align="left">real_interest_rate</td>
+<td align="left">real_interest_rate</td>
 <td align="right">0</td>
 <td align="right">-0.630</td>
 <td align="right">-0.630</td>
@@ -1145,8 +1155,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock4</td>
+<td align="left">real_interest_rate</td>
+<td align="left">real_interest_rate</td>
 <td align="right">1</td>
 <td align="right">-0.384</td>
 <td align="right">-0.384</td>
@@ -1155,8 +1165,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock4</td>
+<td align="left">real_interest_rate</td>
+<td align="left">real_interest_rate</td>
 <td align="right">2</td>
 <td align="right">-0.304</td>
 <td align="right">-0.304</td>
@@ -1165,8 +1175,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock4</td>
+<td align="left">real_interest_rate</td>
+<td align="left">real_interest_rate</td>
 <td align="right">3</td>
 <td align="right">-0.229</td>
 <td align="right">-0.229</td>
@@ -1175,8 +1185,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock5</td>
+<td align="left">real_interest_rate</td>
+<td align="left">hours_worked</td>
 <td align="right">0</td>
 <td align="right">0.493</td>
 <td align="right">0.493</td>
@@ -1185,8 +1195,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock5</td>
+<td align="left">real_interest_rate</td>
+<td align="left">hours_worked</td>
 <td align="right">1</td>
 <td align="right">0.356</td>
 <td align="right">0.356</td>
@@ -1195,8 +1205,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock5</td>
+<td align="left">real_interest_rate</td>
+<td align="left">hours_worked</td>
 <td align="right">2</td>
 <td align="right">0.246</td>
 <td align="right">0.246</td>
@@ -1205,8 +1215,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock5</td>
+<td align="left">real_interest_rate</td>
+<td align="left">hours_worked</td>
 <td align="right">3</td>
 <td align="right">0.184</td>
 <td align="right">0.184</td>
@@ -1215,8 +1225,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock1</td>
+<td align="left">hours_worked</td>
+<td align="left">productivity</td>
 <td align="right">0</td>
 <td align="right">0.110</td>
 <td align="right">0.110</td>
@@ -1225,8 +1235,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock1</td>
+<td align="left">hours_worked</td>
+<td align="left">productivity</td>
 <td align="right">1</td>
 <td align="right">0.136</td>
 <td align="right">0.136</td>
@@ -1235,8 +1245,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock1</td>
+<td align="left">hours_worked</td>
+<td align="left">productivity</td>
 <td align="right">2</td>
 <td align="right">0.163</td>
 <td align="right">0.163</td>
@@ -1245,8 +1255,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock1</td>
+<td align="left">hours_worked</td>
+<td align="left">productivity</td>
 <td align="right">3</td>
 <td align="right">0.163</td>
 <td align="right">0.163</td>
@@ -1255,8 +1265,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock2</td>
+<td align="left">hours_worked</td>
+<td align="left">stock_prices</td>
 <td align="right">0</td>
 <td align="right">0.275</td>
 <td align="right">0.275</td>
@@ -1265,8 +1275,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock2</td>
+<td align="left">hours_worked</td>
+<td align="left">stock_prices</td>
 <td align="right">1</td>
 <td align="right">0.293</td>
 <td align="right">0.293</td>
@@ -1275,8 +1285,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock2</td>
+<td align="left">hours_worked</td>
+<td align="left">stock_prices</td>
 <td align="right">2</td>
 <td align="right">0.268</td>
 <td align="right">0.268</td>
@@ -1285,8 +1295,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock2</td>
+<td align="left">hours_worked</td>
+<td align="left">stock_prices</td>
 <td align="right">3</td>
 <td align="right">0.240</td>
 <td align="right">0.240</td>
@@ -1295,8 +1305,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock3</td>
+<td align="left">hours_worked</td>
+<td align="left">consumption</td>
 <td align="right">0</td>
 <td align="right">-0.060</td>
 <td align="right">-0.060</td>
@@ -1305,8 +1315,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock3</td>
+<td align="left">hours_worked</td>
+<td align="left">consumption</td>
 <td align="right">1</td>
 <td align="right">-0.208</td>
 <td align="right">-0.208</td>
@@ -1315,8 +1325,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock3</td>
+<td align="left">hours_worked</td>
+<td align="left">consumption</td>
 <td align="right">2</td>
 <td align="right">-0.304</td>
 <td align="right">-0.304</td>
@@ -1325,8 +1335,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock3</td>
+<td align="left">hours_worked</td>
+<td align="left">consumption</td>
 <td align="right">3</td>
 <td align="right">-0.358</td>
 <td align="right">-0.358</td>
@@ -1335,8 +1345,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock4</td>
+<td align="left">hours_worked</td>
+<td align="left">real_interest_rate</td>
 <td align="right">0</td>
 <td align="right">-0.569</td>
 <td align="right">-0.569</td>
@@ -1345,8 +1355,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock4</td>
+<td align="left">hours_worked</td>
+<td align="left">real_interest_rate</td>
 <td align="right">1</td>
 <td align="right">-0.886</td>
 <td align="right">-0.886</td>
@@ -1355,8 +1365,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock4</td>
+<td align="left">hours_worked</td>
+<td align="left">real_interest_rate</td>
 <td align="right">2</td>
 <td align="right">-1.016</td>
 <td align="right">-1.016</td>
@@ -1365,8 +1375,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock4</td>
+<td align="left">hours_worked</td>
+<td align="left">real_interest_rate</td>
 <td align="right">3</td>
 <td align="right">-1.073</td>
 <td align="right">-1.073</td>
@@ -1375,8 +1385,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock5</td>
+<td align="left">hours_worked</td>
+<td align="left">hours_worked</td>
 <td align="right">0</td>
 <td align="right">0.217</td>
 <td align="right">0.217</td>
@@ -1385,8 +1395,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock5</td>
+<td align="left">hours_worked</td>
+<td align="left">hours_worked</td>
 <td align="right">1</td>
 <td align="right">0.145</td>
 <td align="right">0.145</td>
@@ -1395,8 +1405,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock5</td>
+<td align="left">hours_worked</td>
+<td align="left">hours_worked</td>
 <td align="right">2</td>
 <td align="right">0.104</td>
 <td align="right">0.104</td>
@@ -1405,8 +1415,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock5</td>
+<td align="left">hours_worked</td>
+<td align="left">hours_worked</td>
 <td align="right">3</td>
 <td align="right">0.095</td>
 <td align="right">0.095</td>
@@ -1422,18 +1432,18 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="va">demo_audit</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%;" class="table">
 <colgroup>
-<col width="5%">
-<col width="7%">
-<col width="5%">
-<col width="6%">
-<col width="12%">
-<col width="20%">
-<col width="6%">
-<col width="16%">
 <col width="4%">
+<col width="8%">
+<col width="8%">
 <col width="5%">
+<col width="11%">
+<col width="23%">
+<col width="5%">
+<col width="14%">
+<col width="3%">
 <col width="4%">
-<col width="4%">
+<col width="3%">
+<col width="3%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Model</th>
@@ -1452,11 +1462,11 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <tbody>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock1</td>
+<td align="left">productivity</td>
+<td align="left">productivity</td>
 <td align="right">0</td>
 <td align="left">irf_zero</td>
-<td align="left">irf[variable1,shock1,0]==0</td>
+<td align="left">irf[productivity,productivity,0]==0</td>
 <td align="left">==0</td>
 <td align="right">1</td>
 <td align="right">0.000</td>
@@ -1466,11 +1476,11 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock1</td>
+<td align="left">stock_prices</td>
+<td align="left">productivity</td>
 <td align="right">0</td>
 <td align="left">irf_sign</td>
-<td align="left">irf[variable2,shock1,0]&gt;0</td>
+<td align="left">irf[stock_prices,productivity,0]&gt;0</td>
 <td align="left">&gt;0</td>
 <td align="right">1</td>
 <td align="right">4.692</td>
@@ -1485,17 +1495,17 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="700"></p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="va">demo_hd</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="9%">
-<col width="13%">
-<col width="9%">
-<col width="16%">
-<col width="13%">
-<col width="9%">
-<col width="9%">
-<col width="9%">
-<col width="9%">
+<col width="7%">
+<col width="20%">
+<col width="20%">
+<col width="12%">
+<col width="10%">
+<col width="7%">
+<col width="7%">
+<col width="7%">
+<col width="7%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Model</th>
@@ -1511,140 +1521,8 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <tbody>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock1</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock1</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">4.037</td>
-<td align="right">5.158</td>
-<td align="right">2.357</td>
-<td align="right">5.158</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock1</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.118</td>
-<td align="right">0.013</td>
-<td align="right">0.013</td>
-<td align="right">0.277</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock1</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.076</td>
-<td align="right">0.123</td>
-<td align="right">0.005</td>
-<td align="right">0.123</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock1</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.229</td>
-<td align="right">0.166</td>
-<td align="right">-0.821</td>
-<td align="right">0.166</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock2</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.411</td>
-<td align="right">-0.389</td>
-<td align="right">-0.444</td>
-<td align="right">-0.389</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock2</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-2.542</td>
-<td align="right">-3.331</td>
-<td align="right">-3.331</td>
-<td align="right">-1.359</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock2</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.031</td>
-<td align="right">0.065</td>
-<td align="right">-0.020</td>
-<td align="right">0.065</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock2</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.099</td>
-<td align="right">0.155</td>
-<td align="right">0.015</td>
-<td align="right">0.155</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock2</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.270</td>
-<td align="right">0.414</td>
-<td align="right">0.052</td>
-<td align="right">0.414</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock3</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.315</td>
-<td align="right">0.571</td>
-<td align="right">-0.068</td>
-<td align="right">0.571</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock3</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-1.296</td>
-<td align="right">-3.112</td>
-<td align="right">-3.112</td>
-<td align="right">1.428</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock3</td>
+<td align="left">consumption</td>
+<td align="left">consumption</td>
 <td align="left">1</td>
 <td align="left">2</td>
 <td align="right">0.015</td>
@@ -1654,8 +1532,30 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock3</td>
+<td align="left">hours_worked</td>
+<td align="left">consumption</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">-0.152</td>
+<td align="right">-0.090</td>
+<td align="right">-0.246</td>
+<td align="right">-0.090</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">productivity</td>
+<td align="left">consumption</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.315</td>
+<td align="right">0.571</td>
+<td align="right">-0.068</td>
+<td align="right">0.571</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">consumption</td>
 <td align="left">1</td>
 <td align="left">2</td>
 <td align="right">0.112</td>
@@ -1665,74 +1565,41 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock3</td>
+<td align="left">stock_prices</td>
+<td align="left">consumption</td>
 <td align="left">1</td>
 <td align="left">2</td>
-<td align="right">-0.152</td>
-<td align="right">-0.090</td>
-<td align="right">-0.246</td>
-<td align="right">-0.090</td>
+<td align="right">-1.296</td>
+<td align="right">-3.112</td>
+<td align="right">-3.112</td>
+<td align="right">1.428</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock4</td>
+<td align="left">consumption</td>
+<td align="left">hours_worked</td>
 <td align="left">1</td>
 <td align="left">2</td>
-<td align="right">-0.161</td>
-<td align="right">-0.202</td>
-<td align="right">-0.202</td>
-<td align="right">-0.099</td>
+<td align="right">0.211</td>
+<td align="right">0.205</td>
+<td align="right">0.205</td>
+<td align="right">0.220</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock4</td>
+<td align="left">hours_worked</td>
+<td align="left">hours_worked</td>
 <td align="left">1</td>
 <td align="left">2</td>
-<td align="right">1.522</td>
-<td align="right">-0.346</td>
-<td align="right">-0.346</td>
-<td align="right">4.324</td>
+<td align="right">0.286</td>
+<td align="right">0.328</td>
+<td align="right">0.225</td>
+<td align="right">0.328</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock4</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.171</td>
-<td align="right">0.252</td>
-<td align="right">0.049</td>
-<td align="right">0.252</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock4</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.039</td>
-<td align="right">0.082</td>
-<td align="right">-0.025</td>
-<td align="right">0.082</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock4</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.360</td>
-<td align="right">-0.858</td>
-<td align="right">-0.858</td>
-<td align="right">0.386</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">variable1</td>
-<td align="left">shock5</td>
+<td align="left">productivity</td>
+<td align="left">hours_worked</td>
 <td align="left">1</td>
 <td align="left">2</td>
 <td align="right">0.022</td>
@@ -1740,10 +1607,21 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <td align="right">-0.066</td>
 <td align="right">0.156</td>
 </tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">hours_worked</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.015</td>
+<td align="right">-0.064</td>
+<td align="right">-0.064</td>
+<td align="right">0.134</td>
+</tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable2</td>
-<td align="left">shock5</td>
+<td align="left">stock_prices</td>
+<td align="left">hours_worked</td>
 <td align="left">1</td>
 <td align="left">2</td>
 <td align="right">-0.436</td>
@@ -1753,95 +1631,181 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable3</td>
-<td align="left">shock5</td>
+<td align="left">consumption</td>
+<td align="left">productivity</td>
 <td align="left">1</td>
 <td align="left">2</td>
-<td align="right">0.211</td>
-<td align="right">0.205</td>
-<td align="right">0.205</td>
-<td align="right">0.220</td>
+<td align="right">0.118</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+<td align="right">0.277</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">variable4</td>
-<td align="left">shock5</td>
+<td align="left">hours_worked</td>
+<td align="left">productivity</td>
 <td align="left">1</td>
 <td align="left">2</td>
-<td align="right">0.015</td>
-<td align="right">-0.064</td>
-<td align="right">-0.064</td>
-<td align="right">0.134</td>
+<td align="right">-0.229</td>
+<td align="right">0.166</td>
+<td align="right">-0.821</td>
+<td align="right">0.166</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">variable5</td>
-<td align="left">shock5</td>
+<td align="left">productivity</td>
+<td align="left">productivity</td>
 <td align="left">1</td>
 <td align="left">2</td>
-<td align="right">0.286</td>
-<td align="right">0.328</td>
-<td align="right">0.225</td>
-<td align="right">0.328</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">productivity</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.076</td>
+<td align="right">0.123</td>
+<td align="right">0.005</td>
+<td align="right">0.123</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">stock_prices</td>
+<td align="left">productivity</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">4.037</td>
+<td align="right">5.158</td>
+<td align="right">2.357</td>
+<td align="right">5.158</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">consumption</td>
+<td align="left">real_interest_rate</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.171</td>
+<td align="right">0.252</td>
+<td align="right">0.049</td>
+<td align="right">0.252</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">hours_worked</td>
+<td align="left">real_interest_rate</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">-0.360</td>
+<td align="right">-0.858</td>
+<td align="right">-0.858</td>
+<td align="right">0.386</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">productivity</td>
+<td align="left">real_interest_rate</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">-0.161</td>
+<td align="right">-0.202</td>
+<td align="right">-0.202</td>
+<td align="right">-0.099</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">real_interest_rate</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.039</td>
+<td align="right">0.082</td>
+<td align="right">-0.025</td>
+<td align="right">0.082</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">stock_prices</td>
+<td align="left">real_interest_rate</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">1.522</td>
+<td align="right">-0.346</td>
+<td align="right">-0.346</td>
+<td align="right">4.324</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">consumption</td>
+<td align="left">stock_prices</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.031</td>
+<td align="right">0.065</td>
+<td align="right">-0.020</td>
+<td align="right">0.065</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">hours_worked</td>
+<td align="left">stock_prices</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.270</td>
+<td align="right">0.414</td>
+<td align="right">0.052</td>
+<td align="right">0.414</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">productivity</td>
+<td align="left">stock_prices</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">-0.411</td>
+<td align="right">-0.389</td>
+<td align="right">-0.444</td>
+<td align="right">-0.389</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">real_interest_rate</td>
+<td align="left">stock_prices</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">0.099</td>
+<td align="right">0.155</td>
+<td align="right">0.015</td>
+<td align="right">0.155</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">stock_prices</td>
+<td align="left">stock_prices</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">-2.542</td>
+<td align="right">-3.331</td>
+<td align="right">-3.331</td>
+<td align="right">-1.359</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event.html">plot_hd_event</a></span><span class="op">(</span><span class="va">demo_post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span>
-<span><span class="co">#&gt; `geom_line()`: Each group consists of only one observation.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Do you need to adjust the <span style="color: #00BB00;">group</span> aesthetic?</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event.html">plot_hd_event</a></span><span class="op">(</span><span class="va">demo_post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="700"></p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_shock_ranking.html">plot_shock_ranking</a></span><span class="op">(</span><span class="va">demo_post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">2</span>, ranking <span class="op">=</span> <span class="st">"absolute"</span>, top_n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-16-2.png" class="r-plt" alt="" width="700"></p>
+<p>The site also includes a small set of pre-rendered sign-restriction
+figures generated from richer posterior samples. This keeps the checked
+vignette build light while still showing smoother diagnostics and
+event-window plots.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

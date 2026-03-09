@@ -126,7 +126,7 @@ reporting helpers.</p>
 <p>Compute cumulative dynamic multipliers:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cdm_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cdm.html">cdm</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
-<span><span class="va">cdr_cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_cdm.html">compare_cdm</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, horizon <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
+<span><span class="va">cdr_cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_cdm.html">compare_cdm</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, horizon <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cdm_obj</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cdm_obj</span><span class="op">)</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cdr_cmp</span><span class="op">)</span></span></code></pre></div>
@@ -150,7 +150,7 @@ only if that is the reporting convention you want:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">irf_tbl</span><span class="op">)</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cdm_tbl</span><span class="op">)</span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="../reference/compare_irf.html">compare_irf</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, horizon <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="fu"><a href="../reference/compare_irf.html">compare_irf</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, horizon <span class="op">=</span> <span class="fl">8</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/style_bsvar_plot.html">style_bsvar_plot</a></span><span class="op">(</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">cdm_tbl</span><span class="op">)</span>,</span>
@@ -247,8 +247,8 @@ to fall to a chosen fraction of its peak or initial level, while
 threshold condition is met.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -256,8 +256,8 @@ threshold condition is met.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/compare_duration_response.html">compare_duration_response</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"cdm"</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -268,8 +268,8 @@ threshold condition is met.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/compare_half_life_response.html">compare_half_life_response</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -278,8 +278,8 @@ threshold condition is met.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/compare_time_to_threshold.html">compare_time_to_threshold</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"cdm"</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -289,8 +289,8 @@ threshold condition is met.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_compare_response.html">plot_compare_response</a></span><span class="op">(</span><span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -363,7 +363,7 @@ the reconstructed sign-restriction score available from
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">diag_tbl</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span><span class="va">diag_tbl</span>, metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Interpretation note:</p>
 <ul>
@@ -388,14 +388,14 @@ summaries, not identification constraints.</p>
 comparison tables.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cmp_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_irf.html">compare_irf</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">8</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cmp_cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_cdm.html">compare_cdm</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">8</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -404,14 +404,14 @@ comparison tables.</p>
 <p>Restriction audits can also be compared directly across models.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_restrictions.html">compare_restrictions</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  restrictions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/irf_restriction.html">irf_restriction</a></span><span class="op">(</span>variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, horizon <span class="op">=</span> <span class="fl">0</span>, sign <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/plot_compare_restrictions.html">plot_compare_restrictions</a></span><span class="op">(</span><span class="fu"><a href="../reference/compare_restrictions.html">compare_restrictions</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
 <span>  restrictions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="../reference/irf_restriction.html">irf_restriction</a></span><span class="op">(</span>variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, horizon <span class="op">=</span> <span class="fl">0</span>, sign <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -424,8 +424,8 @@ first reporting layer can stay simple: render them directly to
 <code>preset = "compact"</code> when you want a narrower
 publication-oriented column selection.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>cmp_tbl <span class="ot">&lt;-</span> <span class="fu">compare_irf</span>(</span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="at">p1 =</span> post,</span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="at">p2 =</span> post_alt,</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>  <span class="at">baseline =</span> post,</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>  <span class="at">alternative =</span> post_alt,</span>
 <span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a>  <span class="at">horizon =</span> <span class="dv">8</span></span>
 <span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>)</span>
 <span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a></span>
@@ -523,8 +523,8 @@ build heavy.</p>
 <span><span class="va">demo_post_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">demo_spec_alt</span>, S <span class="op">=</span> <span class="fl">8</span>, thin <span class="op">=</span> <span class="fl">1</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">demo_cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_irf.html">compare_irf</a></span><span class="op">(</span></span>
-<span>  p1 <span class="op">=</span> <span class="va">demo_post</span>,</span>
-<span>  p2 <span class="op">=</span> <span class="va">demo_post_alt</span>,</span>
+<span>  baseline <span class="op">=</span> <span class="va">demo_post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">demo_post_alt</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">3</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">demo_cmp_focus</span> <span class="op">&lt;-</span> <span class="va">demo_cmp</span><span class="op">[</span></span>
@@ -548,7 +548,7 @@ build heavy.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">p1</td>
+<td align="left">baseline</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">0</td>
@@ -558,7 +558,7 @@ build heavy.</p>
 <td align="right">0.042</td>
 </tr>
 <tr class="even">
-<td align="left">p1</td>
+<td align="left">baseline</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">1</td>
@@ -568,7 +568,7 @@ build heavy.</p>
 <td align="right">0.045</td>
 </tr>
 <tr class="odd">
-<td align="left">p1</td>
+<td align="left">baseline</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">2</td>
@@ -578,7 +578,7 @@ build heavy.</p>
 <td align="right">0.042</td>
 </tr>
 <tr class="even">
-<td align="left">p1</td>
+<td align="left">baseline</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">3</td>
@@ -588,7 +588,7 @@ build heavy.</p>
 <td align="right">0.033</td>
 </tr>
 <tr class="odd">
-<td align="left">p2</td>
+<td align="left">alternative</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">0</td>
@@ -598,7 +598,7 @@ build heavy.</p>
 <td align="right">0.063</td>
 </tr>
 <tr class="even">
-<td align="left">p2</td>
+<td align="left">alternative</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">1</td>
@@ -608,7 +608,7 @@ build heavy.</p>
 <td align="right">0.067</td>
 </tr>
 <tr class="odd">
-<td align="left">p2</td>
+<td align="left">alternative</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">2</td>
@@ -618,7 +618,7 @@ build heavy.</p>
 <td align="right">0.066</td>
 </tr>
 <tr class="even">
-<td align="left">p2</td>
+<td align="left">alternative</td>
 <td align="left">ttr</td>
 <td align="left">ttr</td>
 <td align="right">3</td>
@@ -1396,6 +1396,11 @@ build heavy.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">demo_rep</span>, preset <span class="op">=</span> <span class="st">"paper"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="bsvarPost_files/figure-html/unnamed-chunk-22-1.png" class="r-plt" alt="" width="700"></p>
+<p>For the website, <code>bsvarPost</code> also ships a small set of
+pre-rendered showcase figures generated from larger posterior samples
+and slightly longer horizons. These are not rebuilt during every
+vignette render, which keeps CI stable while still showing what the
+publication-oriented plots look like in a less toy-like setting.</p>
 </div>
 <div class="section level2">
 <h2 id="historical-decomposition-events">Historical decomposition events<a class="anchor" aria-label="anchor" href="#historical-decomposition-events"></a>
@@ -1424,7 +1429,7 @@ cumulative contribution.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>These event summaries can also be compared across fitted models.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cmp_hd_event</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_hd_event.html">compare_hd_event</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="va">post</span>, p2 <span class="op">=</span> <span class="va">post_alt</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cmp_hd_event</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_hd_event.html">compare_hd_event</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">cmp_hd_event</span></span></code></pre></div>
 </div>
 <div class="section level2">
