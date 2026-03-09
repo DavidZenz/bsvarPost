@@ -13,6 +13,7 @@
 #'
 #' @name bsvarPost-getting-started
 #' @aliases bsvarPost-getting-started
+#' @keywords internal
 NULL
 
 #' Post-Estimation Workflows in bsvarPost
@@ -30,4 +31,5 @@ NULL
 #'
 #' @name bsvarPost-workflows
 #' @aliases bsvarPost-workflows
+#' @keywords internal
 NULL

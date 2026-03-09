@@ -82,6 +82,7 @@ reference:
 
   - title: Plotting and Reporting
     contents:
+      - autoplot.bsvar_post_tbl
       - starts_with("plot_")
       - theme_bsvarpost
       - style_bsvar_plot

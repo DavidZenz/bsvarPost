@@ -16,3 +16,4 @@ Open the installed article with:
 If that returns no entries, reinstall the package with
 \code{build_vignettes = TRUE}.
 }
+\keyword{internal}
