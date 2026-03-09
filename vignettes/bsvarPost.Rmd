@@ -352,6 +352,16 @@ if (requireNamespace("gt", quietly = TRUE)) {
 if (requireNamespace("flextable", quietly = TRUE)) {
   as_flextable(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
 }
+
+bundle <- report_bundle(
+  cmp_tbl,
+  caption = "Impulse-response comparison",
+  digits = 3
+)
+
+bundle
+bundle$plot
+as_kable(bundle)
 ```
 
 ## Historical decomposition events

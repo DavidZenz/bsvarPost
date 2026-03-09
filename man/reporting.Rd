@@ -2,26 +2,35 @@
 % Please edit documentation in R/reporting.R
 \name{reporting}
 \alias{reporting}
+\alias{report_bundle}
 \alias{as_kable}
 \alias{as_kable.bsvar_post_tbl}
 \alias{as_kable.data.frame}
+\alias{as_kable.bsvar_report_bundle}
 \alias{as_kable.default}
 \alias{as_gt}
 \alias{as_gt.bsvar_post_tbl}
 \alias{as_gt.data.frame}
+\alias{as_gt.bsvar_report_bundle}
 \alias{as_gt.default}
 \alias{as_flextable}
 \alias{as_flextable.bsvar_post_tbl}
 \alias{as_flextable.data.frame}
+\alias{as_flextable.bsvar_report_bundle}
 \alias{as_flextable.default}
 \alias{write_bsvar_csv}
+\alias{print.bsvar_report_bundle}
 \title{Export bsvarPost tables as reporting objects}
 \usage{
+report_bundle(object, plot = NULL, caption = NULL, digits = NULL, ...)
+
 as_kable(x, ...)
 
 \method{as_kable}{bsvar_post_tbl}(x, caption = NULL, digits = NULL, ...)
 
 \method{as_kable}{data.frame}(x, caption = NULL, digits = NULL, ...)
+
+\method{as_kable}{bsvar_report_bundle}(x, caption = NULL, digits = NULL, ...)
 
 \method{as_kable}{default}(x, ...)
 
@@ -31,6 +40,8 @@ as_gt(x, ...)
 
 \method{as_gt}{data.frame}(x, caption = NULL, digits = NULL, ...)
 
+\method{as_gt}{bsvar_report_bundle}(x, caption = NULL, digits = NULL, ...)
+
 \method{as_gt}{default}(x, ...)
 
 as_flextable(x, ...)
@@ -39,19 +50,28 @@ as_flextable(x, ...)
 
 \method{as_flextable}{data.frame}(x, caption = NULL, digits = NULL, ...)
 
+\method{as_flextable}{bsvar_report_bundle}(x, caption = NULL, digits = NULL, ...)
+
 \method{as_flextable}{default}(x, ...)
 
 write_bsvar_csv(x, file, row.names = FALSE, ...)
+
+\method{print}{bsvar_report_bundle}(x, ...)
 }
 \arguments{
-\item{x}{A \code{bsvar_post_tbl} or data frame.}
+\item{object}{A \code{bsvar_post_tbl}, data frame, or \code{bsvar_report_bundle}.}
 
-\item{...}{Additional arguments passed to the backend formatter.}
+\item{plot}{Optional \code{ggplot} object. If omitted, \code{bsvarPost} will try to
+choose a sensible default plot for the supplied table.}
 
 \item{caption}{Optional table caption.}
 
 \item{digits}{Optional number of digits used to round numeric columns before
 rendering.}
+
+\item{...}{Additional arguments passed to the backend formatter.}
+
+\item{x}{A \code{bsvar_post_tbl} or data frame.}
 
 \item{file}{Output CSV path.}
 

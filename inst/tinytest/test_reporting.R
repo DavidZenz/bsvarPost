@@ -8,10 +8,22 @@ tbl <- compare_irf(base = post, alt = post, horizon = 2)
 kbl <- as_kable(tbl, caption = "IRF comparison", digits = 3)
 expect_true(inherits(kbl, "knitr_kable"))
 
+bundle <- report_bundle(tbl, caption = "IRF comparison", digits = 2)
+expect_true(inherits(bundle, "bsvar_report_bundle"))
+expect_true(inherits(bundle$plot, "ggplot"))
+
+bundle_kable <- as_kable(bundle)
+expect_true(inherits(bundle_kable, "knitr_kable"))
+
 csv_path <- tempfile(fileext = ".csv")
 written_path <- write_bsvar_csv(tbl, csv_path)
 expect_true(file.exists(csv_path))
 expect_true(identical(normalizePath(csv_path, winslash = "/", mustWork = FALSE), written_path))
+
+bundle_csv_path <- tempfile(fileext = ".csv")
+bundle_written_path <- write_bsvar_csv(bundle, bundle_csv_path)
+expect_true(file.exists(bundle_csv_path))
+expect_true(identical(normalizePath(bundle_csv_path, winslash = "/", mustWork = FALSE), bundle_written_path))
 
 if (requireNamespace("gt", quietly = TRUE)) {
   gt_tbl <- as_gt(tbl, caption = "IRF comparison", digits = 2)
