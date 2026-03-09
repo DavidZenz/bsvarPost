@@ -26,7 +26,19 @@ layer for:
 - bridges to downstream workflows such as `tsibble` and `APRScenario`
 - representative-model summaries and posterior audit helpers
 
+The usual workflow is:
+
+1. estimate one or more models with `bsvars` or `bsvarSIGNs`
+2. extract tidy posterior summaries or CDMs
+3. compare specifications or identifying assumptions
+4. move the results into publication-oriented tables and plots
+
 ## Example: `bsvars`
+
+The code chunks below are written as workflow examples. To keep the vignette
+lightweight, most of them are shown but not evaluated during the build. A small
+evaluated showcase appears at the end of the vignette so the rendered document
+still includes an actual table and plot.
 
 ```{r}
 library(bsvars)
@@ -56,6 +68,11 @@ is the reporting convention you want:
 ```{r}
 cdm_scaled <- cdm(post, horizon = 8, scale_by = "shock_sd")
 ```
+
+Interpretation note:
+
+- `scale_by = "shock_sd"` is a reporting normalization
+- the default unscaled output remains the standard CDM object
 
 Extract tidy tables for downstream analysis:
 
@@ -94,6 +111,13 @@ rep_irf <- median_target_irf(post, horizon = 8)
 summary(rep_irf)
 plot(rep_irf)
 ```
+
+Interpretation note:
+
+- `median_target_*()` gives you one coherent stored draw close to the posterior
+  center
+- this is often preferable to reporting pointwise medians as if they were one
+  structural model
 
 Posterior hypothesis and magnitude statements can be evaluated directly from the
 response draws.
@@ -217,6 +241,13 @@ plot_compare_response(compare_peak_response(
 ))
 ```
 
+Interpretation note:
+
+- `reached_prob` is the posterior share of draws that satisfy the requested
+  timing condition within the chosen horizon
+- if `reached_prob` is low, the associated timing summary is conditional on a
+  relatively small subset of the posterior
+
 ## Example: `bsvarSIGNs`
 
 `bsvarPost` uses the same post-estimation interface for sign-restricted models.
@@ -285,6 +316,12 @@ compare_acceptance_diagnostics(p1 = post, p2 = post_alt)
 plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
 ```
 
+Interpretation note:
+
+- `most_likely_admissible_*()` is only available for `PosteriorBSVARSIGN`
+- `restriction_audit()` and `magnitude_audit()` are post-estimation tools;
+  they do not alter the identification scheme used in estimation
+
 Magnitude restrictions in `bsvarPost` are post-estimation summaries, not
 identification constraints.
 
@@ -300,13 +337,13 @@ tables.
 ```{r}
 cmp_irf <- compare_irf(
   p1 = post,
-  p2 = post,
+  p2 = post_alt,
   horizon = 8
 )
 
 cmp_cdm <- compare_cdm(
   p1 = post,
-  p2 = post,
+  p2 = post_alt,
   horizon = 8
 )
 
@@ -319,13 +356,13 @@ Restriction audits can also be compared directly across models.
 ```{r}
 compare_restrictions(
   p1 = post,
-  p2 = post,
+  p2 = post_alt,
   restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
 )
 
 plot_compare_restrictions(compare_restrictions(
   p1 = post,
-  p2 = post,
+  p2 = post_alt,
   restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
 ))
 ```
@@ -382,6 +419,7 @@ diag_bundle <- report_bundle(
 )
 
 diag_bundle$plot
+as_kable(diag_bundle)
 
 joint_bundle <- report_bundle(
   joint_hypothesis_irf(post, variable = 1, shock = 1, horizon = 0:2, relation = ">", value = 0),
@@ -390,6 +428,7 @@ joint_bundle <- report_bundle(
 )
 
 joint_bundle$plot
+as_kable(joint_bundle)
 
 hd_bundle <- report_bundle(
   tidy_hd_event(post, start = 1, end = 4),
@@ -398,6 +437,7 @@ hd_bundle <- report_bundle(
 
 hd_bundle$caption
 hd_bundle$plot
+as_kable(hd_bundle)
 
 publish_bsvar_plot(cmp_tbl, preset = "paper")
 publish_bsvar_plot(median_target_irf(post, horizon = 8), preset = "paper")
@@ -405,6 +445,36 @@ publish_bsvar_plot(diag_tbl, preset = "slides")
 
 `report_table()` also applies publication-facing column labels such as
 `Posterior probability`, `Median half-life`, and `Critical value`.
+```
+
+A practical rule of thumb is:
+
+- use `report_table(..., preset = "compact")` for paper tables
+- use `report_bundle()` when you want the natural table-plus-plot pair
+- use `publish_bsvar_plot()` when you want family-aware styling without manual
+  theme plumbing
+
+## Rendered showcase
+
+This final chunk is intentionally small and evaluated during the vignette build
+so the rendered document includes one actual table and one actual plot.
+
+```{r, eval = TRUE}
+data(us_fiscal_lsuw)
+set.seed(11)
+demo_spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
+demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
+demo_cmp <- compare_peak_response(
+  base = demo_post,
+  alt = demo_post,
+  type = "irf",
+  horizon = 2,
+  variable = 1,
+  shock = 1
+)
+
+as_kable(demo_cmp, preset = "compact", digits = 3)
+publish_bsvar_plot(demo_cmp, preset = "paper")
 ```
 
 ## Historical decomposition events
@@ -436,7 +506,7 @@ annotate_bsvar_plot(
 These event summaries can also be compared across fitted models.
 
 ```{r}
-cmp_hd_event <- compare_hd_event(p1 = post, p2 = post, start = 1, end = 4)
+cmp_hd_event <- compare_hd_event(p1 = post, p2 = post_alt, start = 1, end = 4)
 cmp_hd_event
 ```
 
