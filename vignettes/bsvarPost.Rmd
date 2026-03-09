@@ -515,6 +515,24 @@ as_kable(summary(demo_rep), preset = "compact", digits = 3)
 publish_bsvar_plot(demo_rep, preset = "paper")
 ```
 
+For the website, `bsvarPost` also ships a small set of pre-rendered showcase
+figures generated from larger posterior samples and slightly longer horizons.
+These are not rebuilt during every vignette render, which keeps CI stable while
+still showing what the publication-oriented plots look like in a less toy-like
+setting.
+
+```{r, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("figures/cdm-showcase.png")
+```
+
+```{r, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("figures/compare-irf-showcase.png")
+```
+
+```{r, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("figures/representative-showcase.png")
+```
+
 ## Historical decomposition events
 
 For event studies, `bsvarPost` can aggregate historical decomposition draws

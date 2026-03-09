@@ -310,3 +310,15 @@ as_kable(demo_hd, preset = "compact", digits = 3)
 plot_hd_event(demo_post, start = 1, end = 2)
 plot_shock_ranking(demo_post, start = 1, end = 2, ranking = "absolute", top_n = 4)
 ```
+
+The site also includes a small set of pre-rendered sign-restriction figures
+generated from richer posterior samples. This keeps the checked vignette build
+light while still showing smoother diagnostics and event-window plots.
+
+```{r, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("figures/diagnostics-showcase.png")
+```
+
+```{r, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("figures/hd-event-showcase.png")
+```
