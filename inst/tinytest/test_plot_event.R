@@ -17,6 +17,8 @@ expect_true(inherits(p_hd1, "ggplot"))
 expect_true(inherits(p_hd2, "ggplot"))
 expect_true(inherits(p_rank1, "ggplot"))
 expect_true(inherits(p_rank2, "ggplot"))
+expect_true(any(vapply(p_hd1$layers, function(layer) inherits(layer$geom, "GeomPoint"), logical(1))))
+expect_true(any(vapply(p_hd1$layers, function(layer) inherits(layer$geom, "GeomLinerange"), logical(1))))
 
 expect_error(
   plot_hd_event(post),

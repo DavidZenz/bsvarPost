@@ -14,6 +14,45 @@ autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, mod
   if (!is.null(shocks) && "shock" %in% names(df)) df <- df[df$shock %in% shocks, , drop = FALSE]
   if (!is.null(models) && "model" %in% names(df)) df <- df[df$model %in% models, , drop = FALSE]
 
+  object_type <- attr(object, "object_type") %||% "value"
+  multi_model <- length(unique(df$model)) > 1L
+
+  if (identical(object_type, "hd_event")) {
+    x_var <- if ("event_start" %in% names(df)) "event_start" else names(df)[1]
+    p <- ggplot2::ggplot(
+      df,
+      ggplot2::aes(
+        x = .data[[x_var]],
+        y = .data[["median"]],
+        colour = .data[["model"]]
+      )
+    ) +
+      ggplot2::geom_hline(yintercept = 0, linetype = 2, colour = "grey50") +
+      ggplot2::geom_linerange(
+        ggplot2::aes(ymin = .data[["lower"]], ymax = .data[["upper"]]),
+        linewidth = 0.6,
+        position = ggplot2::position_dodge(width = 0.35)
+      ) +
+      ggplot2::geom_point(
+        size = 2,
+        position = ggplot2::position_dodge(width = 0.35)
+      ) +
+      ggplot2::theme_minimal() +
+      ggplot2::labs(
+        x = "event window",
+        y = "hd_event",
+        colour = if (multi_model) "model" else NULL
+      )
+
+    if ("shock" %in% names(df)) {
+      p <- p + ggplot2::facet_grid(rows = ggplot2::vars(variable), cols = ggplot2::vars(shock), scales = facet_scales)
+    } else {
+      p <- p + ggplot2::facet_wrap(ggplot2::vars(variable), scales = facet_scales)
+    }
+
+    return(p)
+  }
+
   x_var <- if ("horizon" %in% names(df)) {
     "horizon"
   } else if ("time" %in% names(df)) {
@@ -25,7 +64,6 @@ autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, mod
   }
   has_shock <- "shock" %in% names(df)
   has_draws <- isTRUE(attr(object, "draws")) || "draw" %in% names(df)
-  multi_model <- length(unique(df$model)) > 1L
 
   if (has_draws) {
     df$group_id <- interaction(df$model, df$draw, drop = TRUE)
@@ -60,7 +98,7 @@ autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, mod
   p <- p +
     ggplot2::geom_hline(yintercept = 0, linetype = 2, colour = "grey50") +
     ggplot2::theme_minimal() +
-    ggplot2::labs(x = x_var, y = attr(object, "object_type") %||% "value",
+    ggplot2::labs(x = x_var, y = object_type,
                   colour = if (multi_model) "model" else NULL,
                   fill = if (multi_model) "model" else NULL)
 
