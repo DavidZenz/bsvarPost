@@ -24,6 +24,7 @@
 - Added `plot_hypothesis()` and `plot_restriction_audit()` as dedicated plotting helpers for posterior statements and restriction audits.
 - Updated README and vignette comparison examples to use genuinely different model specifications instead of self-comparisons.
 - Added `plot_compare_response()` and `plot_compare_restrictions()` for dedicated visualisation of comparison-table outputs.
+- Added `as_kable()`, `as_gt()`, `as_flextable()`, and `write_bsvar_csv()` as first-pass reporting and export helpers for tidy `bsvarPost` tables.
 - Added a second vignette, `Post-Estimation Workflows in bsvarPost`, to separate workflow/methodology documentation from getting-started material.
 - Added restriction constructor helpers for IRF, structural, and narrative
   audits.

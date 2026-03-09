@@ -18,6 +18,8 @@ Imports:
     methods
 Suggests:
     APRScenario,
+    flextable,
+    gt,
     knitr,
     rmarkdown,
     tinytest,

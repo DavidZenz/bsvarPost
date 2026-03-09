@@ -278,6 +278,29 @@ plot_compare_restrictions(compare_restrictions(
 ))
 ```
 
+## Reporting helpers
+
+`bsvarPost` tables can also be sent directly to common reporting backends:
+
+```r
+cmp_tbl <- compare_irf(
+  baseline = post,
+  alternative = post_alt,
+  horizon = 8
+)
+
+as_kable(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+write_bsvar_csv(cmp_tbl, tempfile(fileext = ".csv"))
+
+if (requireNamespace("gt", quietly = TRUE)) {
+  as_gt(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+}
+
+if (requireNamespace("flextable", quietly = TRUE)) {
+  as_flextable(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+}
+```
+
 ## Historical decomposition events
 
 ```r

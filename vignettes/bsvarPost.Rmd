@@ -330,6 +330,30 @@ plot_compare_restrictions(compare_restrictions(
 ))
 ```
 
+## Reporting helpers
+
+Most `bsvarPost` outputs are already tidy tables, so a first reporting layer can
+stay simple: render them directly to `knitr`, `gt`, `flextable`, or CSV.
+
+```{r}
+cmp_tbl <- compare_irf(
+  p1 = post,
+  p2 = post_alt,
+  horizon = 8
+)
+
+as_kable(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+write_bsvar_csv(cmp_tbl, tempfile(fileext = ".csv"))
+
+if (requireNamespace("gt", quietly = TRUE)) {
+  as_gt(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+}
+
+if (requireNamespace("flextable", quietly = TRUE)) {
+  as_flextable(cmp_tbl, caption = "Impulse-response comparison", digits = 3)
+}
+```
+
 ## Historical decomposition events
 
 For event studies, `bsvarPost` can aggregate historical decomposition draws
