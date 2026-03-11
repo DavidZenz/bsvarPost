@@ -1,3 +1,6 @@
+#' @importFrom utils globalVariables head
+utils::globalVariables(c("restriction_type", "restriction_display"))
+
 new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
   class(x) <- c("bsvar_post_tbl", class(x))
   attr(x, "object_type") <- object_type

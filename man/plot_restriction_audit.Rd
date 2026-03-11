@@ -10,6 +10,8 @@ plot_restriction_audit(
   zero_tol = 1e-08,
   probability = 0.68,
   models = NULL,
+  label_style = c("raw", "pretty"),
+  labels = NULL,
   restriction_types = NULL,
   ...
 )
@@ -26,6 +28,11 @@ plot_restriction_audit(
 \item{probability}{Equal-tailed interval probability used in summaries.}
 
 \item{models}{Optional model filter.}
+
+\item{label_style}{Restriction label style: \code{"raw"} or \code{"pretty"}.}
+
+\item{labels}{Optional named character vector overriding restriction labels by
+raw restriction string.}
 
 \item{restriction_types}{Optional restriction-type filter.}
 
