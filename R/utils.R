@@ -6,6 +6,30 @@ new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
   x
 }
 
+validate_probability <- function(probability, caller) {
+  if (!is.numeric(probability) || length(probability) != 1L || is.na(probability) ||
+      probability <= 0 || probability >= 1) {
+    stop(sprintf("`%s` requires `probability` to be a single number in (0, 1).", caller), call. = FALSE)
+  }
+  probability
+}
+
+validate_nonnegative_horizon <- function(horizon, caller) {
+  if (!is.numeric(horizon) || length(horizon) != 1L || is.na(horizon) ||
+      horizon < 0 || horizon != as.integer(horizon)) {
+    stop(sprintf("`%s` requires `horizon` to be a single non-negative integer.", caller), call. = FALSE)
+  }
+  as.integer(horizon)
+}
+
+validate_positive_count <- function(value, caller, arg = deparse(substitute(value))) {
+  if (!is.numeric(value) || length(value) != 1L || is.na(value) ||
+      value < 1 || value != as.integer(value)) {
+    stop(sprintf("`%s` requires `%s` to be a single positive integer.", caller, arg), call. = FALSE)
+  }
+  as.integer(value)
+}
+
 summary_probs <- function(probability) {
   alpha <- (1 - probability) / 2
   c(alpha, 1 - alpha)
@@ -24,10 +48,16 @@ ensure_model_names <- function(models) {
 
 collect_models <- function(...) {
   dots <- list(...)
+  if (!length(dots)) {
+    stop("At least one model object must be supplied.", call. = FALSE)
+  }
   if (length(dots) == 1 && is.list(dots[[1]]) && !inherits(dots[[1]], c("PosteriorIR", "PosteriorFEVD", "PosteriorShocks", "PosteriorHD", "Forecasts", "PosteriorCDM"))) {
     models <- dots[[1]]
   } else {
     models <- dots
+  }
+  if (!length(models) || any(vapply(models, is.null, logical(1)))) {
+    stop("Model inputs must be non-NULL posterior objects.", call. = FALSE)
   }
   ensure_model_names(models)
 }

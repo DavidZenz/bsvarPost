@@ -31,5 +31,5 @@
 utils::globalVariables(c(
   "variable", "shock", "horizon", "median", "lower", "upper",
   "metric", "value", "model", "flag", "posterior_prob",
-  "restriction", "rank_score"
+  "restriction", "restriction_display", "restriction_type", "rank_score"
 ))

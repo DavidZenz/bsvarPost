@@ -13,6 +13,9 @@ apr_gen_mats(posterior = NULL, specification = NULL, max_cores = 1)
 
 \item{max_cores}{Passed to \code{APRScenario::gen_mats()}.}
 }
+\value{
+The object returned by \code{APRScenario::gen_mats()}.
+}
 \description{
 Optional wrapper around APRScenario::gen_mats
 }

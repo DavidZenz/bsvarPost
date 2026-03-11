@@ -64,6 +64,10 @@ most_likely_admissible_irf(object, ...)
 
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 }
+\value{
+A \code{RepresentativeIR} object. Use \code{\link[=summary]{summary()}} to obtain the tidy
+representative table.
+}
 \description{
 Select a representative impulse-response draw from the posterior.
 }

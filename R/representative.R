@@ -12,10 +12,17 @@
 #' @param metric Distance metric used for median-target selection.
 #' @param standardize Optional standardisation used in distance computation.
 #' @param probability Equal-tailed interval probability used for summaries.
+#' @return A `RepresentativeIR` object. Use [summary()] to obtain the tidy
+#'   representative table.
 #' @param ... Additional arguments passed to computation methods.
 #' @export
 representative_irf <- function(object, ...) {
   UseMethod("representative_irf")
+}
+
+#' @export
+representative_irf.default <- function(object, ...) {
+  stop("`representative_irf()` supports posterior model objects and `PosteriorIR` objects only.", call. = FALSE)
 }
 
 new_representative_object <- function(draws, selected, object_type, probability = 0.68) {
@@ -41,6 +48,7 @@ representative_irf_impl <- function(object, draws, horizon = 10,
                                     metric = c("l2", "weighted_l2"), standardize = c("none", "sd"),
                                     probability = 0.68, ...) {
   method <- match.arg(method)
+  probability <- validate_probability(probability, "representative_irf()")
   if (identical(method, "most_likely_admissible") && !inherits(object, "PosteriorBSVARSIGN")) {
     stop("`most_likely_admissible` is only supported for 'PosteriorBSVARSIGN' in bsvarPost v0.2.", call. = FALSE)
   }
@@ -76,6 +84,7 @@ representative_irf_model <- function(object, horizon = 10, method = c("median_ta
                                      center = c("median", "mean"), variables = NULL, shocks = NULL,
                                      horizons = NULL, metric = c("l2", "weighted_l2"),
                                      standardize = c("none", "sd"), probability = 0.68, ...) {
+  horizon <- validate_nonnegative_horizon(horizon, "representative_irf()")
   draws <- get_irf_draws(object, horizon = horizon, ...)
   representative_irf_impl(object, draws, horizon = horizon, method = method, center = center,
                           variables = variables, shocks = shocks, horizons = horizons,
@@ -101,9 +110,16 @@ representative_irf.PosteriorBSVARSIGN <- representative_irf_model
 #' @inheritParams representative_irf
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A `RepresentativeCDM` object. Use [summary()] to obtain the tidy
+#'   representative table.
 #' @export
 representative_cdm <- function(object, ...) {
   UseMethod("representative_cdm")
+}
+
+#' @export
+representative_cdm.default <- function(object, ...) {
+  stop("`representative_cdm()` supports posterior model objects and `PosteriorCDM` objects only.", call. = FALSE)
 }
 
 representative_cdm_impl <- function(object, draws, method = c("median_target", "most_likely_admissible"),
@@ -111,6 +127,7 @@ representative_cdm_impl <- function(object, draws, method = c("median_target", "
                                     metric = c("l2", "weighted_l2"), standardize = c("none", "sd"),
                                     probability = 0.68, ...) {
   method <- match.arg(method)
+  probability <- validate_probability(probability, "representative_cdm()")
   if (identical(method, "most_likely_admissible") && !inherits(object, "PosteriorBSVARSIGN")) {
     stop("`most_likely_admissible` is only supported for 'PosteriorBSVARSIGN' in bsvarPost v0.2.", call. = FALSE)
   }
@@ -146,6 +163,7 @@ representative_cdm_model <- function(object, horizon = 10, method = c("median_ta
                                      center = c("median", "mean"), variables = NULL, shocks = NULL, horizons = NULL,
                                      metric = c("l2", "weighted_l2"), standardize = c("none", "sd"),
                                      probability = 0.68, scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  horizon <- validate_nonnegative_horizon(horizon, "representative_cdm()")
   draws <- get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by, scale_var = scale_var, ...)
   representative_cdm_impl(object, draws, method = method, center = center, variables = variables,
                           shocks = shocks, horizons = horizons, metric = metric,

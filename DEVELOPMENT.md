@@ -40,9 +40,11 @@ Minimum pre-push checklist:
 3. Run a clean local check:
    - `_R_CHECK_FORCE_SUGGESTS_=false R CMD check --as-cran bsvarPost_*.tar.gz`
 4. Run focused tests for the files or feature area you changed.
-5. Review the staged diff:
+5. Run the release QA contract check:
+   - `Rscript --vanilla -e 'source("tools/release-qa.R"); release_qa_check(".")'`
+6. Review the staged diff:
    - make sure only the intended feature, tests, and docs are included
-6. Push only after GitHub `R-CMD-check` is green.
+7. Push only after GitHub `R-CMD-check` is green.
 
 Additional rules:
 

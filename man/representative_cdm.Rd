@@ -70,6 +70,10 @@ most_likely_admissible_cdm(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{RepresentativeCDM} object. Use \code{\link[=summary]{summary()}} to obtain the tidy
+representative table.
+}
 \description{
 Representative cumulative dynamic multipliers
 }

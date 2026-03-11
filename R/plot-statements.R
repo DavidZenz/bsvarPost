@@ -192,7 +192,11 @@ plot_restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
 
   p <- ggplot2::ggplot(
     df,
-    ggplot2::aes(x = stats::reorder(restriction_display, posterior_prob), y = posterior_prob, fill = model)
+    ggplot2::aes(
+      x = stats::reorder(.data[["restriction_display"]], .data[["posterior_prob"]]),
+      y = .data[["posterior_prob"]],
+      fill = .data[["model"]]
+    )
   ) +
     ggplot2::geom_col(position = "dodge") +
     ggplot2::coord_flip() +

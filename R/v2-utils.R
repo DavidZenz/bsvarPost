@@ -5,7 +5,22 @@ bsvarsigns_native_symbol <- function(symbol) {
   if (!is.null(cached)) {
     return(cached)
   }
-  resolved <- getNativeSymbolInfo(symbol, PACKAGE = "bsvarSIGNs")
+  if (!requireNamespace("bsvarSIGNs", quietly = TRUE)) {
+    stop("Package `bsvarSIGNs` must be installed to use sign-restricted bridge helpers.", call. = FALSE)
+  }
+  resolved <- tryCatch(
+    getNativeSymbolInfo(symbol, PACKAGE = "bsvarSIGNs"),
+    error = function(e) {
+      stop(
+        sprintf(
+          "Could not resolve native symbol `%s` from `bsvarSIGNs` (%s). The upstream native interface may have changed.",
+          symbol,
+          as.character(utils::packageVersion("bsvarSIGNs"))
+        ),
+        call. = FALSE
+      )
+    }
+  )
   bsvarsigns_native_cache[[symbol]] <- resolved$address
   resolved$address
 }
@@ -201,6 +216,19 @@ compute_posterior_kernel <- function(object) {
   if (!inherits(object, "PosteriorBSVARSIGN")) {
     stop("Posterior-kernel ranking is only implemented for 'PosteriorBSVARSIGN'.", call. = FALSE)
   }
+  required_fields <- c("posterior", "last_draw")
+  missing_fields <- required_fields[!required_fields %in% names(object)]
+  if (length(missing_fields) > 0L) {
+    stop(
+      "Malformed `PosteriorBSVARSIGN` object: missing field(s) ",
+      paste(missing_fields, collapse = ", "),
+      ".",
+      call. = FALSE
+    )
+  }
+  if (is.null(object$last_draw$identification) || is.null(object$last_draw$data_matrices)) {
+    stop("Malformed `PosteriorBSVARSIGN` object: missing identification or data matrices in `last_draw`.", call. = FALSE)
+  }
 
   posterior <- object$posterior
   identification <- object$last_draw$identification
@@ -209,6 +237,9 @@ compute_posterior_kernel <- function(object) {
   p <- object$last_draw$p
   T_obs <- nrow(Y)
   S <- dim(posterior$Q)[3]
+  if (is.null(S) || !is.numeric(S) || S < 1L) {
+    stop("Malformed `PosteriorBSVARSIGN` object: `posterior$Q` must contain at least one draw.", call. = FALSE)
+  }
 
   sign_irf <- normalise_sign_restrictions(identification$sign_irf)
   sign_structural <- identification$sign_structural

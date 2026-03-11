@@ -13,8 +13,16 @@ expect_equal(rep_irf$draw_index, expected_idx)
 expect_true(inherits(rep_irf, "RepresentativeIR"))
 expect_true(inherits(summary(rep_irf), "bsvar_post_tbl"))
 
+rep_irf_direct <- representative_irf(irf_draws, center = "median")
+expect_true(inherits(rep_irf_direct, "RepresentativeIR"))
+expect_equal(attr(summary(rep_irf_direct), "object_type"), "irf")
+
 rep_cdm <- median_target_cdm(post_bsvar, horizon = 4)
 expect_true(inherits(rep_cdm, "RepresentativeCDM"))
+cdm_draws <- cdm(post_bsvar, horizon = 4)
+rep_cdm_direct <- representative_cdm(cdm_draws, center = "median")
+expect_true(inherits(rep_cdm_direct, "RepresentativeCDM"))
+expect_equal(attr(summary(rep_cdm_direct), "object_type"), "cdm")
 
 expect_error(
   most_likely_admissible_irf(post_bsvar, horizon = 4),
@@ -33,3 +41,43 @@ rep_sign <- most_likely_admissible_irf(post_sign, horizon = 4)
 expect_equal(rep_sign$score, max(scores))
 expect_true(rep_sign$draw_index %in% which(scores == max(scores)))
 expect_true(inherits(summary(rep_sign), "bsvar_post_tbl"))
+
+rep_sign_cdm <- most_likely_admissible_cdm(post_sign, horizon = 4)
+expect_equal(rep_sign_cdm$method, "most_likely_admissible")
+expect_true(inherits(summary(rep_sign_cdm), "bsvar_post_tbl"))
+
+expect_error(
+  representative_irf(list()),
+  pattern = "PosteriorIR",
+  info = "representative_irf: unsupported classes get a clear error."
+)
+
+expect_error(
+  representative_cdm(list()),
+  pattern = "PosteriorCDM",
+  info = "representative_cdm: unsupported classes get a clear error."
+)
+
+expect_error(
+  representative_irf(post_bsvar, horizon = -1),
+  pattern = "non-negative integer",
+  info = "representative_irf: invalid horizon is rejected."
+)
+
+expect_error(
+  representative_cdm(post_bsvar, horizon = 4, probability = 1),
+  pattern = "single number in \\(0, 1\\)",
+  info = "representative_cdm: invalid probability is rejected."
+)
+
+expect_error(
+  bsvarPost:::bsvarsigns_native_symbol("_bsvarSIGNs_missing_symbol"),
+  pattern = "upstream native interface",
+  info = "bsvarSIGNs native bridge: missing symbols fail with actionable message."
+)
+
+expect_error(
+  bsvarPost:::compute_posterior_kernel(structure(list(), class = "PosteriorBSVARSIGN")),
+  pattern = "missing field",
+  info = "compute_posterior_kernel: malformed sign posterior objects are rejected early."
+)

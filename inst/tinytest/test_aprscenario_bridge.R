@@ -13,3 +13,21 @@ back_tbl <- tidy_apr_forecast(apr_tbl, model = "apr")
 expect_equal(attr(back_tbl, "object_type"), "forecast")
 expect_true(all(c("model", "variable", "time", "median", "lower", "upper") %in% names(back_tbl)))
 expect_equal(nrow(back_tbl), nrow(apr_tbl))
+
+expect_error(
+  as_apr_cond_forc(data.frame(variable = "y", lower = 0, upper = 1)),
+  pattern = "forecast summary columns",
+  info = "as_apr_cond_forc: malformed tidy input is rejected."
+)
+
+expect_error(
+  apr_gen_mats(max_cores = 0),
+  pattern = "positive integer",
+  info = "apr_gen_mats: invalid max_cores is rejected before calling APRScenario."
+)
+
+expect_error(
+  apr_gen_mats(),
+  pattern = "APRScenario",
+  info = "apr_gen_mats: missing optional dependency is reported clearly."
+)

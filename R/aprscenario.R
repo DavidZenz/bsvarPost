@@ -109,11 +109,13 @@ tidy_apr_forecast <- function(data, model = "apr") {
 #' @param posterior A posterior model object.
 #' @param specification The corresponding specification object.
 #' @param max_cores Passed to `APRScenario::gen_mats()`.
+#' @return The object returned by `APRScenario::gen_mats()`.
 #' @export
 apr_gen_mats <- function(posterior = NULL, specification = NULL, max_cores = 1) {
   if (!requireNamespace("APRScenario", quietly = TRUE)) {
     stop("Package `APRScenario` must be installed to use `apr_gen_mats()`.", call. = FALSE)
   }
+  max_cores <- validate_positive_count(max_cores, "apr_gen_mats()", arg = "max_cores")
   APRScenario::gen_mats(posterior = posterior, specification = specification, max_cores = max_cores)
 }
 
