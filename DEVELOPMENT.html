@@ -66,6 +66,9 @@
 <ul><li><code>_R_CHECK_FORCE_SUGGESTS_=false R CMD check --as-cran bsvarPost_*.tar.gz</code></li>
 </ul></li>
 <li>Run focused tests for the files or feature area you changed.</li>
+<li>Run the release QA contract check:
+<ul><li><code>Rscript --vanilla -e 'source("tools/release-qa.R"); release_qa_check(".")'</code></li>
+</ul></li>
 <li>Review the staged diff:
 <ul><li>make sure only the intended feature, tests, and docs are included</li>
 </ul></li>

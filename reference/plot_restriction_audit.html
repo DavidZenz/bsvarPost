@@ -51,6 +51,8 @@
 <span>  zero_tol <span class="op">=</span> <span class="fl">1e-08</span>,</span>
 <span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
 <span>  models <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  label_style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"raw"</span>, <span class="st">"pretty"</span><span class="op">)</span>,</span>
+<span>  labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  restriction_types <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -80,6 +82,15 @@
 
 <dt id="arg-models">models<a class="anchor" aria-label="anchor" href="#arg-models"></a></dt>
 <dd><p>Optional model filter.</p></dd>
+
+
+<dt id="arg-label-style">label_style<a class="anchor" aria-label="anchor" href="#arg-label-style"></a></dt>
+<dd><p>Restriction label style: <code>"raw"</code> or <code>"pretty"</code>.</p></dd>
+
+
+<dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
+<dd><p>Optional named character vector overriding restriction labels by
+raw restriction string.</p></dd>
 
 
 <dt id="arg-restriction-types">restriction_types<a class="anchor" aria-label="anchor" href="#arg-restriction-types"></a></dt>

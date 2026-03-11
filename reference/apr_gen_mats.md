@@ -22,3 +22,8 @@ apr_gen_mats(posterior = NULL, specification = NULL, max_cores = 1)
 
   Passed to
   [`APRScenario::gen_mats()`](https://rdrr.io/pkg/APRScenario/man/gen_mats.html).
+
+## Value
+
+The object returned by
+[`APRScenario::gen_mats()`](https://rdrr.io/pkg/APRScenario/man/gen_mats.html).

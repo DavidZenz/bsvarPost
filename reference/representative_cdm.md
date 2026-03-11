@@ -96,3 +96,9 @@ most_likely_admissible_cdm(object, ...)
 - scale_var:
 
   Optional scaling variable specification.
+
+## Value
+
+A `RepresentativeCDM` object. Use
+[`summary()`](https://rdrr.io/r/base/summary.html) to obtain the tidy
+representative table.

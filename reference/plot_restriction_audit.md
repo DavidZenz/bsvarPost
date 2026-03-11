@@ -11,6 +11,8 @@ plot_restriction_audit(
   zero_tol = 1e-08,
   probability = 0.68,
   models = NULL,
+  label_style = c("raw", "pretty"),
+  labels = NULL,
   restriction_types = NULL,
   ...
 )
@@ -40,6 +42,15 @@ plot_restriction_audit(
 - models:
 
   Optional model filter.
+
+- label_style:
+
+  Restriction label style: `"raw"` or `"pretty"`.
+
+- labels:
+
+  Optional named character vector overriding restriction labels by raw
+  restriction string.
 
 - restriction_types:
 

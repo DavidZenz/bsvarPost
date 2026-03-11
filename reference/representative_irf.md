@@ -86,3 +86,9 @@ most_likely_admissible_irf(object, ...)
 - horizon:
 
   Forecast horizon when `object` is a posterior model object.
+
+## Value
+
+A `RepresentativeIR` object. Use
+[`summary()`](https://rdrr.io/r/base/summary.html) to obtain the tidy
+representative table.
