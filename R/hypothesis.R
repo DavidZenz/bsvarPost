@@ -21,6 +21,16 @@ hypothesis_irf <- function(object, ...) {
   UseMethod("hypothesis_irf")
 }
 
+#' @rdname hypothesis_irf
+#' @export
+hypothesis_irf.default <- function(object, ...) {
+  stop(
+    "hypothesis_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 response_max_horizon <- function(horizon, compare_to = NULL) {
   rhs_horizon <- if (is.null(compare_to)) numeric(0) else as.numeric(compare_to$horizon)
   max(c(as.numeric(horizon), rhs_horizon), na.rm = TRUE)
@@ -168,6 +178,16 @@ hypothesis_irf.PosteriorBSVARSIGN <- hypothesis_irf_model
 #' @export
 hypothesis_cdm <- function(object, ...) {
   UseMethod("hypothesis_cdm")
+}
+
+#' @rdname hypothesis_cdm
+#' @export
+hypothesis_cdm.default <- function(object, ...) {
+  stop(
+    "hypothesis_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 #' @rdname hypothesis_cdm
