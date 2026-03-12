@@ -5,6 +5,20 @@
 #' @param draws If `TRUE`, return draw-level rows.
 #' @param model Optional model identifier.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
+#'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+#'   \code{value} replace the summary statistics.
+#' @examples
+#' # Small posterior (S = 5 draws)
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' # Tidy impulse responses
+#' result <- tidy_irf(post, horizon = 3)
+#' head(result)
 #' @export
 tidy_irf <- function(object, ...) UseMethod("tidy_irf")
 
@@ -48,6 +62,20 @@ tidy_irf.PosteriorBSVARSIGN <- tidy_irf.PosteriorBSVAR
 #' @inheritParams tidy_irf
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
+#'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+#'   \code{value} replace the summary statistics.
+#' @examples
+#' # Small posterior (S = 5 draws)
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' # Tidy cumulative dynamic multipliers
+#' result <- tidy_cdm(post, horizon = 3)
+#' head(result)
 #' @export
 tidy_cdm <- function(object, ...) UseMethod("tidy_cdm")
 
@@ -93,6 +121,20 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 
 #' Tidy forecast error variance decompositions
 #' @inheritParams tidy_irf
+#' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
+#'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+#'   \code{value} replace the summary statistics.
+#' @examples
+#' # Small posterior (S = 5 draws)
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' # Tidy forecast error variance decompositions
+#' result <- tidy_fevd(post, horizon = 3)
+#' head(result)
 #' @export
  tidy_fevd <- function(object, ...) UseMethod("tidy_fevd")
 
@@ -129,6 +171,20 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 
 #' Tidy structural shocks
 #' @inheritParams tidy_irf
+#' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{time},
+#'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
+#'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+#'   \code{value} replace the summary statistics.
+#' @examples
+#' # Small posterior (S = 5 draws)
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' # Tidy structural shocks
+#' result <- tidy_shocks(post)
+#' head(result)
 #' @export
  tidy_shocks <- function(object, ...) UseMethod("tidy_shocks")
 
@@ -165,6 +221,20 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 
 #' Tidy historical decompositions
 #' @inheritParams tidy_irf
+#' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{time},
+#'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
+#'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+#'   \code{value} replace the summary statistics.
+#' @examples
+#' # Small posterior (S = 5 draws)
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' # Tidy historical decompositions
+#' result <- tidy_hd(post)
+#' head(result)
 #' @export
  tidy_hd <- function(object, ...) UseMethod("tidy_hd")
 
@@ -201,6 +271,20 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 
 #' Tidy forecasts
 #' @inheritParams tidy_irf
+#' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
+#'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+#'   \code{value} replace the summary statistics.
+#' @examples
+#' # Small posterior (S = 5 draws)
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' # Tidy forecasts
+#' result <- tidy_forecast(post, horizon = 3)
+#' head(result)
 #' @export
  tidy_forecast <- function(object, ...) UseMethod("tidy_forecast")
 
