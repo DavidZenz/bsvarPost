@@ -21,7 +21,7 @@
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' hd_event <- tidy_hd_event(post, start = 2, end = 3)
+#' hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.5")
 #' head(hd_event)
 #' @export
  tidy_hd_event <- function(object, ...) UseMethod("tidy_hd_event")
@@ -163,7 +163,7 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' sr <- shock_ranking(post, start = 2, end = 3)
+#' sr <- shock_ranking(post, start = "1948.25", end = "1948.5")
 #' print(sr)
 #' @export
 shock_ranking <- function(object, start, end = start, variables = NULL, models = NULL,

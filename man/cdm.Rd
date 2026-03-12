@@ -82,7 +82,19 @@ cdm(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A 4-dimensional array of class \code{PosteriorCDM} with dimensions
+\code{[variables x shocks x (horizon + 1) x draws]}.
+}
 \description{
 Compute cumulative dynamic multipliers (CDMs) for posterior objects from
 \code{bsvars} and \code{bsvarSIGNs}.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+cdm_draws <- cdm(post, horizon = 3)
+dim(cdm_draws)
 }

@@ -28,6 +28,21 @@ identification scheme.}
 
 \item{...}{Reserved for future extensions.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{restriction_type}, \code{restriction}, \code{variable}, \code{shock},
+\code{horizon}, \code{relation}, \code{posterior_prob}, \code{mean},
+\code{median}, \code{lower}, and \code{upper}.
+}
 \description{
 Audit sign, zero, structural, and narrative restrictions
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+audit <- restriction_audit(post, restrictions = r)
+print(audit)
 }

@@ -119,7 +119,7 @@ compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, prob
 #' @examples
 #' \donttest{
 #' data(optimism, package = "bsvarSIGNs")
-#' sign_irf <- matrix(c(1, rep(NA, 5)), 2, 3)
+#' sign_irf <- matrix(c(1, rep(NA, 3)), 2, 2)
 #' spec_s <- suppressMessages(
 #'   bsvarSIGNs::specify_bsvarSIGN$new(optimism[, 1:2], p = 1,
 #'                                      sign_irf = sign_irf)
@@ -158,7 +158,7 @@ compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
 #' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' comp <- compare_hd_event(m1 = post1, m2 = post2, start = 2, end = 3)
+#' comp <- compare_hd_event(m1 = post1, m2 = post2, start = "1948.25", end = "1948.5")
 #' head(comp)
 #' @export
 compare_hd_event <- function(..., start, end = start, probability = 0.68, draws = FALSE) {

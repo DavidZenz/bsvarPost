@@ -58,7 +58,7 @@ theme_bsvarpost <- function(preset = c("default", "paper", "slides"),
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
 #' irf_tbl <- tidy_irf(post, horizon = 3)
-#' p <- style_bsvar_plot(autoplot(irf_tbl), preset = "paper")
+#' p <- style_bsvar_plot(ggplot2::autoplot(irf_tbl), preset = "paper")
 #' @export
 style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
                              palette = NULL, ribbon_alpha = NULL,
@@ -112,7 +112,7 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
 #' irf_tbl <- tidy_irf(post, horizon = 3)
-#' p <- template_bsvar_plot(autoplot(irf_tbl), family = "irf")
+#' p <- template_bsvar_plot(ggplot2::autoplot(irf_tbl), family = "irf")
 #' @export
 template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking",
                                                  "hypothesis", "restriction_audit", "simultaneous",
@@ -191,7 +191,7 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
 #' irf_tbl <- tidy_irf(post, horizon = 3)
-#' p <- annotate_bsvar_plot(autoplot(irf_tbl), title = "IRFs")
+#' p <- annotate_bsvar_plot(ggplot2::autoplot(irf_tbl), title = "IRFs")
 #' @export
 annotate_bsvar_plot <- function(plot, title = NULL, subtitle = NULL, caption = NULL,
                                 yintercept = NULL, xintercept = NULL,

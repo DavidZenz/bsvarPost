@@ -341,8 +341,9 @@ restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' mag <- magnitude_audit(post, horizon = 3)
-#' head(mag)
+#' mag <- magnitude_audit(post, variable = "gdp", shock = "gdp",
+#'                        horizon = 0, relation = ">")
+#' print(mag)
 #' @export
 magnitude_audit <- function(object, type = c("irf", "cdm"), variable, shock, horizon,
                             relation = c("<", "<=", ">", ">=", "=="), value = 0,

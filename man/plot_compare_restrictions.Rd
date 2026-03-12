@@ -21,6 +21,19 @@ plot_compare_restrictions(
 \item{top_n}{Optional number of highest-probability restrictions to keep
 within each model.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 Plot comparison summaries for restriction-audit tables
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+comp <- compare_restrictions(m1 = post1, m2 = post2, restrictions = r)
+p <- plot_compare_restrictions(comp)
 }

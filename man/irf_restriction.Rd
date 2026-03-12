@@ -17,6 +17,15 @@ irf_restriction(variable, shock, horizon, sign = NULL, zero = FALSE)
 
 \item{zero}{If \code{TRUE}, treat the restriction as a zero restriction.}
 }
+\value{
+A list of class \code{bsvar_post_irf_restriction} (inheriting from
+\code{bsvar_post_restriction}) with elements \code{variable},
+\code{shock}, \code{horizon}, \code{sign}, and \code{zero}.
+}
 \description{
 Create an impulse-response restriction specification
+}
+\examples{
+r <- irf_restriction("gdp", "gdp", 0, sign = 1)
+print(r)
 }

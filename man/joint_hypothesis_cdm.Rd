@@ -14,6 +14,22 @@ joint_hypothesis_cdm(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{relation}, \code{posterior_prob},
+\code{n_constraints}, \code{variable}, \code{shock}, \code{horizon},
+\code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+\code{rhs_value}, and \code{absolute}.
+}
 \description{
 Joint posterior probability statements for cumulative dynamic multipliers
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+jh <- joint_hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+                           horizon = 0:2, relation = ">", value = 0)
+print(jh)
 }

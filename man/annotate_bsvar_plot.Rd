@@ -38,6 +38,17 @@ annotate_bsvar_plot(
 
 \item{window_alpha}{Alpha for the highlighted window.}
 }
+\value{
+A \code{ggplot} object with annotations added.
+}
 \description{
 Add publication-oriented annotations to a bsvarPost plot
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+p <- annotate_bsvar_plot(ggplot2::autoplot(irf_tbl), title = "IRFs")
 }

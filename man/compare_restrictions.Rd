@@ -20,6 +20,20 @@ compare_restrictions(
 
 \item{probability}{Equal-tailed interval probability used in summaries.}
 }
+\value{
+A \code{bsvar_post_tbl} combining restriction audit results across
+models, with a \code{model} column identifying each input.
+}
 \description{
 Compare restriction audits across models
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+comp <- compare_restrictions(m1 = post1, m2 = post2, restrictions = r)
+head(comp)
 }

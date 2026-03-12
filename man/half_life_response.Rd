@@ -165,7 +165,22 @@ available horizons, \code{"initial"} uses the horizon-0 response.}
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{fraction},
+\code{baseline}, \code{mean_half_life}, \code{median_half_life},
+\code{sd_half_life}, \code{lower_half_life}, \code{upper_half_life},
+and \code{reached_prob}.
+}
 \description{
 Summarise the first horizon at which a response falls to a chosen fraction of
 its initial or peak level.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+hl <- half_life_response(post, horizon = 3)
+print(hl)
 }

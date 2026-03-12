@@ -73,6 +73,22 @@ most_likely_admissible_cdm(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A list of class \code{RepresentativeCDM} (inheriting from
+\code{RepresentativeResponse}) with elements \code{representative_draw}
+(the selected CDM array), \code{posterior_draws} (all CDM draws),
+\code{draw_index} (integer index of the selected draw), \code{method},
+\code{score}, \code{target_summary}, \code{selection_spec},
+\code{probability}, and \code{object_type}.
+}
 \description{
 Representative cumulative dynamic multipliers
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+rep_cdm <- representative_cdm(post, horizon = 3)
+rep_cdm$draw_index
 }

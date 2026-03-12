@@ -73,6 +73,25 @@ hypothesis_cdm(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{relation}, \code{posterior_prob}, \code{mean_gap},
+\code{median_gap}, \code{lower_gap}, and \code{upper_gap}.  When
+\code{draws = TRUE}, columns \code{draw}, \code{gap}, and
+\code{satisfied} replace the summary statistics.  Additional columns
+\code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+\code{rhs_value}, and \code{absolute} describe the right-hand side.
+}
 \description{
 Posterior probability statements for cumulative dynamic multipliers
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+h <- hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+                    horizon = 0:2, relation = ">", value = 0)
+print(h)
 }

@@ -54,6 +54,20 @@ magnitude_audit(
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{bsvar_post_tbl} with hypothesis test results including
+\code{posterior_prob}, \code{mean}, \code{median}, \code{lower}, and
+\code{upper} columns.
+}
 \description{
 Audit magnitude statements for IRFs or CDMs
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+mag <- magnitude_audit(post, variable = "gdp", shock = "gdp",
+                       horizon = 0, relation = ">")
+print(mag)
 }

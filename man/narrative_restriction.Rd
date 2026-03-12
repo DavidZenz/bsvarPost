@@ -26,6 +26,15 @@ narrative_restriction(
 
 \item{var}{Variable index for \code{"A"} and \code{"B"} restrictions.}
 }
+\value{
+A list of class \code{bsvar_post_narrative_restriction} (inheriting
+from \code{bsvar_post_restriction}) with elements \code{start},
+\code{periods}, \code{type}, \code{sign}, \code{shock}, and \code{var}.
+}
 \description{
 Create a narrative restriction specification
+}
+\examples{
+r <- narrative_restriction(start = 10, periods = 1, type = "S", sign = 1, shock = 1)
+print(r)
 }
