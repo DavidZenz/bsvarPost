@@ -8,6 +8,19 @@
 #'   colour.
 #' @param ... Additional arguments passed to `acceptance_diagnostics()` when
 #'   `object` is not already a diagnostics table.
+#' @return A \code{ggplot} object.
+#' @examples
+#' \donttest{
+#' data(optimism, package = "bsvarSIGNs")
+#' sign_irf <- matrix(c(1, rep(NA, 5)), 2, 3)
+#' spec_s <- suppressMessages(
+#'   bsvarSIGNs::specify_bsvarSIGN$new(optimism[, 1:2], p = 1,
+#'                                      sign_irf = sign_irf)
+#' )
+#' post_s <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
+#'
+#' p <- plot_acceptance_diagnostics(post_s)
+#' }
 #' @export
 plot_acceptance_diagnostics <- function(object, metrics = NULL, models = NULL, show_flags = TRUE, ...) {
   if (inherits(object, "bsvar_post_tbl")) {
