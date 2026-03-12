@@ -105,14 +105,16 @@ Plans:
   5. Integration pipelines tested end-to-end (posterior -> tidy -> compare -> plot)
   6. All tests pass with _R_CHECK_FORCE_SUGGESTS_=false
   7. Error validation tests confirm expected error messages from Phase 2
-**Plans**: 5 plans
+**Plans**: 7 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — S3 dispatch tests for tidy and hypothesis families (PosteriorBSVARSV)
-- [ ] 05-02-PLAN.md — Compare dispatch, zero-reference functions, and PosteriorBSVARSIGN dispatch
-- [ ] 05-03-PLAN.md — Representative and response-summary dispatch plus utils/plot-style coverage
-- [ ] 05-04-PLAN.md — Optional package smoke tests and integration pipeline tests
-- [ ] 05-05-PLAN.md — covr verification gate, gap filling, FORCE_SUGGESTS validation
+- [x] 05-01-PLAN.md — S3 dispatch tests for tidy and hypothesis families (PosteriorBSVARSV)
+- [x] 05-02-PLAN.md — Compare dispatch, zero-reference functions, and PosteriorBSVARSIGN dispatch
+- [x] 05-03-PLAN.md — Representative and response-summary dispatch plus utils/plot-style coverage
+- [x] 05-04-PLAN.md — Optional package smoke tests and integration pipeline tests
+- [x] 05-05-PLAN.md — covr verification gate, gap filling, FORCE_SUGGESTS validation
+- [ ] 05-06-PLAN.md — Gap closure: MIX/MSH/T posterior type dispatch spot-checks
+- [ ] 05-07-PLAN.md — Gap closure: Behavioral edge cases (1-variable, S=1, empty selections)
 
 ### Phase 6: API Consistency & Error Messages
 **Goal**: Standardize error messages and API design across all function families
@@ -183,7 +185,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 2. Input Validation Foundation | 3/3 | Complete    | 2026-03-12 |
 | 3. Output Correctness Verification | 4/4 | Complete | 2026-03-12 |
 | 4. Documentation Completion | 5/5 | Complete | 2026-03-12 |
-| 5. Test Coverage Expansion | 0/5 | Not started | - |
+| 5. Test Coverage Expansion | 5/7 | Gap closure | - |
 | 6. API Consistency & Error Messages | 0/TBD | Not started | - |
 | 7. Vignettes & Multi-Platform | 0/TBD | Not started | - |
 | 8. CRAN Submission | 0/TBD | Not started | - |
