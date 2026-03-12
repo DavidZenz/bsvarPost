@@ -9,6 +9,15 @@
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to methods.
+#' @return A 4-dimensional array of class \code{PosteriorCDM} with dimensions
+#'   \code{[variables x shocks x (horizon + 1) x draws]}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' cdm_draws <- cdm(post, horizon = 3)
+#' dim(cdm_draws)
 #' @export
 cdm <- function(object, ...) {
   UseMethod("cdm")

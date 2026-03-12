@@ -11,6 +11,18 @@
 #' @param draws If `TRUE`, return draw-level cumulative contributions.
 #' @param model Optional model identifier.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{event_start},
+#'   \code{event_end}, \code{median}, \code{mean}, \code{sd}, \code{lower},
+#'   and \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+#'   \code{value} replace the summary statistics.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' hd_event <- tidy_hd_event(post, start = 2, end = 3)
+#' head(hd_event)
 #' @export
  tidy_hd_event <- function(object, ...) UseMethod("tidy_hd_event")
 
@@ -142,6 +154,17 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
 #' @param ranking One of `"absolute"` or `"signed"`.
 #' @param probability Equal-tailed interval probability.
 #' @param ... Additional arguments passed to `tidy_hd_event()`.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{event_start},
+#'   \code{event_end}, \code{median}, \code{mean}, \code{sd}, \code{lower},
+#'   \code{upper}, \code{ranking}, \code{rank_score}, and \code{rank}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' sr <- shock_ranking(post, start = 2, end = 3)
+#' print(sr)
 #' @export
 shock_ranking <- function(object, start, end = start, variables = NULL, models = NULL,
                           ranking = c("absolute", "signed"), probability = 0.68, ...) {
