@@ -7,6 +7,17 @@
 #'   otherwise `time`.
 #' @param regular Optional regularity flag passed to `tsibble::as_tsibble()`.
 #' @param validate Passed to `tsibble::as_tsibble()`.
+#' @return A \code{tsibble::tbl_ts} object.
+#' @examples
+#' \dontrun{
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#' ts_tbl <- as_tsibble_post(irf_tbl)
+#' print(ts_tbl)
+#' }
 #' @export
 as_tsibble_post <- function(object, key = NULL, index = NULL, regular = NULL, validate = TRUE) {
   if (!inherits(object, "bsvar_post_tbl")) {
