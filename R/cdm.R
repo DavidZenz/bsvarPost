@@ -14,6 +14,16 @@ cdm <- function(object, ...) {
   UseMethod("cdm")
 }
 
+#' @rdname cdm
+#' @export
+cdm.default <- function(object, ...) {
+  stop(
+    "cdm() requires a posterior model object.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 cdm_from_model <- function(object, horizon = 10, probability = 0.68,
                            scale_by = c("none", "shock_sd"),
                            scale_var = NULL, ...) {
