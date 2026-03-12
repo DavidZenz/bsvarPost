@@ -16,6 +16,22 @@
 #' @param draws If `TRUE`, return draw-level gaps and indicators.
 #' @param model Optional model identifier.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{relation}, \code{posterior_prob}, \code{mean_gap},
+#'   \code{median_gap}, \code{lower_gap}, and \code{upper_gap}.  When
+#'   \code{draws = TRUE}, columns \code{draw}, \code{gap}, and
+#'   \code{satisfied} replace the summary statistics.  Additional columns
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute} describe the right-hand side.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#'                     horizon = 0:2, relation = ">", value = 0)
+#' print(h)
 #' @export
 hypothesis_irf <- function(object, ...) {
   UseMethod("hypothesis_irf")
@@ -175,6 +191,22 @@ hypothesis_irf.PosteriorBSVARSIGN <- hypothesis_irf_model
 #' @inheritParams hypothesis_irf
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{relation}, \code{posterior_prob}, \code{mean_gap},
+#'   \code{median_gap}, \code{lower_gap}, and \code{upper_gap}.  When
+#'   \code{draws = TRUE}, columns \code{draw}, \code{gap}, and
+#'   \code{satisfied} replace the summary statistics.  Additional columns
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute} describe the right-hand side.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' h <- hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+#'                     horizon = 0:2, relation = ">", value = 0)
+#' print(h)
 #' @export
 hypothesis_cdm <- function(object, ...) {
   UseMethod("hypothesis_cdm")

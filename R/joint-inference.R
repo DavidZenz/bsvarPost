@@ -10,6 +10,17 @@
 #' @param shock Optional shock subset.
 #' @param model Optional model identifier.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+#'   and \code{critical_value}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' sb <- simultaneous_irf(post, horizon = 3)
+#' head(sb)
 #' @export
 simultaneous_irf <- function(object, ...) {
   UseMethod("simultaneous_irf")
@@ -90,6 +101,17 @@ simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 #' @inheritParams simultaneous_irf
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+#'   and \code{critical_value}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' sb <- simultaneous_cdm(post, horizon = 3)
+#' head(sb)
 #' @export
 simultaneous_cdm <- function(object, ...) {
   UseMethod("simultaneous_cdm")
@@ -185,6 +207,19 @@ joint_hypothesis_impl <- function(draws, object_type, variable, shock, horizon,
 #'
 #' @inheritParams hypothesis_irf
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{relation}, \code{posterior_prob},
+#'   \code{n_constraints}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' jh <- joint_hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#'                            horizon = 0:2, relation = ">", value = 0)
+#' print(jh)
 #' @export
 joint_hypothesis_irf <- function(object, ...) {
   UseMethod("joint_hypothesis_irf")
@@ -237,6 +272,19 @@ joint_hypothesis_irf.PosteriorBSVARSIGN <- joint_hypothesis_irf_model
 #'
 #' @inheritParams joint_hypothesis_irf
 #' @inheritParams hypothesis_cdm
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{relation}, \code{posterior_prob},
+#'   \code{n_constraints}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' jh <- joint_hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+#'                            horizon = 0:2, relation = ">", value = 0)
+#' print(jh)
 #' @export
 joint_hypothesis_cdm <- function(object, ...) {
   UseMethod("joint_hypothesis_cdm")
