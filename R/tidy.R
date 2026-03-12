@@ -8,6 +8,16 @@
 #' @export
 tidy_irf <- function(object, ...) UseMethod("tidy_irf")
 
+#' @rdname tidy_irf
+#' @export
+tidy_irf.default <- function(object, ...) {
+  stop(
+    "tidy_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 #' @export
 tidy_irf.PosteriorIR <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
   as_tidy_response_array(object, object_type = "irf", model = model, probability = probability, draws = draws)
@@ -40,6 +50,16 @@ tidy_irf.PosteriorBSVARSIGN <- tidy_irf.PosteriorBSVAR
 #' @param scale_var Optional scaling variable specification.
 #' @export
 tidy_cdm <- function(object, ...) UseMethod("tidy_cdm")
+
+#' @rdname tidy_cdm
+#' @export
+tidy_cdm.default <- function(object, ...) {
+  stop(
+    "tidy_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
 
 #' @export
 tidy_cdm.PosteriorCDM <- function(object, probability = attr(object, "probability", exact = TRUE) %||% 0.68,
@@ -75,6 +95,17 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @inheritParams tidy_irf
 #' @export
  tidy_fevd <- function(object, ...) UseMethod("tidy_fevd")
+
+#' @rdname tidy_fevd
+#' @export
+ tidy_fevd.default <- function(object, ...) {
+  stop(
+    "tidy_fevd() requires a posterior model object or PosteriorFEVD array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+ }
+
 #' @export
  tidy_fevd.PosteriorFEVD <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
   as_tidy_response_array(object, object_type = "fevd", model = model, probability = probability, draws = draws)
@@ -100,6 +131,17 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @inheritParams tidy_irf
 #' @export
  tidy_shocks <- function(object, ...) UseMethod("tidy_shocks")
+
+#' @rdname tidy_shocks
+#' @export
+ tidy_shocks.default <- function(object, ...) {
+  stop(
+    "tidy_shocks() requires a posterior model object or structural shock array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+ }
+
 #' @export
  tidy_shocks.PosteriorShocks <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
   as_tidy_time_array(object, object_type = "shocks", model = model, probability = probability, draws = draws, time_name = "time")
@@ -125,6 +167,17 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @inheritParams tidy_irf
 #' @export
  tidy_hd <- function(object, ...) UseMethod("tidy_hd")
+
+#' @rdname tidy_hd
+#' @export
+ tidy_hd.default <- function(object, ...) {
+  stop(
+    "tidy_hd() requires a posterior model object or PosteriorHD array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+ }
+
 #' @export
  tidy_hd.PosteriorHD <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
   as_tidy_hd_array(object, model = model, probability = probability, draws = draws)
@@ -150,6 +203,17 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @inheritParams tidy_irf
 #' @export
  tidy_forecast <- function(object, ...) UseMethod("tidy_forecast")
+
+#' @rdname tidy_forecast
+#' @export
+ tidy_forecast.default <- function(object, ...) {
+  stop(
+    "tidy_forecast() requires a posterior model object or forecast array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+ }
+
 #' @export
  tidy_forecast.Forecasts <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
   as_tidy_time_array(object$forecasts, object_type = "forecast", model = model, probability = probability, draws = draws, time_name = "horizon")

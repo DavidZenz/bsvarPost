@@ -14,6 +14,16 @@
 #' @export
  tidy_hd_event <- function(object, ...) UseMethod("tidy_hd_event")
 
+#' @rdname tidy_hd_event
+#' @export
+ tidy_hd_event.default <- function(object, ...) {
+  stop(
+    "tidy_hd_event() requires a posterior model object, PosteriorHD array, or tidy HD table.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+ }
+
 event_window_labels <- function(times, start, end = start) {
   labels <- unique(as.character(times))
   start_chr <- as.character(start)
