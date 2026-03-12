@@ -9,6 +9,15 @@
 #' @param shocks Optional shock filter.
 #' @param models Optional model filter.
 #' @param facet_scales Facet scales passed to `ggplot2`.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_peak_response(m1 = post1, m2 = post2, horizon = 3)
+#' p <- plot_compare_response(comp)
 #' @export
 plot_compare_response <- function(object, measure = NULL, variables = NULL, shocks = NULL,
                                   models = NULL, facet_scales = "free_y") {
@@ -87,6 +96,16 @@ plot_compare_response <- function(object, measure = NULL, variables = NULL, shoc
 #' @param restriction_types Optional restriction-type filter.
 #' @param top_n Optional number of highest-probability restrictions to keep
 #'   within each model.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+#' comp <- compare_restrictions(m1 = post1, m2 = post2, restrictions = r)
+#' p <- plot_compare_restrictions(comp)
 #' @export
 plot_compare_restrictions <- function(object, models = NULL, restriction_types = NULL, top_n = NULL) {
   if (!inherits(object, "bsvar_post_tbl") || !isTRUE(attr(object, "compare")) ||

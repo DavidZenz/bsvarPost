@@ -66,6 +66,15 @@ resolve_restriction_plot_labels <- function(df, label_style = c("raw", "pretty")
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#'                     horizon = 0:2, relation = ">", value = 0)
+#' p <- plot_hypothesis(h)
 #' @export
 plot_hypothesis <- function(object, type = c("irf", "cdm"),
                             variable = NULL, shock = NULL, horizon = NULL,
@@ -157,6 +166,15 @@ plot_hypothesis <- function(object, type = c("irf", "cdm"),
 #'   raw restriction string.
 #' @param restriction_types Optional restriction-type filter.
 #' @param ... Additional arguments passed to `restriction_audit()`.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+#' audit <- restriction_audit(post, restrictions = r)
+#' p <- plot_restriction_audit(audit)
 #' @export
 plot_restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
                                    probability = 0.68, models = NULL,
