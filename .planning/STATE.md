@@ -44,6 +44,8 @@ Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 | Phase 03 P02 | 3 min | 2 tasks | 2 files |
 | Phase 03 P01 | 3 min | 2 tasks | 2 files |
 | Phase 03 P03 | 5 min | 2 tasks | 2 files |
+| Phase 05-test-coverage-expansion P02 | 15 | 2 tasks | 3 files |
+| Phase 05 P03 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -90,6 +92,11 @@ Recent decisions affecting current work:
 - [Phase 05-01]: PosteriorBSVARSV dispatch tests use S=5 draws, p=1, us_fiscal_lsuw - consistent with project-wide test fixture pattern
 - [Phase 05-01]: Dispatch tests verify structural return shape (class, nrow, columns) not numerical values - Phase 3 already verified correctness for PosteriorBSVAR
 - [Phase 05-01]: Variable name assertions use rownames(post_sv$last_draw$data_matrices$Y) as expected_names source
+- [Phase 05-02]: shock_ranking uses time label strings (not integer horizons) as start/end args - requires tidy_hd() to extract valid time strings
+- [Phase 05-02]: compare_restrictions is PosteriorBSVARSIGN-specific - tested only in test_dispatch_sign.R with SIGN fixture
+- [Phase 05-02]: most_likely_admissible_cdm and most_likely_admissible_irf select the same draw_index (kernel score maximizer)
+- [Phase 05]: PosteriorBSVARSV fixture: specify_bsvar_sv$new with set.seed(1), S=5, thin=1, horizon=2 — consistent with Phase 3 lightweight fixture pattern
+- [Phase 05]: Dispatch coverage: test_dispatch_representative and test_dispatch_response_summary use PosteriorBSVARSV plus PosteriorIR/PosteriorCDM intermediates
 
 ### Pending Todos
 
@@ -110,5 +117,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed Phase 5 Plan 01 (S3 dispatch tests for PosteriorBSVARSV)
-Resume file: .planning/phases/05-test-coverage-expansion/05-01-SUMMARY.md
+Stopped at: Completed 05-02-PLAN.md (compare dispatch, zero-coverage, and SIGN dispatch tests)
+Resume file: .planning/phases/05-test-coverage-expansion/05-02-SUMMARY.md
