@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 5 of 8 (Test Coverage Expansion) — IN PROGRESS
-Plan: 3 of ? (completed 05-03)
-Status: 05-03 complete — PosteriorBSVARSV dispatch for representative/response-summary + plot style/utils coverage (71 new tests, 829 total)
-Last activity: 2026-03-12 — Completed Phase 5 Plan 03: Dispatch and Utility Coverage Tests
+Plan: 4 of ? (completed 05-04)
+Status: 05-04 complete — optional package smoke tests (gt/flextable/tsibble) + 5 end-to-end integration pipelines (875 total tests)
+Last activity: 2026-03-12 — Completed Phase 5 Plan 04: Optional Package Smoke Tests and Integration Pipelines
 
 Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 
@@ -46,6 +46,7 @@ Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 | Phase 03 P03 | 5 min | 2 tasks | 2 files |
 | Phase 05-test-coverage-expansion P02 | 15 | 2 tasks | 3 files |
 | Phase 05 P03 | 3 | 2 tasks | 3 files |
+| Phase 05 P04 | 4 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,9 @@ Recent decisions affecting current work:
 - [Phase 05-02]: most_likely_admissible_cdm and most_likely_admissible_irf select the same draw_index (kernel score maximizer)
 - [Phase 05]: PosteriorBSVARSV fixture: specify_bsvar_sv$new with set.seed(1), S=5, thin=1, horizon=2 — consistent with Phase 3 lightweight fixture pattern
 - [Phase 05]: Dispatch coverage: test_dispatch_representative and test_dispatch_response_summary use PosteriorBSVARSV plus PosteriorIR/PosteriorCDM intermediates
+- [Phase 05-04]: Optional package tests use exit_file() at file top -- correct tinytest idiom for file-level conditional execution under _R_CHECK_FORCE_SUGGESTS_=false
+- [Phase 05-04]: Integration tests check class/structure at each pipeline stage (not numerical values) -- integration coverage, not replication of Phase 3 correctness verification
+- [Phase 05-04]: test_reporting.R already covers as_gt/as_flextable on bsvar_post_tbl; optional smoke tests focus on report_bundle and data.frame dispatch paths to avoid duplication
 
 ### Pending Todos
 
@@ -117,5 +121,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 05-03-PLAN.md (representative/response-summary dispatch + utils/plot-style coverage)
-Resume file: .planning/phases/05-test-coverage-expansion/05-03-SUMMARY.md
+Stopped at: Completed 05-04-PLAN.md (optional package smoke tests + integration pipeline tests)
+Resume file: .planning/phases/05-test-coverage-expansion/05-04-SUMMARY.md
