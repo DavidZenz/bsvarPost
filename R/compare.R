@@ -3,6 +3,16 @@
 #' @param horizon Forecast horizon.
 #' @param probability Interval probability.
 #' @param draws If `TRUE`, return draw-level rows.
+#' @return A \code{bsvar_post_tbl} combining results across models, with a
+#'   \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_irf(m1 = post1, m2 = post2, horizon = 3)
+#' head(comp)
 #' @export
 compare_irf <- function(..., horizon = 10, probability = 0.68, draws = FALSE) {
   models <- collect_models(...)
@@ -14,6 +24,16 @@ compare_irf <- function(..., horizon = 10, probability = 0.68, draws = FALSE) {
 #' @inheritParams compare_irf
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} combining results across models, with a
+#'   \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_cdm(m1 = post1, m2 = post2, horizon = 3)
+#' head(comp)
 #' @export
 compare_cdm <- function(..., horizon = 10, probability = 0.68, draws = FALSE,
                         scale_by = c("none", "shock_sd"), scale_var = NULL) {
@@ -24,6 +44,16 @@ compare_cdm <- function(..., horizon = 10, probability = 0.68, draws = FALSE,
 
 #' Compare FEVDs across models
 #' @inheritParams compare_irf
+#' @return A \code{bsvar_post_tbl} combining results across models, with a
+#'   \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_fevd(m1 = post1, m2 = post2, horizon = 3)
+#' head(comp)
 #' @export
 compare_fevd <- function(..., horizon = 10, probability = 0.68, draws = FALSE) {
   models <- collect_models(...)
@@ -33,6 +63,16 @@ compare_fevd <- function(..., horizon = 10, probability = 0.68, draws = FALSE) {
 
 #' Compare forecasts across models
 #' @inheritParams compare_irf
+#' @return A \code{bsvar_post_tbl} combining results across models, with a
+#'   \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_forecast(m1 = post1, m2 = post2, horizon = 3)
+#' head(comp)
 #' @export
 compare_forecast <- function(..., horizon = 10, probability = 0.68, draws = FALSE) {
   models <- collect_models(...)
@@ -46,6 +86,17 @@ compare_forecast <- function(..., horizon = 10, probability = 0.68, draws = FALS
 #' @param restrictions Optional list of restriction helper objects applied to each model.
 #' @param zero_tol Numerical tolerance for zero restrictions.
 #' @param probability Equal-tailed interval probability used in summaries.
+#' @return A \code{bsvar_post_tbl} combining restriction audit results across
+#'   models, with a \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+#' comp <- compare_restrictions(m1 = post1, m2 = post2, restrictions = r)
+#' head(comp)
 #' @export
 compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, probability = 0.68) {
   models <- collect_models(...)
@@ -63,6 +114,22 @@ compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, prob
 #'   flag is raised.
 #' @param sparse_threshold Share of near-zero admissibility weights above which a
 #'   sparse-support warning flag is raised.
+#' @return A \code{bsvar_post_tbl} combining acceptance diagnostic results
+#'   across models, with a \code{model} column identifying each input.
+#' @examples
+#' \donttest{
+#' data(optimism, package = "bsvarSIGNs")
+#' sign_irf <- matrix(c(1, rep(NA, 5)), 2, 3)
+#' spec_s <- suppressMessages(
+#'   bsvarSIGNs::specify_bsvarSIGN$new(optimism[, 1:2], p = 1,
+#'                                      sign_irf = sign_irf)
+#' )
+#' post_s1 <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
+#' post_s2 <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_acceptance_diagnostics(m1 = post_s1, m2 = post_s2)
+#' print(comp)
+#' }
 #' @export
 compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
                                            ess_threshold = 20,
@@ -82,6 +149,17 @@ compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
 #' @param end Last time index to include. Defaults to `start`.
 #' @param probability Equal-tailed interval probability used in summaries.
 #' @param draws If `TRUE`, return draw-level rows.
+#' @return A \code{bsvar_post_tbl} combining event-window historical
+#'   decomposition results across models, with a \code{model} column
+#'   identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_hd_event(m1 = post1, m2 = post2, start = 2, end = 3)
+#' head(comp)
 #' @export
 compare_hd_event <- function(..., start, end = start, probability = 0.68, draws = FALSE) {
   models <- collect_models(...)
@@ -102,6 +180,16 @@ compare_hd_event <- function(..., start, end = start, probability = 0.68, draws 
 #' @param probability Equal-tailed interval probability.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} combining peak summary results across
+#'   models, with a \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_peak_response(m1 = post1, m2 = post2, horizon = 3)
+#' head(comp)
 #' @export
 compare_peak_response <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
                                   absolute = FALSE, probability = 0.68,
@@ -129,6 +217,17 @@ compare_peak_response <- function(..., horizon = 10, type = c("irf", "cdm"), var
 #' @param probability Equal-tailed interval probability.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} combining duration summary results across
+#'   models, with a \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_duration_response(m1 = post1, m2 = post2, horizon = 3,
+#'                                    relation = ">", value = 0)
+#' head(comp)
 #' @export
 compare_duration_response <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
                                       relation = c(">", ">=", "<", "<="), value = 0,
@@ -158,6 +257,16 @@ compare_duration_response <- function(..., horizon = 10, type = c("irf", "cdm"),
 #' @param probability Equal-tailed interval probability.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} combining half-life summary results across
+#'   models, with a \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_half_life_response(m1 = post1, m2 = post2, horizon = 3)
+#' head(comp)
 #' @export
 compare_half_life_response <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
                                        fraction = 0.5, baseline = c("peak", "initial"),
@@ -186,6 +295,17 @@ compare_half_life_response <- function(..., horizon = 10, type = c("irf", "cdm")
 #' @param probability Equal-tailed interval probability.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} combining time-to-threshold summary results
+#'   across models, with a \code{model} column identifying each input.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' comp <- compare_time_to_threshold(m1 = post1, m2 = post2, horizon = 3,
+#'                                    relation = ">", value = 0)
+#' head(comp)
 #' @export
 compare_time_to_threshold <- function(..., horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
                                       relation = c(">", ">=", "<", "<="), value = 0,
