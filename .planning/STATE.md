@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 4 planned — ready for execution
+**Current focus:** Phase 3 context gathered — ready for planning
 
 ## Current Position
 
-Phase: 4 of 8 (Documentation Completion) — IN PROGRESS
-Plan: 4 of 5 complete
-Status: Executing documentation completion plans
-Last activity: 2026-03-12 — Completed 04-04-PLAN.md: Plotting and reporting documentation
+Phase: 3 of 8 (Output Correctness Verification) — IN PROGRESS
+Plan: 4 of 4 (executing)
+Status: Executing Phase 3 plans
+Last activity: 2026-03-12 — Completed 03-04-PLAN.md: Compare function merging verification (59 tests, zero failures)
 
-Progress: [███░░░░░░░] 25% (2 of 8 phases complete, Phase 4 in progress)
+Progress: [████░░░░░░] 38% (3 of 8 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 3 minutes
-- Total execution time: 0.42 hours
+- Total plans completed: 10
+- Average duration: 5 minutes
+- Total execution time: 0.73 hours
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [███░░░░░░░] 25% (2 of 8 phases complete, Phase 4 
 |-------|-------|----------|----------|
 | 01-ggplot2-deprecation-fix | 1 | 9 min | 9 min |
 | 02-input-validation-foundation | 3 | 6 min | 2 min |
-| 04-documentation-completion | 4 | 11 min | 3 min |
+| 04-documentation-completion | 5 | 28 min | 6 min |
 
 **Recent Trend:**
-- Last 5 plans: 2 min average
+- Last 5 plans: 6 min average
 
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
@@ -40,6 +40,8 @@ Progress: [███░░░░░░░] 25% (2 of 8 phases complete, Phase 4 
 | Phase 04 P02 | 2 min | 2 tasks | 5 files |
 | Phase 04 P03 | 3 min | 2 tasks | 4 files |
 | Phase 04 P04 | 4 min | 2 tasks | 9 files |
+| Phase 04 P05 | 17 min | 1 task | 67 files |
+| Phase 03 P04 | 2 min | 1 task | 1 file |
 
 ## Accumulated Context
 
@@ -70,6 +72,12 @@ Recent decisions affecting current work:
 - [Phase 04-01]: Plan listed 7 tidy_* generics but R/tidy.R contains 6 - documented all 6 existing functions
 - [Phase 04-04]: Reporting family uses shared Rd page pattern - single comprehensive @return and @examples on NULL anchor block
 - [Phase 04-04]: write_bsvar_csv example uses tempfile() and unlink() pattern for safe demonstration
+- [Phase 04-05]: autoplot() in @examples must use ggplot2::autoplot() namespace prefix (ggplot2 is Imports, not Depends)
+- [Phase 04-05]: bsvarSIGNs sign_irf must be NxN matrix (not NxH); dimension mismatch causes verify_traditional() error
+- [Phase 04-05]: HD event window start/end use character time labels from tidy_hd output, not integer indices
+- [Phase 04-05]: magnitude_audit requires explicit variable and shock arguments (no defaults)
+- [Phase 03-04]: S=30 draws with seeds 2026/2027 for compare verification fixtures
+- [Phase 03-04]: Compare verification tests all summary columns (median, mean, lower, upper) not just one statistic
 
 ### Pending Todos
 
@@ -85,10 +93,10 @@ None yet.
 
 **Quality:**
 - Test coverage gaps: Hypothesis engine edge cases, representative draw selection, restriction auditing (addressed in Phase 5)
-- ~~Documentation gaps: S3 method argument mismatches noted in DEVELOPMENT.md (addressed in Phase 4)~~ Phase 4 planned with 5 plans
+- ~~Documentation gaps: S3 method argument mismatches noted in DEVELOPMENT.md (addressed in Phase 4)~~ **RESOLVED** - Phase 4 complete (5 plans), R CMD check clean
 
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 04-04-PLAN.md: Plotting and reporting documentation (15 Rd pages)
-Resume file: .planning/phases/04-documentation-completion/04-05-PLAN.md
+Stopped at: Completed 03-04-PLAN.md
+Resume file: .planning/phases/03-output-correctness-verification/03-04-SUMMARY.md
