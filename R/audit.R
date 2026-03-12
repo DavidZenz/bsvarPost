@@ -5,6 +5,12 @@
 #' @param horizon Horizon.
 #' @param sign Optional sign restriction, typically `1` or `-1`.
 #' @param zero If `TRUE`, treat the restriction as a zero restriction.
+#' @return A list of class \code{bsvar_post_irf_restriction} (inheriting from
+#'   \code{bsvar_post_restriction}) with elements \code{variable},
+#'   \code{shock}, \code{horizon}, \code{sign}, and \code{zero}.
+#' @examples
+#' r <- irf_restriction("gdp", "gdp", 0, sign = 1)
+#' print(r)
 #' @export
 irf_restriction <- function(variable, shock, horizon, sign = NULL, zero = FALSE) {
   structure(
@@ -18,6 +24,12 @@ irf_restriction <- function(variable, shock, horizon, sign = NULL, zero = FALSE)
 #' @param variable Row index or variable label.
 #' @param shock Column index or shock label.
 #' @param sign Sign restriction, typically `1` or `-1`.
+#' @return A list of class \code{bsvar_post_structural_restriction} (inheriting
+#'   from \code{bsvar_post_restriction}) with elements \code{variable},
+#'   \code{shock}, and \code{sign}.
+#' @examples
+#' r <- structural_restriction("gdp", "gdp", sign = 1)
+#' print(r)
 #' @export
 structural_restriction <- function(variable, shock, sign) {
   structure(
@@ -34,6 +46,12 @@ structural_restriction <- function(variable, shock, sign) {
 #' @param sign Sign direction, `1` or `-1`.
 #' @param shock Shock index.
 #' @param var Variable index for `"A"` and `"B"` restrictions.
+#' @return A list of class \code{bsvar_post_narrative_restriction} (inheriting
+#'   from \code{bsvar_post_restriction}) with elements \code{start},
+#'   \code{periods}, \code{type}, \code{sign}, \code{shock}, and \code{var}.
+#' @examples
+#' r <- narrative_restriction(start = 10, periods = 1, type = "S", sign = 1, shock = 1)
+#' print(r)
 #' @export
 narrative_restriction <- function(start, periods = 1, type = c("S", "A", "B"), sign = 1, shock = 1, var = NA) {
   structure(
@@ -272,6 +290,18 @@ audit_narrative_restriction <- function(restriction, shocks, reduced_irf, p = 0L
 #' @param probability Equal-tailed interval probability used in summaries.
 #' @param model Optional model identifier.
 #' @param ... Reserved for future extensions.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{restriction_type}, \code{restriction}, \code{variable}, \code{shock},
+#'   \code{horizon}, \code{relation}, \code{posterior_prob}, \code{mean},
+#'   \code{median}, \code{lower}, and \code{upper}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+#' audit <- restriction_audit(post, restrictions = r)
+#' print(audit)
 #' @export
 restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
                               probability = 0.68, model = "model1", ...) {
@@ -303,6 +333,16 @@ restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
 #' @param type Response object type to audit.
 #' @inheritParams hypothesis_irf
 #' @inheritParams hypothesis_cdm
+#' @return A \code{bsvar_post_tbl} with hypothesis test results including
+#'   \code{posterior_prob}, \code{mean}, \code{median}, \code{lower}, and
+#'   \code{upper} columns.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' mag <- magnitude_audit(post, horizon = 3)
+#' head(mag)
 #' @export
 magnitude_audit <- function(object, type = c("irf", "cdm"), variable, shock, horizon,
                             relation = c("<", "<=", ">", ">=", "=="), value = 0,
