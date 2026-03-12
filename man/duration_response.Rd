@@ -2,6 +2,7 @@
 % Please edit documentation in R/response-summary.R
 \name{duration_response}
 \alias{duration_response}
+\alias{duration_response.default}
 \alias{duration_response.PosteriorIR}
 \alias{duration_response.PosteriorBSVAR}
 \alias{duration_response.PosteriorBSVARMIX}
@@ -13,6 +14,8 @@
 \title{Duration summaries for posterior IRFs and CDMs}
 \usage{
 duration_response(object, ...)
+
+\method{duration_response}{default}(object, ...)
 
 \method{duration_response}{PosteriorIR}(
   object,

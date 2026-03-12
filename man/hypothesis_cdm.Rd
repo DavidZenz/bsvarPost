@@ -2,11 +2,14 @@
 % Please edit documentation in R/hypothesis.R
 \name{hypothesis_cdm}
 \alias{hypothesis_cdm}
+\alias{hypothesis_cdm.default}
 \alias{hypothesis_cdm.PosteriorCDM}
 \alias{hypothesis_cdm.PosteriorBSVAR}
 \title{Posterior probability statements for cumulative dynamic multipliers}
 \usage{
 hypothesis_cdm(object, ...)
+
+\method{hypothesis_cdm}{default}(object, ...)
 
 \method{hypothesis_cdm}{PosteriorCDM}(
   object,

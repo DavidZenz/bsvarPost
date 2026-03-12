@@ -2,6 +2,7 @@
 % Please edit documentation in R/cdm.R
 \name{cdm}
 \alias{cdm}
+\alias{cdm.default}
 \alias{cdm.PosteriorBSVAR}
 \alias{cdm.PosteriorBSVARMIX}
 \alias{cdm.PosteriorBSVARMSH}
@@ -11,6 +12,8 @@
 \title{Cumulative Dynamic Multipliers}
 \usage{
 cdm(object, ...)
+
+\method{cdm}{default}(object, ...)
 
 \method{cdm}{PosteriorBSVAR}(
   object,

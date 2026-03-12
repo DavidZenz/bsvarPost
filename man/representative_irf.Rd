@@ -2,6 +2,7 @@
 % Please edit documentation in R/representative.R
 \name{representative_irf}
 \alias{representative_irf}
+\alias{representative_irf.default}
 \alias{representative_irf.PosteriorIR}
 \alias{representative_irf.PosteriorBSVAR}
 \alias{median_target_irf}
@@ -9,6 +10,8 @@
 \title{Representative impulse responses}
 \usage{
 representative_irf(object, ...)
+
+\method{representative_irf}{default}(object, ...)
 
 \method{representative_irf}{PosteriorIR}(
   object,

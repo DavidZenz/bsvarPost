@@ -2,6 +2,7 @@
 % Please edit documentation in R/response-summary.R
 \name{peak_response}
 \alias{peak_response}
+\alias{peak_response.default}
 \alias{peak_response.PosteriorIR}
 \alias{peak_response.PosteriorBSVAR}
 \alias{peak_response.PosteriorBSVARMIX}
@@ -13,6 +14,8 @@
 \title{Peak response summaries for posterior IRFs and CDMs}
 \usage{
 peak_response(object, ...)
+
+\method{peak_response}{default}(object, ...)
 
 \method{peak_response}{PosteriorIR}(
   object,

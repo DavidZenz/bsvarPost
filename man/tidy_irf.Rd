@@ -2,10 +2,13 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_irf}
 \alias{tidy_irf}
+\alias{tidy_irf.default}
 \alias{tidy_irf.PosteriorBSVAR}
 \title{Tidy posterior impulse responses}
 \usage{
 tidy_irf(object, ...)
+
+\method{tidy_irf}{default}(object, ...)
 
 \method{tidy_irf}{PosteriorBSVAR}(
   object,

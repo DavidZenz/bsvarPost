@@ -2,6 +2,7 @@
 % Please edit documentation in R/response-summary.R
 \name{time_to_threshold}
 \alias{time_to_threshold}
+\alias{time_to_threshold.default}
 \alias{time_to_threshold.PosteriorIR}
 \alias{time_to_threshold.PosteriorBSVAR}
 \alias{time_to_threshold.PosteriorBSVARMIX}
@@ -13,6 +14,8 @@
 \title{Time-to-threshold summaries for posterior IRFs and CDMs}
 \usage{
 time_to_threshold(object, ...)
+
+\method{time_to_threshold}{default}(object, ...)
 
 \method{time_to_threshold}{PosteriorIR}(
   object,

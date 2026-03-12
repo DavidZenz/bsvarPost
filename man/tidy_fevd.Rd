@@ -2,9 +2,12 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_fevd}
 \alias{tidy_fevd}
+\alias{tidy_fevd.default}
 \title{Tidy forecast error variance decompositions}
 \usage{
 tidy_fevd(object, ...)
+
+\method{tidy_fevd}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or posterior IRF array.}

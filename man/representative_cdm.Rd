@@ -2,6 +2,7 @@
 % Please edit documentation in R/representative.R
 \name{representative_cdm}
 \alias{representative_cdm}
+\alias{representative_cdm.default}
 \alias{representative_cdm.PosteriorCDM}
 \alias{representative_cdm.PosteriorBSVAR}
 \alias{median_target_cdm}
@@ -9,6 +10,8 @@
 \title{Representative cumulative dynamic multipliers}
 \usage{
 representative_cdm(object, ...)
+
+\method{representative_cdm}{default}(object, ...)
 
 \method{representative_cdm}{PosteriorCDM}(
   object,
