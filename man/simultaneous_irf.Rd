@@ -2,6 +2,7 @@
 % Please edit documentation in R/joint-inference.R
 \name{simultaneous_irf}
 \alias{simultaneous_irf}
+\alias{simultaneous_irf.default}
 \alias{simultaneous_irf.PosteriorIR}
 \alias{simultaneous_irf.PosteriorBSVAR}
 \alias{simultaneous_irf.PosteriorBSVARMIX}
@@ -12,6 +13,8 @@
 \title{Simultaneous posterior bands for impulse responses}
 \usage{
 simultaneous_irf(object, ...)
+
+\method{simultaneous_irf}{default}(object, ...)
 
 \method{simultaneous_irf}{PosteriorIR}(
   object,

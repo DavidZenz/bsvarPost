@@ -2,9 +2,12 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_forecast}
 \alias{tidy_forecast}
+\alias{tidy_forecast.default}
 \title{Tidy forecasts}
 \usage{
 tidy_forecast(object, ...)
+
+\method{tidy_forecast}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or posterior IRF array.}

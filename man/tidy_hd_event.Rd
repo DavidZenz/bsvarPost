@@ -2,6 +2,7 @@
 % Please edit documentation in R/hd-event.R
 \name{tidy_hd_event}
 \alias{tidy_hd_event}
+\alias{tidy_hd_event.default}
 \alias{tidy_hd_event.bsvar_post_tbl}
 \alias{tidy_hd_event.PosteriorHD}
 \alias{tidy_hd_event.PosteriorBSVAR}
@@ -13,6 +14,8 @@
 \title{Tidy event-window historical decompositions}
 \usage{
 tidy_hd_event(object, ...)
+
+\method{tidy_hd_event}{default}(object, ...)
 
 \method{tidy_hd_event}{bsvar_post_tbl}(
   object,

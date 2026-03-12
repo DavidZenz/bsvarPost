@@ -2,6 +2,7 @@
 % Please edit documentation in R/response-summary.R
 \name{half_life_response}
 \alias{half_life_response}
+\alias{half_life_response.default}
 \alias{half_life_response.PosteriorIR}
 \alias{half_life_response.PosteriorBSVAR}
 \alias{half_life_response.PosteriorBSVARMIX}
@@ -13,6 +14,8 @@
 \title{Half-life summaries for posterior IRFs and CDMs}
 \usage{
 half_life_response(object, ...)
+
+\method{half_life_response}{default}(object, ...)
 
 \method{half_life_response}{PosteriorIR}(
   object,

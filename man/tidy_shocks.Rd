@@ -2,9 +2,12 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_shocks}
 \alias{tidy_shocks}
+\alias{tidy_shocks.default}
 \title{Tidy structural shocks}
 \usage{
 tidy_shocks(object, ...)
+
+\method{tidy_shocks}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or posterior IRF array.}

@@ -2,6 +2,7 @@
 % Please edit documentation in R/joint-inference.R
 \name{simultaneous_cdm}
 \alias{simultaneous_cdm}
+\alias{simultaneous_cdm.default}
 \alias{simultaneous_cdm.PosteriorCDM}
 \alias{simultaneous_cdm.PosteriorBSVAR}
 \alias{simultaneous_cdm.PosteriorBSVARMIX}
@@ -12,6 +13,8 @@
 \title{Simultaneous posterior bands for cumulative dynamic multipliers}
 \usage{
 simultaneous_cdm(object, ...)
+
+\method{simultaneous_cdm}{default}(object, ...)
 
 \method{simultaneous_cdm}{PosteriorCDM}(
   object,

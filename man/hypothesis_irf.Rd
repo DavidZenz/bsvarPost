@@ -2,11 +2,14 @@
 % Please edit documentation in R/hypothesis.R
 \name{hypothesis_irf}
 \alias{hypothesis_irf}
+\alias{hypothesis_irf.default}
 \alias{hypothesis_irf.PosteriorIR}
 \alias{hypothesis_irf.PosteriorBSVAR}
 \title{Posterior probability statements for impulse responses}
 \usage{
 hypothesis_irf(object, ...)
+
+\method{hypothesis_irf}{default}(object, ...)
 
 \method{hypothesis_irf}{PosteriorIR}(
   object,

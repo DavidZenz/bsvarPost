@@ -2,9 +2,12 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_hd}
 \alias{tidy_hd}
+\alias{tidy_hd.default}
 \title{Tidy historical decompositions}
 \usage{
 tidy_hd(object, ...)
+
+\method{tidy_hd}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or posterior IRF array.}

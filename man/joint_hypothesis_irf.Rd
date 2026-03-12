@@ -2,9 +2,12 @@
 % Please edit documentation in R/joint-inference.R
 \name{joint_hypothesis_irf}
 \alias{joint_hypothesis_irf}
+\alias{joint_hypothesis_irf.default}
 \title{Joint posterior probability statements for impulse responses}
 \usage{
 joint_hypothesis_irf(object, ...)
+
+\method{joint_hypothesis_irf}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or a \code{PosteriorIR} object.}

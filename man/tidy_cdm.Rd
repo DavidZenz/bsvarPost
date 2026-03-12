@@ -2,10 +2,13 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_cdm}
 \alias{tidy_cdm}
+\alias{tidy_cdm.default}
 \alias{tidy_cdm.PosteriorBSVAR}
 \title{Tidy cumulative dynamic multipliers}
 \usage{
 tidy_cdm(object, ...)
+
+\method{tidy_cdm}{default}(object, ...)
 
 \method{tidy_cdm}{PosteriorBSVAR}(
   object,

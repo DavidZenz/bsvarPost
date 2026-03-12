@@ -2,9 +2,12 @@
 % Please edit documentation in R/joint-inference.R
 \name{joint_hypothesis_cdm}
 \alias{joint_hypothesis_cdm}
+\alias{joint_hypothesis_cdm.default}
 \title{Joint posterior probability statements for cumulative dynamic multipliers}
 \usage{
 joint_hypothesis_cdm(object, ...)
+
+\method{joint_hypothesis_cdm}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or a \code{PosteriorIR} object.}
