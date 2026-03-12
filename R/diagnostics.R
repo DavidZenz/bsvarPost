@@ -14,6 +14,22 @@
 #'   sparse-support warning flag is raised.
 #' @param model Optional model identifier.
 #' @param ... Reserved for future extensions.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{metric}, \code{value}, \code{flag}, and
+#'   \code{message}.  Each row reports one diagnostic metric.
+#' @examples
+#' \donttest{
+#' data(optimism, package = "bsvarSIGNs")
+#' sign_irf <- matrix(c(1, rep(NA, 5)), 2, 3)
+#' spec_s <- suppressMessages(
+#'   bsvarSIGNs::specify_bsvarSIGN$new(optimism[, 1:2], p = 1,
+#'                                      sign_irf = sign_irf)
+#' )
+#' post_s <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
+#'
+#' diag <- acceptance_diagnostics(post_s)
+#' print(diag)
+#' }
 #' @export
 acceptance_diagnostics <- function(object, ...) {
   UseMethod("acceptance_diagnostics")

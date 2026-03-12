@@ -13,6 +13,19 @@
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock},
+#'   \code{mean_value}, \code{median_value}, \code{sd_value},
+#'   \code{lower_value}, \code{upper_value}, \code{mean_horizon},
+#'   \code{median_horizon}, \code{sd_horizon}, \code{lower_horizon},
+#'   and \code{upper_horizon}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' pk <- peak_response(post, horizon = 3)
+#' print(pk)
 #' @export
 peak_response <- function(object, ...) {
   UseMethod("peak_response")
@@ -129,6 +142,18 @@ peak_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL, ab
 #' @inheritParams peak_response
 #' @param relation Comparison operator.
 #' @param value Threshold value.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{relation},
+#'   \code{threshold}, \code{mode}, \code{mean_duration},
+#'   \code{median_duration}, \code{sd_duration}, \code{lower_duration},
+#'   and \code{upper_duration}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' dur <- duration_response(post, horizon = 3, relation = ">", value = 0)
+#' print(dur)
 #' @export
 duration_response <- function(object, ...) {
   UseMethod("duration_response")
@@ -289,6 +314,18 @@ summarise_optional_timing <- function(x, probability) {
 #' @param baseline Reference level: `"peak"` uses the largest response over the
 #'   available horizons, `"initial"` uses the horizon-0 response.
 #' @inheritParams peak_response
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{fraction},
+#'   \code{baseline}, \code{mean_half_life}, \code{median_half_life},
+#'   \code{sd_half_life}, \code{lower_half_life}, \code{upper_half_life},
+#'   and \code{reached_prob}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' hl <- half_life_response(post, horizon = 3)
+#' print(hl)
 #' @export
 half_life_response <- function(object, ...) {
   UseMethod("half_life_response")
@@ -430,6 +467,18 @@ half_life_response.PosteriorCDM <- function(object, variable = NULL, shock = NUL
 #'
 #' @inheritParams duration_response
 #' @inheritParams peak_response
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{relation},
+#'   \code{threshold}, \code{mean_horizon}, \code{median_horizon},
+#'   \code{sd_horizon}, \code{lower_horizon}, \code{upper_horizon},
+#'   and \code{reached_prob}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' ttt <- time_to_threshold(post, horizon = 3, relation = ">", value = 0)
+#' print(ttt)
 #' @export
 time_to_threshold <- function(object, ...) {
   UseMethod("time_to_threshold")
