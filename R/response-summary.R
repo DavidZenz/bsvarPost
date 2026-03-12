@@ -18,6 +18,16 @@ peak_response <- function(object, ...) {
   UseMethod("peak_response")
 }
 
+#' @rdname peak_response
+#' @export
+peak_response.default <- function(object, ...) {
+  stop(
+    "peak_response() requires a PosteriorIR or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 resolve_peak <- function(path, horizons, absolute = FALSE) {
   eval_path <- if (absolute) abs(path) else path
   idx <- which.max(eval_path)
@@ -122,6 +132,16 @@ peak_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL, ab
 #' @export
 duration_response <- function(object, ...) {
   UseMethod("duration_response")
+}
+
+#' @rdname duration_response
+#' @export
+duration_response.default <- function(object, ...) {
+  stop(
+    "duration_response() requires a PosteriorIR or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 compute_duration <- function(path, relation = c(">", ">=", "<", "<="), value = 0,
@@ -274,6 +294,16 @@ half_life_response <- function(object, ...) {
   UseMethod("half_life_response")
 }
 
+#' @rdname half_life_response
+#' @export
+half_life_response.default <- function(object, ...) {
+  stop(
+    "half_life_response() requires a PosteriorIR or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 compute_half_life <- function(path, horizons, fraction = 0.5,
                               baseline = c("peak", "initial"), absolute = TRUE) {
   baseline <- match.arg(baseline)
@@ -403,6 +433,16 @@ half_life_response.PosteriorCDM <- function(object, variable = NULL, shock = NUL
 #' @export
 time_to_threshold <- function(object, ...) {
   UseMethod("time_to_threshold")
+}
+
+#' @rdname time_to_threshold
+#' @export
+time_to_threshold.default <- function(object, ...) {
+  stop(
+    "time_to_threshold() requires a PosteriorIR or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 compute_time_to_threshold <- function(path, horizons, relation = c(">", ">=", "<", "<="), value = 0,
