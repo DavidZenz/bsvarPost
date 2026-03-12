@@ -6,6 +6,42 @@
 #'
 #' @param x A `bsvar_post_tbl` or data frame.
 #' @param ... Additional arguments passed to the backend formatter.
+#' @return
+#' \describe{
+#'   \item{\code{report_bundle()}}{A list of class \code{bsvar_report_bundle}
+#'     with elements \code{table}, \code{plot}, \code{caption}, and
+#'     \code{object_type}.}
+#'   \item{\code{report_table()}}{A data frame with reporting-ready columns.}
+#'   \item{\code{as_kable()}}{A \code{knitr::kable} object.}
+#'   \item{\code{as_gt()}}{A \code{gt::gt_tbl} object.}
+#'   \item{\code{as_flextable()}}{A \code{flextable::flextable} object.}
+#'   \item{\code{write_bsvar_csv()}}{The file path (returned invisibly).}
+#' }
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#'
+#' # Report table
+#' rt <- report_table(irf_tbl)
+#' head(rt)
+#'
+#' # Report bundle
+#' rb <- report_bundle(irf_tbl)
+#' print(rb)
+#'
+#' # Write to CSV
+#' tmp <- tempfile(fileext = ".csv")
+#' write_bsvar_csv(irf_tbl, file = tmp)
+#' unlink(tmp)
+#'
+#' \dontrun{
+#' # Requires optional packages
+#' as_gt(irf_tbl)
+#' as_flextable(irf_tbl)
+#' }
 #' @name reporting
 NULL
 
