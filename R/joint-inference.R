@@ -15,6 +15,16 @@ simultaneous_irf <- function(object, ...) {
   UseMethod("simultaneous_irf")
 }
 
+#' @rdname simultaneous_irf
+#' @export
+simultaneous_irf.default <- function(object, ...) {
+  stop(
+    "simultaneous_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 simultaneous_band_impl <- function(draws, object_type, probability = 0.68,
                                    variable = NULL, shock = NULL, model = "model1") {
   subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
@@ -83,6 +93,16 @@ simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 #' @export
 simultaneous_cdm <- function(object, ...) {
   UseMethod("simultaneous_cdm")
+}
+
+#' @rdname simultaneous_cdm
+#' @export
+simultaneous_cdm.default <- function(object, ...) {
+  stop(
+    "simultaneous_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 #' @rdname simultaneous_cdm
@@ -170,6 +190,16 @@ joint_hypothesis_irf <- function(object, ...) {
   UseMethod("joint_hypothesis_irf")
 }
 
+#' @rdname joint_hypothesis_irf
+#' @export
+joint_hypothesis_irf.default <- function(object, ...) {
+  stop(
+    "joint_hypothesis_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 #' @export
 joint_hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
                                              relation = c("<", "<=", ">", ">=", "=="), value = 0,
@@ -210,6 +240,16 @@ joint_hypothesis_irf.PosteriorBSVARSIGN <- joint_hypothesis_irf_model
 #' @export
 joint_hypothesis_cdm <- function(object, ...) {
   UseMethod("joint_hypothesis_cdm")
+}
+
+#' @rdname joint_hypothesis_cdm
+#' @export
+joint_hypothesis_cdm.default <- function(object, ...) {
+  stop(
+    "joint_hypothesis_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 #' @export
