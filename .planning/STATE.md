@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 
 ## Current Position
 
-Phase: 5 of 8 (Test Coverage Expansion) — IN PROGRESS
-Plan: 4 of ? (completed 05-04)
-Status: 05-04 complete — optional package smoke tests (gt/flextable/tsibble) + 5 end-to-end integration pipelines (875 total tests)
-Last activity: 2026-03-12 — Completed Phase 5 Plan 04: Optional Package Smoke Tests and Integration Pipelines
+Phase: 5 of 8 (Test Coverage Expansion) — COMPLETE
+Plan: 5 of 5 (completed 05-05)
+Status: 05-05 complete — 86.9% line coverage confirmed by covr, all 66 exports covered, 875 tests pass under FORCE_SUGGESTS=false
+Last activity: 2026-03-12 — Completed Phase 5 Plan 05: Coverage Measurement, Gap Identification, and FORCE_SUGGESTS Validation
 
 Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 
@@ -47,6 +47,7 @@ Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 | Phase 05-test-coverage-expansion P02 | 15 | 2 tasks | 3 files |
 | Phase 05 P03 | 3 | 2 tasks | 3 files |
 | Phase 05 P04 | 4 | 2 tasks | 4 files |
+| Phase 05 P05 | 15 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -101,6 +102,8 @@ Recent decisions affecting current work:
 - [Phase 05-04]: Optional package tests use exit_file() at file top -- correct tinytest idiom for file-level conditional execution under _R_CHECK_FORCE_SUGGESTS_=false
 - [Phase 05-04]: Integration tests check class/structure at each pipeline stage (not numerical values) -- integration coverage, not replication of Phase 3 correctness verification
 - [Phase 05-04]: test_reporting.R already covers as_gt/as_flextable on bsvar_post_tbl; optional smoke tests focus on report_bundle and data.frame dispatch paths to avoid duplication
+- [Phase 05-05]: Coverage gate passed at 86.9% (threshold 80%) -- no additional gap-filling tests required
+- [Phase 05-05]: openssl R package required patched Makevars.in on macOS arm64 to link bcrypt .o files directly (flat namespace issue with static archive)
 
 ### Pending Todos
 
@@ -115,11 +118,11 @@ None yet.
 - Native symbol bridge to bsvarSIGNs (R/v2-utils.R): Technical debt for post-v1.0 follow-up; acceptable for v1.0 but fragile
 
 **Quality:**
-- ~~Test coverage gaps: Hypothesis engine edge cases, representative draw selection, restriction auditing (addressed in Phase 5)~~ **PARTIALLY RESOLVED** - Phase 3 verified correctness; Phase 5 will expand coverage
+- ~~Test coverage gaps: Hypothesis engine edge cases, representative draw selection, restriction auditing (addressed in Phase 5)~~ **RESOLVED** - Phase 5 complete: 86.9% line coverage, all 66 exports covered, 875 tests pass
 - ~~Documentation gaps: S3 method argument mismatches noted in DEVELOPMENT.md (addressed in Phase 4)~~ **RESOLVED** - Phase 4 complete (5 plans), R CMD check clean
 
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 05-04-PLAN.md (optional package smoke tests + integration pipeline tests)
-Resume file: .planning/phases/05-test-coverage-expansion/05-04-SUMMARY.md
+Stopped at: Completed 05-05-PLAN.md (coverage measurement: 86.9%, all 66 exports covered, 875 tests pass under FORCE_SUGGESTS=false)
+Resume file: .planning/phases/05-test-coverage-expansion/05-05-SUMMARY.md
