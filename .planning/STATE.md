@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 5 of 8 (Test Coverage Expansion) — COMPLETE
-Plan: 5 of 5 (completed 05-05)
-Status: 05-05 complete — 86.9% line coverage confirmed by covr, all 66 exports covered, 875 tests pass under FORCE_SUGGESTS=false
-Last activity: 2026-03-12 — Completed Phase 5 Plan 05: Coverage Measurement, Gap Identification, and FORCE_SUGGESTS Validation
+Plan: 6 of 6 (completed 05-06)
+Status: 05-06 complete — dispatch spot-check tests added for PosteriorBSVARMIX, PosteriorBSVARMSH, PosteriorBSVART; all 6 posterior types now have dispatch coverage (SC2 satisfied)
+Last activity: 2026-03-12 — Completed Phase 5 Plan 06: MIX/MSH/T Posterior Dispatch Coverage
 
 Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 
@@ -48,6 +48,7 @@ Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 | Phase 05 P03 | 3 | 2 tasks | 3 files |
 | Phase 05 P04 | 4 | 2 tasks | 4 files |
 | Phase 05 P05 | 15 | 1 tasks | 1 files |
+| Phase 05-test-coverage-expansion P06 | 3 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,8 @@ Recent decisions affecting current work:
 - [Phase 05-04]: test_reporting.R already covers as_gt/as_flextable on bsvar_post_tbl; optional smoke tests focus on report_bundle and data.frame dispatch paths to avoid duplication
 - [Phase 05-05]: Coverage gate passed at 86.9% (threshold 80%) -- no additional gap-filling tests required
 - [Phase 05-05]: openssl R package required patched Makevars.in on macOS arm64 to link bcrypt .o files directly (flat namespace issue with static archive)
+- [Phase 05-06]: MIX/MSH/T posterior types are code-path aliases; structural spot-check dispatch assertions sufficient for dispatch coverage (Phase 3 verified numerical correctness)
+- [Phase 05-06]: representative_irf returns RepresentativeIR list (draw_index as slot) not bsvar_post_tbl -- assertions follow actual behavior from test_dispatch_representative.R
 
 ### Pending Todos
 
@@ -124,5 +127,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 05-05-PLAN.md (coverage measurement: 86.9%, all 66 exports covered, 875 tests pass under FORCE_SUGGESTS=false)
-Resume file: .planning/phases/05-test-coverage-expansion/05-05-SUMMARY.md
+Stopped at: Completed 05-06-PLAN.md (dispatch tests for MIX, MSH, T: 24 tests pass, all 6 posterior types covered, SC2 satisfied)
+Resume file: .planning/phases/05-test-coverage-expansion/05-06-SUMMARY.md
