@@ -49,6 +49,7 @@ Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 | Phase 05 P04 | 4 | 2 tasks | 4 files |
 | Phase 05 P05 | 15 | 1 tasks | 1 files |
 | Phase 05-test-coverage-expansion P06 | 3 | 1 tasks | 1 files |
+| Phase 05-test-coverage-expansion P07 | 4 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -107,6 +108,9 @@ Recent decisions affecting current work:
 - [Phase 05-05]: openssl R package required patched Makevars.in on macOS arm64 to link bcrypt .o files directly (flat namespace issue with static archive)
 - [Phase 05-06]: MIX/MSH/T posterior types are code-path aliases; structural spot-check dispatch assertions sufficient for dispatch coverage (Phase 3 verified numerical correctness)
 - [Phase 05-06]: representative_irf returns RepresentativeIR list (draw_index as slot) not bsvar_post_tbl -- assertions follow actual behavior from test_dispatch_representative.R
+- [Phase 05-07]: bsvars requires 2+ variables; 1-variable model not valid — used minimal 2-variable model for edge case testing
+- [Phase 05-07]: bsvars::estimate requires S >= 2; used S=2 as minimum-draw boundary test instead of plan's S=1
+- [Phase 05-07]: resolve_selection with character(0) returns integer(0) silently — documented as acceptable behavior
 
 ### Pending Todos
 
@@ -127,5 +131,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 05-06-PLAN.md (dispatch tests for MIX, MSH, T: 24 tests pass, all 6 posterior types covered, SC2 satisfied)
+Stopped at: Completed 05-07-PLAN.md (behavioral edge cases: 13 tests pass, Gap 2 closed, resolve_selection documented)
 Resume file: .planning/phases/05-test-coverage-expansion/05-06-SUMMARY.md
