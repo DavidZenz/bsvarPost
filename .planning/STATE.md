@@ -12,16 +12,16 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 Phase: 3 of 8 (Output Correctness Verification) — IN PROGRESS
 Plan: 4 of 4 (executing)
 Status: Executing Phase 3 plans
-Last activity: 2026-03-12 — Completed 03-04-PLAN.md: Compare function merging verification (59 tests, zero failures)
+Last activity: 2026-03-12 — Completed 03-02-PLAN.md: Hypothesis and response summary verification (31 tests, zero failures)
 
 Progress: [████░░░░░░] 38% (3 of 8 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 12
 - Average duration: 5 minutes
-- Total execution time: 0.73 hours
+- Total execution time: 0.83 hours
 
 **By Phase:**
 
@@ -42,6 +42,8 @@ Progress: [████░░░░░░] 38% (3 of 8 phases complete)
 | Phase 04 P04 | 4 min | 2 tasks | 9 files |
 | Phase 04 P05 | 17 min | 1 task | 67 files |
 | Phase 03 P04 | 2 min | 1 task | 1 file |
+| Phase 03 P02 | 3 min | 2 tasks | 2 files |
+| Phase 03 P01 | 3 min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -78,6 +80,11 @@ Recent decisions affecting current work:
 - [Phase 04-05]: magnitude_audit requires explicit variable and shock arguments (no defaults)
 - [Phase 03-04]: S=30 draws with seeds 2026/2027 for compare verification fixtures
 - [Phase 03-04]: Compare verification tests all summary columns (median, mean, lower, upper) not just one statistic
+- [Phase 03-01]: FEVD row sums verified at 100 (not 1.0) because bsvars reports FEVD as percentages on 0-100 scale
+- [Phase 03-01]: Credible interval verification uses diagonal variable/shock pairs at horizons 0, 4, 8 (9 cells per function)
+- [Phase 03-02]: S=30 draws sufficient for verification of mathematical correctness at 1e-10 tolerance
+- [Phase 03-02]: Horizon off-by-one explicitly tested: horizon 2 maps to array index 3 (horizon 0 = index 1)
+- [Phase 03-02]: half_life and time_to_threshold NA handling verified via reached_prob + conditional stat checks
 
 ### Pending Todos
 
@@ -98,5 +105,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 03-04-PLAN.md
-Resume file: .planning/phases/03-output-correctness-verification/03-04-SUMMARY.md
+Stopped at: Completed 03-02-PLAN.md
+Resume file: .planning/phases/03-output-correctness-verification/03-02-SUMMARY.md
