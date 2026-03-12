@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 3 context gathered — ready for planning
+**Current focus:** Phase 3 complete — ready for Phase 5
 
 ## Current Position
 
-Phase: 3 of 8 (Output Correctness Verification) — IN PROGRESS
-Plan: 4 of 4 (executing)
-Status: Executing Phase 3 plans
-Last activity: 2026-03-12 — Completed 03-02-PLAN.md: Hypothesis and response summary verification (31 tests, zero failures)
+Phase: 5 of 8 (Test Coverage Expansion) — IN PROGRESS
+Plan: 1 of ? (completed 05-01)
+Status: 05-01 complete — S3 dispatch verified for PosteriorBSVARSV across 12 functions (49 new tests, 803 total)
+Last activity: 2026-03-12 — Completed Phase 5 Plan 01: S3 Dispatch Coverage for PosteriorBSVARSV
 
-Progress: [████░░░░░░] 38% (3 of 8 phases complete)
+Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
-- Average duration: 5 minutes
-- Total execution time: 0.83 hours
+- Total plans completed: 16
+- Average duration: 4 minutes
+- Total execution time: ~1.1 hours
 
 **By Phase:**
 
@@ -29,21 +29,21 @@ Progress: [████░░░░░░] 38% (3 of 8 phases complete)
 |-------|-------|----------|----------|
 | 01-ggplot2-deprecation-fix | 1 | 9 min | 9 min |
 | 02-input-validation-foundation | 3 | 6 min | 2 min |
+| 03-output-correctness-verification | 4 | 11 min | 3 min |
 | 04-documentation-completion | 5 | 28 min | 6 min |
+| 05-test-coverage-expansion | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 6 min average
+- Last 5 plans: 3 min average
 
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
-| Phase 04 P01 | 2 min | 2 tasks | 5 files |
-| Phase 04 P02 | 2 min | 2 tasks | 5 files |
-| Phase 04 P03 | 3 min | 2 tasks | 4 files |
-| Phase 04 P04 | 4 min | 2 tasks | 9 files |
+| Phase 05 P01 | 2 min | 2 tasks | 2 files |
 | Phase 04 P05 | 17 min | 1 task | 67 files |
 | Phase 03 P04 | 2 min | 1 task | 1 file |
 | Phase 03 P02 | 3 min | 2 tasks | 2 files |
 | Phase 03 P01 | 3 min | 2 tasks | 2 files |
+| Phase 03 P03 | 5 min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -85,6 +85,11 @@ Recent decisions affecting current work:
 - [Phase 03-02]: S=30 draws sufficient for verification of mathematical correctness at 1e-10 tolerance
 - [Phase 03-02]: Horizon off-by-one explicitly tested: horizon 2 maps to array index 3 (horizon 0 = index 1)
 - [Phase 03-02]: half_life and time_to_threshold NA handling verified via reached_prob + conditional stat checks
+- [Phase 03-03]: IRF arrays from compute_impulse_responses have no dimnames; use infer_model_variable_names() for index resolution
+- [Phase 03-03]: Representative draw L2 distance uses draw_matrix() flattening: matrix(as.numeric(draws), nrow=prod(d[1:3]), ncol=d[4])
+- [Phase 05-01]: PosteriorBSVARSV dispatch tests use S=5 draws, p=1, us_fiscal_lsuw - consistent with project-wide test fixture pattern
+- [Phase 05-01]: Dispatch tests verify structural return shape (class, nrow, columns) not numerical values - Phase 3 already verified correctness for PosteriorBSVAR
+- [Phase 05-01]: Variable name assertions use rownames(post_sv$last_draw$data_matrices$Y) as expected_names source
 
 ### Pending Todos
 
@@ -99,11 +104,11 @@ None yet.
 - Native symbol bridge to bsvarSIGNs (R/v2-utils.R): Technical debt for post-v1.0 follow-up; acceptable for v1.0 but fragile
 
 **Quality:**
-- Test coverage gaps: Hypothesis engine edge cases, representative draw selection, restriction auditing (addressed in Phase 5)
+- ~~Test coverage gaps: Hypothesis engine edge cases, representative draw selection, restriction auditing (addressed in Phase 5)~~ **PARTIALLY RESOLVED** - Phase 3 verified correctness; Phase 5 will expand coverage
 - ~~Documentation gaps: S3 method argument mismatches noted in DEVELOPMENT.md (addressed in Phase 4)~~ **RESOLVED** - Phase 4 complete (5 plans), R CMD check clean
 
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 03-02-PLAN.md
-Resume file: .planning/phases/03-output-correctness-verification/03-02-SUMMARY.md
+Stopped at: Completed Phase 5 Plan 01 (S3 dispatch tests for PosteriorBSVARSV)
+Resume file: .planning/phases/05-test-coverage-expansion/05-01-SUMMARY.md
