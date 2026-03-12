@@ -13,7 +13,7 @@
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
 #' irf_tbl <- tidy_irf(post, horizon = 3)
-#' p <- autoplot(irf_tbl)
+#' p <- ggplot2::autoplot(irf_tbl)
 #' @export
 autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, models = NULL,
                                     facet_scales = "free_y", ...) {

@@ -175,7 +175,22 @@ duration_response(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{relation},
+\code{threshold}, \code{mode}, \code{mean_duration},
+\code{median_duration}, \code{sd_duration}, \code{lower_duration},
+and \code{upper_duration}.
+}
 \description{
 Summarise how long a response satisfies a threshold condition over the
 available horizons.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+dur <- duration_response(post, horizon = 3, relation = ">", value = 0)
+print(dur)
 }

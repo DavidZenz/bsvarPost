@@ -112,7 +112,22 @@ decomposition table.}
 
 \item{model}{Optional model identifier.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{event_start},
+\code{event_end}, \code{median}, \code{mean}, \code{sd}, \code{lower},
+and \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+\code{value} replace the summary statistics.
+}
 \description{
 Aggregate historical decomposition draws or summaries over a selected event
 window.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.5")
+head(hd_event)
 }

@@ -116,6 +116,20 @@ simultaneous_cdm(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+and \code{critical_value}.
+}
 \description{
 Simultaneous posterior bands for cumulative dynamic multipliers
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+sb <- simultaneous_cdm(post, horizon = 3)
+head(sb)
 }

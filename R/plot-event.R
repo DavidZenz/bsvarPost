@@ -17,7 +17,7 @@
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' p <- plot_hd_event(post, start = 2, end = 3)
+#' p <- plot_hd_event(post, start = "1948.25", end = "1948.5")
 #' @export
 plot_hd_event <- function(object, start = NULL, end = start, probability = 0.68, draws = FALSE,
                           variables = NULL, shocks = NULL, models = NULL,
@@ -56,7 +56,7 @@ plot_hd_event <- function(object, start = NULL, end = start, probability = 0.68,
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' p <- plot_shock_ranking(post, start = 2, end = 3)
+#' p <- plot_shock_ranking(post, start = "1948.25", end = "1948.5")
 #' @export
 plot_shock_ranking <- function(object, start = NULL, end = start, variables = NULL, models = NULL,
                                ranking = c("absolute", "signed"), top_n = NULL,

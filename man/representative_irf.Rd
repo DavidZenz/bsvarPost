@@ -67,6 +67,22 @@ most_likely_admissible_irf(object, ...)
 
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 }
+\value{
+A list of class \code{RepresentativeIR} (inheriting from
+\code{RepresentativeResponse}) with elements \code{representative_draw}
+(the selected IRF array), \code{posterior_draws} (all IRF draws),
+\code{draw_index} (integer index of the selected draw), \code{method},
+\code{score}, \code{target_summary}, \code{selection_spec},
+\code{probability}, and \code{object_type}.
+}
 \description{
 Select a representative impulse-response draw from the posterior.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+rep_irf <- representative_irf(post, horizon = 3)
+rep_irf$draw_index
 }

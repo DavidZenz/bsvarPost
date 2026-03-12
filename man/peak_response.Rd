@@ -144,6 +144,22 @@ peak_response(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock},
+\code{mean_value}, \code{median_value}, \code{sd_value},
+\code{lower_value}, \code{upper_value}, \code{mean_horizon},
+\code{median_horizon}, \code{sd_horizon}, \code{lower_horizon},
+and \code{upper_horizon}.
+}
 \description{
 Summarise the peak response level and the horizon at which that peak occurs.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+pk <- peak_response(post, horizon = 3)
+print(pk)
 }

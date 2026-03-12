@@ -41,6 +41,20 @@ compare_time_to_threshold(
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} combining time-to-threshold summary results
+across models, with a \code{model} column identifying each input.
+}
 \description{
 Compare time-to-threshold summaries across models
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+comp <- compare_time_to_threshold(m1 = post1, m2 = post2, horizon = 3,
+                                   relation = ">", value = 0)
+head(comp)
 }

@@ -5,33 +5,41 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 2 - Input Validation Foundation
+**Current focus:** Phase 4 planned — ready for execution
 
 ## Current Position
 
-Phase: 2 of 8 (Input Validation Foundation)
-Plan: 2 of 3 complete
-Status: Executing phase 2
-Last activity: 2026-03-12 — Completed plan 02-02: remaining S3 .default methods
+Phase: 4 of 8 (Documentation Completion) — IN PROGRESS
+Plan: 4 of 5 complete
+Status: Executing documentation completion plans
+Last activity: 2026-03-12 — Completed 04-04-PLAN.md: Plotting and reporting documentation
 
-Progress: [██░░░░░░░░] 12.5% (1 of 8 phases)
+Progress: [███░░░░░░░] 25% (2 of 8 phases complete, Phase 4 in progress)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 4 minutes
-- Total execution time: 0.22 hours
+- Total plans completed: 8
+- Average duration: 3 minutes
+- Total execution time: 0.42 hours
 
 **By Phase:**
 
 | Phase | Plans | Duration | Avg/Plan |
 |-------|-------|----------|----------|
 | 01-ggplot2-deprecation-fix | 1 | 9 min | 9 min |
-| 02-input-validation-foundation | 2 | 4 min | 2 min |
+| 02-input-validation-foundation | 3 | 6 min | 2 min |
+| 04-documentation-completion | 4 | 11 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 4 min average
+- Last 5 plans: 2 min average
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 04 P01 | 2 min | 2 tasks | 5 files |
+| Phase 04 P02 | 2 min | 2 tasks | 5 files |
+| Phase 04 P03 | 3 min | 2 tasks | 4 files |
+| Phase 04 P04 | 4 min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -50,6 +58,18 @@ Recent decisions affecting current work:
 - [Phase 02-input-validation-foundation]: validate_horizon returns as.integer() for type safety downstream
 - [Phase 02-input-validation-foundation]: .default methods list both expected and received class for debugging clarity
 - [Phase 02-input-validation-foundation]: NAMESPACE regeneration deferred to Plan 02-03 combined step
+- [Phase 04-documentation-completion]: @return placed on generics only, never on @rdname S3 methods
+- [Phase 04-documentation-completion]: Standard fixture: S=5 draws, horizon=3, us_fiscal_lsuw dataset (~2ms)
+- [Phase 04-documentation-completion]: bsvarSIGNs fixture uses suppressMessages() + \donttest{} wrapper
+- [Phase 04-documentation-completion]: Optional-package examples (gt, flextable, tsibble, APRScenario) use \dontrun{}
+- [Phase 04-documentation-completion]: Plot examples assign to variable (p <- ...) to avoid device opening during R CMD check
+- [Phase 04-02]: @return descriptions match actual column names from implementation
+- [Phase 04-02]: acceptance_diagnostics uses bsvarSIGNs optimism fixture with suppressMessages()
+- [Phase 04-documentation-completion]: Standard two-model fixture pattern for compare_* functions
+- [Phase 04-01]: Documented actual shock_ranking return columns (ranking, rank_score, rank) rather than plan's incorrect specification
+- [Phase 04-01]: Plan listed 7 tidy_* generics but R/tidy.R contains 6 - documented all 6 existing functions
+- [Phase 04-04]: Reporting family uses shared Rd page pattern - single comprehensive @return and @examples on NULL anchor block
+- [Phase 04-04]: write_bsvar_csv example uses tempfile() and unlink() pattern for safe demonstration
 
 ### Pending Todos
 
@@ -65,10 +85,10 @@ None yet.
 
 **Quality:**
 - Test coverage gaps: Hypothesis engine edge cases, representative draw selection, restriction auditing (addressed in Phase 5)
-- Documentation gaps: S3 method argument mismatches noted in DEVELOPMENT.md (addressed in Phase 4)
+- ~~Documentation gaps: S3 method argument mismatches noted in DEVELOPMENT.md (addressed in Phase 4)~~ Phase 4 planned with 5 plans
 
 ## Session Continuity
 
 Last session: 2026-03-12
-Stopped at: Completed 02-input-validation-foundation/02-02-PLAN.md
-Resume file: .planning/phases/02-input-validation-foundation/02-02-SUMMARY.md
+Stopped at: Completed 04-04-PLAN.md: Plotting and reporting documentation (15 Rd pages)
+Resume file: .planning/phases/04-documentation-completion/04-05-PLAN.md

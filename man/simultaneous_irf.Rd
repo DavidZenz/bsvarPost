@@ -100,7 +100,21 @@ simultaneous_irf(object, ...)
 
 \item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+and \code{critical_value}.
+}
 \description{
 Construct simultaneous bands over a selected set of impulse responses using
 the empirical sup-norm around the posterior median path.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+sb <- simultaneous_irf(post, horizon = 3)
+head(sb)
 }

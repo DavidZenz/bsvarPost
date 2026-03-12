@@ -17,6 +17,20 @@ compare_hd_event(..., start, end = start, probability = 0.68, draws = FALSE)
 
 \item{draws}{If \code{TRUE}, return draw-level rows.}
 }
+\value{
+A \code{bsvar_post_tbl} combining event-window historical
+decomposition results across models, with a \code{model} column
+identifying each input.
+}
 \description{
 Compare event-window historical decompositions across models
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+comp <- compare_hd_event(m1 = post1, m2 = post2, start = "1948.25", end = "1948.5")
+head(comp)
 }

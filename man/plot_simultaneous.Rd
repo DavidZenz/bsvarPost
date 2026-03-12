@@ -44,6 +44,16 @@ object.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 Plot simultaneous posterior bands
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+p <- plot_simultaneous(post, horizon = 3)
 }

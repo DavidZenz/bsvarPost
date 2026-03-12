@@ -41,6 +41,19 @@ compare_half_life_response(
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} combining half-life summary results across
+models, with a \code{model} column identifying each input.
+}
 \description{
 Compare half-life summaries across models
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+comp <- compare_half_life_response(m1 = post1, m2 = post2, horizon = 3)
+head(comp)
 }

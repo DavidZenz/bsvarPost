@@ -37,8 +37,19 @@ object, or report bundle.}
 \item{...}{Additional arguments passed to the underlying plot constructor
 when \code{object} is not already a \code{ggplot}.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 This helper detects a supported \code{bsvarPost} output family, constructs the
 corresponding plot when needed, and applies the matching plot template plus
 optional annotations.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+p <- publish_bsvar_plot(irf_tbl)
 }

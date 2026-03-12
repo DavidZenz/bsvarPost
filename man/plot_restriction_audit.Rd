@@ -38,6 +38,18 @@ raw restriction string.}
 
 \item{...}{Additional arguments passed to \code{restriction_audit()}.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 Plot restriction-audit summaries
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+audit <- restriction_audit(post, restrictions = r)
+p <- plot_restriction_audit(audit)
 }

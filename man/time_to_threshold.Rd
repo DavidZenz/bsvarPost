@@ -164,7 +164,22 @@ time_to_threshold(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{relation},
+\code{threshold}, \code{mean_horizon}, \code{median_horizon},
+\code{sd_horizon}, \code{lower_horizon}, \code{upper_horizon},
+and \code{reached_prob}.
+}
 \description{
 Summarise the first horizon at which a response satisfies a threshold
 condition.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+ttt <- time_to_threshold(post, horizon = 3, relation = ">", value = 0)
+print(ttt)
 }

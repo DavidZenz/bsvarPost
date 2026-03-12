@@ -32,6 +32,23 @@ tidy_irf(object, ...)
 
 \item{model}{Optional model identifier.}
 }
+\value{
+A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{mean}, \code{median}, \code{sd}, \code{lower}, and
+\code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+\code{value} replace the summary statistics.
+}
 \description{
 Tidy posterior impulse responses
+}
+\examples{
+# Small posterior (S = 5 draws)
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+# Tidy impulse responses
+result <- tidy_irf(post, horizon = 3)
+head(result)
 }

@@ -26,6 +26,17 @@
 
 \item{...}{Unused.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 Autoplot tidy posterior outputs
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+p <- ggplot2::autoplot(irf_tbl)
 }

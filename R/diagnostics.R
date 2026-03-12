@@ -20,7 +20,7 @@
 #' @examples
 #' \donttest{
 #' data(optimism, package = "bsvarSIGNs")
-#' sign_irf <- matrix(c(1, rep(NA, 5)), 2, 3)
+#' sign_irf <- matrix(c(1, rep(NA, 3)), 2, 2)
 #' spec_s <- suppressMessages(
 #'   bsvarSIGNs::specify_bsvarSIGN$new(optimism[, 1:2], p = 1,
 #'                                      sign_irf = sign_irf)
