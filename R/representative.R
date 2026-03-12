@@ -18,6 +18,16 @@ representative_irf <- function(object, ...) {
   UseMethod("representative_irf")
 }
 
+#' @rdname representative_irf
+#' @export
+representative_irf.default <- function(object, ...) {
+  stop(
+    "representative_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
 new_representative_object <- function(draws, selected, object_type, probability = 0.68) {
   structure(
     list(
@@ -104,6 +114,16 @@ representative_irf.PosteriorBSVARSIGN <- representative_irf_model
 #' @export
 representative_cdm <- function(object, ...) {
   UseMethod("representative_cdm")
+}
+
+#' @rdname representative_cdm
+#' @export
+representative_cdm.default <- function(object, ...) {
+  stop(
+    "representative_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 representative_cdm_impl <- function(object, draws, method = c("median_target", "most_likely_admissible"),
