@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 7 in progress — Plan 01 complete (fixtures, figures, CI matrix)
+**Current focus:** Phase 7 in progress — Plan 02 complete (Getting Started vignette rewrite)
 
 ## Current Position
 
 Phase: 7 of 8 (Vignettes & Multi-Platform) — IN PROGRESS
-Plan: 02 (next)
-Status: Plan 01 complete — fixtures and CI matrix ready; vignette content writing next
-Last activity: 2026-03-13 — Completed Plan 07-01: pre-computed .rds fixtures, regenerated showcase figures, 5-platform CI matrix
+Plan: 03 (next)
+Status: Plan 02 complete — Getting Started vignette rewritten as 200-line narrative; vignette 2 writing next
+Last activity: 2026-03-13 — Completed Plan 07-02: Getting Started vignette rewrite (600 -> 200 lines, fixture-based, economic narrative)
 
 Progress: [████████░░] 75% (6 of 8 phases complete)
 
@@ -54,6 +54,7 @@ Progress: [████████░░] 75% (6 of 8 phases complete)
 | Phase 06-api-consistency P02 | 11 min | 2 tasks | 13 files |
 | Phase 06-api-consistency P03 | 12 min | 2 tasks | 37 files |
 | Phase 07-vignettes-multi-platform P01 | 2 | 2 tasks | 11 files |
+| Phase 07 P02 | 2 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -129,6 +130,7 @@ Recent decisions affecting current work:
 - [Phase 07-vignettes-multi-platform]: Fixture seeds 123/456 for primary/alternative posteriors; S=200 for vignette fixtures
 - [Phase 07-vignettes-multi-platform]: CI R-devel on ubuntu only per r-lib/actions community standard; Windows/R-devel via WinBuilder in Plan 05
 - [Phase 07-vignettes-multi-platform]: setup-pandoc placed before setup-r in CI — required for vignette Rmd rendering on Windows/macOS
+- [Phase 07-vignettes-multi-platform]: Getting Started vignette: 200-line narrative scope (extraction, comparison, plotting) replaces 600-line reference catalog
 
 ### Pending Todos
 
@@ -149,5 +151,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 07-01-PLAN.md (fixtures, figures, CI matrix)
-Resume file: .planning/phases/07-vignettes-multi-platform/07-01-SUMMARY.md
+Stopped at: Completed 07-02-PLAN.md (Getting Started vignette rewrite)
+Resume file: .planning/phases/07-vignettes-multi-platform/07-02-SUMMARY.md
