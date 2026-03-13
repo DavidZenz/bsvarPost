@@ -26,8 +26,8 @@ bsvarsigns_match_sign_narrative <- function(epsilon, sign_narrative, irf) {
   bsvarsigns_native("_bsvarSIGNs_match_sign_narrative", epsilon, sign_narrative, irf)
 }
 
-bsvarsigns_weight_narrative <- function(T, sign_narrative, irf) {
-  bsvarsigns_native("_bsvarSIGNs_weight_narrative", as.integer(T), sign_narrative, irf)
+bsvarsigns_weight_narrative <- function(n_obs, sign_narrative, irf) {
+  bsvarsigns_native("_bsvarSIGNs_weight_narrative", as.integer(n_obs), sign_narrative, irf)
 }
 
 bsvarsigns_weight_zero <- function(Z, B, h_inv, Q) {

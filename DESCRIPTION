@@ -2,7 +2,6 @@ Package: bsvarPost
 Type: Package
 Title: Post-Estimation Tools for 'bsvars' and 'bsvarSIGNs'
 Version: 1.0.0
-Date: 2026-03-13
 Authors@R: person("David", "Zenz", role = c("aut", "cre", "cph"), email = "office@davidzenz.com")
 Description: Companion post-estimation tools for Bayesian structural vector
     autoregressions fitted with the 'bsvars' and 'bsvarSIGNs' packages.
