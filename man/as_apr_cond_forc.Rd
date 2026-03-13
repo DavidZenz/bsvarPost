@@ -19,7 +19,7 @@ as_apr_cond_forc(object, ...)
 
 \method{as_apr_cond_forc}{Forecasts}(
   object,
-  probability = 0.68,
+  probability = 0.9,
   center = c("median", "mean"),
   origin = NULL,
   frequency = c("quarter", "month", "year", "day"),
@@ -29,8 +29,8 @@ as_apr_cond_forc(object, ...)
 
 \method{as_apr_cond_forc}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   center = c("median", "mean"),
   origin = NULL,
   frequency = c("quarter", "month", "year", "day"),
@@ -58,6 +58,19 @@ style \code{hor} dates.}
 
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 }
+\value{
+A data frame with columns \code{hor}, \code{variable},
+\code{lower}, \code{center}, and \code{upper}, suitable for use with
+APRScenario conditioning workflows.
+}
 \description{
 Convert tidy forecasts to APRScenario format
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+apr_forc <- as_apr_cond_forc(post, horizon = 3)
+head(apr_forc)
 }

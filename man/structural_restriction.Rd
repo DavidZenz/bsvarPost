@@ -13,6 +13,15 @@ structural_restriction(variable, shock, sign)
 
 \item{sign}{Sign restriction, typically \code{1} or \code{-1}.}
 }
+\value{
+A list of class \code{bsvar_post_structural_restriction} (inheriting
+from \code{bsvar_post_restriction}) with elements \code{variable},
+\code{shock}, and \code{sign}.
+}
 \description{
 Create a structural restriction specification
+}
+\examples{
+r <- structural_restriction("gdp", "gdp", sign = 1)
+print(r)
 }

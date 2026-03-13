@@ -47,6 +47,18 @@ elements \code{variable}, \code{shock}, and \code{horizon}.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 Plot joint posterior probability statements
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+jh <- joint_hypothesis_irf(post, variable = "gdp", shock = "gdp",
+                           horizon = 0:2, relation = ">", value = 0)
+p <- plot_joint_hypothesis(jh)
 }

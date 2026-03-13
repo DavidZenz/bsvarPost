@@ -3,6 +3,9 @@
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param base_size Base font size.
 #' @param base_family Base font family.
+#' @return A \code{ggplot2} theme object.
+#' @examples
+#' th <- theme_bsvarpost(preset = "paper")
 #' @export
 theme_bsvarpost <- function(preset = c("default", "paper", "slides"),
                             base_size = 11, base_family = "") {
@@ -48,6 +51,14 @@ theme_bsvarpost <- function(preset = c("default", "paper", "slides"),
 #' @param base_size Base font size for the applied theme.
 #' @param base_family Base font family for the applied theme.
 #' @param legend_position Optional legend position override.
+#' @return A \code{ggplot} object with the applied style.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#' p <- style_bsvar_plot(ggplot2::autoplot(irf_tbl), preset = "paper")
 #' @export
 style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
                              palette = NULL, ribbon_alpha = NULL,
@@ -94,6 +105,14 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param base_size Base font size for the applied theme.
 #' @param base_family Base font family for the applied theme.
+#' @return A \code{ggplot} object with template styling applied.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#' p <- template_bsvar_plot(ggplot2::autoplot(irf_tbl), family = "irf")
 #' @export
 template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking",
                                                  "hypothesis", "restriction_audit", "simultaneous",
@@ -165,6 +184,14 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
 #' @param xmax Optional end of a highlighted x-window.
 #' @param window_fill Fill colour for the highlighted window.
 #' @param window_alpha Alpha for the highlighted window.
+#' @return A \code{ggplot} object with annotations added.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#' p <- annotate_bsvar_plot(ggplot2::autoplot(irf_tbl), title = "IRFs")
 #' @export
 annotate_bsvar_plot <- function(plot, title = NULL, subtitle = NULL, caption = NULL,
                                 yintercept = NULL, xintercept = NULL,

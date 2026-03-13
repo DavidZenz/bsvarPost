@@ -2,6 +2,7 @@
 % Please edit documentation in R/response-summary.R
 \name{time_to_threshold}
 \alias{time_to_threshold}
+\alias{time_to_threshold.default}
 \alias{time_to_threshold.PosteriorIR}
 \alias{time_to_threshold.PosteriorBSVAR}
 \alias{time_to_threshold.PosteriorBSVARMIX}
@@ -14,28 +15,34 @@
 \usage{
 time_to_threshold(object, ...)
 
+\method{time_to_threshold}{default}(object, ...)
+
 \method{time_to_threshold}{PosteriorIR}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
 
 \method{time_to_threshold}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -44,14 +51,16 @@ time_to_threshold(object, ...)
 
 \method{time_to_threshold}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -60,14 +69,16 @@ time_to_threshold(object, ...)
 
 \method{time_to_threshold}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -76,14 +87,16 @@ time_to_threshold(object, ...)
 
 \method{time_to_threshold}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -92,14 +105,16 @@ time_to_threshold(object, ...)
 
 \method{time_to_threshold}{PosteriorBSVART}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -108,14 +123,16 @@ time_to_threshold(object, ...)
 
 \method{time_to_threshold}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -124,12 +141,14 @@ time_to_threshold(object, ...)
 
 \method{time_to_threshold}{PosteriorCDM}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -139,9 +158,13 @@ time_to_threshold(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{relation}{Comparison operator.}
 
@@ -161,7 +184,22 @@ time_to_threshold(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{relation},
+\code{threshold}, \code{mean_horizon}, \code{median_horizon},
+\code{sd_horizon}, \code{lower_horizon}, \code{upper_horizon},
+and \code{reached_prob}.
+}
 \description{
 Summarise the first horizon at which a response satisfies a threshold
 condition.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+ttt <- time_to_threshold(post, horizon = 3, relation = ">", value = 0)
+print(ttt)
 }

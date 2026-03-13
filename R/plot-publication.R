@@ -15,6 +15,14 @@
 #' @param base_family Base font family for the applied theme.
 #' @param ... Additional arguments passed to the underlying plot constructor
 #'   when `object` is not already a `ggplot`.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#' p <- publish_bsvar_plot(irf_tbl)
 #' @export
 publish_bsvar_plot <- function(object, family = NULL,
                                preset = c("default", "paper", "slides"),

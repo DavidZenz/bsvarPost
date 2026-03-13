@@ -11,8 +11,15 @@
 #' @param models Optional model filter.
 #' @param facet_scales Facet scales passed to `ggplot2`.
 #' @param ... Additional arguments passed to `tidy_hd_event()`.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' p <- plot_hd_event(post, start = "1948.25", end = "1948.5")
 #' @export
-plot_hd_event <- function(object, start = NULL, end = start, probability = 0.68, draws = FALSE,
+plot_hd_event <- function(object, start = NULL, end = start, probability = 0.90, draws = FALSE,
                           variables = NULL, shocks = NULL, models = NULL,
                           facet_scales = "free_y", ...) {
   if (inherits(object, "bsvar_post_tbl")) {
@@ -43,10 +50,17 @@ plot_hd_event <- function(object, start = NULL, end = start, probability = 0.68,
 #' @param top_n Optional number of top-ranked shocks to keep per model-variable panel.
 #' @param probability Equal-tailed interval probability.
 #' @param ... Additional arguments passed to `shock_ranking()`.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' p <- plot_shock_ranking(post, start = "1948.25", end = "1948.5")
 #' @export
 plot_shock_ranking <- function(object, start = NULL, end = start, variables = NULL, models = NULL,
                                ranking = c("absolute", "signed"), top_n = NULL,
-                               probability = 0.68, ...) {
+                               probability = 0.90, ...) {
   ranking <- match.arg(ranking)
 
   if (inherits(object, "bsvar_post_tbl")) {

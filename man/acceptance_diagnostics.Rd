@@ -35,9 +35,28 @@ sparse-support warning flag is raised.}
 
 \item{model}{Optional model identifier.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{metric}, \code{value}, \code{flag}, and
+\code{message}.  Each row reports one diagnostic metric.
+}
 \description{
 Summarise stored-draw diagnostics for sign-restricted posterior objects.
 These diagnostics do not reconstruct the full proposal/rejection history of
 the sampler. Instead, they report what can be recovered from the saved
 posterior state, identification pattern, and admissibility weights.
+}
+\examples{
+\donttest{
+data(optimism, package = "bsvarSIGNs")
+sign_irf <- matrix(c(1, rep(NA, 3)), 2, 2)
+spec_s <- suppressMessages(
+  bsvarSIGNs::specify_bsvarSIGN$new(optimism[, 1:2], p = 1,
+                                     sign_irf = sign_irf)
+)
+post_s <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
+
+diag <- acceptance_diagnostics(post_s)
+print(diag)
+}
 }

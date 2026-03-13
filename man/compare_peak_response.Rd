@@ -6,12 +6,14 @@
 \usage{
 compare_peak_response(
   ...,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL
 )
@@ -19,13 +21,18 @@ compare_peak_response(
 \arguments{
 \item{...}{Posterior model objects or a named list of model objects.}
 
-\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
+\item{horizon}{Maximum horizon used when \code{object} is a posterior model object.
+If \code{NULL} (default), resolves to 20 periods.}
 
 \item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset.}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset.}
+
+\item{variable}{Deprecated. Use \code{variables} instead.}
+
+\item{shock}{Deprecated. Use \code{shocks} instead.}
 
 \item{absolute}{If \code{TRUE}, search for the largest absolute response.}
 
@@ -35,6 +42,19 @@ compare_peak_response(
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} combining peak summary results across
+models, with a \code{model} column identifying each input.
+}
 \description{
 Compare peak response summaries across models
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+comp <- compare_peak_response(m1 = post1, m2 = post2, horizon = 3)
+head(comp)
 }

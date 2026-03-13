@@ -23,6 +23,25 @@ flag is raised.}
 \item{sparse_threshold}{Share of near-zero admissibility weights above which a
 sparse-support warning flag is raised.}
 }
+\value{
+A \code{bsvar_post_tbl} combining acceptance diagnostic results
+across models, with a \code{model} column identifying each input.
+}
 \description{
 Compare acceptance diagnostics across models
+}
+\examples{
+\donttest{
+data(optimism, package = "bsvarSIGNs")
+sign_irf <- matrix(c(1, rep(NA, 3)), 2, 2)
+spec_s <- suppressMessages(
+  bsvarSIGNs::specify_bsvarSIGN$new(optimism[, 1:2], p = 1,
+                                     sign_irf = sign_irf)
+)
+post_s1 <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
+post_s2 <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
+
+comp <- compare_acceptance_diagnostics(m1 = post_s1, m2 = post_s2)
+print(comp)
+}
 }

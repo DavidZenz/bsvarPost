@@ -2,6 +2,7 @@
 % Please edit documentation in R/joint-inference.R
 \name{simultaneous_cdm}
 \alias{simultaneous_cdm}
+\alias{simultaneous_cdm.default}
 \alias{simultaneous_cdm.PosteriorCDM}
 \alias{simultaneous_cdm.PosteriorBSVAR}
 \alias{simultaneous_cdm.PosteriorBSVARMIX}
@@ -13,9 +14,13 @@
 \usage{
 simultaneous_cdm(object, ...)
 
+\method{simultaneous_cdm}{default}(object, ...)
+
 \method{simultaneous_cdm}{PosteriorCDM}(
   object,
-  probability = 0.68,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -24,8 +29,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -36,8 +43,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -48,8 +57,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -60,8 +71,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -72,8 +85,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVART}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -84,8 +99,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -101,9 +118,13 @@ simultaneous_cdm(object, ...)
 
 \item{probability}{Coverage probability for the simultaneous band.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{model}{Optional model identifier.}
 
@@ -113,6 +134,20 @@ simultaneous_cdm(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+and \code{critical_value}.
+}
 \description{
 Simultaneous posterior bands for cumulative dynamic multipliers
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+sb <- simultaneous_cdm(post, horizon = 3)
+head(sb)
 }

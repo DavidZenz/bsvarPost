@@ -2,6 +2,7 @@
 % Please edit documentation in R/representative.R
 \name{representative_cdm}
 \alias{representative_cdm}
+\alias{representative_cdm.default}
 \alias{representative_cdm.PosteriorCDM}
 \alias{representative_cdm.PosteriorBSVAR}
 \alias{median_target_cdm}
@@ -9,6 +10,8 @@
 \title{Representative cumulative dynamic multipliers}
 \usage{
 representative_cdm(object, ...)
+
+\method{representative_cdm}{default}(object, ...)
 
 \method{representative_cdm}{PosteriorCDM}(
   object,
@@ -19,13 +22,13 @@ representative_cdm(object, ...)
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 
 \method{representative_cdm}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   method = c("median_target", "most_likely_admissible"),
   center = c("median", "mean"),
   variables = NULL,
@@ -33,7 +36,7 @@ representative_cdm(object, ...)
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -71,9 +74,21 @@ most_likely_admissible_cdm(object, ...)
 \item{scale_var}{Optional scaling variable specification.}
 }
 \value{
-A \code{RepresentativeCDM} object. Use \code{\link[=summary]{summary()}} to obtain the tidy
-representative table.
+A list of class \code{RepresentativeCDM} (inheriting from
+\code{RepresentativeResponse}) with elements \code{representative_draw}
+(the selected CDM array), \code{posterior_draws} (all CDM draws),
+\code{draw_index} (integer index of the selected draw), \code{method},
+\code{score}, \code{target_summary}, \code{selection_spec},
+\code{probability}, and \code{object_type}.
 }
 \description{
 Representative cumulative dynamic multipliers
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+rep_cdm <- representative_cdm(post, horizon = 3)
+rep_cdm$draw_index
 }

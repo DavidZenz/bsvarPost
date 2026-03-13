@@ -25,6 +25,20 @@ otherwise \code{time}.}
 
 \item{validate}{Passed to \code{tsibble::as_tsibble()}.}
 }
+\value{
+A \code{tsibble::tbl_ts} object.
+}
 \description{
 Convert bsvarPost tidy outputs to tsibble
+}
+\examples{
+\dontrun{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+ts_tbl <- as_tsibble_post(irf_tbl)
+print(ts_tbl)
+}
 }

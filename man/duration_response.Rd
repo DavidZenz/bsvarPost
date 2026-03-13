@@ -2,6 +2,7 @@
 % Please edit documentation in R/response-summary.R
 \name{duration_response}
 \alias{duration_response}
+\alias{duration_response.default}
 \alias{duration_response.PosteriorIR}
 \alias{duration_response.PosteriorBSVAR}
 \alias{duration_response.PosteriorBSVARMIX}
@@ -14,30 +15,36 @@
 \usage{
 duration_response(object, ...)
 
+\method{duration_response}{default}(object, ...)
+
 \method{duration_response}{PosteriorIR}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
 
 \method{duration_response}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -46,15 +53,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -63,15 +72,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -80,15 +91,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -97,15 +110,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVART}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -114,15 +129,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -131,13 +148,15 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorCDM}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -147,9 +166,13 @@ duration_response(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{relation}{Comparison operator.}
 
@@ -172,7 +195,22 @@ duration_response(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{relation},
+\code{threshold}, \code{mode}, \code{mean_duration},
+\code{median_duration}, \code{sd_duration}, \code{lower_duration},
+and \code{upper_duration}.
+}
 \description{
 Summarise how long a response satisfies a threshold condition over the
 available horizons.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+dur <- duration_response(post, horizon = 3, relation = ">", value = 0)
+print(dur)
 }

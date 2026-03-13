@@ -11,7 +11,7 @@ shock_ranking(
   variables = NULL,
   models = NULL,
   ranking = c("absolute", "signed"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 }
@@ -33,6 +33,20 @@ decomposition table.}
 
 \item{...}{Additional arguments passed to \code{tidy_hd_event()}.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{event_start},
+\code{event_end}, \code{median}, \code{mean}, \code{sd}, \code{lower},
+\code{upper}, \code{ranking}, \code{rank_score}, and \code{rank}.
+}
 \description{
 Rank shocks by event-window historical decomposition contributions
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+sr <- shock_ranking(post, start = "1948.25", end = "1948.5")
+print(sr)
 }

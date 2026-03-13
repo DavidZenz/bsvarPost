@@ -2,15 +2,35 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_shocks}
 \alias{tidy_shocks}
+\alias{tidy_shocks.default}
 \title{Tidy structural shocks}
 \usage{
 tidy_shocks(object, ...)
+
+\method{tidy_shocks}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or posterior IRF array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{time},
+\code{mean}, \code{median}, \code{sd}, \code{lower}, and
+\code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+\code{value} replace the summary statistics.
+}
 \description{
 Tidy structural shocks
+}
+\examples{
+# Small posterior (S = 5 draws)
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+# Tidy structural shocks
+result <- tidy_shocks(post)
+head(result)
 }

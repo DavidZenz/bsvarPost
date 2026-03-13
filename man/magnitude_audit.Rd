@@ -14,7 +14,7 @@ magnitude_audit(
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   scale_by = c("none", "shock_sd"),
@@ -27,9 +27,9 @@ magnitude_audit(
 
 \item{type}{Response object type to audit.}
 
-\item{variable}{Response variable selection on the left-hand side.}
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
 
-\item{shock}{Shock selection on the left-hand side.}
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{horizon}{Horizon selection on the left-hand side.}
 
@@ -54,6 +54,20 @@ magnitude_audit(
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{bsvar_post_tbl} with hypothesis test results including
+\code{posterior_prob}, \code{mean}, \code{median}, \code{lower}, and
+\code{upper} columns.
+}
 \description{
 Audit magnitude statements for IRFs or CDMs
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+mag <- magnitude_audit(post, variable = "gdp", shock = "gdp",
+                       horizon = 0, relation = ">")
+print(mag)
 }

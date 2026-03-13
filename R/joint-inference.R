@@ -6,18 +6,41 @@
 #' @param object A posterior model object or a `PosteriorIR` object.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #' @param probability Coverage probability for the simultaneous band.
-#' @param variable Optional response-variable subset.
-#' @param shock Optional shock subset.
+#' @param variables Optional response-variable subset (character or integer vector).
+#' @param shocks Optional shock subset (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param model Optional model identifier.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+#'   and \code{critical_value}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' sb <- simultaneous_irf(post, horizon = 3)
+#' head(sb)
 #' @export
 simultaneous_irf <- function(object, ...) {
   UseMethod("simultaneous_irf")
 }
 
-simultaneous_band_impl <- function(draws, object_type, probability = 0.68,
-                                   variable = NULL, shock = NULL, model = "model1") {
-  subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
+#' @rdname simultaneous_irf
+#' @export
+simultaneous_irf.default <- function(object, ...) {
+  stop(
+    "simultaneous_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
+simultaneous_band_impl <- function(draws, object_type, probability = 0.90,
+                                   variables = NULL, shocks = NULL, model = "model1") {
+  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
   mat <- draw_matrix(subset$draws)
   target <- apply(mat, 1, stats::median)
   max_dev <- apply(abs(mat - target), 2, max)
@@ -42,18 +65,24 @@ simultaneous_band_impl <- function(draws, object_type, probability = 0.68,
 
 #' @rdname simultaneous_irf
 #' @export
-simultaneous_irf.PosteriorIR <- function(object, probability = 0.68,
+simultaneous_irf.PosteriorIR <- function(object, probability = 0.90,
+                                         variables = NULL, shocks = NULL,
                                          variable = NULL, shock = NULL,
                                          model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "simultaneous_irf")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "simultaneous_irf")
   simultaneous_band_impl(object, object_type = "irf", probability = probability,
-                         variable = variable, shock = shock, model = model)
+                         variables = variables, shocks = shocks, model = model)
 }
 
-simultaneous_irf_model <- function(object, horizon = 10, probability = 0.68,
+simultaneous_irf_model <- function(object, horizon = NULL, probability = 0.90,
+                                   variables = NULL, shocks = NULL,
                                    variable = NULL, shock = NULL,
                                    model = "model1", ...) {
-  simultaneous_irf(get_irf_draws(object, horizon = horizon, ...), probability = probability,
-                   variable = variable, shock = shock, model = model)
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "simultaneous_irf")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "simultaneous_irf")
+  simultaneous_irf(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), probability = probability,
+                   variables = variables, shocks = shocks, model = model)
 }
 
 #' @rdname simultaneous_irf
@@ -78,8 +107,23 @@ simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 #' Simultaneous posterior bands for cumulative dynamic multipliers
 #'
 #' @inheritParams simultaneous_irf
+#' @param variables Optional response-variable subset (character or integer vector).
+#' @param shocks Optional shock subset (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+#'   and \code{critical_value}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' sb <- simultaneous_cdm(post, horizon = 3)
+#' head(sb)
 #' @export
 simultaneous_cdm <- function(object, ...) {
   UseMethod("simultaneous_cdm")
@@ -87,22 +131,38 @@ simultaneous_cdm <- function(object, ...) {
 
 #' @rdname simultaneous_cdm
 #' @export
-simultaneous_cdm.PosteriorCDM <- function(object, probability = 0.68,
-                                          variable = NULL, shock = NULL,
-                                          model = "model1", ...) {
-  simultaneous_band_impl(object, object_type = "cdm", probability = probability,
-                         variable = variable, shock = shock, model = model)
+simultaneous_cdm.default <- function(object, ...) {
+  stop(
+    "simultaneous_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
-simultaneous_cdm_model <- function(object, horizon = 10, probability = 0.68,
+#' @rdname simultaneous_cdm
+#' @export
+simultaneous_cdm.PosteriorCDM <- function(object, probability = 0.90,
+                                          variables = NULL, shocks = NULL,
+                                          variable = NULL, shock = NULL,
+                                          model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "simultaneous_cdm")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "simultaneous_cdm")
+  simultaneous_band_impl(object, object_type = "cdm", probability = probability,
+                         variables = variables, shocks = shocks, model = model)
+}
+
+simultaneous_cdm_model <- function(object, horizon = NULL, probability = 0.90,
+                                   variables = NULL, shocks = NULL,
                                    variable = NULL, shock = NULL,
                                    model = "model1",
                                    scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "simultaneous_cdm")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "simultaneous_cdm")
   simultaneous_cdm(
-    get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by, scale_var = scale_var, ...),
+    get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by, scale_var = scale_var, ...),
     probability = probability,
-    variable = variable,
-    shock = shock,
+    variables = variables,
+    shocks = shocks,
     model = model
   )
 }
@@ -165,9 +225,32 @@ joint_hypothesis_impl <- function(draws, object_type, variable, shock, horizon,
 #'
 #' @inheritParams hypothesis_irf
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{relation}, \code{posterior_prob},
+#'   \code{n_constraints}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' jh <- joint_hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#'                            horizon = 0:2, relation = ">", value = 0)
+#' print(jh)
 #' @export
 joint_hypothesis_irf <- function(object, ...) {
   UseMethod("joint_hypothesis_irf")
+}
+
+#' @rdname joint_hypothesis_irf
+#' @export
+joint_hypothesis_irf.default <- function(object, ...) {
+  stop(
+    "joint_hypothesis_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 #' @export
@@ -207,9 +290,32 @@ joint_hypothesis_irf.PosteriorBSVARSIGN <- joint_hypothesis_irf_model
 #'
 #' @inheritParams joint_hypothesis_irf
 #' @inheritParams hypothesis_cdm
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{relation}, \code{posterior_prob},
+#'   \code{n_constraints}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute}.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' jh <- joint_hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+#'                            horizon = 0:2, relation = ">", value = 0)
+#' print(jh)
 #' @export
 joint_hypothesis_cdm <- function(object, ...) {
   UseMethod("joint_hypothesis_cdm")
+}
+
+#' @rdname joint_hypothesis_cdm
+#' @export
+joint_hypothesis_cdm.default <- function(object, ...) {
+  stop(
+    "joint_hypothesis_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 #' @export

@@ -2,22 +2,27 @@
 % Please edit documentation in R/hypothesis.R
 \name{hypothesis_irf}
 \alias{hypothesis_irf}
+\alias{hypothesis_irf.default}
 \alias{hypothesis_irf.PosteriorIR}
 \alias{hypothesis_irf.PosteriorBSVAR}
 \title{Posterior probability statements for impulse responses}
 \usage{
 hypothesis_irf(object, ...)
 
+\method{hypothesis_irf}{default}(object, ...)
+
 \method{hypothesis_irf}{PosteriorIR}(
   object,
-  variable,
-  shock,
+  variables = NULL,
+  shocks = NULL,
+  variable = NULL,
+  shock = NULL,
   horizon,
   relation = c("<", "<=", ">", ">=", "=="),
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -25,14 +30,16 @@ hypothesis_irf(object, ...)
 
 \method{hypothesis_irf}{PosteriorBSVAR}(
   object,
-  variable,
-  shock,
+  variables = NULL,
+  shocks = NULL,
+  variable = NULL,
+  shock = NULL,
   horizon,
   relation = c("<", "<=", ">", ">=", "=="),
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -43,9 +50,13 @@ hypothesis_irf(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Response variable selection on the left-hand side.}
+\item{variables}{Response variable selection on the left-hand side (character or integer vector).}
 
-\item{shock}{Shock selection on the left-hand side.}
+\item{shocks}{Shock selection on the left-hand side (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{horizon}{Horizon selection on the left-hand side.}
 
@@ -64,7 +75,26 @@ hypothesis_irf(object, ...)
 
 \item{model}{Optional model identifier.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{relation}, \code{posterior_prob}, \code{mean_gap},
+\code{median_gap}, \code{lower_gap}, and \code{upper_gap}.  When
+\code{draws = TRUE}, columns \code{draw}, \code{gap}, and
+\code{satisfied} replace the summary statistics.  Additional columns
+\code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+\code{rhs_value}, and \code{absolute} describe the right-hand side.
+}
 \description{
 Evaluate threshold or pairwise posterior probability statements on impulse
 response draws.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+                    horizon = 0:2, relation = ">", value = 0)
+print(h)
 }

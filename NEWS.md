@@ -1,52 +1,107 @@
-# bsvarPost 0.2.0
+# bsvarPost 1.0.0
 
-- Added representative-model selection helpers for IRFs and CDMs:
-  `representative_irf()`, `representative_cdm()`, `median_target_*()`,
-  and `most_likely_admissible_*()`.
-- Added posterior hypothesis helpers: `hypothesis_irf()` and
-  `hypothesis_cdm()`.
-- Added audit helpers: `restriction_audit()` and `magnitude_audit()`.
-- Added `tidy_hd_event()` and `shock_ranking()` for event-window historical decomposition summaries.
-- Added `peak_response()` and `duration_response()` for posterior response-shape summaries.
-- Added `compare_restrictions()` for cross-model restriction-audit comparisons.
-- Added `compare_hd_event()` for cross-model event-window historical decomposition comparisons.
-- Added `compare_peak_response()` and `compare_duration_response()` for cross-model response-shape comparisons.
-- Added `half_life_response()` and `time_to_threshold()` for response-decay and threshold-timing summaries.
-- Added `compare_half_life_response()` and `compare_time_to_threshold()` for cross-model timing-summary comparisons.
-- Added `plot_hd_event()` and `plot_shock_ranking()` as dedicated event-study plotting helpers.
-- Added `theme_bsvarpost()` and `style_bsvar_plot()` for reusable publication-oriented plot styling.
-- Added `template_bsvar_plot()` and `annotate_bsvar_plot()` for output-family templates and publication annotations.
-- Added `acceptance_diagnostics()` for stored-draw admissibility diagnostics in `bsvarSIGNs`.
-- Added `summary()` and print support for `acceptance_diagnostics()` outputs.
-- Added `compare_acceptance_diagnostics()` and `plot_acceptance_diagnostics()` for cross-model diagnostics workflows.
-- Added `simultaneous_irf()`, `simultaneous_cdm()`, `joint_hypothesis_irf()`, and `joint_hypothesis_cdm()` for first-pass joint inference support.
-- Added `plot_simultaneous()` and `plot_joint_hypothesis()` for direct visualisation of simultaneous bands and joint posterior probability statements.
-- Added `plot_hypothesis()` and `plot_restriction_audit()` as dedicated plotting helpers for posterior statements and restriction audits.
-- Updated README and vignette comparison examples to use genuinely different model specifications instead of self-comparisons.
-- Added `plot_compare_response()` and `plot_compare_restrictions()` for dedicated visualisation of comparison-table outputs.
-- Added `as_kable()`, `as_gt()`, `as_flextable()`, and `write_bsvar_csv()` as first-pass reporting and export helpers for tidy `bsvarPost` tables.
-- Added `report_bundle()` as a first-pass plot-and-table bundle for publication workflows.
-- Added `report_table()` and compact/default reporting presets for publication-oriented table layouts.
-- Extended `report_bundle()` to support representative-response and acceptance-diagnostics workflows.
-- Extended `report_bundle()` to support simultaneous-band and joint-hypothesis outputs.
-- Extended `report_bundle()` to support event-study tables and object-family default captions.
-- Added `publish_bsvar_plot()` for family-aware publication templates across comparison, representative, diagnostics, event-study, and joint-inference outputs.
-- Added publication-facing report-table labels and short family-specific subtitles for representative, diagnostics, event-study, simultaneous-band, and joint-hypothesis plots.
-- Expanded the vignettes with clearer interpretation notes, non-trivial comparison examples, and lightweight rendered table/plot showcases.
-- Added pkgdown site scaffolding, including site configuration, homepage content, reference grouping, and a GitHub Pages deployment workflow.
-- Added a second vignette, `Post-Estimation Workflows in bsvarPost`, to separate workflow/methodology documentation from getting-started material.
-- Added restriction constructor helpers for IRF, structural, and narrative
-  audits.
+Initial CRAN release.
 
-# bsvarPost 0.1.0
+## Breaking changes and deprecations
 
-- Initial release.
-- Added cross-package `cdm()` support for posterior objects from `bsvars` and
-  `bsvarSIGNs`.
-- Added `PosteriorCDM` summary and plotting methods.
-- Added tidy extractors for impulse responses, cumulative dynamic multipliers,
-  variance decompositions, shocks, historical decompositions, and forecasts.
-- Added comparison helpers for IRFs, CDMs, FEVDs, and forecasts.
-- Added `ggplot2` autoplot support for tidy and comparison outputs.
-- Added bridge helpers for APRScenario-style forecast tables.
-- Added optional `tsibble` conversion for tidy outputs.
+* The `variable` and `shock` (singular) arguments are deprecated in favour of
+  `variables` and `shocks` (plural) throughout the package. The singular forms
+  still work and produce a warning; they will be removed in a future version.
+
+## Core posterior extraction
+
+* `tidy_irf()` extracts impulse responses from `PosteriorBSVAR`,
+  `PosteriorBSVARSV`, `PosteriorBSVARMIX`, `PosteriorBSVARMSH`,
+  `PosteriorBSVART`, and `PosteriorBSVARSIGN` objects into tidy tibbles with
+  credible-interval columns.
+* `tidy_cdm()` extracts cumulative dynamic multipliers for all supported
+  posterior types.
+* `tidy_fevd()` extracts forecast error variance decompositions (reported on
+  the 0–100 percentage scale used by 'bsvars').
+* `tidy_shocks()` extracts structural shocks.
+* `tidy_hd()` extracts historical decompositions.
+* `tidy_forecast()` extracts out-of-sample forecasts.
+* `cdm()` estimates cumulative dynamic multipliers directly from any supported
+  posterior object, bridging 'bsvars' and 'bsvarSIGNs' in a single call.
+
+## Hypothesis testing and inference
+
+* `hypothesis_irf()` and `hypothesis_cdm()` compute posterior probabilities for
+  user-specified inequality constraints on impulse responses and cumulative
+  dynamic multipliers.
+* `joint_hypothesis_irf()` and `joint_hypothesis_cdm()` extend hypothesis
+  testing to joint constraints across multiple variable–shock–horizon
+  combinations.
+* `simultaneous_irf()` and `simultaneous_cdm()` compute simultaneous credible
+  bands with exact joint coverage.
+
+## Representative model selection
+
+* `representative_irf()` and `representative_cdm()` identify the posterior
+  draw closest to the pointwise median across all impulse-response or CDM
+  paths.
+* `most_likely_admissible_irf()` and `most_likely_admissible_cdm()` select the
+  draw with the highest kernel score among sign-restriction-admissible draws.
+
+## Response summaries
+
+* `peak_response()` locates the horizon of maximum absolute impulse response
+  and its posterior distribution.
+* `duration_response()` summarises the number of horizons for which a response
+  remains above a threshold.
+* `half_life_response()` computes the posterior distribution of the half-life
+  of a response decay.
+* `time_to_threshold()` computes the posterior distribution of the first
+  horizon at which a response crosses a user-specified threshold.
+
+## Model comparison
+
+* `compare_irf()`, `compare_cdm()`, `compare_fevd()` compare tidy extractions
+  across two models side-by-side.
+* `compare_peak_response()`, `compare_duration_response()`,
+  `compare_half_life_response()`, `compare_time_to_threshold()` compare
+  response-shape summaries across models.
+* `compare_restrictions()` compares restriction-audit results across models.
+* `compare_hd_event()` compares event-window historical decomposition summaries
+  across models.
+* `compare_acceptance_diagnostics()` compares sign-restriction acceptance
+  diagnostics across models.
+
+## Restriction and acceptance auditing
+
+* `restriction_audit()` evaluates whether posterior draws satisfy a set of
+  structural sign or narrative restrictions.
+* `magnitude_audit()` checks whether impulse responses satisfy magnitude-based
+  restrictions with explicit `variable` and `shock` arguments.
+* `acceptance_diagnostics()` reports draw-level admissibility statistics for
+  `bsvarSIGNs` posteriors, with `summary()` and `print()` methods.
+
+## Event-study helpers
+
+* `tidy_hd_event()` summarises historical decomposition contributions within a
+  user-specified event window.
+* `shock_ranking()` ranks shocks by their contribution to a target variable
+  within an event window.
+
+## Plotting and reporting
+
+* `autoplot()` support for all tidy extractors (`PosteriorIR`,
+  `PosteriorCDM`, `PosteriorFEVD`, `PosteriorSHOCKS`, `PosteriorHD`,
+  `PosteriorFORECAST`), all comparison outputs, simultaneous bands, and joint
+  hypothesis objects.
+* `theme_bsvarpost()` provides a minimal publication-ready ggplot2 theme.
+* `style_bsvar_plot()` applies consistent axis, legend, and colour styling to
+  any bsvarPost ggplot2 output.
+* `publish_bsvar_plot()` applies family-aware publication templates across
+  comparison, representative, diagnostics, event-study, and joint-inference
+  outputs.
+* `as_gt()`, `as_flextable()`, and `as_kable()` convert tidy bsvarPost tables
+  to formatted gt, flextable, and knitr::kable outputs for publication
+  documents.
+* `write_bsvar_csv()` writes any tidy bsvarPost table to CSV.
+* `report_bundle()` produces a paired plot-and-table bundle suitable for
+  publication workflows, with support for representative-response,
+  acceptance-diagnostics, simultaneous-band, joint-hypothesis, and event-study
+  objects.
+* `report_table()` generates compact or default publication-oriented table
+  layouts with family-specific labels and subtitles.

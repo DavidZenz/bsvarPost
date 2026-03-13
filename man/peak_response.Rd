@@ -2,6 +2,7 @@
 % Please edit documentation in R/response-summary.R
 \name{peak_response}
 \alias{peak_response}
+\alias{peak_response.default}
 \alias{peak_response.PosteriorIR}
 \alias{peak_response.PosteriorBSVAR}
 \alias{peak_response.PosteriorBSVARMIX}
@@ -14,24 +15,30 @@
 \usage{
 peak_response(object, ...)
 
+\method{peak_response}{default}(object, ...)
+
 \method{peak_response}{PosteriorIR}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
 
 \method{peak_response}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -40,12 +47,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -54,12 +63,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -68,12 +79,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -82,12 +95,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVART}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -96,12 +111,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -110,10 +127,12 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorCDM}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -123,9 +142,13 @@ peak_response(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{absolute}{If \code{TRUE}, search for the largest absolute response.}
 
@@ -141,6 +164,22 @@ peak_response(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock},
+\code{mean_value}, \code{median_value}, \code{sd_value},
+\code{lower_value}, \code{upper_value}, \code{mean_horizon},
+\code{median_horizon}, \code{sd_horizon}, \code{lower_horizon},
+and \code{upper_horizon}.
+}
 \description{
 Summarise the peak response level and the horizon at which that peak occurs.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+pk <- peak_response(post, horizon = 3)
+print(pk)
 }

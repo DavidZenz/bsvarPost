@@ -2,6 +2,7 @@
 % Please edit documentation in R/joint-inference.R
 \name{simultaneous_irf}
 \alias{simultaneous_irf}
+\alias{simultaneous_irf.default}
 \alias{simultaneous_irf.PosteriorIR}
 \alias{simultaneous_irf.PosteriorBSVAR}
 \alias{simultaneous_irf.PosteriorBSVARMIX}
@@ -13,9 +14,13 @@
 \usage{
 simultaneous_irf(object, ...)
 
+\method{simultaneous_irf}{default}(object, ...)
+
 \method{simultaneous_irf}{PosteriorIR}(
   object,
-  probability = 0.68,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -24,8 +29,10 @@ simultaneous_irf(object, ...)
 
 \method{simultaneous_irf}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -34,8 +41,10 @@ simultaneous_irf(object, ...)
 
 \method{simultaneous_irf}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -44,8 +53,10 @@ simultaneous_irf(object, ...)
 
 \method{simultaneous_irf}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -54,8 +65,10 @@ simultaneous_irf(object, ...)
 
 \method{simultaneous_irf}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -64,8 +77,10 @@ simultaneous_irf(object, ...)
 
 \method{simultaneous_irf}{PosteriorBSVART}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -74,8 +89,10 @@ simultaneous_irf(object, ...)
 
 \method{simultaneous_irf}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -89,15 +106,33 @@ simultaneous_irf(object, ...)
 
 \item{probability}{Coverage probability for the simultaneous band.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{model}{Optional model identifier.}
 
 \item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
+and \code{critical_value}.
+}
 \description{
 Construct simultaneous bands over a selected set of impulse responses using
 the empirical sup-norm around the posterior median path.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+sb <- simultaneous_irf(post, horizon = 3)
+head(sb)
 }
