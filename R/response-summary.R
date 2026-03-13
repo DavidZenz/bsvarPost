@@ -48,7 +48,7 @@ resolve_peak <- function(path, horizons, absolute = FALSE) {
 }
 
 summarise_peak_draws <- function(draws, object_type, variable = NULL, shock = NULL,
-                                 absolute = FALSE, probability = 0.68, model = "model1") {
+                                 absolute = FALSE, probability = 0.90, model = "model1") {
   subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
   dims <- dim(subset$draws)
   horizons <- as.numeric(subset$labels$horizon)
@@ -88,20 +88,20 @@ summarise_peak_draws <- function(draws, object_type, variable = NULL, shock = NU
 #' @rdname peak_response
 #' @export
 peak_response.PosteriorIR <- function(object, variable = NULL, shock = NULL, absolute = FALSE,
-                                      probability = 0.68, model = "model1", ...) {
+                                      probability = 0.90, model = "model1", ...) {
   summarise_peak_draws(object, object_type = "peak_irf", variable = variable, shock = shock,
                        absolute = absolute, probability = probability, model = model)
 }
 
-peak_response_model <- function(object, horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
-                                absolute = FALSE, probability = 0.68, model = "model1",
+peak_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+                                absolute = FALSE, probability = 0.90, model = "model1",
                                 scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(peak_response(get_irf_draws(object, horizon = horizon, ...), variable = variable, shock = shock,
+    return(peak_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
                          absolute = absolute, probability = probability, model = model))
   }
-  peak_response(get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by,
+  peak_response(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
                               scale_var = scale_var, ...), variable = variable, shock = shock,
                 absolute = absolute, probability = probability, model = model)
 }
@@ -127,7 +127,7 @@ peak_response.PosteriorBSVARSIGN <- peak_response_model
 #' @rdname peak_response
 #' @export
 peak_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL, absolute = FALSE,
-                                       probability = 0.68, model = "model1", ...) {
+                                       probability = 0.90, model = "model1", ...) {
   summarise_peak_draws(object, object_type = "peak_cdm", variable = variable, shock = shock,
                        absolute = absolute, probability = probability, model = model)
 }
@@ -194,7 +194,7 @@ compute_duration <- function(path, relation = c(">", ">=", "<", "<="), value = 0
 summarise_duration_draws <- function(draws, object_type, variable = NULL, shock = NULL,
                                      relation = c(">", ">=", "<", "<="), value = 0,
                                      absolute = FALSE, mode = c("consecutive", "total"),
-                                     probability = 0.68, model = "model1") {
+                                     probability = 0.90, model = "model1") {
   relation <- match.arg(relation)
   mode <- match.arg(mode)
   subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
@@ -235,24 +235,24 @@ summarise_duration_draws <- function(draws, object_type, variable = NULL, shock 
 duration_response.PosteriorIR <- function(object, variable = NULL, shock = NULL,
                                           relation = c(">", ">=", "<", "<="), value = 0,
                                           absolute = FALSE, mode = c("consecutive", "total"),
-                                          probability = 0.68, model = "model1", ...) {
+                                          probability = 0.90, model = "model1", ...) {
   summarise_duration_draws(object, object_type = "duration_irf", variable = variable, shock = shock,
                            relation = relation, value = value, absolute = absolute, mode = mode,
                            probability = probability, model = model)
 }
 
-duration_response_model <- function(object, horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+duration_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
                                     relation = c(">", ">=", "<", "<="), value = 0,
                                     absolute = FALSE, mode = c("consecutive", "total"),
-                                    probability = 0.68, model = "model1",
+                                    probability = 0.90, model = "model1",
                                     scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(duration_response(get_irf_draws(object, horizon = horizon, ...), variable = variable, shock = shock,
+    return(duration_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
                              relation = relation, value = value, absolute = absolute, mode = mode,
                              probability = probability, model = model))
   }
-  duration_response(get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by,
+  duration_response(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
                                   scale_var = scale_var, ...), variable = variable, shock = shock,
                     relation = relation, value = value, absolute = absolute, mode = mode,
                     probability = probability, model = model)
@@ -282,7 +282,7 @@ duration_response.PosteriorBSVARSIGN <- duration_response_model
 duration_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
                                            relation = c(">", ">=", "<", "<="), value = 0,
                                            absolute = FALSE, mode = c("consecutive", "total"),
-                                           probability = 0.68, model = "model1", ...) {
+                                           probability = 0.90, model = "model1", ...) {
   summarise_duration_draws(object, object_type = "duration_cdm", variable = variable, shock = shock,
                            relation = relation, value = value, absolute = absolute, mode = mode,
                            probability = probability, model = model)
@@ -370,7 +370,7 @@ compute_half_life <- function(path, horizons, fraction = 0.5,
 
 summarise_half_life_draws <- function(draws, object_type, variable = NULL, shock = NULL,
                                       fraction = 0.5, baseline = c("peak", "initial"),
-                                      absolute = TRUE, probability = 0.68, model = "model1") {
+                                      absolute = TRUE, probability = 0.90, model = "model1") {
   baseline <- match.arg(baseline)
   subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
   dims <- dim(subset$draws)
@@ -410,23 +410,23 @@ summarise_half_life_draws <- function(draws, object_type, variable = NULL, shock
 #' @export
 half_life_response.PosteriorIR <- function(object, variable = NULL, shock = NULL,
                                            fraction = 0.5, baseline = c("peak", "initial"),
-                                           absolute = TRUE, probability = 0.68, model = "model1", ...) {
+                                           absolute = TRUE, probability = 0.90, model = "model1", ...) {
   summarise_half_life_draws(object, object_type = "half_life_irf", variable = variable, shock = shock,
                             fraction = fraction, baseline = baseline, absolute = absolute,
                             probability = probability, model = model)
 }
 
-half_life_response_model <- function(object, horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+half_life_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
                                      fraction = 0.5, baseline = c("peak", "initial"),
-                                     absolute = TRUE, probability = 0.68, model = "model1",
+                                     absolute = TRUE, probability = 0.90, model = "model1",
                                      scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(half_life_response(get_irf_draws(object, horizon = horizon, ...), variable = variable, shock = shock,
+    return(half_life_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
                               fraction = fraction, baseline = baseline, absolute = absolute,
                               probability = probability, model = model))
   }
-  half_life_response(get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by,
+  half_life_response(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
                                    scale_var = scale_var, ...), variable = variable, shock = shock,
                      fraction = fraction, baseline = baseline, absolute = absolute,
                      probability = probability, model = model)
@@ -454,7 +454,7 @@ half_life_response.PosteriorBSVARSIGN <- half_life_response_model
 #' @export
 half_life_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
                                             fraction = 0.5, baseline = c("peak", "initial"),
-                                            absolute = TRUE, probability = 0.68, model = "model1", ...) {
+                                            absolute = TRUE, probability = 0.90, model = "model1", ...) {
   summarise_half_life_draws(object, object_type = "half_life_cdm", variable = variable, shock = shock,
                             fraction = fraction, baseline = baseline, absolute = absolute,
                             probability = probability, model = model)
@@ -514,7 +514,7 @@ compute_time_to_threshold <- function(path, horizons, relation = c(">", ">=", "<
 
 summarise_threshold_draws <- function(draws, object_type, variable = NULL, shock = NULL,
                                       relation = c(">", ">=", "<", "<="), value = 0,
-                                      absolute = FALSE, probability = 0.68, model = "model1") {
+                                      absolute = FALSE, probability = 0.90, model = "model1") {
   relation <- match.arg(relation)
   subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
   dims <- dim(subset$draws)
@@ -554,23 +554,23 @@ summarise_threshold_draws <- function(draws, object_type, variable = NULL, shock
 #' @export
 time_to_threshold.PosteriorIR <- function(object, variable = NULL, shock = NULL,
                                           relation = c(">", ">=", "<", "<="), value = 0,
-                                          absolute = FALSE, probability = 0.68, model = "model1", ...) {
+                                          absolute = FALSE, probability = 0.90, model = "model1", ...) {
   summarise_threshold_draws(object, object_type = "time_to_threshold_irf", variable = variable, shock = shock,
                             relation = relation, value = value, absolute = absolute,
                             probability = probability, model = model)
 }
 
-time_to_threshold_model <- function(object, horizon = 10, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+time_to_threshold_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
                                     relation = c(">", ">=", "<", "<="), value = 0,
-                                    absolute = FALSE, probability = 0.68, model = "model1",
+                                    absolute = FALSE, probability = 0.90, model = "model1",
                                     scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(time_to_threshold(get_irf_draws(object, horizon = horizon, ...), variable = variable, shock = shock,
+    return(time_to_threshold(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
                              relation = relation, value = value, absolute = absolute,
                              probability = probability, model = model))
   }
-  time_to_threshold(get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by,
+  time_to_threshold(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
                                   scale_var = scale_var, ...), variable = variable, shock = shock,
                     relation = relation, value = value, absolute = absolute,
                     probability = probability, model = model)
@@ -598,7 +598,7 @@ time_to_threshold.PosteriorBSVARSIGN <- time_to_threshold_model
 #' @export
 time_to_threshold.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
                                            relation = c(">", ">=", "<", "<="), value = 0,
-                                           absolute = FALSE, probability = 0.68, model = "model1", ...) {
+                                           absolute = FALSE, probability = 0.90, model = "model1", ...) {
   summarise_threshold_draws(object, object_type = "time_to_threshold_cdm", variable = variable, shock = shock,
                             relation = relation, value = value, absolute = absolute,
                             probability = probability, model = model)

@@ -99,7 +99,7 @@ append_hypothesis_rhs <- function(tbl, compare_to, value, absolute) {
 
 hypothesis_response_impl <- function(object, draws, object_type, variable, shock, horizon,
                                      relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                     compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                     compare_to = NULL, absolute = FALSE, probability = 0.90,
                                      draws_out = FALSE, model = "model1") {
   relation <- match.arg(relation)
   compare_to <- normalise_compare_to(compare_to)
@@ -133,7 +133,7 @@ hypothesis_response_impl <- function(object, draws, object_type, variable, shock
 #' @export
 hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
                                        relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                       compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                       compare_to = NULL, absolute = FALSE, probability = 0.90,
                                        draws = FALSE, model = "model1", ...) {
   hypothesis_response_impl(
     object = object,
@@ -154,7 +154,7 @@ hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
 
 hypothesis_irf_model <- function(object, variable, shock, horizon,
                                  relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                 compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                 compare_to = NULL, absolute = FALSE, probability = 0.90,
                                  draws = FALSE, model = "model1", ...) {
   irf_draws <- get_irf_draws(object, horizon = response_fetch_horizon(horizon, compare_to), ...)
   hypothesis_irf(
@@ -226,7 +226,7 @@ hypothesis_cdm.default <- function(object, ...) {
 #' @export
 hypothesis_cdm.PosteriorCDM <- function(object, variable, shock, horizon,
                                         relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                        compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                        compare_to = NULL, absolute = FALSE, probability = 0.90,
                                         draws = FALSE, model = "model1", ...) {
   hypothesis_response_impl(
     object = object,
@@ -247,7 +247,7 @@ hypothesis_cdm.PosteriorCDM <- function(object, variable, shock, horizon,
 
 hypothesis_cdm_model <- function(object, variable, shock, horizon,
                                  relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                 compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                 compare_to = NULL, absolute = FALSE, probability = 0.90,
                                  draws = FALSE, model = "model1",
                                  scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   cdm_horizon <- response_fetch_horizon(horizon, compare_to)

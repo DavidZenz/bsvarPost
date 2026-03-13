@@ -36,7 +36,7 @@ simultaneous_irf.default <- function(object, ...) {
   )
 }
 
-simultaneous_band_impl <- function(draws, object_type, probability = 0.68,
+simultaneous_band_impl <- function(draws, object_type, probability = 0.90,
                                    variable = NULL, shock = NULL, model = "model1") {
   subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
   mat <- draw_matrix(subset$draws)
@@ -63,17 +63,17 @@ simultaneous_band_impl <- function(draws, object_type, probability = 0.68,
 
 #' @rdname simultaneous_irf
 #' @export
-simultaneous_irf.PosteriorIR <- function(object, probability = 0.68,
+simultaneous_irf.PosteriorIR <- function(object, probability = 0.90,
                                          variable = NULL, shock = NULL,
                                          model = "model1", ...) {
   simultaneous_band_impl(object, object_type = "irf", probability = probability,
                          variable = variable, shock = shock, model = model)
 }
 
-simultaneous_irf_model <- function(object, horizon = 10, probability = 0.68,
+simultaneous_irf_model <- function(object, horizon = NULL, probability = 0.90,
                                    variable = NULL, shock = NULL,
                                    model = "model1", ...) {
-  simultaneous_irf(get_irf_draws(object, horizon = horizon, ...), probability = probability,
+  simultaneous_irf(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), probability = probability,
                    variable = variable, shock = shock, model = model)
 }
 
@@ -129,19 +129,19 @@ simultaneous_cdm.default <- function(object, ...) {
 
 #' @rdname simultaneous_cdm
 #' @export
-simultaneous_cdm.PosteriorCDM <- function(object, probability = 0.68,
+simultaneous_cdm.PosteriorCDM <- function(object, probability = 0.90,
                                           variable = NULL, shock = NULL,
                                           model = "model1", ...) {
   simultaneous_band_impl(object, object_type = "cdm", probability = probability,
                          variable = variable, shock = shock, model = model)
 }
 
-simultaneous_cdm_model <- function(object, horizon = 10, probability = 0.68,
+simultaneous_cdm_model <- function(object, horizon = NULL, probability = 0.90,
                                    variable = NULL, shock = NULL,
                                    model = "model1",
                                    scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   simultaneous_cdm(
-    get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by, scale_var = scale_var, ...),
+    get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by, scale_var = scale_var, ...),
     probability = probability,
     variable = variable,
     shock = shock,

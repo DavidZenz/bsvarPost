@@ -41,7 +41,7 @@ representative_irf.default <- function(object, ...) {
   )
 }
 
-new_representative_object <- function(draws, selected, object_type, probability = 0.68) {
+new_representative_object <- function(draws, selected, object_type, probability = 0.90) {
   structure(
     list(
       representative_draw = selected$representative_draw,
@@ -58,11 +58,11 @@ new_representative_object <- function(draws, selected, object_type, probability 
   )
 }
 
-representative_irf_impl <- function(object, draws, horizon = 10,
+representative_irf_impl <- function(object, draws, horizon = NULL,
                                     method = c("median_target", "most_likely_admissible"),
                                     center = c("median", "mean"), variables = NULL, shocks = NULL, horizons = NULL,
                                     metric = c("l2", "weighted_l2"), standardize = c("none", "sd"),
-                                    probability = 0.68, ...) {
+                                    probability = 0.90, ...) {
   method <- match.arg(method)
   if (identical(method, "most_likely_admissible") && !inherits(object, "PosteriorBSVARSIGN")) {
     stop("`most_likely_admissible` is only supported for 'PosteriorBSVARSIGN' in bsvarPost v0.2.", call. = FALSE)
@@ -89,17 +89,17 @@ representative_irf_impl <- function(object, draws, horizon = 10,
 representative_irf.PosteriorIR <- function(object, method = c("median_target", "most_likely_admissible"),
                                            center = c("median", "mean"), variables = NULL, shocks = NULL,
                                            horizons = NULL, metric = c("l2", "weighted_l2"),
-                                           standardize = c("none", "sd"), probability = 0.68, ...) {
+                                           standardize = c("none", "sd"), probability = 0.90, ...) {
   representative_irf_impl(object, object, method = method, center = center, variables = variables,
                           shocks = shocks, horizons = horizons, metric = metric,
                           standardize = standardize, probability = probability, ...)
 }
 
-representative_irf_model <- function(object, horizon = 10, method = c("median_target", "most_likely_admissible"),
+representative_irf_model <- function(object, horizon = NULL, method = c("median_target", "most_likely_admissible"),
                                      center = c("median", "mean"), variables = NULL, shocks = NULL,
                                      horizons = NULL, metric = c("l2", "weighted_l2"),
-                                     standardize = c("none", "sd"), probability = 0.68, ...) {
-  draws <- get_irf_draws(object, horizon = horizon, ...)
+                                     standardize = c("none", "sd"), probability = 0.90, ...) {
+  draws <- get_irf_draws(object, horizon = resolve_horizon(horizon), ...)
   representative_irf_impl(object, draws, horizon = horizon, method = method, center = center,
                           variables = variables, shocks = shocks, horizons = horizons,
                           metric = metric, standardize = standardize, probability = probability, ...)
@@ -155,7 +155,7 @@ representative_cdm.default <- function(object, ...) {
 representative_cdm_impl <- function(object, draws, method = c("median_target", "most_likely_admissible"),
                                     center = c("median", "mean"), variables = NULL, shocks = NULL, horizons = NULL,
                                     metric = c("l2", "weighted_l2"), standardize = c("none", "sd"),
-                                    probability = 0.68, ...) {
+                                    probability = 0.90, ...) {
   method <- match.arg(method)
   if (identical(method, "most_likely_admissible") && !inherits(object, "PosteriorBSVARSIGN")) {
     stop("`most_likely_admissible` is only supported for 'PosteriorBSVARSIGN' in bsvarPost v0.2.", call. = FALSE)
@@ -182,17 +182,17 @@ representative_cdm_impl <- function(object, draws, method = c("median_target", "
 representative_cdm.PosteriorCDM <- function(object, method = c("median_target", "most_likely_admissible"),
                                             center = c("median", "mean"), variables = NULL, shocks = NULL,
                                             horizons = NULL, metric = c("l2", "weighted_l2"),
-                                            standardize = c("none", "sd"), probability = 0.68, ...) {
+                                            standardize = c("none", "sd"), probability = 0.90, ...) {
   representative_cdm_impl(object, object, method = method, center = center, variables = variables,
                           shocks = shocks, horizons = horizons, metric = metric,
                           standardize = standardize, probability = probability, ...)
 }
 
-representative_cdm_model <- function(object, horizon = 10, method = c("median_target", "most_likely_admissible"),
+representative_cdm_model <- function(object, horizon = NULL, method = c("median_target", "most_likely_admissible"),
                                      center = c("median", "mean"), variables = NULL, shocks = NULL, horizons = NULL,
                                      metric = c("l2", "weighted_l2"), standardize = c("none", "sd"),
-                                     probability = 0.68, scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
-  draws <- get_cdm_draws(object, horizon = horizon, probability = probability, scale_by = scale_by, scale_var = scale_var, ...)
+                                     probability = 0.90, scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  draws <- get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by, scale_var = scale_var, ...)
   representative_cdm_impl(object, draws, method = method, center = center, variables = variables,
                           shocks = shocks, horizons = horizons, metric = metric,
                           standardize = standardize, probability = probability, ...)

@@ -79,7 +79,7 @@ resolve_restriction_plot_labels <- function(df, label_style = c("raw", "pretty")
 plot_hypothesis <- function(object, type = c("irf", "cdm"),
                             variable = NULL, shock = NULL, horizon = NULL,
                             relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                            compare_to = NULL, absolute = FALSE, probability = 0.68,
+                            compare_to = NULL, absolute = FALSE, probability = 0.90,
                             models = NULL, scale_by = c("none", "shock_sd"),
                             scale_var = NULL, ...) {
   type <- match.arg(type)
@@ -177,7 +177,7 @@ plot_hypothesis <- function(object, type = c("irf", "cdm"),
 #' p <- plot_restriction_audit(audit)
 #' @export
 plot_restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
-                                   probability = 0.68, models = NULL,
+                                   probability = 0.90, models = NULL,
                                    label_style = c("raw", "pretty"),
                                    labels = NULL,
                                    restriction_types = NULL, ...) {
