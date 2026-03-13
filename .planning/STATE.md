@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 3 complete — ready for Phase 5
+**Current focus:** Phase 5 complete — ready for Phase 6
 
 ## Current Position
 
-Phase: 5 of 8 (Test Coverage Expansion) — COMPLETE
-Plan: 6 of 6 (completed 05-06)
-Status: 05-06 complete — dispatch spot-check tests added for PosteriorBSVARMIX, PosteriorBSVARMSH, PosteriorBSVART; all 6 posterior types now have dispatch coverage (SC2 satisfied)
-Last activity: 2026-03-12 — Completed Phase 5 Plan 06: MIX/MSH/T Posterior Dispatch Coverage
+Phase: 6 of 8 (API Consistency & Error Messages) — IN PROGRESS
+Plan: 1 complete (of N in phase)
+Status: Phase 6 Plan 01 complete — validation helpers, dimension guards, compare defaults updated
+Last activity: 2026-03-13 — Completed Phase 6 Plan 01: Validation Infrastructure and Compare Defaults
 
-Progress: [█████░░░░░] 50% (4 of 8 phases complete)
+Progress: [██████░░░░] 62% (5 of 8 phases complete, Phase 6 in progress)
 
 ## Performance Metrics
 
@@ -50,6 +50,7 @@ Progress: [█████░░░░░] 50% (4 of 8 phases complete)
 | Phase 05 P05 | 15 | 1 tasks | 1 files |
 | Phase 05-test-coverage-expansion P06 | 3 | 1 tasks | 1 files |
 | Phase 05-test-coverage-expansion P07 | 4 | 1 tasks | 1 files |
+| Phase 06-api-consistency P01 | 3 min | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -111,6 +112,10 @@ Recent decisions affecting current work:
 - [Phase 05-07]: bsvars requires 2+ variables; 1-variable model not valid — used minimal 2-variable model for edge case testing
 - [Phase 05-07]: bsvars::estimate requires S >= 2; used S=2 as minimum-draw boundary test instead of plan's S=1
 - [Phase 05-07]: resolve_selection with character(0) returns integer(0) silently — documented as acceptable behavior
+- [Phase 06-01]: resolve_horizon(NULL) returns 20L — business-cycle convention covering full dynamics
+- [Phase 06-01]: deprecate_arg() gives new_val precedence when both old and new args are provided
+- [Phase 06-01]: compare_acceptance_diagnostics excluded from validate_model_compatibility — output has no variable column
+- [Phase 06-01]: Dimension assertions use class reporting for non-array inputs, dimension count for wrong-dimension arrays
 
 ### Pending Todos
 
@@ -130,6 +135,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-12
-Stopped at: Completed 05-07-PLAN.md (behavioral edge cases: 13 tests pass, Gap 2 closed, resolve_selection documented)
-Resume file: .planning/phases/05-test-coverage-expansion/05-06-SUMMARY.md
+Last session: 2026-03-13
+Stopped at: Completed Phase 6 Plan 01 (06-01-PLAN.md) — validation.R, utils.R, compare.R updated
+Resume file: .planning/phases/06-api-consistency-error-messages/06-01-SUMMARY.md
