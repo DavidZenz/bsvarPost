@@ -28,6 +28,17 @@ template_bsvar_plot(
 
 \item{base_family}{Base font family for the applied theme.}
 }
+\value{
+A \code{ggplot} object with template styling applied.
+}
 \description{
 Apply an output-family template to a bsvarPost plot
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+p <- template_bsvar_plot(ggplot2::autoplot(irf_tbl), family = "irf")
 }

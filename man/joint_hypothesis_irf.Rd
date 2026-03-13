@@ -2,16 +2,35 @@
 % Please edit documentation in R/joint-inference.R
 \name{joint_hypothesis_irf}
 \alias{joint_hypothesis_irf}
+\alias{joint_hypothesis_irf.default}
 \title{Joint posterior probability statements for impulse responses}
 \usage{
 joint_hypothesis_irf(object, ...)
+
+\method{joint_hypothesis_irf}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or a \code{PosteriorIR} object.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{relation}, \code{posterior_prob},
+\code{n_constraints}, \code{variable}, \code{shock}, \code{horizon},
+\code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+\code{rhs_value}, and \code{absolute}.
+}
 \description{
 Evaluate whether a set of posterior IRF inequalities holds jointly across all
 selected variables, shocks, and horizons.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+jh <- joint_hypothesis_irf(post, variable = "gdp", shock = "gdp",
+                           horizon = 0:2, relation = ">", value = 0)
+print(jh)
 }

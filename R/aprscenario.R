@@ -11,6 +11,16 @@
 #'   `"month"`, `"year"`, or `"day"`.
 #' @param model Optional model identifier.
 #' @param ... Additional arguments passed to [tidy_forecast()].
+#' @return A data frame with columns \code{hor}, \code{variable},
+#'   \code{lower}, \code{center}, and \code{upper}, suitable for use with
+#'   APRScenario conditioning workflows.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' apr_forc <- as_apr_cond_forc(post, horizon = 3)
+#' head(apr_forc)
 #' @export
 as_apr_cond_forc <- function(object, ...) {
   UseMethod("as_apr_cond_forc")
@@ -45,14 +55,14 @@ as_apr_cond_forc.bsvar_post_tbl <- function(object, center = c("median", "mean")
 
 #' @rdname as_apr_cond_forc
 #' @export
-as_apr_cond_forc.Forecasts <- function(object, probability = 0.68, center = c("median", "mean"),
+as_apr_cond_forc.Forecasts <- function(object, probability = 0.90, center = c("median", "mean"),
                                        origin = NULL, frequency = c("quarter", "month", "year", "day"),
                                        model = "model1", ...) {
   as_apr_cond_forc(tidy_forecast(object, probability = probability, model = model), center = center,
                    origin = origin, frequency = frequency)
 }
 
-as_apr_cond_forc_model <- function(object, horizon = 10, probability = 0.68, center = c("median", "mean"),
+as_apr_cond_forc_model <- function(object, horizon = NULL, probability = 0.90, center = c("median", "mean"),
                                    origin = NULL, frequency = c("quarter", "month", "year", "day"),
                                    model = "model1", ...) {
   as_apr_cond_forc(tidy_forecast(object, horizon = horizon, probability = probability, model = model, ...),
@@ -61,7 +71,7 @@ as_apr_cond_forc_model <- function(object, horizon = 10, probability = 0.68, cen
 
 #' @rdname as_apr_cond_forc
 #' @export
-as_apr_cond_forc.PosteriorBSVAR <- function(object, horizon = 10, probability = 0.68, center = c("median", "mean"),
+as_apr_cond_forc.PosteriorBSVAR <- function(object, horizon = NULL, probability = 0.90, center = c("median", "mean"),
                                             origin = NULL, frequency = c("quarter", "month", "year", "day"),
                                             model = "model1", ...) {
   as_apr_cond_forc_model(object, horizon = horizon, probability = probability, center = center,
@@ -83,6 +93,22 @@ as_apr_cond_forc.PosteriorBSVARSIGN <- as_apr_cond_forc.PosteriorBSVAR
 #' @param data A data frame with APRScenario columns `hor`, `variable`,
 #'   `lower`, `center`, and `upper`.
 #' @param model Model identifier.
+#' @return A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
+#'   \code{variable}, \code{time}, \code{mean}, \code{median}, \code{sd},
+#'   \code{lower}, and \code{upper}.
+#' @examples
+#' \dontrun{
+#' # Requires APRScenario package
+#' apr_data <- data.frame(
+#'   hor = 1:3,
+#'   variable = "gdp",
+#'   lower = c(0.8, 0.9, 1.0),
+#'   center = c(1.0, 1.1, 1.2),
+#'   upper = c(1.2, 1.3, 1.4)
+#' )
+#' tidy_tbl <- tidy_apr_forecast(apr_data)
+#' head(tidy_tbl)
+#' }
 #' @export
 tidy_apr_forecast <- function(data, model = "apr") {
   required <- c("hor", "variable", "lower", "center", "upper")
@@ -109,13 +135,21 @@ tidy_apr_forecast <- function(data, model = "apr") {
 #' @param posterior A posterior model object.
 #' @param specification The corresponding specification object.
 #' @param max_cores Passed to `APRScenario::gen_mats()`.
-#' @return The object returned by `APRScenario::gen_mats()`.
+#' @return The result of \code{APRScenario::gen_mats()}, typically a list
+#'   containing matrices used for conditional forecasting.
+#' @examples
+#' \dontrun{
+#' # Requires APRScenario package
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' mats <- apr_gen_mats(posterior = post, specification = spec)
+#' }
 #' @export
 apr_gen_mats <- function(posterior = NULL, specification = NULL, max_cores = 1) {
   if (!requireNamespace("APRScenario", quietly = TRUE)) {
     stop("Package `APRScenario` must be installed to use `apr_gen_mats()`.", call. = FALSE)
   }
-  max_cores <- validate_positive_count(max_cores, "apr_gen_mats()", arg = "max_cores")
   APRScenario::gen_mats(posterior = posterior, specification = specification, max_cores = max_cores)
 }
 

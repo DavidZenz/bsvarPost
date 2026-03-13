@@ -12,7 +12,7 @@ plot_shock_ranking(
   models = NULL,
   ranking = c("absolute", "signed"),
   top_n = NULL,
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 }
@@ -36,6 +36,16 @@ ranking table.}
 
 \item{...}{Additional arguments passed to \code{shock_ranking()}.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 Plot ranked event-window shock contributions
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+p <- plot_shock_ranking(post, start = "1948.25", end = "1948.5")
 }

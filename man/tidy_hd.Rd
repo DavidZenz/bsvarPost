@@ -2,15 +2,35 @@
 % Please edit documentation in R/tidy.R
 \name{tidy_hd}
 \alias{tidy_hd}
+\alias{tidy_hd.default}
 \title{Tidy historical decompositions}
 \usage{
 tidy_hd(object, ...)
+
+\method{tidy_hd}{default}(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or posterior IRF array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{time},
+\code{mean}, \code{median}, \code{sd}, \code{lower}, and
+\code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+\code{value} replace the summary statistics.
+}
 \description{
 Tidy historical decompositions
+}
+\examples{
+# Small posterior (S = 5 draws)
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+# Tidy historical decompositions
+result <- tidy_hd(post)
+head(result)
 }

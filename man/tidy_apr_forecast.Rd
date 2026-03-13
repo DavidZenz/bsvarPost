@@ -12,6 +12,25 @@ tidy_apr_forecast(data, model = "apr")
 
 \item{model}{Model identifier.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
+\code{variable}, \code{time}, \code{mean}, \code{median}, \code{sd},
+\code{lower}, and \code{upper}.
+}
 \description{
 Convert APRScenario-style forecast tables to bsvarPost tidy format
+}
+\examples{
+\dontrun{
+# Requires APRScenario package
+apr_data <- data.frame(
+  hor = 1:3,
+  variable = "gdp",
+  lower = c(0.8, 0.9, 1.0),
+  center = c(1.0, 1.1, 1.2),
+  upper = c(1.2, 1.3, 1.4)
+)
+tidy_tbl <- tidy_apr_forecast(apr_data)
+head(tidy_tbl)
+}
 }

@@ -2,6 +2,7 @@
 % Please edit documentation in R/hd-event.R
 \name{tidy_hd_event}
 \alias{tidy_hd_event}
+\alias{tidy_hd_event.default}
 \alias{tidy_hd_event.bsvar_post_tbl}
 \alias{tidy_hd_event.PosteriorHD}
 \alias{tidy_hd_event.PosteriorBSVAR}
@@ -14,11 +15,13 @@
 \usage{
 tidy_hd_event(object, ...)
 
+\method{tidy_hd_event}{default}(object, ...)
+
 \method{tidy_hd_event}{bsvar_post_tbl}(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   ...
 )
@@ -27,7 +30,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -37,7 +40,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -47,7 +50,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -57,7 +60,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -67,7 +70,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -77,7 +80,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -87,7 +90,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -109,7 +112,22 @@ decomposition table.}
 
 \item{model}{Optional model identifier.}
 }
+\value{
+A \code{bsvar_post_tbl} with columns \code{model},
+\code{object_type}, \code{variable}, \code{shock}, \code{event_start},
+\code{event_end}, \code{median}, \code{mean}, \code{sd}, \code{lower},
+and \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
+\code{value} replace the summary statistics.
+}
 \description{
 Aggregate historical decomposition draws or summaries over a selected event
 window.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.5")
+head(hd_event)
 }

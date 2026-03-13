@@ -6,6 +6,14 @@
 #' @param models Optional model filter.
 #' @param facet_scales Facet scales passed to `ggplot2`.
 #' @param ... Unused.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#' p <- ggplot2::autoplot(irf_tbl)
 #' @export
 autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, models = NULL,
                                     facet_scales = "free_y", ...) {

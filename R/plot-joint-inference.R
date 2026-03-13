@@ -14,8 +14,15 @@
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' p <- plot_simultaneous(post, horizon = 3)
 #' @export
-plot_simultaneous <- function(object, type = c("irf", "cdm"), horizon = 10, probability = 0.68,
+plot_simultaneous <- function(object, type = c("irf", "cdm"), horizon = NULL, probability = 0.90,
                               variable = NULL, shock = NULL, models = NULL, facet_scales = "free_y",
                               scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   type <- match.arg(type)
@@ -54,6 +61,15 @@ plot_simultaneous <- function(object, type = c("irf", "cdm"), horizon = 10, prob
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{ggplot} object.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' jh <- joint_hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#'                            horizon = 0:2, relation = ">", value = 0)
+#' p <- plot_joint_hypothesis(jh)
 #' @export
 plot_joint_hypothesis <- function(object, type = c("irf", "cdm"),
                                   variable = NULL, shock = NULL, horizon = NULL,

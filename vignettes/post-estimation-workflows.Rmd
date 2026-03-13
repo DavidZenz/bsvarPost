@@ -8,317 +8,217 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  eval = FALSE
-)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
 ```
 
-This vignette focuses on the broader analytical surface of `bsvarPost` after a
-model has already been estimated with `bsvars` or `bsvarSIGNs`.
+```{r setup, eval = TRUE, include = FALSE}
+library(bsvarPost)
+post     <- readRDS("fixtures/fiscal_post_bsvar.rds")
+post_alt <- readRDS("fixtures/fiscal_post_bsvar_alt.rds")
+```
 
-The emphasis is not on estimation itself, but on:
-
-- representative-model summaries
-- posterior hypothesis and restriction auditing
-- event-window historical decomposition workflows
-- response timing summaries
-- diagnostics for sign-restricted models
-- plot styling and publication-oriented outputs
-
-Most chunks are shown as workflow templates rather than evaluated during the
-build. A small evaluated showcase is included at the end so the rendered
-document still contains a real table and plot.
-
-This example uses one sign-restricted baseline specification and one lighter
-alternative lag specification:
-
-- `post`: `p = 4`
-- `post_alt`: `p = 2`
-
-That gives a meaningful surface for representative summaries, audits, and
-event-window comparisons.
+This vignette picks up where "Getting Started" left off. After extracting impulse
+responses and CDMs, deeper analytical questions remain: Which draw best represents
+the posterior as a whole? When exactly does a spending shock peak, and how long
+does it last? Which structural shocks drove observed fiscal dynamics? This vignette
+works through those questions using the same `us_fiscal_lsuw` dataset — quarterly
+US data on tax revenue (`ttr`), government spending (`gs`), and output (`gdp`) —
+comparing a one-lag baseline against a three-lag alternative specification.
 
 ## Representative-model summaries
 
-For sign-restricted analysis, pointwise posterior medians need not correspond to
-one coherent draw. `bsvarPost` therefore offers representative-model summaries.
+Pointwise posterior medians may not correspond to any one coherent structural
+draw. `median_target_irf()` finds the stored draw whose IRF matrix is closest
+(in L2 distance) to the posterior median. The result is a single self-consistent
+model that typifies the posterior center.
 
-```{r}
-library(bsvarSIGNs)
-library(bsvarPost)
-
-data(optimism)
-
-sign_irf <- matrix(c(0, 1, rep(NA, 23)), 5, 5)
-
-spec <- specify_bsvarSIGN$new(
-  optimism * 100,
-  p = 4,
-  sign_irf = sign_irf
-)
-
-post <- estimate(spec, S = 100, thin = 1, show_progress = FALSE)
-
-spec_alt <- specify_bsvarSIGN$new(
-  optimism * 100,
-  p = 2,
-  sign_irf = sign_irf
-)
-
-post_alt <- estimate(spec_alt, S = 100, thin = 1, show_progress = FALSE)
-
-rep_median <- median_target_irf(post, horizon = 12)
-rep_mla <- most_likely_admissible_irf(post, horizon = 12)
-
-summary(rep_median)
-summary(rep_mla)
-plot(rep_median)
+```{r, eval = TRUE}
+rep_irf <- median_target_irf(post, horizon = 20)
+summary(rep_irf)
 ```
 
-Use `median_target_*()` when you want the stored draw closest to the posterior
-center. Use `most_likely_admissible_*()` when you want the stored admissible
-draw with the highest reconstructed admissibility score.
+The `draw_index` slot records which posterior draw was selected. This can be used
+to extract other quantities (CDMs, FEVD) from the same draw for a fully coherent
+representative model.
 
-The comparison to `post_alt` is useful because it changes the dynamic
-specification while leaving the identifying sign restrictions unchanged.
+A pre-rendered figure from the same posterior at the full S = 200 resolution:
 
-## Posterior hypotheses and audits
-
-Posterior probability statements can be evaluated directly on IRFs or CDMs.
-
-```{r}
-hypothesis_irf(
-  post,
-  variable = 1,
-  shock = 1,
-  horizon = 0:2,
-  relation = ">",
-  value = 0
-)
-
-joint_hypothesis_irf(
-  post,
-  variable = 1,
-  shock = 1,
-  horizon = 0:2,
-  relation = ">",
-  value = 0
-)
-
-simultaneous_irf(
-  post,
-  horizon = 12,
-  variable = 1,
-  shock = 1
-)
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("figures/representative-showcase.png")
 ```
 
-Restriction and magnitude audits are explicit post-estimation summaries. They
-do not modify the estimation problem.
-
-```{r}
-restriction_audit(post)
-
-magnitude_audit(
-  post,
-  type = "irf",
-  variable = 2,
-  shock = 1,
-  horizon = 0,
-  relation = ">",
-  value = 0
-)
-```
-
-## Historical decomposition workflows
-
-For event studies, aggregate historical decomposition contributions over a
-window and then rank shocks by contribution size.
-
-```{r}
-hd_event <- tidy_hd_event(post, start = 1, end = 4)
-hd_event
-
-ranked <- shock_ranking(post, start = 1, end = 4, ranking = "absolute")
-ranked
-```
-
-Compare event windows across models:
-
-```{r}
-compare_hd_event(baseline = post, alternative = post_alt, start = 1, end = 4)
-```
-
-Plot the resulting summaries:
-
-```{r}
-plot_hd_event(post, start = 1, end = 4)
-plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5)
-```
+The representative IRF for the `gs` spending shock shows the typical fiscal
+transmission shape: an immediate positive effect on government spending itself,
+with the `gdp` response peaking a few quarters later.
 
 ## Response timing summaries
 
-`bsvarPost` includes timing summaries that applied users often compute manually
-for papers and presentations.
+Researchers often need to report precisely *when* effects arrive and *how long*
+they persist. `bsvarPost` provides four timing summaries, each with full
+posterior uncertainty.
 
-```{r}
-peak_response(post, type = "irf", horizon = 12, variable = 1, shock = 1)
+**Peak response** — at what horizon does the fiscal spending shock produce the
+largest `gdp` effect?
 
+```{r, eval = TRUE}
+peak_response(post, type = "irf", horizon = 20, variables = 3, shocks = 2)
+```
+
+**Duration response** — how many quarters does the cumulative multiplier remain
+positive?
+
+```{r, eval = TRUE}
 duration_response(
   post,
-  type = "cdm",
-  horizon = 12,
-  variable = 1,
-  shock = 1,
+  type     = "cdm",
+  horizon  = 20,
+  variables = 3,
+  shocks   = 2,
   relation = ">",
-  value = 0,
-  mode = "total"
+  value    = 0,
+  mode     = "total"
 )
+```
 
+**Half-life** — how quickly does the impulse response decay from its peak?
+
+```{r, eval = TRUE}
 half_life_response(
   post,
-  type = "irf",
-  horizon = 12,
-  variable = 1,
-  shock = 1,
+  type     = "irf",
+  horizon  = 20,
+  variables = 3,
+  shocks   = 2,
   baseline = "peak"
 )
+```
 
+**Time to threshold** — when does the cumulative multiplier first exceed zero?
+
+```{r, eval = TRUE}
 time_to_threshold(
   post,
-  type = "cdm",
-  horizon = 12,
-  variable = 1,
-  shock = 1,
+  type     = "cdm",
+  horizon  = 20,
+  variables = 3,
+  shocks   = 2,
   relation = ">",
-  value = 0
+  value    = 0
 )
 ```
 
-The same summaries can be compared across alternative specifications.
+These four summaries characterise when the fiscal spending effect arrives, how
+large it becomes, and how quickly it dissipates — the standard set of timing
+statistics for fiscal multiplier papers.
 
-```{r}
-compare_peak_response(baseline = post, alternative = post_alt, type = "irf", horizon = 12, variable = 1, shock = 1)
-compare_duration_response(baseline = post, alternative = post_alt, type = "cdm", horizon = 12, variable = 1, shock = 1, relation = ">", value = 0)
-compare_half_life_response(baseline = post, alternative = post_alt, type = "irf", horizon = 12, variable = 1, shock = 1)
-compare_time_to_threshold(baseline = post, alternative = post_alt, type = "cdm", horizon = 12, variable = 1, shock = 1, relation = ">", value = 0)
+## Comparing response summaries
 
-as_kable(compare_peak_response(
-  baseline = post,
+Does the estimated timing change under a three-lag specification? The
+`compare_*` helpers place both posteriors side by side.
+
+```{r, eval = TRUE}
+cmp_peak <- compare_peak_response(
+  baseline    = post,
   alternative = post_alt,
-  type = "irf",
-  horizon = 12,
-  variable = 1,
-  shock = 1
-), preset = "compact")
-```
-
-## Diagnostics for sign-restricted models
-
-`acceptance_diagnostics()` provides a stored-draw diagnostics layer for
-`PosteriorBSVARSIGN` objects.
-
-```{r}
-diag_tbl <- acceptance_diagnostics(post)
-diag_tbl
-
-summary(diag_tbl)
-```
-
-Compare diagnostics across models:
-
-```{r}
-compare_acceptance_diagnostics(baseline = post, alternative = post_alt)
-plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
-
-as_kable(report_bundle(diag_tbl, preset = "compact"))
-```
-
-These are not full proposal acceptance histories. They are summaries of what is
-recoverable from the stored posterior draws and identification state.
-
-## Plot styling and templates
-
-All `ggplot2` outputs returned by `bsvarPost` can be restyled downstream.
-
-```{r}
-irf_tbl <- tidy_irf(post, horizon = 12)
-
-p <- ggplot2::autoplot(irf_tbl)
-
-style_bsvar_plot(
-  p,
-  preset = "paper",
-  palette = c("#1b9e77", "#d95f02")
+  type        = "irf",
+  horizon     = 20,
+  variables   = 3,
+  shocks      = 2
 )
-
-template_bsvar_plot(
-  p,
-  family = "irf",
-  preset = "paper"
-)
-
-annotate_bsvar_plot(
-  p,
-  title = "Impulse responses",
-  xintercept = 2
-)
-
-publish_bsvar_plot(diag_tbl, preset = "slides")
-```
-
-This plotting layer is intended to reduce the amount of manual figure code
-needed to bring posterior outputs into publication-ready form.
-
-## Rendered showcase
-
-```{r, eval = TRUE}
-library(bsvarSIGNs)
-library(bsvarPost)
-data(optimism)
-sign_irf_demo <- matrix(c(0, 1, rep(NA, 23)), 5, 5)
-set.seed(12)
-demo_spec <- specify_bsvarSIGN$new(
-  optimism * 100,
-  p = 2,
-  sign_irf = sign_irf_demo
-)
-demo_post <- estimate(demo_spec, S = 5, thin = 1, show_progress = FALSE)
-demo_diag <- acceptance_diagnostics(demo_post)
-demo_rep <- median_target_irf(demo_post, horizon = 3)
-demo_audit <- restriction_audit(demo_post)
-demo_hd <- tidy_hd_event(demo_post, start = 1, end = 2)
-
-as_kable(report_bundle(demo_diag, preset = "compact"))
-publish_bsvar_plot(demo_diag, preset = "paper")
+cmp_peak
 ```
 
 ```{r, eval = TRUE}
-as_kable(summary(demo_rep), preset = "compact", digits = 3)
-publish_bsvar_plot(demo_rep, preset = "paper")
+compare_duration_response(
+  baseline    = post,
+  alternative = post_alt,
+  type        = "cdm",
+  horizon     = 20,
+  variables   = 3,
+  shocks      = 2,
+  relation    = ">",
+  value       = 0
+)
 ```
+
+`as_kable()` formats any `bsvar_post_tbl` as a compact `knitr::kable` table
+ready for Rmd reports.
 
 ```{r, eval = TRUE}
-as_kable(demo_audit, preset = "compact", digits = 3)
-plot_restriction_audit(demo_audit)
+as_kable(cmp_peak, preset = "compact")
 ```
+
+The three-lag alternative typically shows a later peak with wider credible bands,
+reflecting the richer lag dynamics.
+
+## Historical decomposition events
+
+Historical decompositions (HD) measure each structural shock's contribution to
+observed variation in each variable at each point in time. `tidy_hd_event()`
+aggregates those contributions over a chosen event window.
+
+The `us_fiscal_lsuw` sample begins in 1948. To examine which shocks drove fiscal
+dynamics in the first year (four quarters: 1948.25 through 1948.75):
 
 ```{r, eval = TRUE}
-as_kable(demo_hd, preset = "compact", digits = 3)
-plot_hd_event(demo_post, start = 1, end = 2)
-plot_shock_ranking(demo_post, start = 1, end = 2, ranking = "absolute", top_n = 4)
+hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.75")
+head(hd_event)
 ```
 
-The site also includes a small set of pre-rendered sign-restriction figures
-generated from richer posterior samples. This keeps the checked vignette build
-light while still showing smoother diagnostics and event-window plots.
+`shock_ranking()` ranks the structural shocks by their absolute contribution to a
+target variable over the same window. Which shock moved `gdp` the most?
 
-```{r, echo = FALSE, out.width = "100%"}
+```{r, eval = TRUE}
+shock_ranking(post, start = "1948.25", end = "1948.75", ranking = "absolute")
+```
+
+A pre-rendered HD event figure from a richer S = 200 run:
+
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("figures/hd-event-showcase.png")
+```
+
+## Publication-ready reporting
+
+All `bsvarPost` outputs are `bsvar_post_tbl` data frames and accept the same
+family of reporting helpers.
+
+**knitr table** (always available):
+
+```{r, eval = TRUE}
+as_kable(summary(rep_irf), preset = "compact", digits = 3)
+```
+
+**gt table** (when the `gt` package is installed):
+
+```{r, eval = requireNamespace("gt", quietly = TRUE)}
+as_gt(cmp_peak, caption = "Peak response: 1-lag vs 3-lag", digits = 3,
+      preset = "compact")
+```
+
+**flextable** (when the `flextable` package is installed):
+
+```{r, eval = requireNamespace("flextable", quietly = TRUE)}
+as_flextable(cmp_peak, caption = "Peak response: 1-lag vs 3-lag", digits = 3,
+             preset = "compact")
+```
+
+**Publication plot** — `publish_bsvar_plot()` applies a paper-ready theme and
+returns the plot object for further adjustment or direct saving.
+
+```{r, eval = FALSE}
+publish_bsvar_plot(rep_irf, preset = "paper")
+```
+
+A pre-rendered diagnostics figure demonstrating the publication styling layer:
+
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
 knitr::include_graphics("figures/diagnostics-showcase.png")
 ```
 
-```{r, echo = FALSE, out.width = "100%"}
-knitr::include_graphics("figures/hd-event-showcase.png")
-```
+## Next steps
+
+The **Hypothesis Testing vignette** covers formal posterior probability
+statements — `hypothesis_irf()`, `joint_hypothesis_irf()`, and
+`simultaneous_irf()` — for testing sign and magnitude restrictions on the
+fiscal transmission mechanism.

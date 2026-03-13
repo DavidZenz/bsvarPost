@@ -7,3 +7,11 @@
 ^tools/
 ^_pkgdown\.yml$
 ^index\.md$
+^\.planning$
+^\.planning/
+^\.claude$
+^\.claude/
+^\.git$
+^\.git/
+^cran-comments\.md$
+^CRAN-SUBMISSION$

@@ -4,17 +4,31 @@
 \alias{compare_forecast}
 \title{Compare forecasts across models}
 \usage{
-compare_forecast(..., horizon = 10, probability = 0.68, draws = FALSE)
+compare_forecast(..., horizon = NULL, probability = 0.9, draws = FALSE)
 }
 \arguments{
 \item{...}{Posterior model objects or a named list of model objects.}
 
-\item{horizon}{Forecast horizon.}
+\item{horizon}{Forecast horizon. If \code{NULL} (default), resolves to 20
+periods.}
 
 \item{probability}{Interval probability.}
 
 \item{draws}{If \code{TRUE}, return draw-level rows.}
 }
+\value{
+A \code{bsvar_post_tbl} combining results across models, with a
+\code{model} column identifying each input.
+}
 \description{
 Compare forecasts across models
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+comp <- compare_forecast(m1 = post1, m2 = post2, horizon = 3)
+head(comp)
 }

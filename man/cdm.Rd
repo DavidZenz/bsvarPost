@@ -2,6 +2,7 @@
 % Please edit documentation in R/cdm.R
 \name{cdm}
 \alias{cdm}
+\alias{cdm.default}
 \alias{cdm.PosteriorBSVAR}
 \alias{cdm.PosteriorBSVARMIX}
 \alias{cdm.PosteriorBSVARMSH}
@@ -12,10 +13,12 @@
 \usage{
 cdm(object, ...)
 
+\method{cdm}{default}(object, ...)
+
 \method{cdm}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -23,8 +26,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -32,8 +35,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -41,8 +44,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -50,8 +53,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVART}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -59,8 +62,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -79,7 +82,19 @@ cdm(object, ...)
 
 \item{scale_var}{Optional scaling variable specification.}
 }
+\value{
+A 4-dimensional array of class \code{PosteriorCDM} with dimensions
+\code{[variables x shocks x (horizon + 1) x draws]}.
+}
 \description{
 Compute cumulative dynamic multipliers (CDMs) for posterior objects from
 \code{bsvars} and \code{bsvarSIGNs}.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+cdm_draws <- cdm(post, horizon = 3)
+dim(cdm_draws)
 }

@@ -2,6 +2,7 @@
 % Please edit documentation in R/representative.R
 \name{representative_irf}
 \alias{representative_irf}
+\alias{representative_irf.default}
 \alias{representative_irf.PosteriorIR}
 \alias{representative_irf.PosteriorBSVAR}
 \alias{median_target_irf}
@@ -9,6 +10,8 @@
 \title{Representative impulse responses}
 \usage{
 representative_irf(object, ...)
+
+\method{representative_irf}{default}(object, ...)
 
 \method{representative_irf}{PosteriorIR}(
   object,
@@ -19,13 +22,13 @@ representative_irf(object, ...)
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 
 \method{representative_irf}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   method = c("median_target", "most_likely_admissible"),
   center = c("median", "mean"),
   variables = NULL,
@@ -33,7 +36,7 @@ representative_irf(object, ...)
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 
@@ -65,9 +68,21 @@ most_likely_admissible_irf(object, ...)
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 }
 \value{
-A \code{RepresentativeIR} object. Use \code{\link[=summary]{summary()}} to obtain the tidy
-representative table.
+A list of class \code{RepresentativeIR} (inheriting from
+\code{RepresentativeResponse}) with elements \code{representative_draw}
+(the selected IRF array), \code{posterior_draws} (all IRF draws),
+\code{draw_index} (integer index of the selected draw), \code{method},
+\code{score}, \code{target_summary}, \code{selection_spec},
+\code{probability}, and \code{object_type}.
 }
 \description{
 Select a representative impulse-response draw from the posterior.
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+rep_irf <- representative_irf(post, horizon = 3)
+rep_irf$draw_index
 }

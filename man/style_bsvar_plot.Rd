@@ -30,6 +30,17 @@ style_bsvar_plot(
 
 \item{legend_position}{Optional legend position override.}
 }
+\value{
+A \code{ggplot} object with the applied style.
+}
 \description{
 Apply a publication-oriented style to a bsvarPost plot
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+p <- style_bsvar_plot(ggplot2::autoplot(irf_tbl), preset = "paper")
 }

@@ -14,8 +14,18 @@ apr_gen_mats(posterior = NULL, specification = NULL, max_cores = 1)
 \item{max_cores}{Passed to \code{APRScenario::gen_mats()}.}
 }
 \value{
-The object returned by \code{APRScenario::gen_mats()}.
+The result of \code{APRScenario::gen_mats()}, typically a list
+containing matrices used for conditional forecasting.
 }
 \description{
 Optional wrapper around APRScenario::gen_mats
+}
+\examples{
+\dontrun{
+# Requires APRScenario package
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+mats <- apr_gen_mats(posterior = post, specification = spec)
+}
 }

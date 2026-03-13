@@ -41,8 +41,8 @@ bsvarsigns_match_sign_narrative <- function(epsilon, sign_narrative, irf) {
   bsvarsigns_native("_bsvarSIGNs_match_sign_narrative", epsilon, sign_narrative, irf)
 }
 
-bsvarsigns_weight_narrative <- function(T, sign_narrative, irf) {
-  bsvarsigns_native("_bsvarSIGNs_weight_narrative", as.integer(T), sign_narrative, irf)
+bsvarsigns_weight_narrative <- function(n_obs, sign_narrative, irf) {
+  bsvarsigns_native("_bsvarSIGNs_weight_narrative", as.integer(n_obs), sign_narrative, irf)
 }
 
 bsvarsigns_weight_zero <- function(Z, B, h_inv, Q) {
@@ -53,17 +53,17 @@ bsvarsigns_hd1 <- function(var_i, t, h, epsilon, irf) {
   bsvarsigns_native("_bsvarSIGNs_hd1_cpp", as.integer(var_i), as.integer(t), as.integer(h), epsilon, irf)
 }
 
-get_irf_draws <- function(object, horizon = 10, ...) {
+get_irf_draws <- function(object, horizon = NULL, ...) {
   if (inherits(object, "PosteriorIR")) {
     return(object)
   }
   set_response_dimnames(
-    bsvars::compute_impulse_responses(object, horizon = horizon, ...),
+    bsvars::compute_impulse_responses(object, horizon = resolve_horizon(horizon), ...),
     model = object
   )
 }
 
-get_cdm_draws <- function(object, horizon = 10, probability = 0.68,
+get_cdm_draws <- function(object, horizon = NULL, probability = 0.90,
                           scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   if (inherits(object, "PosteriorCDM")) {
     return(object)
@@ -325,7 +325,7 @@ compute_representative_draw <- function(draws, method = c("median_target", "most
     draw_index = draw_index,
     score = scores[draw_index],
     scores = scores,
-    target_summary = as_tidy_response_array(subset$draws, object_type = object_type, probability = 0.68, draws = FALSE),
+    target_summary = as_tidy_response_array(subset$draws, object_type = object_type, probability = 0.90, draws = FALSE),
     selection_spec = list(
       variables = subset$labels$variable,
       shocks = subset$labels$shock,
@@ -412,7 +412,7 @@ evaluate_draw_predicate <- function(draws, variable, shock, horizon, relation = 
   )
 }
 
-summarise_gap_matrix <- function(gap, indicator, labels, object_type, relation, compare_to = NULL, model = "model1", draws = FALSE, probability = 0.68) {
+summarise_gap_matrix <- function(gap, indicator, labels, object_type, relation, compare_to = NULL, model = "model1", draws = FALSE, probability = 0.90) {
   rows <- vector("list", nrow(gap))
   idx <- 1L
 

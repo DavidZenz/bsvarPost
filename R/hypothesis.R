@@ -4,8 +4,10 @@
 #' response draws.
 #'
 #' @param object A posterior model object or a `PosteriorIR` object.
-#' @param variable Response variable selection on the left-hand side.
-#' @param shock Shock selection on the left-hand side.
+#' @param variables Response variable selection on the left-hand side (character or integer vector).
+#' @param shocks Shock selection on the left-hand side (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param horizon Horizon selection on the left-hand side.
 #' @param relation Comparison operator.
 #' @param value Scalar comparison value for threshold statements.
@@ -16,9 +18,35 @@
 #' @param draws If `TRUE`, return draw-level gaps and indicators.
 #' @param model Optional model identifier.
 #' @param ... Additional arguments passed to computation methods.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{relation}, \code{posterior_prob}, \code{mean_gap},
+#'   \code{median_gap}, \code{lower_gap}, and \code{upper_gap}.  When
+#'   \code{draws = TRUE}, columns \code{draw}, \code{gap}, and
+#'   \code{satisfied} replace the summary statistics.  Additional columns
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute} describe the right-hand side.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#'                     horizon = 0:2, relation = ">", value = 0)
+#' print(h)
 #' @export
 hypothesis_irf <- function(object, ...) {
   UseMethod("hypothesis_irf")
+}
+
+#' @rdname hypothesis_irf
+#' @export
+hypothesis_irf.default <- function(object, ...) {
+  stop(
+    "hypothesis_irf() requires a posterior model object or PosteriorIR array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 response_max_horizon <- function(horizon, compare_to = NULL) {
@@ -73,7 +101,7 @@ append_hypothesis_rhs <- function(tbl, compare_to, value, absolute) {
 
 hypothesis_response_impl <- function(object, draws, object_type, variable, shock, horizon,
                                      relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                     compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                     compare_to = NULL, absolute = FALSE, probability = 0.90,
                                      draws_out = FALSE, model = "model1") {
   relation <- match.arg(relation)
   compare_to <- normalise_compare_to(compare_to)
@@ -105,16 +133,19 @@ hypothesis_response_impl <- function(object, draws, object_type, variable, shock
 
 #' @rdname hypothesis_irf
 #' @export
-hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
+hypothesis_irf.PosteriorIR <- function(object, variables = NULL, shocks = NULL,
+                                       variable = NULL, shock = NULL, horizon,
                                        relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                       compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                       compare_to = NULL, absolute = FALSE, probability = 0.90,
                                        draws = FALSE, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_irf")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_irf")
   hypothesis_response_impl(
     object = object,
     draws = object,
     object_type = "irf",
-    variable = variable,
-    shock = shock,
+    variable = variables,
+    shock = shocks,
     horizon = horizon,
     relation = relation,
     value = value,
@@ -126,15 +157,18 @@ hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
   )
 }
 
-hypothesis_irf_model <- function(object, variable, shock, horizon,
+hypothesis_irf_model <- function(object, variables = NULL, shocks = NULL,
+                                 variable = NULL, shock = NULL, horizon,
                                  relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                 compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                 compare_to = NULL, absolute = FALSE, probability = 0.90,
                                  draws = FALSE, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_irf")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_irf")
   irf_draws <- get_irf_draws(object, horizon = response_fetch_horizon(horizon, compare_to), ...)
   hypothesis_irf(
     irf_draws,
-    variable = variable,
-    shock = shock,
+    variables = variables,
+    shocks = shocks,
     horizon = horizon,
     relation = relation,
     value = value,
@@ -163,8 +197,28 @@ hypothesis_irf.PosteriorBSVARSIGN <- hypothesis_irf_model
 #' Posterior probability statements for cumulative dynamic multipliers
 #'
 #' @inheritParams hypothesis_irf
+#' @param variables Response variable selection on the left-hand side (character or integer vector).
+#' @param shocks Shock selection on the left-hand side (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
+#' @return A \code{bsvar_post_tbl} with columns \code{model},
+#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{relation}, \code{posterior_prob}, \code{mean_gap},
+#'   \code{median_gap}, \code{lower_gap}, and \code{upper_gap}.  When
+#'   \code{draws = TRUE}, columns \code{draw}, \code{gap}, and
+#'   \code{satisfied} replace the summary statistics.  Additional columns
+#'   \code{rhs_variable}, \code{rhs_shock}, \code{rhs_horizon},
+#'   \code{rhs_value}, and \code{absolute} describe the right-hand side.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#'
+#' h <- hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+#'                     horizon = 0:2, relation = ">", value = 0)
+#' print(h)
 #' @export
 hypothesis_cdm <- function(object, ...) {
   UseMethod("hypothesis_cdm")
@@ -172,16 +226,29 @@ hypothesis_cdm <- function(object, ...) {
 
 #' @rdname hypothesis_cdm
 #' @export
-hypothesis_cdm.PosteriorCDM <- function(object, variable, shock, horizon,
+hypothesis_cdm.default <- function(object, ...) {
+  stop(
+    "hypothesis_cdm() requires a posterior model object or PosteriorCDM array.\n",
+    "Received object of class: ", paste(class(object), collapse = ", "),
+    call. = FALSE
+  )
+}
+
+#' @rdname hypothesis_cdm
+#' @export
+hypothesis_cdm.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
+                                        variable = NULL, shock = NULL, horizon,
                                         relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                        compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                        compare_to = NULL, absolute = FALSE, probability = 0.90,
                                         draws = FALSE, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_cdm")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_cdm")
   hypothesis_response_impl(
     object = object,
     draws = object,
     object_type = "cdm",
-    variable = variable,
-    shock = shock,
+    variable = variables,
+    shock = shocks,
     horizon = horizon,
     relation = relation,
     value = value,
@@ -193,11 +260,14 @@ hypothesis_cdm.PosteriorCDM <- function(object, variable, shock, horizon,
   )
 }
 
-hypothesis_cdm_model <- function(object, variable, shock, horizon,
+hypothesis_cdm_model <- function(object, variables = NULL, shocks = NULL,
+                                 variable = NULL, shock = NULL, horizon,
                                  relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                                 compare_to = NULL, absolute = FALSE, probability = 0.68,
+                                 compare_to = NULL, absolute = FALSE, probability = 0.90,
                                  draws = FALSE, model = "model1",
                                  scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_cdm")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_cdm")
   cdm_horizon <- response_fetch_horizon(horizon, compare_to)
   cdm_draws <- get_cdm_draws(
     object,
@@ -209,8 +279,8 @@ hypothesis_cdm_model <- function(object, variable, shock, horizon,
   )
   hypothesis_cdm(
     cdm_draws,
-    variable = variable,
-    shock = shock,
+    variables = variables,
+    shocks = shocks,
     horizon = horizon,
     relation = relation,
     value = value,

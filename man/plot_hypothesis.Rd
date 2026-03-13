@@ -14,7 +14,7 @@ plot_hypothesis(
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   models = NULL,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -52,6 +52,18 @@ posterior-statement table.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
+\value{
+A \code{ggplot} object.
+}
 \description{
 Plot posterior probability statements for IRFs or CDMs
+}
+\examples{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+                    horizon = 0:2, relation = ">", value = 0)
+p <- plot_hypothesis(h)
 }

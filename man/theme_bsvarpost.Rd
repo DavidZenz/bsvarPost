@@ -17,6 +17,12 @@ theme_bsvarpost(
 
 \item{base_family}{Base font family.}
 }
+\value{
+A \code{ggplot2} theme object.
+}
 \description{
 Plot theme for bsvarPost outputs
+}
+\examples{
+th <- theme_bsvarpost(preset = "paper")
 }
