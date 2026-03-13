@@ -8,3 +8,4 @@
 *.Rcheck/
 vignettes/*.html
 .planning/
+CRAN-SUBMISSION
