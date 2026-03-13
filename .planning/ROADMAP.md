@@ -144,9 +144,9 @@ Plans:
   2. Vignettes render correctly without suggested packages installed
   3. Suggested package usage guarded with requireNamespace() in all vignettes
   4. Vignettes cover core workflows (extraction, comparison, hypothesis testing, plotting)
-  5. R CMD check passes on ubuntu-latest, windows-latest, macos-latest with R-release and R-devel
-  6. devtools::check_win_devel() passes cleanly
-  7. Zero errors, zero warnings, minimal notes across all 6 platform/R combinations
+  5. CI matrix passes on 5 OS/R combinations following r-lib/actions community standard (macos/release, windows/release, ubuntu/devel, ubuntu/release, ubuntu/oldrel-1); R-devel runs on ubuntu in CI
+  6. devtools::check_win_devel() submitted to WinBuilder for windows/R-devel validation (results arrive by email)
+  7. Zero errors, zero warnings, minimal notes across all CI + WinBuilder checks
 **Plans**: 5 plans
 
 Plans:
@@ -154,7 +154,7 @@ Plans:
 - [ ] 07-02-PLAN.md — Rewrite Getting Started vignette with fiscal policy narrative
 - [ ] 07-03-PLAN.md — Rewrite Post-Estimation Workflows vignette with fiscal narrative
 - [ ] 07-04-PLAN.md — Create Hypothesis Testing vignette
-- [ ] 07-05-PLAN.md — R CMD check validation and vignette build verification
+- [ ] 07-05-PLAN.md — R CMD check validation, vignette build verification, and WinBuilder submission
 
 ### Phase 8: CRAN Submission
 **Goal**: Complete final validation and submit package to CRAN
