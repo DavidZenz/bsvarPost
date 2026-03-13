@@ -2,6 +2,16 @@
 utils::globalVariables(c("restriction_type", "restriction_display"))
 
 new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
+  required_cols <- c("model", "object_type")
+  missing_cols <- setdiff(required_cols, names(x))
+  if (length(missing_cols) > 0L) {
+    stop(
+      "In new_bsvar_post_tbl(): missing required columns for object_type '", object_type, "'.\n",
+      "Expected: model, object_type\n",
+      "Missing: ", paste(missing_cols, collapse = ", "),
+      call. = FALSE
+    )
+  }
   class(x) <- c("bsvar_post_tbl", class(x))
   attr(x, "object_type") <- object_type
   attr(x, "draws") <- draws
@@ -65,6 +75,13 @@ infer_model_variable_names <- function(model, n = NULL) {
 }
 
 set_response_dimnames <- function(x, model = NULL) {
+  if (!is.array(x) || length(dim(x)) != 4L) {
+    stop(
+      "In set_response_dimnames(): expected a 4-dimensional array.\n",
+      "Received: ", if (is.array(x)) paste0(length(dim(x)), " dimensions") else paste0("class ", paste(class(x), collapse = ", ")),
+      call. = FALSE
+    )
+  }
   d <- dim(x)
   var_names <- infer_model_variable_names(model, n = d[1])
   if (is.null(var_names) || length(var_names) != d[1]) {
@@ -86,6 +103,13 @@ set_response_dimnames <- function(x, model = NULL) {
 }
 
 set_time_dimnames <- function(x, model = NULL) {
+  if (!is.array(x) || length(dim(x)) != 3L) {
+    stop(
+      "In set_time_dimnames(): expected a 3-dimensional array.\n",
+      "Received: ", if (is.array(x)) paste0(length(dim(x)), " dimensions") else paste0("class ", paste(class(x), collapse = ", ")),
+      call. = FALSE
+    )
+  }
   d <- dim(x)
   var_names <- infer_model_variable_names(model, n = d[1])
   if (is.null(var_names) || length(var_names) != d[1]) {
@@ -101,6 +125,13 @@ set_time_dimnames <- function(x, model = NULL) {
 }
 
 set_hd_dimnames <- function(x, model = NULL) {
+  if (!is.array(x) || length(dim(x)) != 4L) {
+    stop(
+      "In set_hd_dimnames(): expected a 4-dimensional array.\n",
+      "Received: ", if (is.array(x)) paste0(length(dim(x)), " dimensions") else paste0("class ", paste(class(x), collapse = ", ")),
+      call. = FALSE
+    )
+  }
   d <- dim(x)
   var_names <- infer_model_variable_names(model, n = d[1])
   if (is.null(var_names) || length(var_names) != d[1]) {
@@ -171,7 +202,7 @@ resolve_scale_factors <- function(model, n_shocks, scale_var = NULL) {
   stop("'scale_var' must be NULL, character, or numeric.", call. = FALSE)
 }
 
-as_tidy_response_array <- function(x, object_type, model = "model1", probability = 0.68, draws = FALSE) {
+as_tidy_response_array <- function(x, object_type, model = "model1", probability = 0.90, draws = FALSE) {
   d <- dim(x)
   dns <- resolve_array_dimnames(x, list(
     paste0("variable", seq_len(d[1])),
@@ -218,7 +249,7 @@ as_tidy_response_array <- function(x, object_type, model = "model1", probability
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = draws)
 }
 
-as_tidy_time_array <- function(x, object_type, model = "model1", probability = 0.68, draws = FALSE, time_name = "time") {
+as_tidy_time_array <- function(x, object_type, model = "model1", probability = 0.90, draws = FALSE, time_name = "time") {
   d <- dim(x)
   dns <- resolve_array_dimnames(x, list(
     paste0("variable", seq_len(d[1])),
@@ -261,7 +292,7 @@ as_tidy_time_array <- function(x, object_type, model = "model1", probability = 0
   new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = draws)
 }
 
-as_tidy_hd_array <- function(x, model = "model1", probability = 0.68, draws = FALSE) {
+as_tidy_hd_array <- function(x, model = "model1", probability = 0.90, draws = FALSE) {
   d <- dim(x)
   dns <- resolve_array_dimnames(x, list(
     paste0("variable", seq_len(d[1])),
