@@ -2,12 +2,12 @@
 utils::globalVariables(c("restriction_type", "restriction_display"))
 
 new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
-  required_cols <- c("model", "object_type")
+  required_cols <- c("model")
   missing_cols <- setdiff(required_cols, names(x))
   if (length(missing_cols) > 0L) {
     stop(
       "In new_bsvar_post_tbl(): missing required columns for object_type '", object_type, "'.\n",
-      "Expected: model, object_type\n",
+      "Expected: model\n",
       "Missing: ", paste(missing_cols, collapse = ", "),
       call. = FALSE
     )

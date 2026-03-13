@@ -8,7 +8,7 @@ make_joint_plot_irf <- function() {
 }
 
 irf_obj <- make_joint_plot_irf()
-sim_tbl <- simultaneous_irf(irf_obj, variable = "y", shock = "shock", probability = 0.68)
+sim_tbl <- simultaneous_irf(irf_obj, variables = "y", shocks = "shock", probability = 0.68)
 joint_tbl <- joint_hypothesis_irf(irf_obj, variable = "y", shock = "shock", horizon = c(0, 1), relation = ">", value = 0)
 
 p_sim_tbl <- plot_simultaneous(sim_tbl)
