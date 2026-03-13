@@ -19,14 +19,6 @@ new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
   x
 }
 
-validate_probability <- function(probability, caller) {
-  if (!is.numeric(probability) || length(probability) != 1L || is.na(probability) ||
-      probability <= 0 || probability >= 1) {
-    stop(sprintf("`%s` requires `probability` to be a single number in (0, 1).", caller), call. = FALSE)
-  }
-  probability
-}
-
 validate_nonnegative_horizon <- function(horizon, caller) {
   if (!is.numeric(horizon) || length(horizon) != 1L || is.na(horizon) ||
       horizon < 0 || horizon != as.integer(horizon)) {
@@ -44,6 +36,7 @@ validate_positive_count <- function(value, caller, arg = deparse(substitute(valu
 }
 
 summary_probs <- function(probability) {
+  validate_probability(probability)
   alpha <- (1 - probability) / 2
   c(alpha, 1 - alpha)
 }

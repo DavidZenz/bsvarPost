@@ -160,6 +160,28 @@ expect_error(
   info = "validate_model_compatibility: errors on mismatched horizon ranges"
 )
 
+# Incompatible shock names should error
+fake_s1 <- data.frame(variable = "x", shock = c("s1", "s2"), value = 1:2,
+                      stringsAsFactors = FALSE)
+fake_s2 <- data.frame(variable = "x", shock = c("u1", "u2"), value = 3:4,
+                      stringsAsFactors = FALSE)
+expect_error(
+  bsvarPost:::validate_model_compatibility(list(fake_s1, fake_s2), "compare_test"),
+  pattern = "incompatible shock names",
+  info = "validate_model_compatibility: errors on mismatched shock names"
+)
+
+# Incompatible time indices should error
+fake_t1 <- data.frame(variable = "x", time = 1:3, value = 1:3,
+                      stringsAsFactors = FALSE)
+fake_t2 <- data.frame(variable = "x", time = 2:4, value = 1:3,
+                      stringsAsFactors = FALSE)
+expect_error(
+  bsvarPost:::validate_model_compatibility(list(fake_t1, fake_t2), "compare_test"),
+  pattern = "incompatible time indices",
+  info = "validate_model_compatibility: errors on mismatched time indices"
+)
+
 # ---- Return type consistency (bsvar_post_tbl) for function families ---------
 
 data(us_fiscal_lsuw, package = "bsvars")
@@ -219,4 +241,15 @@ pk_result <- peak_response(post, horizon = 3, variables = "gdp", shocks = "gdp")
 expect_true(
   inherits(pk_result, "bsvar_post_tbl"),
   info = "peak_response: returns bsvar_post_tbl with new plural params"
+)
+
+expect_silent(
+  compare_peak_response(post, post2, horizon = 3, variables = "gdp", shocks = "gdp"),
+  info = "compare_peak_response: no warning when using new plural params"
+)
+
+expect_error(
+  tidy_irf(post, horizon = 3, probability = 2),
+  pattern = "strictly between 0 and 1",
+  info = "tidy_irf: invalid probability is caught by package validation."
 )

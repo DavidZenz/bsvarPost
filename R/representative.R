@@ -77,6 +77,7 @@ representative_irf_impl <- function(object, draws, horizon = NULL,
     horizons = horizons,
     metric = metric,
     standardize = standardize,
+    probability = probability,
     object = object,
     object_type = "irf"
   )
@@ -170,6 +171,7 @@ representative_cdm_impl <- function(object, draws, method = c("median_target", "
     horizons = horizons,
     metric = metric,
     standardize = standardize,
+    probability = probability,
     object = object,
     object_type = "cdm"
   )
