@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 7 complete (5 of 5 plans done) — Ready for Phase 8 (CRAN submission)
+**Current focus:** Phase 7 complete — ready for Phase 8
 
 ## Current Position
 
-Phase: 7 of 8 (Vignettes & Multi-Platform) — COMPLETE
-Plan: 05 (complete, last plan in phase)
-Status: Plan 05 complete — R CMD check passing (1 WARNING qpdf/env, 1 NOTE new-submission), .Rbuildignore fixed, 941 tests pass, WinBuilder deferred to Phase 8
-Last activity: 2026-03-13 — Completed Plan 07-05: CRAN validation, .Rbuildignore fix (.planning/.claude/.git exclusions), R CMD check clean
+Phase: 8 of 8 (CRAN Submission) — IN PROGRESS
+Plan: 2 of 3 (08-01 complete)
+Status: 08-01 complete — DESCRIPTION v1.0.0, NEWS.md, WORDLIST, cran-comments.md created
+Last activity: 2026-03-13 — Completed Phase 8 Plan 01: CRAN submission artifacts
 
-Progress: [████████░░] 75% (6 of 8 phases complete)
+Progress: [█████████░] 87% (7 of 8 phases complete)
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [████████░░] 75% (6 of 8 phases complete)
 | Phase 07-vignettes-multi-platform P03 | 4 | 1 tasks | 1 files |
 | Phase 07-vignettes-multi-platform P04 | 5 | 1 tasks | 1 files |
 | Phase 07-vignettes-multi-platform P05 | 15 | 3 tasks | 1 files |
+| Phase 08-cran-submission P01 | 5 | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -140,6 +141,10 @@ Recent decisions affecting current work:
 - [Phase 07-vignettes-multi-platform]: Hidden dev directories (.planning, .claude, .git) require explicit .Rbuildignore entries — R CMD build does not auto-exclude hidden files
 - [Phase 07-vignettes-multi-platform]: WinBuilder submission via devtools::check_win_devel() deferred to Phase 8 — devtools not available in worktree environment
 - [Phase 07-vignettes-multi-platform]: R CMD check Status: 1 WARNING (qpdf local env), 1 NOTE (new submission) — both expected for CRAN first submission, not package issues
+- [Phase 08-cran-submission]: DESCRIPTION Description field polished to enumerate full v1.0.0 capabilities
+- [Phase 08-cran-submission]: NEWS.md is fresh initial CRAN release (not upgrade from 0.2.0) with 9 feature-category groupings
+- [Phase 08-cran-submission]: WORDLIST built manually: hunspell compilation fails on macOS arm64 flat namespace
+- [Phase 08-cran-submission]: cran-comments.md documents 0 errors | 0 warnings | 1 note (new submission expected)
 
 ### Pending Todos
 
@@ -160,5 +165,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 07-05-PLAN.md (CRAN validation and .Rbuildignore fix)
-Resume file: .planning/phases/07-vignettes-multi-platform/07-05-SUMMARY.md
+Stopped at: Completed 08-01-PLAN.md (CRAN submission artifacts)
+Resume file: .planning/phases/08-cran-submission/08-01-SUMMARY.md
