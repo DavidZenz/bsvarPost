@@ -12,7 +12,7 @@ plot_shock_ranking(
   models = NULL,
   ranking = c("absolute", "signed"),
   top_n = NULL,
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 }

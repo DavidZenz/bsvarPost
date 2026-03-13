@@ -4,12 +4,13 @@
 \alias{compare_irf}
 \title{Compare posterior impulse responses across models}
 \usage{
-compare_irf(..., horizon = 10, probability = 0.68, draws = FALSE)
+compare_irf(..., horizon = NULL, probability = 0.9, draws = FALSE)
 }
 \arguments{
 \item{...}{Posterior model objects or a named list of model objects.}
 
-\item{horizon}{Forecast horizon.}
+\item{horizon}{Forecast horizon. If \code{NULL} (default), resolves to 20
+periods.}
 
 \item{probability}{Interval probability.}
 

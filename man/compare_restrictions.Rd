@@ -8,7 +8,7 @@ compare_restrictions(
   ...,
   restrictions = NULL,
   zero_tol = 1e-08,
-  probability = 0.68
+  probability = 0.9
 )
 }
 \arguments{

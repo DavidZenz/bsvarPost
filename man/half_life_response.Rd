@@ -19,26 +19,30 @@ half_life_response(object, ...)
 
 \method{half_life_response}{PosteriorIR}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
 
 \method{half_life_response}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -47,14 +51,16 @@ half_life_response(object, ...)
 
 \method{half_life_response}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -63,14 +69,16 @@ half_life_response(object, ...)
 
 \method{half_life_response}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -79,14 +87,16 @@ half_life_response(object, ...)
 
 \method{half_life_response}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -95,14 +105,16 @@ half_life_response(object, ...)
 
 \method{half_life_response}{PosteriorBSVART}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -111,14 +123,16 @@ half_life_response(object, ...)
 
 \method{half_life_response}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -127,12 +141,14 @@ half_life_response(object, ...)
 
 \method{half_life_response}{PosteriorCDM}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   fraction = 0.5,
   baseline = c("peak", "initial"),
   absolute = TRUE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -142,9 +158,13 @@ half_life_response(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{fraction}{Fraction of the reference level used to define the half-life.}
 

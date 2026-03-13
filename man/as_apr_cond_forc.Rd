@@ -19,7 +19,7 @@ as_apr_cond_forc(object, ...)
 
 \method{as_apr_cond_forc}{Forecasts}(
   object,
-  probability = 0.68,
+  probability = 0.9,
   center = c("median", "mean"),
   origin = NULL,
   frequency = c("quarter", "month", "year", "day"),
@@ -29,8 +29,8 @@ as_apr_cond_forc(object, ...)
 
 \method{as_apr_cond_forc}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   center = c("median", "mean"),
   origin = NULL,
   frequency = c("quarter", "month", "year", "day"),

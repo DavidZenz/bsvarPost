@@ -4,7 +4,7 @@
 \alias{compare_hd_event}
 \title{Compare event-window historical decompositions across models}
 \usage{
-compare_hd_event(..., start, end = start, probability = 0.68, draws = FALSE)
+compare_hd_event(..., start, end = start, probability = 0.9, draws = FALSE)
 }
 \arguments{
 \item{...}{Posterior model objects or a named list of model objects.}

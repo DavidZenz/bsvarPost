@@ -18,7 +18,9 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorCDM}(
   object,
-  probability = 0.68,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -27,8 +29,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -39,8 +43,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -51,8 +57,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -63,8 +71,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -75,8 +85,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVART}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -87,8 +99,10 @@ simultaneous_cdm(object, ...)
 
 \method{simultaneous_cdm}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   model = "model1",
@@ -104,9 +118,13 @@ simultaneous_cdm(object, ...)
 
 \item{probability}{Coverage probability for the simultaneous band.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{model}{Optional model identifier.}
 

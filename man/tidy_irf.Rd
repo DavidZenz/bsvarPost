@@ -12,8 +12,8 @@ tidy_irf(object, ...)
 
 \method{tidy_irf}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...

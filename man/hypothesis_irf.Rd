@@ -13,14 +13,16 @@ hypothesis_irf(object, ...)
 
 \method{hypothesis_irf}{PosteriorIR}(
   object,
-  variable,
-  shock,
+  variables = NULL,
+  shocks = NULL,
+  variable = NULL,
+  shock = NULL,
   horizon,
   relation = c("<", "<=", ">", ">=", "=="),
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -28,14 +30,16 @@ hypothesis_irf(object, ...)
 
 \method{hypothesis_irf}{PosteriorBSVAR}(
   object,
-  variable,
-  shock,
+  variables = NULL,
+  shocks = NULL,
+  variable = NULL,
+  shock = NULL,
   horizon,
   relation = c("<", "<=", ">", ">=", "=="),
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -46,9 +50,13 @@ hypothesis_irf(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Response variable selection on the left-hand side.}
+\item{variables}{Response variable selection on the left-hand side (character or integer vector).}
 
-\item{shock}{Shock selection on the left-hand side.}
+\item{shocks}{Shock selection on the left-hand side (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{horizon}{Horizon selection on the left-hand side.}
 

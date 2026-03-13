@@ -21,7 +21,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   ...
 )
@@ -30,7 +30,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -40,7 +40,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -50,7 +50,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -60,7 +60,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -70,7 +70,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -80,7 +80,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -90,7 +90,7 @@ tidy_hd_event(object, ...)
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...

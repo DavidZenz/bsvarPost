@@ -19,22 +19,26 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorIR}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
 
 \method{peak_response}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -43,12 +47,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -57,12 +63,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -71,12 +79,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -85,12 +95,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVART}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -99,12 +111,14 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -113,10 +127,12 @@ peak_response(object, ...)
 
 \method{peak_response}{PosteriorCDM}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -126,9 +142,13 @@ peak_response(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{absolute}{If \code{TRUE}, search for the largest absolute response.}
 
