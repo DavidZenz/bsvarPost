@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 5 complete — ready for Phase 6
+**Current focus:** Phase 7 in progress — Plan 01 complete (fixtures, figures, CI matrix)
 
 ## Current Position
 
-Phase: 6 of 8 (API Consistency & Error Messages) — IN PROGRESS
-Plan: 3 complete (of N in phase)
-Status: Phase 6 Plan 03 complete — 28 new tests, documentation regenerated, all 941 tests pass
-Last activity: 2026-03-13 — Completed Phase 6 Plan 03: Test Updates, API Consistency Tests, Documentation
+Phase: 7 of 8 (Vignettes & Multi-Platform) — IN PROGRESS
+Plan: 02 (next)
+Status: Plan 01 complete — fixtures and CI matrix ready; vignette content writing next
+Last activity: 2026-03-13 — Completed Plan 07-01: pre-computed .rds fixtures, regenerated showcase figures, 5-platform CI matrix
 
-Progress: [██████░░░░] 62% (5 of 8 phases complete, Phase 6 in progress)
+Progress: [████████░░] 75% (6 of 8 phases complete)
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [██████░░░░] 62% (5 of 8 phases complete, Phase 6 
 | Phase 06-api-consistency P01 | 3 min | 3 tasks | 3 files |
 | Phase 06-api-consistency P02 | 11 min | 2 tasks | 13 files |
 | Phase 06-api-consistency P03 | 12 min | 2 tasks | 37 files |
+| Phase 07-vignettes-multi-platform P01 | 2 | 2 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -125,6 +126,9 @@ Recent decisions affecting current work:
 - [Phase 06-03]: new_bsvar_post_tbl() column validation requires only 'model' column — object_type is stored as attribute, not column, in restriction_audit, joint-inference, hd-event, diagnostics callers
 - [Phase 06-03]: test_api_consistency.R tests 28 assertions across deprecate_arg, resolve_horizon, dimension guards, column validation, validate_model_compatibility, return types, and deprecation warnings
 - [Phase 06-03]: Infrastructure R CMD check warnings (vignette compilation, .git, ..Rcheck) are pre-existing worktree issues, not Phase 6 regressions
+- [Phase 07-vignettes-multi-platform]: Fixture seeds 123/456 for primary/alternative posteriors; S=200 for vignette fixtures
+- [Phase 07-vignettes-multi-platform]: CI R-devel on ubuntu only per r-lib/actions community standard; Windows/R-devel via WinBuilder in Plan 05
+- [Phase 07-vignettes-multi-platform]: setup-pandoc placed before setup-r in CI — required for vignette Rmd rendering on Windows/macOS
 
 ### Pending Todos
 
@@ -145,5 +149,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed Phase 6 Plan 03 (06-03-PLAN.md) — test updates, test_api_consistency.R, documentation regeneration
-Resume file: .planning/phases/06-api-consistency-error-messages/06-03-SUMMARY.md
+Stopped at: Completed 07-01-PLAN.md (fixtures, figures, CI matrix)
+Resume file: .planning/phases/07-vignettes-multi-platform/07-01-SUMMARY.md
