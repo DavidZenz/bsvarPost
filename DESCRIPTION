@@ -1,12 +1,19 @@
 Package: bsvarPost
 Type: Package
 Title: Post-Estimation Tools for 'bsvars' and 'bsvarSIGNs'
-Version: 0.2.0
-Date: 2026-03-07
-Authors@R: person("David", "Zenz", role = c("aut", "cre"), email = "office@davidzenz.com")
-Author: David Zenz [aut, cre]
-Maintainer: David Zenz <office@davidzenz.com>
-Description: Companion post-estimation tools for Bayesian structural vector autoregressions fitted with the 'bsvars' and 'bsvarSIGNs' packages. It adds cumulative dynamic multipliers, tidy extraction helpers, model comparison utilities, and a 'ggplot2' plotting layer on top of existing posterior objects.
+Version: 1.0.0
+Date: 2026-03-13
+Authors@R: person("David", "Zenz", role = c("aut", "cre", "cph"), email = "office@davidzenz.com")
+Description: Companion post-estimation tools for Bayesian structural vector
+    autoregressions fitted with the 'bsvars' and 'bsvarSIGNs' packages.
+    Provides tidy extractors for impulse responses, cumulative dynamic
+    multipliers, forecast error variance decompositions, historical
+    decompositions, shocks, and forecasts; cross-package cumulative dynamic
+    multiplier estimation via cdm(); model comparison utilities; posterior
+    hypothesis testing and joint inference; representative model selection;
+    response-shape summaries; acceptance diagnostics for sign-restricted
+    models; and a 'ggplot2' plotting and publication-reporting layer built
+    on top of existing posterior objects.
 License: GPL (>= 3)
 Depends: R (>= 4.1.0)
 Imports:
