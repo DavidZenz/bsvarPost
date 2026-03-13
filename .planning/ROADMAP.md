@@ -18,7 +18,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 4: Documentation Completion** - Complete roxygen docs with runnable examples (completed 2026-03-12)
 - [x] **Phase 5: Test Coverage Expansion** - Expand tinytest suite to 80%+ coverage (completed 2026-03-12)
 - [x] **Phase 6: API Consistency & Error Messages** - Standardize errors and API across function families (completed 2026-03-13)
-- [ ] **Phase 7: Vignettes & Multi-Platform** - Polish vignettes and validate across platforms
+- [x] **Phase 7: Vignettes & Multi-Platform** - Polish vignettes and validate across platforms (completed 2026-03-13)
 - [ ] **Phase 8: CRAN Submission** - Final validation and package submission
 
 ## Phase Details
@@ -150,11 +150,11 @@ Plans:
 **Plans**: 5 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Generate .rds fixtures, regenerate figures, expand CI to 5-platform matrix
-- [ ] 07-02-PLAN.md — Rewrite Getting Started vignette with fiscal policy narrative
-- [ ] 07-03-PLAN.md — Rewrite Post-Estimation Workflows vignette with fiscal narrative
-- [ ] 07-04-PLAN.md — Create Hypothesis Testing vignette
-- [ ] 07-05-PLAN.md — R CMD check validation, vignette build verification, and WinBuilder submission
+- [x] 07-01-PLAN.md — Generate .rds fixtures, regenerate figures, expand CI to 5-platform matrix
+- [x] 07-02-PLAN.md — Rewrite Getting Started vignette with fiscal policy narrative
+- [x] 07-03-PLAN.md — Rewrite Post-Estimation Workflows vignette with fiscal narrative
+- [x] 07-04-PLAN.md — Create Hypothesis Testing vignette
+- [x] 07-05-PLAN.md — R CMD check validation, vignette build verification, and WinBuilder submission
 
 ### Phase 8: CRAN Submission
 **Goal**: Complete final validation and submit package to CRAN
@@ -170,7 +170,12 @@ Plans:
   7. All documentation URLs validated and accessible
   8. Final R CMD check --as-cran produces 0 errors, 0 warnings, 0 notes
   9. Package tarball submitted to CRAN via devtools::release()
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Create CRAN submission artifacts (DESCRIPTION fix, NEWS.md, cran-comments.md, inst/WORDLIST)
+- [ ] 08-02-PLAN.md — Run validation gauntlet (spelling, URLs, goodpractice, R CMD check --as-cran)
+- [ ] 08-03-PLAN.md — User verification and CRAN submission via devtools::release()
 
 ## Progress
 
@@ -199,5 +204,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 4. Documentation Completion | 5/5 | Complete | 2026-03-12 |
 | 5. Test Coverage Expansion | 7/7 | Complete | 2026-03-12 |
 | 6. API Consistency & Error Messages | 3/3 | Complete | 2026-03-13 |
-| 7. Vignettes & Multi-Platform | 0/5 | Not started | - |
-| 8. CRAN Submission | 0/TBD | Not started | - |
+| 7. Vignettes & Multi-Platform | 5/5 | Complete | 2026-03-13 |
+| 8. CRAN Submission | 0/3 | Not started | - |
