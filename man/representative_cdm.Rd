@@ -22,13 +22,13 @@ representative_cdm(object, ...)
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 
 \method{representative_cdm}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   method = c("median_target", "most_likely_admissible"),
   center = c("median", "mean"),
   variables = NULL,
@@ -36,7 +36,7 @@ representative_cdm(object, ...)
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...

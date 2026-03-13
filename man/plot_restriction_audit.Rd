@@ -8,7 +8,7 @@ plot_restriction_audit(
   object,
   restrictions = NULL,
   zero_tol = 1e-08,
-  probability = 0.68,
+  probability = 0.9,
   models = NULL,
   label_style = c("raw", "pretty"),
   labels = NULL,

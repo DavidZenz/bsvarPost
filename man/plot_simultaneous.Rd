@@ -7,8 +7,8 @@
 plot_simultaneous(
   object,
   type = c("irf", "cdm"),
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   variable = NULL,
   shock = NULL,
   models = NULL,

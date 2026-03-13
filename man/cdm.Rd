@@ -17,8 +17,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -26,8 +26,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -35,8 +35,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -44,8 +44,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -53,8 +53,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVART}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...
@@ -62,8 +62,8 @@ cdm(object, ...)
 
 \method{cdm}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
   ...

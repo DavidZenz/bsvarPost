@@ -19,28 +19,32 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorIR}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
 
 \method{duration_response}{PosteriorBSVAR}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -49,15 +53,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARMIX}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -66,15 +72,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARMSH}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -83,15 +91,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARSV}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -100,15 +110,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVART}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -117,15 +129,17 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorBSVARSIGN}(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -134,13 +148,15 @@ duration_response(object, ...)
 
 \method{duration_response}{PosteriorCDM}(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -150,9 +166,13 @@ duration_response(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variables}{Optional response-variable subset (character or integer vector).}
 
-\item{shock}{Optional shock subset.}
+\item{shocks}{Optional shock subset (character or integer vector).}
+
+\item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
+
+\item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
 \item{relation}{Comparison operator.}
 

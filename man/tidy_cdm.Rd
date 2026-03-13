@@ -12,8 +12,8 @@ tidy_cdm(object, ...)
 
 \method{tidy_cdm}{PosteriorBSVAR}(
   object,
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   scale_by = c("none", "shock_sd"),

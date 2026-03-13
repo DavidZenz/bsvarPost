@@ -14,7 +14,7 @@ plot_hypothesis(
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   models = NULL,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,

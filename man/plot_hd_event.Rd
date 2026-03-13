@@ -8,7 +8,7 @@ plot_hd_event(
   object,
   start = NULL,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   variables = NULL,
   shocks = NULL,

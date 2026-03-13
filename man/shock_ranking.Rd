@@ -11,7 +11,7 @@ shock_ranking(
   variables = NULL,
   models = NULL,
   ranking = c("absolute", "signed"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 }
