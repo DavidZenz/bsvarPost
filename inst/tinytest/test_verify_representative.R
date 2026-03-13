@@ -155,3 +155,34 @@ expect_true(
   "draw_index" %in% names(summ),
   info = "summary includes draw_index column"
 )
+
+# ---------------------------------------------------------------------------
+# Test 9 -- representative target_summary respects requested probability
+# ---------------------------------------------------------------------------
+rep_irf_half <- representative_irf(post_b, horizon = 8, probability = 0.5)
+manual_target_half <- bsvarPost:::as_tidy_response_array(
+  irf_raw,
+  object_type = "irf",
+  probability = 0.5,
+  draws = FALSE
+)
+
+expect_equal(
+  rep_irf_half$probability,
+  0.5,
+  info = "representative_irf stores the requested probability"
+)
+
+expect_equal(
+  rep_irf_half$target_summary$lower,
+  manual_target_half$lower,
+  tolerance = 1e-10,
+  info = "representative_irf target_summary lower bounds use requested probability"
+)
+
+expect_equal(
+  rep_irf_half$target_summary$upper,
+  manual_target_half$upper,
+  tolerance = 1e-10,
+  info = "representative_irf target_summary upper bounds use requested probability"
+)

@@ -286,7 +286,7 @@ compute_posterior_kernel <- function(object) {
 compute_representative_draw <- function(draws, method = c("median_target", "most_likely_admissible"),
                                         center = c("median", "mean"), variables = NULL, shocks = NULL, horizons = NULL,
                                         metric = c("l2", "weighted_l2"), standardize = c("none", "sd"),
-                                        object = NULL, object_type = c("irf", "cdm")) {
+                                        probability = 0.90, object = NULL, object_type = c("irf", "cdm")) {
   method <- match.arg(method)
   center <- match.arg(center)
   metric <- match.arg(metric)
@@ -325,7 +325,7 @@ compute_representative_draw <- function(draws, method = c("median_target", "most
     draw_index = draw_index,
     score = scores[draw_index],
     scores = scores,
-    target_summary = as_tidy_response_array(subset$draws, object_type = object_type, probability = 0.90, draws = FALSE),
+    target_summary = as_tidy_response_array(subset$draws, object_type = object_type, probability = probability, draws = FALSE),
     selection_spec = list(
       variables = subset$labels$variable,
       shocks = subset$labels$shock,

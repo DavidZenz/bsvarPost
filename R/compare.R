@@ -212,7 +212,7 @@ compare_peak_response <- function(..., horizon = NULL, type = c("irf", "cdm"),
   models <- collect_models(...)
   out <- lapply(names(models), function(nm) {
     peak_response(models[[nm]], horizon = resolve_horizon(horizon), type = type,
-                  variable = variables, shock = shocks,
+                  variables = variables, shocks = shocks,
                   absolute = absolute, probability = probability, model = nm,
                   scale_by = scale_by, scale_var = scale_var)
   })
@@ -263,7 +263,7 @@ compare_duration_response <- function(..., horizon = NULL, type = c("irf", "cdm"
   models <- collect_models(...)
   out <- lapply(names(models), function(nm) {
     duration_response(models[[nm]], horizon = resolve_horizon(horizon), type = type,
-                      variable = variables, shock = shocks,
+                      variables = variables, shocks = shocks,
                       relation = relation, value = value, absolute = absolute, mode = mode,
                       probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
   })
@@ -310,7 +310,7 @@ compare_half_life_response <- function(..., horizon = NULL, type = c("irf", "cdm
   models <- collect_models(...)
   out <- lapply(names(models), function(nm) {
     half_life_response(models[[nm]], horizon = resolve_horizon(horizon), type = type,
-                       variable = variables, shock = shocks,
+                       variables = variables, shocks = shocks,
                        fraction = fraction, baseline = baseline, absolute = absolute,
                        probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
   })
@@ -358,7 +358,7 @@ compare_time_to_threshold <- function(..., horizon = NULL, type = c("irf", "cdm"
   models <- collect_models(...)
   out <- lapply(names(models), function(nm) {
     time_to_threshold(models[[nm]], horizon = resolve_horizon(horizon), type = type,
-                      variable = variables, shock = shocks,
+                      variables = variables, shocks = shocks,
                       relation = relation, value = value, absolute = absolute,
                       probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
   })
@@ -368,31 +368,28 @@ compare_time_to_threshold <- function(..., horizon = NULL, type = c("irf", "cdm"
 
 validate_model_compatibility <- function(results, fn_name) {
   if (length(results) < 2L) return(invisible(NULL))
-  var_sets <- lapply(results, function(r) sort(unique(r$variable)))
-  ref <- var_sets[[1]]
-  for (i in seq_along(var_sets)[-1]) {
-    if (!identical(var_sets[[i]], ref)) {
-      stop(
-        "In ", fn_name, "(): models have incompatible variable names.\n",
-        "Model 1 variables: ", paste(ref, collapse = ", "), "\n",
-        "Model ", i, " variables: ", paste(var_sets[[i]], collapse = ", "),
-        call. = FALSE
-      )
+  validate_key <- function(column, label) {
+    if (!(column %in% names(results[[1]]))) {
+      return(invisible(NULL))
     }
-  }
-  if ("horizon" %in% names(results[[1]])) {
-    hor_sets <- lapply(results, function(r) sort(unique(r$horizon)))
-    ref_h <- hor_sets[[1]]
-    for (i in seq_along(hor_sets)[-1]) {
-      if (!identical(hor_sets[[i]], ref_h)) {
+    key_sets <- lapply(results, function(r) sort(unique(r[[column]])))
+    ref <- key_sets[[1]]
+    for (i in seq_along(key_sets)[-1]) {
+      if (!identical(key_sets[[i]], ref)) {
         stop(
-          "In ", fn_name, "(): models have incompatible horizon ranges.\n",
-          "Model 1 horizons: ", paste(ref_h, collapse = ", "), "\n",
-          "Model ", i, " horizons: ", paste(hor_sets[[i]], collapse = ", "),
+          "In ", fn_name, "(): models have incompatible ", label, ".\n",
+          "Model 1 ", label, ": ", paste(ref, collapse = ", "), "\n",
+          "Model ", i, " ", label, ": ", paste(key_sets[[i]], collapse = ", "),
           call. = FALSE
         )
       }
     }
+    invisible(NULL)
   }
+
+  validate_key("variable", "variable names")
+  validate_key("shock", "shock names")
+  validate_key("horizon", "horizon ranges")
+  validate_key("time", "time indices")
   invisible(NULL)
 }
