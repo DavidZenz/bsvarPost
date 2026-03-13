@@ -5,8 +5,10 @@
 #' @param object A posterior model object, `PosteriorIR`, or `PosteriorCDM`.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
-#' @param variable Optional response-variable subset.
-#' @param shock Optional shock subset.
+#' @param variables Optional response-variable subset (character or integer vector).
+#' @param shocks Optional shock subset (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param absolute If `TRUE`, search for the largest absolute response.
 #' @param probability Equal-tailed interval probability.
 #' @param model Optional model identifier.
@@ -47,9 +49,9 @@ resolve_peak <- function(path, horizons, absolute = FALSE) {
   c(value = path[idx], horizon = horizons[idx])
 }
 
-summarise_peak_draws <- function(draws, object_type, variable = NULL, shock = NULL,
+summarise_peak_draws <- function(draws, object_type, variables = NULL, shocks = NULL,
                                  absolute = FALSE, probability = 0.90, model = "model1") {
-  subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
+  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
   dims <- dim(subset$draws)
   horizons <- as.numeric(subset$labels$horizon)
 
@@ -87,22 +89,28 @@ summarise_peak_draws <- function(draws, object_type, variable = NULL, shock = NU
 
 #' @rdname peak_response
 #' @export
-peak_response.PosteriorIR <- function(object, variable = NULL, shock = NULL, absolute = FALSE,
-                                      probability = 0.90, model = "model1", ...) {
-  summarise_peak_draws(object, object_type = "peak_irf", variable = variable, shock = shock,
+peak_response.PosteriorIR <- function(object, variables = NULL, shocks = NULL,
+                                      variable = NULL, shock = NULL,
+                                      absolute = FALSE, probability = 0.90, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "peak_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "peak_response")
+  summarise_peak_draws(object, object_type = "peak_irf", variables = variables, shocks = shocks,
                        absolute = absolute, probability = probability, model = model)
 }
 
-peak_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+peak_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variables = NULL, shocks = NULL,
+                                variable = NULL, shock = NULL,
                                 absolute = FALSE, probability = 0.90, model = "model1",
                                 scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "peak_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "peak_response")
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(peak_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
+    return(peak_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variables = variables, shocks = shocks,
                          absolute = absolute, probability = probability, model = model))
   }
   peak_response(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
-                              scale_var = scale_var, ...), variable = variable, shock = shock,
+                              scale_var = scale_var, ...), variables = variables, shocks = shocks,
                 absolute = absolute, probability = probability, model = model)
 }
 
@@ -126,9 +134,12 @@ peak_response.PosteriorBSVART <- peak_response_model
 peak_response.PosteriorBSVARSIGN <- peak_response_model
 #' @rdname peak_response
 #' @export
-peak_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL, absolute = FALSE,
-                                       probability = 0.90, model = "model1", ...) {
-  summarise_peak_draws(object, object_type = "peak_cdm", variable = variable, shock = shock,
+peak_response.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
+                                       variable = NULL, shock = NULL,
+                                       absolute = FALSE, probability = 0.90, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "peak_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "peak_response")
+  summarise_peak_draws(object, object_type = "peak_cdm", variables = variables, shocks = shocks,
                        absolute = absolute, probability = probability, model = model)
 }
 
@@ -140,6 +151,10 @@ peak_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL, ab
 #' @param mode Either `"consecutive"` for the duration until first violation or
 #'   `"total"` for the total count of satisfying horizons.
 #' @inheritParams peak_response
+#' @param variables Optional response-variable subset (character or integer vector).
+#' @param shocks Optional shock subset (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param relation Comparison operator.
 #' @param value Threshold value.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
@@ -191,13 +206,13 @@ compute_duration <- function(path, relation = c(">", ">=", "<", "<="), value = 0
   if (is.na(first_fail)) length(satisfied) else first_fail - 1L
 }
 
-summarise_duration_draws <- function(draws, object_type, variable = NULL, shock = NULL,
+summarise_duration_draws <- function(draws, object_type, variables = NULL, shocks = NULL,
                                      relation = c(">", ">=", "<", "<="), value = 0,
                                      absolute = FALSE, mode = c("consecutive", "total"),
                                      probability = 0.90, model = "model1") {
   relation <- match.arg(relation)
   mode <- match.arg(mode)
-  subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
+  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
   dims <- dim(subset$draws)
 
   rows <- vector("list", dims[1] * dims[2])
@@ -232,28 +247,34 @@ summarise_duration_draws <- function(draws, object_type, variable = NULL, shock 
 
 #' @rdname duration_response
 #' @export
-duration_response.PosteriorIR <- function(object, variable = NULL, shock = NULL,
+duration_response.PosteriorIR <- function(object, variables = NULL, shocks = NULL,
+                                          variable = NULL, shock = NULL,
                                           relation = c(">", ">=", "<", "<="), value = 0,
                                           absolute = FALSE, mode = c("consecutive", "total"),
                                           probability = 0.90, model = "model1", ...) {
-  summarise_duration_draws(object, object_type = "duration_irf", variable = variable, shock = shock,
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "duration_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "duration_response")
+  summarise_duration_draws(object, object_type = "duration_irf", variables = variables, shocks = shocks,
                            relation = relation, value = value, absolute = absolute, mode = mode,
                            probability = probability, model = model)
 }
 
-duration_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+duration_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variables = NULL, shocks = NULL,
+                                    variable = NULL, shock = NULL,
                                     relation = c(">", ">=", "<", "<="), value = 0,
                                     absolute = FALSE, mode = c("consecutive", "total"),
                                     probability = 0.90, model = "model1",
                                     scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "duration_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "duration_response")
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(duration_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
+    return(duration_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variables = variables, shocks = shocks,
                              relation = relation, value = value, absolute = absolute, mode = mode,
                              probability = probability, model = model))
   }
   duration_response(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
-                                  scale_var = scale_var, ...), variable = variable, shock = shock,
+                                  scale_var = scale_var, ...), variables = variables, shocks = shocks,
                     relation = relation, value = value, absolute = absolute, mode = mode,
                     probability = probability, model = model)
 }
@@ -279,11 +300,14 @@ duration_response.PosteriorBSVARSIGN <- duration_response_model
 
 #' @rdname duration_response
 #' @export
-duration_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
+duration_response.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
+                                           variable = NULL, shock = NULL,
                                            relation = c(">", ">=", "<", "<="), value = 0,
                                            absolute = FALSE, mode = c("consecutive", "total"),
                                            probability = 0.90, model = "model1", ...) {
-  summarise_duration_draws(object, object_type = "duration_cdm", variable = variable, shock = shock,
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "duration_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "duration_response")
+  summarise_duration_draws(object, object_type = "duration_cdm", variables = variables, shocks = shocks,
                            relation = relation, value = value, absolute = absolute, mode = mode,
                            probability = probability, model = model)
 }
@@ -314,6 +338,10 @@ summarise_optional_timing <- function(x, probability) {
 #' @param baseline Reference level: `"peak"` uses the largest response over the
 #'   available horizons, `"initial"` uses the horizon-0 response.
 #' @inheritParams peak_response
+#' @param variables Optional response-variable subset (character or integer vector).
+#' @param shocks Optional shock subset (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{fraction},
 #'   \code{baseline}, \code{mean_half_life}, \code{median_half_life},
@@ -368,11 +396,11 @@ compute_half_life <- function(path, horizons, fraction = 0.5,
   horizons[hit] - horizons[ref_idx]
 }
 
-summarise_half_life_draws <- function(draws, object_type, variable = NULL, shock = NULL,
+summarise_half_life_draws <- function(draws, object_type, variables = NULL, shocks = NULL,
                                       fraction = 0.5, baseline = c("peak", "initial"),
                                       absolute = TRUE, probability = 0.90, model = "model1") {
   baseline <- match.arg(baseline)
-  subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
+  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
   dims <- dim(subset$draws)
   horizons <- as.numeric(subset$labels$horizon)
 
@@ -408,26 +436,32 @@ summarise_half_life_draws <- function(draws, object_type, variable = NULL, shock
 
 #' @rdname half_life_response
 #' @export
-half_life_response.PosteriorIR <- function(object, variable = NULL, shock = NULL,
+half_life_response.PosteriorIR <- function(object, variables = NULL, shocks = NULL,
+                                           variable = NULL, shock = NULL,
                                            fraction = 0.5, baseline = c("peak", "initial"),
                                            absolute = TRUE, probability = 0.90, model = "model1", ...) {
-  summarise_half_life_draws(object, object_type = "half_life_irf", variable = variable, shock = shock,
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "half_life_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "half_life_response")
+  summarise_half_life_draws(object, object_type = "half_life_irf", variables = variables, shocks = shocks,
                             fraction = fraction, baseline = baseline, absolute = absolute,
                             probability = probability, model = model)
 }
 
-half_life_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+half_life_response_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variables = NULL, shocks = NULL,
+                                     variable = NULL, shock = NULL,
                                      fraction = 0.5, baseline = c("peak", "initial"),
                                      absolute = TRUE, probability = 0.90, model = "model1",
                                      scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "half_life_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "half_life_response")
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(half_life_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
+    return(half_life_response(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variables = variables, shocks = shocks,
                               fraction = fraction, baseline = baseline, absolute = absolute,
                               probability = probability, model = model))
   }
   half_life_response(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
-                                   scale_var = scale_var, ...), variable = variable, shock = shock,
+                                   scale_var = scale_var, ...), variables = variables, shocks = shocks,
                      fraction = fraction, baseline = baseline, absolute = absolute,
                      probability = probability, model = model)
 }
@@ -452,10 +486,13 @@ half_life_response.PosteriorBSVART <- half_life_response_model
 half_life_response.PosteriorBSVARSIGN <- half_life_response_model
 #' @rdname half_life_response
 #' @export
-half_life_response.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
+half_life_response.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
+                                            variable = NULL, shock = NULL,
                                             fraction = 0.5, baseline = c("peak", "initial"),
                                             absolute = TRUE, probability = 0.90, model = "model1", ...) {
-  summarise_half_life_draws(object, object_type = "half_life_cdm", variable = variable, shock = shock,
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "half_life_response")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "half_life_response")
+  summarise_half_life_draws(object, object_type = "half_life_cdm", variables = variables, shocks = shocks,
                             fraction = fraction, baseline = baseline, absolute = absolute,
                             probability = probability, model = model)
 }
@@ -467,6 +504,10 @@ half_life_response.PosteriorCDM <- function(object, variable = NULL, shock = NUL
 #'
 #' @inheritParams duration_response
 #' @inheritParams peak_response
+#' @param variables Optional response-variable subset (character or integer vector).
+#' @param shocks Optional shock subset (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{relation},
 #'   \code{threshold}, \code{mean_horizon}, \code{median_horizon},
@@ -512,11 +553,11 @@ compute_time_to_threshold <- function(path, horizons, relation = c(">", ">=", "<
   horizons[hit]
 }
 
-summarise_threshold_draws <- function(draws, object_type, variable = NULL, shock = NULL,
+summarise_threshold_draws <- function(draws, object_type, variables = NULL, shocks = NULL,
                                       relation = c(">", ">=", "<", "<="), value = 0,
                                       absolute = FALSE, probability = 0.90, model = "model1") {
   relation <- match.arg(relation)
-  subset <- subset_response_draws(draws, variables = variable, shocks = shock, horizons = NULL)
+  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
   dims <- dim(subset$draws)
   horizons <- as.numeric(subset$labels$horizon)
 
@@ -552,26 +593,32 @@ summarise_threshold_draws <- function(draws, object_type, variable = NULL, shock
 
 #' @rdname time_to_threshold
 #' @export
-time_to_threshold.PosteriorIR <- function(object, variable = NULL, shock = NULL,
+time_to_threshold.PosteriorIR <- function(object, variables = NULL, shocks = NULL,
+                                          variable = NULL, shock = NULL,
                                           relation = c(">", ">=", "<", "<="), value = 0,
                                           absolute = FALSE, probability = 0.90, model = "model1", ...) {
-  summarise_threshold_draws(object, object_type = "time_to_threshold_irf", variable = variable, shock = shock,
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "time_to_threshold")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "time_to_threshold")
+  summarise_threshold_draws(object, object_type = "time_to_threshold_irf", variables = variables, shocks = shocks,
                             relation = relation, value = value, absolute = absolute,
                             probability = probability, model = model)
 }
 
-time_to_threshold_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variable = NULL, shock = NULL,
+time_to_threshold_model <- function(object, horizon = NULL, type = c("irf", "cdm"), variables = NULL, shocks = NULL,
+                                    variable = NULL, shock = NULL,
                                     relation = c(">", ">=", "<", "<="), value = 0,
                                     absolute = FALSE, probability = 0.90, model = "model1",
                                     scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "time_to_threshold")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "time_to_threshold")
   type <- match.arg(type)
   if (identical(type, "irf")) {
-    return(time_to_threshold(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variable = variable, shock = shock,
+    return(time_to_threshold(get_irf_draws(object, horizon = resolve_horizon(horizon), ...), variables = variables, shocks = shocks,
                              relation = relation, value = value, absolute = absolute,
                              probability = probability, model = model))
   }
   time_to_threshold(get_cdm_draws(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by,
-                                  scale_var = scale_var, ...), variable = variable, shock = shock,
+                                  scale_var = scale_var, ...), variables = variables, shocks = shocks,
                     relation = relation, value = value, absolute = absolute,
                     probability = probability, model = model)
 }
@@ -596,10 +643,13 @@ time_to_threshold.PosteriorBSVART <- time_to_threshold_model
 time_to_threshold.PosteriorBSVARSIGN <- time_to_threshold_model
 #' @rdname time_to_threshold
 #' @export
-time_to_threshold.PosteriorCDM <- function(object, variable = NULL, shock = NULL,
+time_to_threshold.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
+                                           variable = NULL, shock = NULL,
                                            relation = c(">", ">=", "<", "<="), value = 0,
                                            absolute = FALSE, probability = 0.90, model = "model1", ...) {
-  summarise_threshold_draws(object, object_type = "time_to_threshold_cdm", variable = variable, shock = shock,
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "time_to_threshold")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "time_to_threshold")
+  summarise_threshold_draws(object, object_type = "time_to_threshold_cdm", variables = variables, shocks = shocks,
                             relation = relation, value = value, absolute = absolute,
                             probability = probability, model = model)
 }

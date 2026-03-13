@@ -4,8 +4,10 @@
 #' response draws.
 #'
 #' @param object A posterior model object or a `PosteriorIR` object.
-#' @param variable Response variable selection on the left-hand side.
-#' @param shock Shock selection on the left-hand side.
+#' @param variables Response variable selection on the left-hand side (character or integer vector).
+#' @param shocks Shock selection on the left-hand side (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param horizon Horizon selection on the left-hand side.
 #' @param relation Comparison operator.
 #' @param value Scalar comparison value for threshold statements.
@@ -131,16 +133,19 @@ hypothesis_response_impl <- function(object, draws, object_type, variable, shock
 
 #' @rdname hypothesis_irf
 #' @export
-hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
+hypothesis_irf.PosteriorIR <- function(object, variables = NULL, shocks = NULL,
+                                       variable = NULL, shock = NULL, horizon,
                                        relation = c("<", "<=", ">", ">=", "=="), value = 0,
                                        compare_to = NULL, absolute = FALSE, probability = 0.90,
                                        draws = FALSE, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_irf")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_irf")
   hypothesis_response_impl(
     object = object,
     draws = object,
     object_type = "irf",
-    variable = variable,
-    shock = shock,
+    variable = variables,
+    shock = shocks,
     horizon = horizon,
     relation = relation,
     value = value,
@@ -152,15 +157,18 @@ hypothesis_irf.PosteriorIR <- function(object, variable, shock, horizon,
   )
 }
 
-hypothesis_irf_model <- function(object, variable, shock, horizon,
+hypothesis_irf_model <- function(object, variables = NULL, shocks = NULL,
+                                 variable = NULL, shock = NULL, horizon,
                                  relation = c("<", "<=", ">", ">=", "=="), value = 0,
                                  compare_to = NULL, absolute = FALSE, probability = 0.90,
                                  draws = FALSE, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_irf")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_irf")
   irf_draws <- get_irf_draws(object, horizon = response_fetch_horizon(horizon, compare_to), ...)
   hypothesis_irf(
     irf_draws,
-    variable = variable,
-    shock = shock,
+    variables = variables,
+    shocks = shocks,
     horizon = horizon,
     relation = relation,
     value = value,
@@ -189,6 +197,10 @@ hypothesis_irf.PosteriorBSVARSIGN <- hypothesis_irf_model
 #' Posterior probability statements for cumulative dynamic multipliers
 #'
 #' @inheritParams hypothesis_irf
+#' @param variables Response variable selection on the left-hand side (character or integer vector).
+#' @param shocks Shock selection on the left-hand side (character or integer vector).
+#' @param variable **Deprecated.** Use \code{variables} instead.
+#' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
@@ -224,16 +236,19 @@ hypothesis_cdm.default <- function(object, ...) {
 
 #' @rdname hypothesis_cdm
 #' @export
-hypothesis_cdm.PosteriorCDM <- function(object, variable, shock, horizon,
+hypothesis_cdm.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
+                                        variable = NULL, shock = NULL, horizon,
                                         relation = c("<", "<=", ">", ">=", "=="), value = 0,
                                         compare_to = NULL, absolute = FALSE, probability = 0.90,
                                         draws = FALSE, model = "model1", ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_cdm")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_cdm")
   hypothesis_response_impl(
     object = object,
     draws = object,
     object_type = "cdm",
-    variable = variable,
-    shock = shock,
+    variable = variables,
+    shock = shocks,
     horizon = horizon,
     relation = relation,
     value = value,
@@ -245,11 +260,14 @@ hypothesis_cdm.PosteriorCDM <- function(object, variable, shock, horizon,
   )
 }
 
-hypothesis_cdm_model <- function(object, variable, shock, horizon,
+hypothesis_cdm_model <- function(object, variables = NULL, shocks = NULL,
+                                 variable = NULL, shock = NULL, horizon,
                                  relation = c("<", "<=", ">", ">=", "=="), value = 0,
                                  compare_to = NULL, absolute = FALSE, probability = 0.90,
                                  draws = FALSE, model = "model1",
                                  scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
+  variables <- deprecate_arg(variables, variable, "variable", "variables", "hypothesis_cdm")
+  shocks <- deprecate_arg(shocks, shock, "shock", "shocks", "hypothesis_cdm")
   cdm_horizon <- response_fetch_horizon(horizon, compare_to)
   cdm_draws <- get_cdm_draws(
     object,
@@ -261,8 +279,8 @@ hypothesis_cdm_model <- function(object, variable, shock, horizon,
   )
   hypothesis_cdm(
     cdm_draws,
-    variable = variable,
-    shock = shock,
+    variables = variables,
+    shocks = shocks,
     horizon = horizon,
     relation = relation,
     value = value,
