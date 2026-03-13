@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 7 in progress — Plan 02 complete (Getting Started vignette rewrite)
+**Current focus:** Phase 7 in progress — Plan 03 complete (Post-Estimation Workflows vignette rewrite)
 
 ## Current Position
 
 Phase: 7 of 8 (Vignettes & Multi-Platform) — IN PROGRESS
-Plan: 03 (next)
-Status: Plan 02 complete — Getting Started vignette rewritten as 200-line narrative; vignette 2 writing next
-Last activity: 2026-03-13 — Completed Plan 07-02: Getting Started vignette rewrite (600 -> 200 lines, fixture-based, economic narrative)
+Plan: 04 (next)
+Status: Plan 03 complete — Post-Estimation Workflows vignette rewritten as 224-line fiscal narrative; vignette 3 (Hypothesis Testing) writing next
+Last activity: 2026-03-13 — Completed Plan 07-03: Post-Estimation Workflows vignette rewrite (representative models, timing summaries, HD events, reporting)
 
 Progress: [████████░░] 75% (6 of 8 phases complete)
 
@@ -55,6 +55,7 @@ Progress: [████████░░] 75% (6 of 8 phases complete)
 | Phase 06-api-consistency P03 | 12 min | 2 tasks | 37 files |
 | Phase 07-vignettes-multi-platform P01 | 2 | 2 tasks | 11 files |
 | Phase 07 P02 | 2 | 1 tasks | 1 files |
+| Phase 07-vignettes-multi-platform P03 | 4 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -131,6 +132,8 @@ Recent decisions affecting current work:
 - [Phase 07-vignettes-multi-platform]: CI R-devel on ubuntu only per r-lib/actions community standard; Windows/R-devel via WinBuilder in Plan 05
 - [Phase 07-vignettes-multi-platform]: setup-pandoc placed before setup-r in CI — required for vignette Rmd rendering on Windows/macOS
 - [Phase 07-vignettes-multi-platform]: Getting Started vignette: 200-line narrative scope (extraction, comparison, plotting) replaces 600-line reference catalog
+- [Phase 07-vignettes-multi-platform]: Variable indices for fiscal narrative: variables=3 (gdp), shocks=2 (gs) for government spending -> GDP analysis
+- [Phase 07-vignettes-multi-platform]: HD event window uses decimal quarterly strings ('1948.25' to '1948.75') not integer indices — actual string labels from bsvars HD output
 
 ### Pending Todos
 
