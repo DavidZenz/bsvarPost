@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 7 in progress — Plan 03 complete (Post-Estimation Workflows vignette rewrite)
+**Current focus:** Phase 7 in progress — Plan 04 complete (Hypothesis Testing vignette)
 
 ## Current Position
 
 Phase: 7 of 8 (Vignettes & Multi-Platform) — IN PROGRESS
-Plan: 04 (next)
-Status: Plan 03 complete — Post-Estimation Workflows vignette rewritten as 224-line fiscal narrative; vignette 3 (Hypothesis Testing) writing next
-Last activity: 2026-03-13 — Completed Plan 07-03: Post-Estimation Workflows vignette rewrite (representative models, timing summaries, HD events, reporting)
+Plan: 05 (next)
+Status: Plan 04 complete — Hypothesis Testing vignette created (216 lines, fiscal narrative, hypothesis_irf/joint/simultaneous/magnitude_audit); Plan 05 (WinBuilder/CRAN submission) next
+Last activity: 2026-03-13 — Completed Plan 07-04: Hypothesis Testing vignette (posterior probability statements, joint hypotheses, simultaneous bands, magnitude auditing)
 
 Progress: [████████░░] 75% (6 of 8 phases complete)
 
@@ -56,6 +56,7 @@ Progress: [████████░░] 75% (6 of 8 phases complete)
 | Phase 07-vignettes-multi-platform P01 | 2 | 2 tasks | 11 files |
 | Phase 07 P02 | 2 | 1 tasks | 1 files |
 | Phase 07-vignettes-multi-platform P03 | 4 | 1 tasks | 1 files |
+| Phase 07-vignettes-multi-platform P04 | 5 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -134,6 +135,7 @@ Recent decisions affecting current work:
 - [Phase 07-vignettes-multi-platform]: Getting Started vignette: 200-line narrative scope (extraction, comparison, plotting) replaces 600-line reference catalog
 - [Phase 07-vignettes-multi-platform]: Variable indices for fiscal narrative: variables=3 (gdp), shocks=2 (gs) for government spending -> GDP analysis
 - [Phase 07-vignettes-multi-platform]: HD event window uses decimal quarterly strings ('1948.25' to '1948.75') not integer indices — actual string labels from bsvars HD output
+- [Phase 07-vignettes-multi-platform]: joint_hypothesis_irf and magnitude_audit use singular variable/shock params — no plural API variants exist for these functions
 
 ### Pending Todos
 
@@ -154,5 +156,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 07-02-PLAN.md (Getting Started vignette rewrite)
-Resume file: .planning/phases/07-vignettes-multi-platform/07-02-SUMMARY.md
+Stopped at: Completed 07-04-PLAN.md (Hypothesis Testing vignette)
+Resume file: .planning/phases/07-vignettes-multi-platform/07-04-SUMMARY.md
