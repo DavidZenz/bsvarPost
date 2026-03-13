@@ -16,8 +16,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Input Validation Foundation** - Add validation helpers and default S3 methods (completed 2026-03-12)
 - [x] **Phase 3: Output Correctness Verification** - Verify computational correctness with tight tolerances (completed 2026-03-12)
 - [x] **Phase 4: Documentation Completion** - Complete roxygen docs with runnable examples (completed 2026-03-12)
-- [ ] **Phase 5: Test Coverage Expansion** - Expand tinytest suite to 80%+ coverage
-- [ ] **Phase 6: API Consistency & Error Messages** - Standardize errors and API across function families
+- [x] **Phase 5: Test Coverage Expansion** - Expand tinytest suite to 80%+ coverage (completed 2026-03-12)
+- [x] **Phase 6: API Consistency & Error Messages** - Standardize errors and API across function families (completed 2026-03-13)
 - [ ] **Phase 7: Vignettes & Multi-Platform** - Polish vignettes and validate across platforms
 - [ ] **Phase 8: CRAN Submission** - Final validation and package submission
 
@@ -113,8 +113,8 @@ Plans:
 - [x] 05-03-PLAN.md — Representative and response-summary dispatch plus utils/plot-style coverage
 - [x] 05-04-PLAN.md — Optional package smoke tests and integration pipeline tests
 - [x] 05-05-PLAN.md — covr verification gate, gap filling, FORCE_SUGGESTS validation
-- [ ] 05-06-PLAN.md — Gap closure: MIX/MSH/T posterior type dispatch spot-checks
-- [ ] 05-07-PLAN.md — Gap closure: Behavioral edge cases (1-variable, S=1, empty selections)
+- [x] 05-06-PLAN.md — Gap closure: MIX/MSH/T posterior type dispatch spot-checks
+- [x] 05-07-PLAN.md — Gap closure: Behavioral edge cases (1-variable, S=1, empty selections)
 
 ### Phase 6: API Consistency & Error Messages
 **Goal**: Standardize error messages and API design across all function families
@@ -128,7 +128,12 @@ Plans:
   5. Dimension assertions present in set_*_dimnames() functions
   6. Tibble structure validation present in new_bsvar_post_tbl()
   7. Model compatibility checks present in compare_*() functions
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [x] 06-01-PLAN.md — Add validation helpers, structural validators, and update compare.R defaults
+- [x] 06-02-PLAN.md — Update defaults in remaining R files and add singular->plural deprecation shims
+- [x] 06-03-PLAN.md — Update tests for new defaults, create API consistency tests, R CMD check
 
 ### Phase 7: Vignettes & Multi-Platform
 **Goal**: Polish vignettes to CRAN quality and validate across all target platforms
@@ -142,7 +147,14 @@ Plans:
   5. R CMD check passes on ubuntu-latest, windows-latest, macos-latest with R-release and R-devel
   6. devtools::check_win_devel() passes cleanly
   7. Zero errors, zero warnings, minimal notes across all 6 platform/R combinations
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Generate .rds fixtures, regenerate figures, expand CI to 5-platform matrix
+- [ ] 07-02-PLAN.md — Rewrite Getting Started vignette with fiscal policy narrative
+- [ ] 07-03-PLAN.md — Rewrite Post-Estimation Workflows vignette with fiscal narrative
+- [ ] 07-04-PLAN.md — Create Hypothesis Testing vignette
+- [ ] 07-05-PLAN.md — R CMD check validation and vignette build verification
 
 ### Phase 8: CRAN Submission
 **Goal**: Complete final validation and submit package to CRAN
@@ -185,7 +197,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8
 | 2. Input Validation Foundation | 3/3 | Complete    | 2026-03-12 |
 | 3. Output Correctness Verification | 4/4 | Complete | 2026-03-12 |
 | 4. Documentation Completion | 5/5 | Complete | 2026-03-12 |
-| 5. Test Coverage Expansion | 5/7 | Gap closure | - |
-| 6. API Consistency & Error Messages | 0/TBD | Not started | - |
-| 7. Vignettes & Multi-Platform | 0/TBD | Not started | - |
+| 5. Test Coverage Expansion | 7/7 | Complete | 2026-03-12 |
+| 6. API Consistency & Error Messages | 3/3 | Complete | 2026-03-13 |
+| 7. Vignettes & Multi-Platform | 0/5 | Not started | - |
 | 8. CRAN Submission | 0/TBD | Not started | - |
