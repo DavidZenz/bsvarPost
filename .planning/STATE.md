@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-03-11)
 
 **Core value:** Every function produces correct, robust output that researchers can trust in publications — correct impulse responses, valid posterior probabilities, and reliable visualizations.
-**Current focus:** Phase 7 in progress — Plan 04 complete (Hypothesis Testing vignette)
+**Current focus:** Phase 7 complete (5 of 5 plans done) — Ready for Phase 8 (CRAN submission)
 
 ## Current Position
 
-Phase: 7 of 8 (Vignettes & Multi-Platform) — IN PROGRESS
-Plan: 05 (next)
-Status: Plan 04 complete — Hypothesis Testing vignette created (216 lines, fiscal narrative, hypothesis_irf/joint/simultaneous/magnitude_audit); Plan 05 (WinBuilder/CRAN submission) next
-Last activity: 2026-03-13 — Completed Plan 07-04: Hypothesis Testing vignette (posterior probability statements, joint hypotheses, simultaneous bands, magnitude auditing)
+Phase: 7 of 8 (Vignettes & Multi-Platform) — COMPLETE
+Plan: 05 (complete, last plan in phase)
+Status: Plan 05 complete — R CMD check passing (1 WARNING qpdf/env, 1 NOTE new-submission), .Rbuildignore fixed, 941 tests pass, WinBuilder deferred to Phase 8
+Last activity: 2026-03-13 — Completed Plan 07-05: CRAN validation, .Rbuildignore fix (.planning/.claude/.git exclusions), R CMD check clean
 
 Progress: [████████░░] 75% (6 of 8 phases complete)
 
@@ -57,6 +57,7 @@ Progress: [████████░░] 75% (6 of 8 phases complete)
 | Phase 07 P02 | 2 | 1 tasks | 1 files |
 | Phase 07-vignettes-multi-platform P03 | 4 | 1 tasks | 1 files |
 | Phase 07-vignettes-multi-platform P04 | 5 | 1 tasks | 1 files |
+| Phase 07-vignettes-multi-platform P05 | 15 | 3 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -136,6 +137,9 @@ Recent decisions affecting current work:
 - [Phase 07-vignettes-multi-platform]: Variable indices for fiscal narrative: variables=3 (gdp), shocks=2 (gs) for government spending -> GDP analysis
 - [Phase 07-vignettes-multi-platform]: HD event window uses decimal quarterly strings ('1948.25' to '1948.75') not integer indices — actual string labels from bsvars HD output
 - [Phase 07-vignettes-multi-platform]: joint_hypothesis_irf and magnitude_audit use singular variable/shock params — no plural API variants exist for these functions
+- [Phase 07-vignettes-multi-platform]: Hidden dev directories (.planning, .claude, .git) require explicit .Rbuildignore entries — R CMD build does not auto-exclude hidden files
+- [Phase 07-vignettes-multi-platform]: WinBuilder submission via devtools::check_win_devel() deferred to Phase 8 — devtools not available in worktree environment
+- [Phase 07-vignettes-multi-platform]: R CMD check Status: 1 WARNING (qpdf local env), 1 NOTE (new submission) — both expected for CRAN first submission, not package issues
 
 ### Pending Todos
 
@@ -156,5 +160,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 07-04-PLAN.md (Hypothesis Testing vignette)
-Resume file: .planning/phases/07-vignettes-multi-platform/07-04-SUMMARY.md
+Stopped at: Completed 07-05-PLAN.md (CRAN validation and .Rbuildignore fix)
+Resume file: .planning/phases/07-vignettes-multi-platform/07-05-SUMMARY.md
