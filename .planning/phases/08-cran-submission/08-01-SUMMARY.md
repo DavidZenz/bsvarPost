@@ -142,6 +142,17 @@ None - no external service configuration required.
 - WinBuilder (devtools::check_win_devel()) can be retried in Plan 02 after
   attempting devtools installation via an alternative approach
 
+## Self-Check: PASSED
+
+- FOUND: DESCRIPTION (Version: 1.0.0, cph role, no legacy Author/Maintainer)
+- FOUND: NEWS.md (# bsvarPost 1.0.0, Initial CRAN release.)
+- FOUND: inst/WORDLIST
+- FOUND: cran-comments.md
+- FOUND: .planning/phases/08-cran-submission/08-01-SUMMARY.md
+- COMMIT c12c663: feat(08-01): fix DESCRIPTION for CRAN and rewrite NEWS.md as v1.0.0
+- COMMIT d042fc5: feat(08-01): add WORDLIST, cran-comments.md, and update build exclusions
+- COMMIT 30a8cc5: docs(08-01): complete CRAN submission artifacts plan
+
 ---
 *Phase: 08-cran-submission*
 *Completed: 2026-03-13*
