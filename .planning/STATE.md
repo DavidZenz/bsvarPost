@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 6 of 8 (API Consistency & Error Messages) — IN PROGRESS
-Plan: 2 complete (of N in phase)
-Status: Phase 6 Plan 02 complete — probability/horizon defaults updated, deprecation shims for singular->plural migration added
-Last activity: 2026-03-13 — Completed Phase 6 Plan 02: Default Consistency and Deprecation Shims
+Plan: 3 complete (of N in phase)
+Status: Phase 6 Plan 03 complete — 28 new tests, documentation regenerated, all 941 tests pass
+Last activity: 2026-03-13 — Completed Phase 6 Plan 03: Test Updates, API Consistency Tests, Documentation
 
 Progress: [██████░░░░] 62% (5 of 8 phases complete, Phase 6 in progress)
 
@@ -51,6 +51,8 @@ Progress: [██████░░░░] 62% (5 of 8 phases complete, Phase 6 
 | Phase 05-test-coverage-expansion P06 | 3 | 1 tasks | 1 files |
 | Phase 05-test-coverage-expansion P07 | 4 | 1 tasks | 1 files |
 | Phase 06-api-consistency P01 | 3 min | 3 tasks | 3 files |
+| Phase 06-api-consistency P02 | 11 min | 2 tasks | 13 files |
+| Phase 06-api-consistency P03 | 12 min | 2 tasks | 37 files |
 
 ## Accumulated Context
 
@@ -120,6 +122,9 @@ Recent decisions affecting current work:
 - [Phase 06-02]: All horizon defaults changed from 10 to NULL with resolve_horizon() wrapper in model-dispatch functions
 - [Phase 06-02]: hypothesis_irf/hypothesis_cdm: variables/shocks added as new params, horizon remains required (constraint specifier not selection param)
 - [Phase 06-02]: Internal summarise_*_draws helpers renamed to plural without deprecation shim (internal functions)
+- [Phase 06-03]: new_bsvar_post_tbl() column validation requires only 'model' column — object_type is stored as attribute, not column, in restriction_audit, joint-inference, hd-event, diagnostics callers
+- [Phase 06-03]: test_api_consistency.R tests 28 assertions across deprecate_arg, resolve_horizon, dimension guards, column validation, validate_model_compatibility, return types, and deprecation warnings
+- [Phase 06-03]: Infrastructure R CMD check warnings (vignette compilation, .git, ..Rcheck) are pre-existing worktree issues, not Phase 6 regressions
 
 ### Pending Todos
 
@@ -140,5 +145,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed Phase 6 Plan 02 (06-02-PLAN.md) — probability/horizon defaults, deprecation shims for singular->plural migration
-Resume file: .planning/phases/06-api-consistency-error-messages/06-02-SUMMARY.md
+Stopped at: Completed Phase 6 Plan 03 (06-03-PLAN.md) — test updates, test_api_consistency.R, documentation regeneration
+Resume file: .planning/phases/06-api-consistency-error-messages/06-03-SUMMARY.md
