@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 8 of 8 (CRAN Submission) — IN PROGRESS
-Plan: 2 of 3 (08-01 complete)
-Status: 08-01 complete — DESCRIPTION v1.0.0, NEWS.md, WORDLIST, cran-comments.md created
-Last activity: 2026-03-13 — Completed Phase 8 Plan 01: CRAN submission artifacts
+Plan: 3 of 3 (08-02 complete)
+Status: 08-02 complete — Validation gauntlet passed: 0 errors, 0 warnings, 1 NOTE; goodpractice fixes applied; cran-comments.md updated
+Last activity: 2026-03-13 — Completed Phase 8 Plan 02: CRAN validation gauntlet
 
 Progress: [█████████░] 87% (7 of 8 phases complete)
 
@@ -59,6 +59,7 @@ Progress: [█████████░] 87% (7 of 8 phases complete)
 | Phase 07-vignettes-multi-platform P04 | 5 | 1 tasks | 1 files |
 | Phase 07-vignettes-multi-platform P05 | 15 | 3 tasks | 1 files |
 | Phase 08-cran-submission P01 | 5 | 2 tasks | 6 files |
+| Phase 08-cran-submission P02 | 9 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -145,6 +146,10 @@ Recent decisions affecting current work:
 - [Phase 08-cran-submission]: NEWS.md is fresh initial CRAN release (not upgrade from 0.2.0) with 9 feature-category groupings
 - [Phase 08-cran-submission]: WORDLIST built manually: hunspell compilation fails on macOS arm64 flat namespace
 - [Phase 08-cran-submission]: cran-comments.md documents 0 errors | 0 warnings | 1 note (new submission expected)
+- [Phase 08-02]: Date field removed from DESCRIPTION — not required, gets invalid between submissions
+- [Phase 08-02]: T parameter renamed to n_obs in bsvarsigns_weight_narrative() — T shadows TRUE logical constant
+- [Phase 08-02]: Long lines and whole-package imports: acceptable for CRAN submission, not fixed (style only)
+- [Phase 08-02]: WinBuilder: devtools unavailable; manual upload to https://win-builder.r-project.org/upload.aspx required before Plan 03
 
 ### Pending Todos
 
@@ -165,5 +170,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed 08-01-PLAN.md (CRAN submission artifacts)
-Resume file: .planning/phases/08-cran-submission/08-01-SUMMARY.md
+Stopped at: Completed 08-02-PLAN.md (CRAN validation gauntlet)
+Resume file: .planning/phases/08-cran-submission/08-02-SUMMARY.md
