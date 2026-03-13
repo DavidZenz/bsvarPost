@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-11)
 ## Current Position
 
 Phase: 6 of 8 (API Consistency & Error Messages) — IN PROGRESS
-Plan: 1 complete (of N in phase)
-Status: Phase 6 Plan 01 complete — validation helpers, dimension guards, compare defaults updated
-Last activity: 2026-03-13 — Completed Phase 6 Plan 01: Validation Infrastructure and Compare Defaults
+Plan: 2 complete (of N in phase)
+Status: Phase 6 Plan 02 complete — probability/horizon defaults updated, deprecation shims for singular->plural migration added
+Last activity: 2026-03-13 — Completed Phase 6 Plan 02: Default Consistency and Deprecation Shims
 
 Progress: [██████░░░░] 62% (5 of 8 phases complete, Phase 6 in progress)
 
@@ -116,6 +116,10 @@ Recent decisions affecting current work:
 - [Phase 06-01]: deprecate_arg() gives new_val precedence when both old and new args are provided
 - [Phase 06-01]: compare_acceptance_diagnostics excluded from validate_model_compatibility — output has no variable column
 - [Phase 06-01]: Dimension assertions use class reporting for non-array inputs, dimension count for wrong-dimension arrays
+- [Phase 06-02]: All probability defaults changed from 0.68 to 0.90 across 13 R source files
+- [Phase 06-02]: All horizon defaults changed from 10 to NULL with resolve_horizon() wrapper in model-dispatch functions
+- [Phase 06-02]: hypothesis_irf/hypothesis_cdm: variables/shocks added as new params, horizon remains required (constraint specifier not selection param)
+- [Phase 06-02]: Internal summarise_*_draws helpers renamed to plural without deprecation shim (internal functions)
 
 ### Pending Todos
 
@@ -136,5 +140,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-13
-Stopped at: Completed Phase 6 Plan 01 (06-01-PLAN.md) — validation.R, utils.R, compare.R updated
-Resume file: .planning/phases/06-api-consistency-error-messages/06-01-SUMMARY.md
+Stopped at: Completed Phase 6 Plan 02 (06-02-PLAN.md) — probability/horizon defaults, deprecation shims for singular->plural migration
+Resume file: .planning/phases/06-api-consistency-error-messages/06-02-SUMMARY.md
