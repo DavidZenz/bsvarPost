@@ -13,3 +13,5 @@
 ^\.claude/
 ^\.git$
 ^\.git/
+^cran-comments\.md$
+^CRAN-SUBMISSION$
