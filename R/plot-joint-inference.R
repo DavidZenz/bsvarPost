@@ -22,7 +22,7 @@
 #'
 #' p <- plot_simultaneous(post, horizon = 3)
 #' @export
-plot_simultaneous <- function(object, type = c("irf", "cdm"), horizon = 10, probability = 0.68,
+plot_simultaneous <- function(object, type = c("irf", "cdm"), horizon = NULL, probability = 0.90,
                               variable = NULL, shock = NULL, models = NULL, facet_scales = "free_y",
                               scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   type <- match.arg(type)

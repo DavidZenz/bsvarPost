@@ -55,14 +55,14 @@ as_apr_cond_forc.bsvar_post_tbl <- function(object, center = c("median", "mean")
 
 #' @rdname as_apr_cond_forc
 #' @export
-as_apr_cond_forc.Forecasts <- function(object, probability = 0.68, center = c("median", "mean"),
+as_apr_cond_forc.Forecasts <- function(object, probability = 0.90, center = c("median", "mean"),
                                        origin = NULL, frequency = c("quarter", "month", "year", "day"),
                                        model = "model1", ...) {
   as_apr_cond_forc(tidy_forecast(object, probability = probability, model = model), center = center,
                    origin = origin, frequency = frequency)
 }
 
-as_apr_cond_forc_model <- function(object, horizon = 10, probability = 0.68, center = c("median", "mean"),
+as_apr_cond_forc_model <- function(object, horizon = NULL, probability = 0.90, center = c("median", "mean"),
                                    origin = NULL, frequency = c("quarter", "month", "year", "day"),
                                    model = "model1", ...) {
   as_apr_cond_forc(tidy_forecast(object, horizon = horizon, probability = probability, model = model, ...),
@@ -71,7 +71,7 @@ as_apr_cond_forc_model <- function(object, horizon = 10, probability = 0.68, cen
 
 #' @rdname as_apr_cond_forc
 #' @export
-as_apr_cond_forc.PosteriorBSVAR <- function(object, horizon = 10, probability = 0.68, center = c("median", "mean"),
+as_apr_cond_forc.PosteriorBSVAR <- function(object, horizon = NULL, probability = 0.90, center = c("median", "mean"),
                                             origin = NULL, frequency = c("quarter", "month", "year", "day"),
                                             model = "model1", ...) {
   as_apr_cond_forc_model(object, horizon = horizon, probability = probability, center = center,

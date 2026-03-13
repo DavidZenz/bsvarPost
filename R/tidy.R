@@ -33,18 +33,18 @@ tidy_irf.default <- function(object, ...) {
 }
 
 #' @export
-tidy_irf.PosteriorIR <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
+tidy_irf.PosteriorIR <- function(object, probability = 0.90, draws = FALSE, model = "model1", ...) {
   as_tidy_response_array(object, object_type = "irf", model = model, probability = probability, draws = draws)
 }
 
-tidy_irf_model <- function(object, horizon = 10, probability = 0.68, draws = FALSE, model = "model1", ...) {
-  irf <- bsvars::compute_impulse_responses(object, horizon = horizon, ...)
+tidy_irf_model <- function(object, horizon = NULL, probability = 0.90, draws = FALSE, model = "model1", ...) {
+  irf <- bsvars::compute_impulse_responses(object, horizon = resolve_horizon(horizon), ...)
   tidy_irf(set_response_dimnames(irf, model = object), probability = probability, draws = draws, model = model)
 }
 
 #' @rdname tidy_irf
 #' @export
-tidy_irf.PosteriorBSVAR <- function(object, horizon = 10, probability = 0.68, draws = FALSE, model = "model1", ...) {
+tidy_irf.PosteriorBSVAR <- function(object, horizon = NULL, probability = 0.90, draws = FALSE, model = "model1", ...) {
   tidy_irf_model(object, horizon = horizon, probability = probability, draws = draws, model = model, ...)
 }
 #' @export
@@ -90,20 +90,20 @@ tidy_cdm.default <- function(object, ...) {
 }
 
 #' @export
-tidy_cdm.PosteriorCDM <- function(object, probability = attr(object, "probability", exact = TRUE) %||% 0.68,
+tidy_cdm.PosteriorCDM <- function(object, probability = attr(object, "probability", exact = TRUE) %||% 0.90,
                                   draws = FALSE, model = "model1", ...) {
   as_tidy_response_array(object, object_type = "cdm", model = model, probability = probability, draws = draws)
 }
 
-tidy_cdm_model <- function(object, horizon = 10, probability = 0.68, draws = FALSE,
+tidy_cdm_model <- function(object, horizon = NULL, probability = 0.90, draws = FALSE,
                            model = "model1", scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
-  tidy_cdm(cdm(object, horizon = horizon, probability = probability, scale_by = scale_by, scale_var = scale_var, ...),
+  tidy_cdm(cdm(object, horizon = resolve_horizon(horizon), probability = probability, scale_by = scale_by, scale_var = scale_var, ...),
            probability = probability, draws = draws, model = model)
 }
 
 #' @rdname tidy_cdm
 #' @export
-tidy_cdm.PosteriorBSVAR <- function(object, horizon = 10, probability = 0.68, draws = FALSE,
+tidy_cdm.PosteriorBSVAR <- function(object, horizon = NULL, probability = 0.90, draws = FALSE,
                                     model = "model1", scale_by = c("none", "shock_sd"), scale_var = NULL, ...) {
   tidy_cdm_model(object, horizon = horizon, probability = probability, draws = draws, model = model,
                  scale_by = scale_by, scale_var = scale_var, ...)
@@ -149,11 +149,11 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
  }
 
 #' @export
- tidy_fevd.PosteriorFEVD <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_fevd.PosteriorFEVD <- function(object, probability = 0.90, draws = FALSE, model = "model1", ...) {
   as_tidy_response_array(object, object_type = "fevd", model = model, probability = probability, draws = draws)
  }
- tidy_fevd_model <- function(object, horizon = 10, probability = 0.68, draws = FALSE, model = "model1", ...) {
-  fevd <- bsvars::compute_variance_decompositions(object, horizon = horizon, ...)
+ tidy_fevd_model <- function(object, horizon = NULL, probability = 0.90, draws = FALSE, model = "model1", ...) {
+  fevd <- bsvars::compute_variance_decompositions(object, horizon = resolve_horizon(horizon), ...)
   tidy_fevd(set_response_dimnames(fevd, model = object), probability = probability, draws = draws, model = model)
  }
 #' @export
@@ -199,10 +199,10 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
  }
 
 #' @export
- tidy_shocks.PosteriorShocks <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_shocks.PosteriorShocks <- function(object, probability = 0.90, draws = FALSE, model = "model1", ...) {
   as_tidy_time_array(object, object_type = "shocks", model = model, probability = probability, draws = draws, time_name = "time")
  }
- tidy_shocks_model <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_shocks_model <- function(object, probability = 0.90, draws = FALSE, model = "model1", ...) {
   shocks <- bsvars::compute_structural_shocks(object)
   tidy_shocks(set_time_dimnames(shocks, model = object), probability = probability, draws = draws, model = model)
  }
@@ -249,10 +249,10 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
  }
 
 #' @export
- tidy_hd.PosteriorHD <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_hd.PosteriorHD <- function(object, probability = 0.90, draws = FALSE, model = "model1", ...) {
   as_tidy_hd_array(object, model = model, probability = probability, draws = draws)
  }
- tidy_hd_model <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_hd_model <- function(object, probability = 0.90, draws = FALSE, model = "model1", ...) {
   hd <- bsvars::compute_historical_decompositions(object, show_progress = FALSE)
   tidy_hd(set_hd_dimnames(hd, model = object), probability = probability, draws = draws, model = model)
  }
@@ -299,11 +299,11 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
  }
 
 #' @export
- tidy_forecast.Forecasts <- function(object, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_forecast.Forecasts <- function(object, probability = 0.90, draws = FALSE, model = "model1", ...) {
   as_tidy_time_array(object$forecasts, object_type = "forecast", model = model, probability = probability, draws = draws, time_name = "horizon")
  }
- tidy_forecast_model <- function(object, horizon = 10, probability = 0.68, draws = FALSE, model = "model1", ...) {
-  tidy_forecast(bsvars::forecast(object, horizon = horizon, ...), probability = probability, draws = draws, model = model)
+ tidy_forecast_model <- function(object, horizon = NULL, probability = 0.90, draws = FALSE, model = "model1", ...) {
+  tidy_forecast(bsvars::forecast(object, horizon = resolve_horizon(horizon), ...), probability = probability, draws = draws, model = model)
  }
 #' @export
  tidy_forecast.PosteriorBSVAR <- tidy_forecast_model

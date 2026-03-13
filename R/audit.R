@@ -171,7 +171,7 @@ restriction_max_horizon <- function(restrictions) {
   max(1, vals, na.rm = TRUE)
 }
 
-prepare_audit_context <- function(object, restrictions, probability = 0.68) {
+prepare_audit_context <- function(object, restrictions, probability = 0.90) {
   needs_irf <- any(vapply(restrictions, inherits, logical(1), what = "bsvar_post_irf_restriction")) ||
     any(vapply(restrictions, inherits, logical(1), what = "bsvar_post_narrative_restriction"))
   needs_structural <- any(vapply(restrictions, inherits, logical(1), what = "bsvar_post_structural_restriction"))
@@ -199,7 +199,7 @@ prepare_audit_context <- function(object, restrictions, probability = 0.68) {
   out
 }
 
-audit_irf_restriction <- function(restriction, irf_draws, zero_tol = 1e-8, probability = 0.68) {
+audit_irf_restriction <- function(restriction, irf_draws, zero_tol = 1e-8, probability = 0.90) {
   subset <- subset_response_draws(irf_draws, variables = restriction$variable, shocks = restriction$shock, horizons = restriction$horizon)
   values <- as.numeric(subset$draws[1, 1, 1, ])
   if (isTRUE(restriction$zero)) {
@@ -225,7 +225,7 @@ audit_irf_restriction <- function(restriction, irf_draws, zero_tol = 1e-8, proba
   )
 }
 
-audit_structural_restriction <- function(restriction, structural_draws, probability = 0.68) {
+audit_structural_restriction <- function(restriction, structural_draws, probability = 0.90) {
   dns <- resolve_array_dimnames(structural_draws, list(
     paste0("variable", seq_len(dim(structural_draws)[1])),
     paste0("shock", seq_len(dim(structural_draws)[2])),
@@ -304,7 +304,7 @@ audit_narrative_restriction <- function(restriction, shocks, reduced_irf, p = 0L
 #' print(audit)
 #' @export
 restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
-                              probability = 0.68, model = "model1", ...) {
+                              probability = 0.90, model = "model1", ...) {
   restrictions <- normalise_restrictions(object, restrictions)
   ctx <- prepare_audit_context(object, restrictions, probability = probability)
 
@@ -347,7 +347,7 @@ restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
 #' @export
 magnitude_audit <- function(object, type = c("irf", "cdm"), variable, shock, horizon,
                             relation = c("<", "<=", ">", ">=", "=="), value = 0,
-                            compare_to = NULL, absolute = FALSE, probability = 0.68,
+                            compare_to = NULL, absolute = FALSE, probability = 0.90,
                             draws = FALSE, model = "model1", scale_by = c("none", "shock_sd"),
                             scale_var = NULL, ...) {
   type <- match.arg(type)

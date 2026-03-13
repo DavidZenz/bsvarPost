@@ -19,7 +19,7 @@
 #'
 #' p <- plot_hd_event(post, start = "1948.25", end = "1948.5")
 #' @export
-plot_hd_event <- function(object, start = NULL, end = start, probability = 0.68, draws = FALSE,
+plot_hd_event <- function(object, start = NULL, end = start, probability = 0.90, draws = FALSE,
                           variables = NULL, shocks = NULL, models = NULL,
                           facet_scales = "free_y", ...) {
   if (inherits(object, "bsvar_post_tbl")) {
@@ -60,7 +60,7 @@ plot_hd_event <- function(object, start = NULL, end = start, probability = 0.68,
 #' @export
 plot_shock_ranking <- function(object, start = NULL, end = start, variables = NULL, models = NULL,
                                ranking = c("absolute", "signed"), top_n = NULL,
-                               probability = 0.68, ...) {
+                               probability = 0.90, ...) {
   ranking <- match.arg(ranking)
 
   if (inherits(object, "bsvar_post_tbl")) {

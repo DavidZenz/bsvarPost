@@ -48,7 +48,7 @@ event_window_labels <- function(times, start, end = start) {
   labels[seq.int(start_idx, end_idx)]
 }
 
-summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, draws = FALSE) {
+summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, draws = FALSE) {
   window_labels <- event_window_labels(tbl$time, start = start, end = end)
   time_chr <- as.character(tbl$time)
   keep <- time_chr %in% window_labels
@@ -80,7 +80,7 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
 
 #' @rdname tidy_hd_event
 #' @export
- tidy_hd_event.bsvar_post_tbl <- function(object, start, end = start, probability = 0.68, draws = FALSE, ...) {
+ tidy_hd_event.bsvar_post_tbl <- function(object, start, end = start, probability = 0.90, draws = FALSE, ...) {
   if (!identical(attr(object, "object_type"), "hd")) {
     stop("`tidy_hd_event.bsvar_post_tbl()` requires a tidy historical decomposition table.", call. = FALSE)
   }
@@ -114,12 +114,12 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
 
 #' @rdname tidy_hd_event
 #' @export
- tidy_hd_event.PosteriorHD <- function(object, start, end = start, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_hd_event.PosteriorHD <- function(object, start, end = start, probability = 0.90, draws = FALSE, model = "model1", ...) {
   tidy_hd_event(tidy_hd(object, probability = probability, draws = TRUE, model = model), start = start, end = end,
                 probability = probability, draws = draws)
  }
 
- tidy_hd_event_model <- function(object, start, end = start, probability = 0.68, draws = FALSE, model = "model1", ...) {
+ tidy_hd_event_model <- function(object, start, end = start, probability = 0.90, draws = FALSE, model = "model1", ...) {
   tidy_hd_event(tidy_hd(object, probability = probability, draws = TRUE, model = model, ...),
                 start = start, end = end, probability = probability, draws = draws)
  }
@@ -167,7 +167,7 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.68, 
 #' print(sr)
 #' @export
 shock_ranking <- function(object, start, end = start, variables = NULL, models = NULL,
-                          ranking = c("absolute", "signed"), probability = 0.68, ...) {
+                          ranking = c("absolute", "signed"), probability = 0.90, ...) {
   ranking <- match.arg(ranking)
   event_tbl <- tidy_hd_event(object, start = start, end = end, probability = probability, draws = FALSE, ...)
 
