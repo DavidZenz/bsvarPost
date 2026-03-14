@@ -1,6 +1,10 @@
-# Plot observed, fitted, and selected decomposition totals
+# Plot observed and reconstructed decomposition totals
 
-Plot observed, fitted, and selected decomposition totals
+This plot compares the observed series to the reconstructed
+decomposition total and can optionally show the baseline component plus
+selected contributor lines. The decomposition total is built from the
+same explicit baseline-plus-shock summary used in
+[`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md).
 
 ## Usage
 
@@ -13,7 +17,7 @@ plot_hd_total(
   models = NULL,
   facet_scales = "free_y",
   include_observed = TRUE,
-  include_residual = TRUE,
+  include_baseline = TRUE,
   shock_groups = NULL,
   top_n = NULL,
   collapse_other = TRUE,
@@ -52,13 +56,13 @@ plot_hd_total(
 
 - include_observed:
 
-  If `TRUE`, overlay the observed series when it can be recovered from a
-  posterior model object.
+  If `TRUE`, include the observed series for plot types that compare
+  decomposition totals against the realised path.
 
-- include_residual:
+- include_baseline:
 
-  If `TRUE`, include a residual/unexplained component whenever the
-  observed path differs materially from the fitted contribution sum.
+  If `TRUE`, include the non-shock baseline component when building a
+  full decomposition.
 
 - shock_groups:
 

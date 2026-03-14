@@ -227,18 +227,29 @@ Historical decomposition is now split into two complementary workflows:
 
 ``` r
 hd_tbl <- tidy_hd(post)
-plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
 
 hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
 plot_hd_event_share(post, start = hd_times[1], end = hd_times[2], top_n = 3)
 ```
 
-A pre-rendered full-sample HD composition plot from the same S = 200
+A pre-rendered full-sample HD overlay plot from the same S = 200
 posterior:
 
+![](figures/hd-overlay-showcase.png)
+
+For composition, the stacked view is the coherent decomposition plot: it
+adds an explicit `Baseline` component so the displayed areas sum to the
+realised series on the plotted summary scale.
+
 ![](figures/hd-full-showcase.png)
+
+And
+[`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
+shows the same decomposition from a validation angle by comparing the
+observed path to the reconstructed total.
 
 ## Reporting helpers
 

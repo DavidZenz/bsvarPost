@@ -1,6 +1,9 @@
 # Stacked historical decomposition contributions over time
 
-Stacked historical decomposition contributions over time
+This plot builds a coherent decomposition by adding an explicit
+`"Baseline"` component to the selected shock contributions. The plotted
+series therefore sum to the observed path on the displayed summary
+scale.
 
 ## Usage
 
@@ -12,8 +15,8 @@ plot_hd_stacked(
   shocks = NULL,
   models = NULL,
   facet_scales = "free_y",
-  include_observed = TRUE,
-  include_residual = TRUE,
+  include_observed = FALSE,
+  include_baseline = TRUE,
   shock_groups = NULL,
   top_n = NULL,
   collapse_other = TRUE,
@@ -53,13 +56,13 @@ plot_hd_stacked(
 
 - include_observed:
 
-  If `TRUE`, overlay the observed series when it can be recovered from a
-  posterior model object.
+  If `TRUE`, include the observed series for plot types that compare
+  decomposition totals against the realised path.
 
-- include_residual:
+- include_baseline:
 
-  If `TRUE`, include a residual/unexplained component whenever the
-  observed path differs materially from the fitted contribution sum.
+  If `TRUE`, include the non-shock baseline component when building a
+  full decomposition.
 
 - shock_groups:
 

@@ -81,7 +81,7 @@
 - [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
   : Stacked historical decomposition contributions over time
 - [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
-  : Plot observed, fitted, and selected decomposition totals
+  : Plot observed and reconstructed decomposition totals
 - [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
   : Plot event contribution shares
 - [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md)
@@ -138,7 +138,7 @@
 - [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
   : Stacked historical decomposition contributions over time
 - [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
-  : Plot observed, fitted, and selected decomposition totals
+  : Plot observed and reconstructed decomposition totals
 - [`plot_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_hypothesis.md)
   : Plot posterior probability statements for IRFs or CDMs
 - [`plot_joint_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_joint_hypothesis.md)

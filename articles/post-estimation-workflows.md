@@ -210,23 +210,35 @@ time.
 For full-sample interpretation, start with
 [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md)
 and one of the dedicated plot helpers.
-[`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
-gives the standard composition view,
 [`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md)
-compares shock paths within each variable, and
+is the best first-look diagnostic because it compares shock paths within
+each variable without mixing in the raw level path.
+[`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
+then gives the coherent composition view by adding an explicit
+`Baseline` component, and
 [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
-overlays the reconstructed series on the observed path.
+compares the observed path against that same reconstructed decomposition
+total.
 
 ``` r
 hd_full <- tidy_hd(post)
-plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
 ```
 
-A pre-rendered full-sample HD plot from the same S = 200 posterior:
+A pre-rendered full-sample HD overlay plot from the same S = 200
+posterior:
+
+![](figures/hd-overlay-showcase.png)
+
+The stacked view now shows a full baseline-plus-shock decomposition on
+the displayed summary scale:
 
 ![](figures/hd-full-showcase.png)
+
+And the totals view checks that decomposition against the realised
+series:
 
 [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
 then aggregates those contributions over a chosen event window.

@@ -1,6 +1,8 @@
 # Overlay historical decomposition component paths
 
-Overlay historical decomposition component paths
+This is a component-comparison plot. By default it does not overlay the
+observed series because the raw level path is not directly comparable to
+a shock-only component panel.
 
 ## Usage
 
@@ -12,12 +14,13 @@ plot_hd_overlay(
   shocks = NULL,
   models = NULL,
   facet_scales = "free_y",
-  include_observed = TRUE,
-  include_residual = TRUE,
+  include_observed = FALSE,
+  include_baseline = FALSE,
   shock_groups = NULL,
   top_n = NULL,
   collapse_other = TRUE,
   by = c("variable", "shock"),
+  intervals = FALSE,
   model = "model1",
   ...
 )
@@ -53,13 +56,13 @@ plot_hd_overlay(
 
 - include_observed:
 
-  If `TRUE`, overlay the observed series when it can be recovered from a
-  posterior model object.
+  If `TRUE`, include the observed series for plot types that compare
+  decomposition totals against the realised path.
 
-- include_residual:
+- include_baseline:
 
-  If `TRUE`, include a residual/unexplained component whenever the
-  observed path differs materially from the fitted contribution sum.
+  If `TRUE`, include the non-shock baseline component when building a
+  full decomposition.
 
 - shock_groups:
 
@@ -78,6 +81,12 @@ plot_hd_overlay(
 - by:
 
   One of `"variable"` or `"shock"` for line-based displays.
+
+- intervals:
+
+  If `TRUE`, show uncertainty ribbons for overlay plots. Defaults to
+  `FALSE` because multiple component intervals in a single panel are
+  usually hard to read.
 
 - ...:
 
