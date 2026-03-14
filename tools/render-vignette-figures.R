@@ -96,6 +96,18 @@ rep_bsvar <- median_target_irf(post_bsvar, horizon = 20)
   height = 5
 )
 
+# hd-full-showcase.png: full-sample HD composition view
+.save_gg(
+  "vignettes/figures/hd-full-showcase.png",
+  template_bsvar_plot(
+    plot_hd_stacked(post_bsvar, variables = "gdp", top_n = 3),
+    family = "hd",
+    preset = "paper"
+  ),
+  width = 8,
+  height = 5
+)
+
 # diagnostics-showcase.png and hd-event-showcase.png: bsvarSIGNs optimism data
 data(optimism)
 sign_irf <- matrix(c(0, 1, rep(NA, 23)), 5, 5)
@@ -119,6 +131,18 @@ hd_sign <- plot_hd_event(post_sign, start = 1, end = 4)
 .save_gg(
   "vignettes/figures/hd-event-showcase.png",
   hd_sign,
+  width = 8,
+  height = 5
+)
+
+hd_event_share <- template_bsvar_plot(
+  plot_hd_event_share(post_sign, start = 1, end = 4, top_n = 4),
+  family = "hd_event",
+  preset = "paper"
+)
+.save_gg(
+  "vignettes/figures/hd-event-share-showcase.png",
+  hd_event_share,
   width = 8,
   height = 5
 )

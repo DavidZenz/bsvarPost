@@ -134,8 +134,16 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd",
     forecast = list(palette = c("#6a3d9a", "#cab2d6"), ribbon_alpha = 0.14, legend_position = "bottom"),
     hd = list(palette = c("#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#999999"),
               ribbon_alpha = 0.10, legend_position = "bottom"),
-    hd_event = list(palette = c("#8c510a", "#d8b365"), ribbon_alpha = 0.10, legend_position = "bottom"),
-    shock_ranking = list(palette = c("#b2182b", "#2166ac"), ribbon_alpha = NULL, legend_position = "bottom"),
+    hd_event = list(
+      palette = c("#8c510a", "#bf812d", "#dfc27d", "#80cdc1", "#35978f", "#01665e", "#c7eae5", "#f6e8c3"),
+      ribbon_alpha = 0.10,
+      legend_position = "bottom"
+    ),
+    shock_ranking = list(
+      palette = c("#b2182b", "#d6604d", "#f4a582", "#92c5de", "#4393c3", "#2166ac", "#fddbc7", "#d1e5f0"),
+      ribbon_alpha = NULL,
+      legend_position = "bottom"
+    ),
     hypothesis = list(palette = c("#1b9e77", "#66a61e", "#d95f02"), ribbon_alpha = NULL, legend_position = "bottom"),
     restriction_audit = list(palette = c("#4c78a8", "#f58518", "#54a24b"), ribbon_alpha = NULL, legend_position = "bottom"),
     simultaneous = list(palette = c("#1f78b4", "#a6cee3"), ribbon_alpha = 0.14, legend_position = "bottom"),
