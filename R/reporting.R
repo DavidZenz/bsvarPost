@@ -314,7 +314,7 @@ infer_report_plot <- function(object, ...) {
 
   object_type <- attr(object, "object_type") %||% ""
   if (identical(object_type, "hd")) {
-    return(plot_hd_stacked(object, ...))
+    return(plot_hd_overlay(object, ...))
   }
   if (identical(object_type, "acceptance_diagnostics")) {
     return(plot_acceptance_diagnostics(object, ...))

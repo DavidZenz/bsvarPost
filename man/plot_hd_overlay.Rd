@@ -11,12 +11,13 @@ plot_hd_overlay(
   shocks = NULL,
   models = NULL,
   facet_scales = "free_y",
-  include_observed = TRUE,
-  include_residual = TRUE,
+  include_observed = FALSE,
+  include_baseline = FALSE,
   shock_groups = NULL,
   top_n = NULL,
   collapse_other = TRUE,
   by = c("variable", "shock"),
+  intervals = FALSE,
   model = "model1",
   ...
 )
@@ -36,12 +37,11 @@ is not already a tidy table.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 
-\item{include_observed}{If \code{TRUE}, overlay the observed series when it
-can be recovered from a posterior model object.}
+\item{include_observed}{If \code{TRUE}, include the observed series for plot
+types that compare decomposition totals against the realised path.}
 
-\item{include_residual}{If \code{TRUE}, include a residual/unexplained
-component whenever the observed path differs materially from the fitted
-contribution sum.}
+\item{include_baseline}{If \code{TRUE}, include the non-shock baseline
+component when building a full decomposition.}
 
 \item{shock_groups}{Optional named character vector mapping shock names to
 display groups.}
@@ -54,9 +54,15 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
 \item{by}{One of \code{"variable"} or \code{"shock"} for line-based displays.}
 
+\item{intervals}{If \code{TRUE}, show uncertainty ribbons for overlay plots.
+Defaults to \code{FALSE} because multiple component intervals in a single
+panel are usually hard to read.}
+
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-Overlay historical decomposition component paths
+This is a component-comparison plot. By default it does not overlay the
+observed series because the raw level path is not directly comparable to a
+shock-only component panel.
 }

@@ -85,7 +85,7 @@ build_publication_plot <- function(object, family, ...) {
 
   switch(
     family,
-    hd = plot_hd_stacked(object, ...),
+    hd = plot_hd_overlay(object, ...),
     acceptance_diagnostics = plot_acceptance_diagnostics(object, ...),
     hd_event = plot_hd_event(object, ...),
     shock_ranking = plot_shock_ranking(object, ...),

@@ -365,8 +365,8 @@ publish_bsvar_plot(diag_tbl, preset = "slides")
 
 ```r
 hd_tbl <- tidy_hd(post)
-plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
 
 hd_event <- tidy_hd_event(post, start = 1, end = 4)
@@ -388,6 +388,16 @@ annotate_bsvar_plot(
   title = "Event-window contribution shares"
 )
 ```
+
+For full-sample interpretation, the intended workflow is:
+
+- `plot_hd_overlay()` first, to compare shock paths over time without mixing in
+  the raw observed level.
+- `plot_hd_stacked()` second, for a coherent composition view. It adds an
+  explicit `Baseline` component so the stacked areas sum to the realised series
+  on the plotted summary scale.
+- `plot_hd_total()` third, to check the observed path against that same
+  reconstructed decomposition total.
 
 Event-window comparisons:
 

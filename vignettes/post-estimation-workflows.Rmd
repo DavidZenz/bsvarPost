@@ -157,22 +157,33 @@ Historical decompositions (HD) measure each structural shock's contribution to
 observed variation in each variable at each point in time.
 
 For full-sample interpretation, start with `tidy_hd()` and one of the dedicated
-plot helpers. `plot_hd_stacked()` gives the standard composition view,
-`plot_hd_overlay()` compares shock paths within each variable, and
-`plot_hd_total()` overlays the reconstructed series on the observed path.
+plot helpers. `plot_hd_overlay()` is the best first-look diagnostic because it
+compares shock paths within each variable without mixing in the raw level path.
+`plot_hd_stacked()` then gives the coherent composition view by adding an
+explicit `Baseline` component, and `plot_hd_total()` compares the observed path
+against that same reconstructed decomposition total.
 
 ```{r, eval = FALSE}
 hd_full <- tidy_hd(post)
-plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
 ```
 
-A pre-rendered full-sample HD plot from the same S = 200 posterior:
+A pre-rendered full-sample HD overlay plot from the same S = 200 posterior:
+
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("figures/hd-overlay-showcase.png")
+```
+
+The stacked view now shows a full baseline-plus-shock decomposition on the
+displayed summary scale:
 
 ```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
 knitr::include_graphics("figures/hd-full-showcase.png")
 ```
+
+And the totals view checks that decomposition against the realised series:
 
 `tidy_hd_event()` then aggregates those contributions over a chosen event
 window.
