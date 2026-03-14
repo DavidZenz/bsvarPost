@@ -38,10 +38,35 @@ as_tsibble_post <- function(object, key = NULL, index = NULL, regular = NULL, va
     key <- intersect(c("model", "variable", "shock", "draw"), names(object))
   }
 
+  object <- normalise_tsibble_index(object, index = index)
+
   args <- list(object, key = key, index = index, validate = validate)
   if (!is.null(regular)) {
     args$regular <- regular
   }
 
   do.call(tsibble::as_tsibble, args)
+}
+
+normalise_tsibble_index <- function(object, index) {
+  if (!index %in% names(object)) {
+    stop("`index` must name a column present in `object`.", call. = FALSE)
+  }
+
+  index_values <- object[[index]]
+  if (!is.character(index_values)) {
+    return(object)
+  }
+
+  suppressWarnings(parsed <- as.numeric(index_values))
+  if (all(!is.na(parsed))) {
+    object[[index]] <- parsed
+    return(object)
+  }
+
+  stop(
+    "Index column `", index, "` must use a tsibble-supported type. ",
+    "Character indexes are only supported when they can be parsed as numeric values.",
+    call. = FALSE
+  )
 }
