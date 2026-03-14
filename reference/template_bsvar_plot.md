@@ -7,7 +7,7 @@ Apply an output-family template to a bsvarPost plot
 ``` r
 template_bsvar_plot(
   plot,
-  family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking", "hypothesis",
+  family = c("irf", "cdm", "forecast", "hd", "hd_event", "shock_ranking", "hypothesis",
     "restriction_audit", "simultaneous", "joint_hypothesis", "acceptance_diagnostics",
     "representative", "comparison"),
   preset = c("default", "paper", "slides"),
@@ -24,7 +24,7 @@ template_bsvar_plot(
 
 - family:
 
-  One of `"irf"`, `"cdm"`, `"forecast"`, `"hd_event"`,
+  One of `"irf"`, `"cdm"`, `"forecast"`, `"hd"`, `"hd_event"`,
   `"shock_ranking"`, `"hypothesis"`, `"restriction_audit"`,
   `"simultaneous"`, `"joint_hypothesis"`, `"acceptance_diagnostics"`,
   `"representative"`, or `"comparison"`.

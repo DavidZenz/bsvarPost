@@ -70,8 +70,24 @@
 
 ## Historical Decomposition and Timing
 
+- [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md)
+  : Tidy historical decompositions
 - [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
   : Tidy event-window historical decompositions
+- [`plot_hd_lines()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_lines.md)
+  : Plot full-sample historical decomposition components
+- [`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md)
+  : Overlay historical decomposition component paths
+- [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
+  : Stacked historical decomposition contributions over time
+- [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
+  : Plot observed, fitted, and selected decomposition totals
+- [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
+  : Plot event contribution shares
+- [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md)
+  : Plot cumulative event-window contribution paths
+- [`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.md)
+  : Plot event-window contribution uncertainty by shock
 - [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md)
   : Rank shocks by event-window historical decomposition contributions
 - [`peak_response()`](https://davidzenz.github.io/bsvarPost/reference/peak_response.md)
@@ -109,6 +125,20 @@
   : Plot comparison summaries for restriction-audit tables
 - [`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md)
   : Plot event-window historical decomposition summaries
+- [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md)
+  : Plot cumulative event-window contribution paths
+- [`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.md)
+  : Plot event-window contribution uncertainty by shock
+- [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
+  : Plot event contribution shares
+- [`plot_hd_lines()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_lines.md)
+  : Plot full-sample historical decomposition components
+- [`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md)
+  : Overlay historical decomposition component paths
+- [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
+  : Stacked historical decomposition contributions over time
+- [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
+  : Plot observed, fitted, and selected decomposition totals
 - [`plot_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_hypothesis.md)
   : Plot posterior probability statements for IRFs or CDMs
 - [`plot_joint_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_joint_hypothesis.md)

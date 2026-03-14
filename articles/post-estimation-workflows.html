@@ -300,12 +300,23 @@ credible bands, reflecting the richer lag dynamics.</p>
 </h2>
 <p>Historical decompositions (HD) measure each structural shock’s
 contribution to observed variation in each variable at each point in
-time. <code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> aggregates those contributions over a
-chosen event window.</p>
+time.</p>
+<p>For full-sample interpretation, start with <code><a href="../reference/tidy_hd.html">tidy_hd()</a></code> and
+one of the dedicated plot helpers. <code><a href="../reference/plot_hd_stacked.html">plot_hd_stacked()</a></code> gives
+the standard composition view, <code><a href="../reference/plot_hd_overlay.html">plot_hd_overlay()</a></code> compares
+shock paths within each variable, and <code><a href="../reference/plot_hd_total.html">plot_hd_total()</a></code>
+overlays the reconstructed series on the observed path.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hd_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd.html">tidy_hd</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_hd_stacked.html">plot_hd_stacked</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_hd_overlay.html">plot_hd_overlay</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_hd_total.html">plot_hd_total</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, shocks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gs"</span>, <span class="st">"ttr"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> then aggregates those contributions over
+a chosen event window.</p>
 <p>The <code>us_fiscal_lsuw</code> sample begins in 1948. To examine
 which shocks drove fiscal dynamics in the first year (four quarters:
 1948.25 through 1948.75):</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hd_event</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd_event.html">tidy_hd_event</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hd_event</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
@@ -321,7 +332,7 @@ which shocks drove fiscal dynamics in the first year (four quarters:
 <p><code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> ranks the structural shocks by their
 absolute contribution to a target variable over the same window. Which
 shock moved <code>gdp</code> the most?</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/shock_ranking.html">shock_ranking</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, ranking <span class="op">=</span> <span class="st">"absolute"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 14</span></span></span>
 <span><span class="co">#&gt;   model  object_type variable shock event_start event_end     mean    median</span></span>
@@ -337,6 +348,11 @@ shock moved <code>gdp</code> the most?</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> model1 hd_event    ttr      gs    1948.25     1948.75    0.001<span style="text-decoration: underline;">40</span>  0.006<span style="text-decoration: underline;">80</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: sd &lt;dbl&gt;, lower &lt;dbl&gt;, upper &lt;dbl&gt;, ranking &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   rank_score &lt;dbl&gt;, rank &lt;int&gt;</span></span></span></code></pre></div>
+<p>For a composition-oriented event view,
+<code><a href="../reference/plot_hd_event_share.html">plot_hd_event_share()</a></code> rescales the same event-window
+contributions into shares:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event_share.html">plot_hd_event_share</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p>A pre-rendered HD event figure from a richer S = 200 run:</p>
 <p><img src="figures/hd-event-showcase.png" class="r-plt" alt="" width="100%"></p>
 </div>
@@ -346,7 +362,7 @@ shock moved <code>gdp</code> the most?</p>
 <p>All <code>bsvarPost</code> outputs are <code>bsvar_post_tbl</code>
 data frames and accept the same family of reporting helpers.</p>
 <p><strong>knitr table</strong> (always available):</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_irf</span><span class="op">)</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -2254,7 +2270,7 @@ data frames and accept the same family of reporting helpers.</p>
 </table>
 <p><strong>gt table</strong> (when the <code>gt</code> package is
 installed):</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_gt</a></span><span class="op">(</span><span class="va">cmp_peak</span>, caption <span class="op">=</span> <span class="st">"Peak response: 1-lag vs 3-lag"</span>, digits <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>      preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
 <div id="mwlefoodfi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -2757,52 +2773,52 @@ installed):</p>
 </div>
 <p><strong>flextable</strong> (when the <code>flextable</code> package
 is installed):</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_flextable</a></span><span class="op">(</span><span class="va">cmp_peak</span>, caption <span class="op">=</span> <span class="st">"Peak response: 1-lag vs 3-lag"</span>, digits <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>             preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
 <div class="tabwid">
-<style>.cl-4acbfcc8{}.cl-4ac2f7ea{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-4ac6737a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-4ac67384{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-4ac69bf2{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69bfc{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c06{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c07{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c10{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c11{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-4acbfcc8">
+<style>.cl-b4ac2454{}.cl-b4a46c0a{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b4a7bbd0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b4a7bbe4{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b4a7e4fc{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b4a7e506{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b4a7e507{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b4a7e510{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b4a7e511{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b4a7e51a{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-b4ac2454">
 <caption style="display:table-caption;margin:0pt;text-align:center;border-bottom: 0.00pt solid transparent;border-top: 0.00pt solid transparent;border-left: 0.00pt solid transparent;border-right: 0.00pt solid transparent;padding-top:3pt;padding-bottom:3pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;"><span>Peak response: 1-lag vs 3-lag</span></caption>
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-4ac69bf2"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">Model</span></p></th>
-<th class="cl-4ac69bf2"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">Variable</span></p></th>
-<th class="cl-4ac69bf2"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">Shock</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Mean value</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Median value</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Lower value</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Upper value</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Mean horizon</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Median horizon</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Lower horizon</span></p></th>
-<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Upper horizon</span></p></th>
+<th class="cl-b4a7e4fc"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">Model</span></p></th>
+<th class="cl-b4a7e4fc"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">Variable</span></p></th>
+<th class="cl-b4a7e4fc"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">Shock</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Mean value</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Median value</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Lower value</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Upper value</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Mean horizon</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Median horizon</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Lower horizon</span></p></th>
+<th class="cl-b4a7e506"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">Upper horizon</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-4ac69c06"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">baseline</span></p></td>
-<td class="cl-4ac69c06"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gdp</span></p></td>
-<td class="cl-4ac69c06"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gs</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0.038</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">-0.001</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0.001</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">1.105</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
-<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">10.5</span></p></td>
+<td class="cl-b4a7e507"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">baseline</span></p></td>
+<td class="cl-b4a7e507"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">gdp</span></p></td>
+<td class="cl-b4a7e507"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">gs</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0.038</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">-0.001</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0.001</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">1.105</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0</span></p></td>
+<td class="cl-b4a7e510"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">10.5</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-4ac69c10"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">alternative</span></p></td>
-<td class="cl-4ac69c10"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gdp</span></p></td>
-<td class="cl-4ac69c10"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gs</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">66,131.493</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">-0.001</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0.003</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">4.740</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">1</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
-<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">20.0</span></p></td>
+<td class="cl-b4a7e511"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">alternative</span></p></td>
+<td class="cl-b4a7e511"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">gdp</span></p></td>
+<td class="cl-b4a7e511"><p class="cl-b4a7bbd0"><span class="cl-b4a46c0a">gs</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">66,131.493</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">-0.001</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0.003</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">4.740</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">1</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">0</span></p></td>
+<td class="cl-b4a7e51a"><p class="cl-b4a7bbe4"><span class="cl-b4a46c0a">20.0</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -2810,7 +2826,7 @@ is installed):</p>
 <p><strong>Publication plot</strong> — <code><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code>
 applies a paper-ready theme and returns the plot object for further
 adjustment or direct saving.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">rep_irf</span>, preset <span class="op">=</span> <span class="st">"paper"</span><span class="op">)</span></span></code></pre></div>
 <p>A pre-rendered diagnostics figure demonstrating the publication
 styling layer:</p>

@@ -23,6 +23,7 @@ style_bsvar_plot(
   A `ggplot` object, typically returned by
   [`ggplot2::autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html),
   [`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md),
+  [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md),
   or
   [`plot_shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/plot_shock_ranking.md).
 

@@ -207,6 +207,34 @@ A pre-rendered representative-response showcase:
 
 ![](figures/representative-showcase.png)
 
+## Historical decomposition plots
+
+Historical decomposition is now split into two complementary workflows:
+
+- full-sample contribution paths with
+  [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md),
+  [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md),
+  [`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md),
+  and
+  [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md);
+- event-window summaries with
+  [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md),
+  [`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md),
+  [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md),
+  [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md),
+  and
+  [`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.md).
+
+``` r
+hd_tbl <- tidy_hd(post)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
+plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+
+hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
+plot_hd_event_share(post, start = hd_times[1], end = hd_times[2], top_n = 3)
+```
+
 ## Reporting helpers
 
 Most `bsvarPost` outputs are tidy data frames and render directly to any
@@ -1191,8 +1219,9 @@ Impulse-response comparison
 ## Next steps
 
 - **Post-Estimation Workflows vignette** — covers historical
-  decomposition, hypothesis testing, peak/duration response summaries,
-  and representative-draw selection.
+  decomposition, including full-sample HD plots and event-window
+  composition views, plus hypothesis testing, peak/duration response
+  summaries, and representative-draw selection.
 - **Hypothesis Testing vignette** — formal posterior probability
   statements via
   [`hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_irf.md),

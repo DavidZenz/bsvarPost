@@ -77,13 +77,13 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 result <- tidy_cdm(post, horizon = 3)
 head(result)
 #> # A tibble: 6 × 10
-#>   model  object_type variable shock horizon     mean   median      sd    lower
-#>   <chr>  <chr>       <chr>    <chr>   <dbl>    <dbl>    <dbl>   <dbl>    <dbl>
-#> 1 model1 cdm         ttr      ttr         0  0.0817   0.0641  0.0419   0.0547 
-#> 2 model1 cdm         ttr      ttr         1  0.174    0.134   0.0955   0.110  
-#> 3 model1 cdm         ttr      ttr         2  0.280    0.211   0.163    0.168  
-#> 4 model1 cdm         ttr      ttr         3  0.402    0.295   0.248    0.227  
-#> 5 model1 cdm         ttr      gs          0  0        0       0        0      
-#> 6 model1 cdm         ttr      gs          1 -0.00283 -0.00662 0.00862 -0.00724
+#>   model  object_type variable shock horizon      mean   median      sd    lower
+#>   <chr>  <chr>       <chr>    <chr>   <dbl>     <dbl>    <dbl>   <dbl>    <dbl>
+#> 1 model1 cdm         ttr      ttr         0  0.0442    0.0375  0.0154   0.0347 
+#> 2 model1 cdm         ttr      ttr         1  0.0926    0.0764  0.0364   0.0690 
+#> 3 model1 cdm         ttr      ttr         2  0.145     0.117   0.0616   0.103  
+#> 4 model1 cdm         ttr      ttr         3  0.200     0.161   0.0860   0.137  
+#> 5 model1 cdm         ttr      gs          0  0         0       0        0      
+#> 6 model1 cdm         ttr      gs          1 -0.000784 -0.00344 0.00929 -0.00790
 #> # ℹ 1 more variable: upper <dbl>
 ```

@@ -70,17 +70,17 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 sr <- shock_ranking(post, start = "1948.25", end = "1948.5")
 print(sr)
 #> # A tibble: 9 × 14
-#>   model  object_type variable shock event_start event_end   mean median    sd
-#>   <chr>  <chr>       <chr>    <chr> <chr>       <chr>      <dbl>  <dbl> <dbl>
-#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5     2.38   2.33  0.305
-#> 2 model1 hd_event    gdp      ttr   1948.25     1948.5     1.14   1.06  0.288
-#> 3 model1 hd_event    gdp      gs    1948.25     1948.5    -0.533 -0.567 0.174
-#> 4 model1 hd_event    gs       gs    1948.25     1948.5    -1.60  -1.65  1.18 
-#> 5 model1 hd_event    gs       ttr   1948.25     1948.5     1.19   1.18  0.962
-#> 6 model1 hd_event    gs       gdp   1948.25     1948.5     0      0     0    
-#> 7 model1 hd_event    ttr      ttr   1948.25     1948.5    -1.36  -1.19  0.421
-#> 8 model1 hd_event    ttr      gdp   1948.25     1948.5     0      0     0    
-#> 9 model1 hd_event    ttr      gs    1948.25     1948.5     0      0     0    
+#>   model object_type variable shock event_start event_end    mean   median     sd
+#>   <chr> <chr>       <chr>    <chr> <chr>       <chr>       <dbl>    <dbl>  <dbl>
+#> 1 mode… hd_event    gdp      gdp   1948.25     1948.5     1.27    1.18    0.884 
+#> 2 mode… hd_event    gdp      ttr   1948.25     1948.5     0.254   0.168   0.245 
+#> 3 mode… hd_event    gdp      gs    1948.25     1948.5     0.0344  0.00353 0.0888
+#> 4 mode… hd_event    gs       gs    1948.25     1948.5     0.654   0.391   0.679 
+#> 5 mode… hd_event    gs       ttr   1948.25     1948.5    -0.0352 -0.00373 0.0821
+#> 6 mode… hd_event    gs       gdp   1948.25     1948.5     0       0       0     
+#> 7 mode… hd_event    ttr      ttr   1948.25     1948.5    -2.42   -2.52    1.27  
+#> 8 mode… hd_event    ttr      gdp   1948.25     1948.5     0       0       0     
+#> 9 mode… hd_event    ttr      gs    1948.25     1948.5     0       0       0     
 #> # ℹ 5 more variables: lower <dbl>, upper <dbl>, ranking <chr>,
 #> #   rank_score <dbl>, rank <int>
 ```

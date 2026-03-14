@@ -43,10 +43,10 @@ head(result)
 #> # A tibble: 6 × 9
 #>   model  object_type variable time      mean median    sd  lower   upper
 #>   <chr>  <chr>       <chr>    <chr>    <dbl>  <dbl> <dbl>  <dbl>   <dbl>
-#> 1 model1 shocks      ttr      1948.25 -1.83  -1.86  0.447 -2.29  -1.26  
-#> 2 model1 shocks      ttr      1948.5  -0.401 -0.388 0.457 -0.972  0.0779
-#> 3 model1 shocks      ttr      1948.75  0.740  0.903 0.321  0.296  0.949 
-#> 4 model1 shocks      ttr      1949     0.657  0.755 0.387  0.132  0.955 
-#> 5 model1 shocks      ttr      1949.25  0.421  0.426 0.476 -0.197  0.841 
-#> 6 model1 shocks      ttr      1949.5   0.203  0.114 0.656 -0.611  0.830 
+#> 1 model1 shocks      ttr      1948.25 -2.56  -2.99  0.980 -3.11  -1.21  
+#> 2 model1 shocks      ttr      1948.5  -1.47  -1.88  1.05  -2.13  -0.0456
+#> 3 model1 shocks      ttr      1948.75 -0.337 -0.637 0.888 -0.954  0.857 
+#> 4 model1 shocks      ttr      1949    -0.500 -0.783 0.888 -1.12   0.690 
+#> 5 model1 shocks      ttr      1949.25 -0.806 -1.09  0.831 -1.38   0.315 
+#> 6 model1 shocks      ttr      1949.5  -1.22  -1.54  0.940 -1.86   0.0493
 ```

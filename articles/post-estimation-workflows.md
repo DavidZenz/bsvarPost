@@ -206,8 +206,26 @@ credible bands, reflecting the richer lag dynamics.
 Historical decompositions (HD) measure each structural shock’s
 contribution to observed variation in each variable at each point in
 time.
+
+For full-sample interpretation, start with
+[`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md)
+and one of the dedicated plot helpers.
+[`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
+gives the standard composition view,
+[`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md)
+compares shock paths within each variable, and
+[`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
+overlays the reconstructed series on the observed path.
+
+``` r
+hd_full <- tidy_hd(post)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
+plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+```
+
 [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
-aggregates those contributions over a chosen event window.
+then aggregates those contributions over a chosen event window.
 
 The `us_fiscal_lsuw` sample begins in 1948. To examine which shocks
 drove fiscal dynamics in the first year (four quarters: 1948.25 through
@@ -248,6 +266,14 @@ shock_ranking(post, start = "1948.25", end = "1948.75", ranking = "absolute")
 #> 9 model1 hd_event    ttr      gs    1948.25     1948.75    0.00140  0.00680 
 #> # ℹ 6 more variables: sd <dbl>, lower <dbl>, upper <dbl>, ranking <chr>,
 #> #   rank_score <dbl>, rank <int>
+```
+
+For a composition-oriented event view,
+[`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
+rescales the same event-window contributions into shares:
+
+``` r
+plot_hd_event_share(post, start = "1948.25", end = "1948.75", top_n = 3)
 ```
 
 A pre-rendered HD event figure from a richer S = 200 run:

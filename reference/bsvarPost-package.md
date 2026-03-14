@@ -16,9 +16,11 @@ If no vignettes are listed there, reinstall the GitHub package with
 
 The package currently ships with:
 
-- [bsvarPost-getting-started](https://davidzenz.github.io/bsvarPost/reference/bsvarPost-getting-started.md)
+- Getting Started (`bsvarPost`)
 
-- [bsvarPost-workflows](https://davidzenz.github.io/bsvarPost/reference/bsvarPost-workflows.md)
+- Post-Estimation Workflows (`post-estimation-workflows`)
+
+- Hypothesis Testing (`hypothesis-testing`)
 
 ## See also
 
@@ -30,4 +32,4 @@ Useful links:
 
 ## Author
 
-**Maintainer**: David Zenz <office@davidzenz.com>
+**Maintainer**: David Zenz <office@davidzenz.com> \[copyright holder\]

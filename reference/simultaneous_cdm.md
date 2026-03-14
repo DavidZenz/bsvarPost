@@ -176,13 +176,13 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 sb <- simultaneous_cdm(post, horizon = 3)
 head(sb)
 #> # A tibble: 6 × 10
-#>   model  object_type      variable shock horizon     median lower upper
-#>   <chr>  <chr>            <chr>    <chr>   <dbl>      <dbl> <dbl> <dbl>
-#> 1 model1 simultaneous_cdm ttr      ttr         0  0.0310    -3.17  3.23
-#> 2 model1 simultaneous_cdm gs       ttr         0 -0.000280  -3.20  3.20
-#> 3 model1 simultaneous_cdm gdp      ttr         0  0.00482   -3.19  3.20
-#> 4 model1 simultaneous_cdm ttr      gs          0  0         -3.20  3.20
-#> 5 model1 simultaneous_cdm gs       gs          0  0.0263    -3.17  3.22
-#> 6 model1 simultaneous_cdm gdp      gs          0  0.0000954 -3.20  3.20
+#>   model  object_type      variable shock horizon    median  lower upper
+#>   <chr>  <chr>            <chr>    <chr>   <dbl>     <dbl>  <dbl> <dbl>
+#> 1 model1 simultaneous_cdm ttr      ttr         0  0.0308   -0.114 0.176
+#> 2 model1 simultaneous_cdm gs       ttr         0 -0.00230  -0.147 0.142
+#> 3 model1 simultaneous_cdm gdp      ttr         0  0.00509  -0.140 0.150
+#> 4 model1 simultaneous_cdm ttr      gs          0  0        -0.145 0.145
+#> 5 model1 simultaneous_cdm gs       gs          0  0.0275   -0.117 0.172
+#> 6 model1 simultaneous_cdm gdp      gs          0 -0.000823 -0.146 0.144
 #> # ℹ 2 more variables: simultaneous_prob <dbl>, critical_value <dbl>
 ```

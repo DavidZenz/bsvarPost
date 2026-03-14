@@ -150,11 +150,11 @@ head(hd_event)
 #> # A tibble: 6 × 11
 #>   model  object_type variable shock event_start event_end    mean  median     sd
 #>   <chr>  <chr>       <chr>    <chr> <chr>       <chr>       <dbl>   <dbl>  <dbl>
-#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5     1.38    1.26   0.406 
+#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5     1.38    1.58   1.05  
 #> 2 model1 hd_event    gs       gdp   1948.25     1948.5     0       0      0     
 #> 3 model1 hd_event    ttr      gdp   1948.25     1948.5     0       0      0     
-#> 4 model1 hd_event    gdp      gs    1948.25     1948.5    -0.0863 -0.0439 0.0879
-#> 5 model1 hd_event    gs       gs    1948.25     1948.5    -0.0415 -0.222  1.34  
+#> 4 model1 hd_event    gdp      gs    1948.25     1948.5     0.0327  0.0523 0.0754
+#> 5 model1 hd_event    gs       gs    1948.25     1948.5    -0.503  -0.402  0.874 
 #> 6 model1 hd_event    ttr      gs    1948.25     1948.5     0       0      0     
 #> # ℹ 2 more variables: lower <dbl>, upper <dbl>
 ```

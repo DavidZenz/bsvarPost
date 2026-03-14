@@ -204,20 +204,20 @@ irf_tbl <- tidy_irf(post, horizon = 3)
 # Report table
 rt <- report_table(irf_tbl)
 head(rt)
-#>    Model Variable Shock Horizon        Mean      Median       Lower
-#> 1 model1      ttr   ttr       0  0.05754515  0.04806737  0.04368855
-#> 2 model1      ttr   ttr       1  0.07829688  0.05286291  0.04328229
-#> 3 model1      ttr   ttr       2  0.10079462  0.06200503  0.04332046
-#> 4 model1      ttr   ttr       3  0.12464119  0.07311891  0.04382685
-#> 5 model1      ttr    gs       0  0.00000000  0.00000000  0.00000000
-#> 6 model1      ttr    gs       1 -0.02455106 -0.01044670 -0.07170458
-#>          Upper object_type         sd
-#> 1  0.091199426         irf 0.02472531
-#> 2  0.165635428         irf 0.06446679
-#> 3  0.241270387         irf 0.10386285
-#> 4  0.315650268         irf 0.14087868
-#> 5  0.000000000         irf 0.00000000
-#> 6 -0.006726165         irf 0.03491052
+#>    Model Variable Shock Horizon       Mean       Median         Lower
+#> 1 model1      ttr   ttr       0 0.04274337 0.0329951693  0.0287148222
+#> 2 model1      ttr   ttr       1 0.05973787 0.0270632019  0.0216077639
+#> 3 model1      ttr   ttr       2 0.07313949 0.0252268990 -0.0174972921
+#> 4 model1      ttr   ttr       3 0.06833054 0.0235072535 -0.1260623605
+#> 5 model1      ttr    gs       0 0.00000000 0.0000000000  0.0000000000
+#> 6 model1      ttr    gs       1 0.00163395 0.0003055543 -0.0003440199
+#>         Upper object_type          sd
+#> 1 0.075412878         irf 0.023763510
+#> 2 0.158032659         irf 0.072233274
+#> 3 0.250142138         irf 0.130822612
+#> 4 0.336607419         irf 0.208372228
+#> 5 0.000000000         irf 0.000000000
+#> 6 0.005700754         irf 0.002945923
 
 # Report bundle
 rb <- report_bundle(irf_tbl)

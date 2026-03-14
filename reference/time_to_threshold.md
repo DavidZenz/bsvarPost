@@ -237,15 +237,15 @@ print(ttt)
 #> # A tibble: 9 × 12
 #>   model  object_type           variable shock relation threshold mean_horizon
 #>   <chr>  <chr>                 <chr>    <chr> <chr>        <dbl>        <dbl>
-#> 1 model1 time_to_threshold_irf ttr      ttr   >                0            0
-#> 2 model1 time_to_threshold_irf ttr      gs    >                0            1
-#> 3 model1 time_to_threshold_irf ttr      gdp   >                0            1
-#> 4 model1 time_to_threshold_irf gs       ttr   >                0            0
-#> 5 model1 time_to_threshold_irf gs       gs    >                0            0
-#> 6 model1 time_to_threshold_irf gs       gdp   >                0            1
-#> 7 model1 time_to_threshold_irf gdp      ttr   >                0            0
-#> 8 model1 time_to_threshold_irf gdp      gs    >                0            0
-#> 9 model1 time_to_threshold_irf gdp      gdp   >                0            0
+#> 1 model1 time_to_threshold_irf ttr      ttr   >                0          0  
+#> 2 model1 time_to_threshold_irf ttr      gs    >                0          1  
+#> 3 model1 time_to_threshold_irf ttr      gdp   >                0          1  
+#> 4 model1 time_to_threshold_irf gs       ttr   >                0          1.5
+#> 5 model1 time_to_threshold_irf gs       gs    >                0          0  
+#> 6 model1 time_to_threshold_irf gs       gdp   >                0          1  
+#> 7 model1 time_to_threshold_irf gdp      ttr   >                0          0  
+#> 8 model1 time_to_threshold_irf gdp      gs    >                0          0  
+#> 9 model1 time_to_threshold_irf gdp      gdp   >                0          0  
 #> # ℹ 5 more variables: median_horizon <dbl>, sd_horizon <dbl>,
 #> #   lower_horizon <dbl>, upper_horizon <dbl>, reached_prob <dbl>
 ```
