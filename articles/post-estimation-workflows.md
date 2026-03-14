@@ -224,6 +224,10 @@ plot_hd_overlay(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
 ```
 
+A pre-rendered full-sample HD plot from the same S = 200 posterior:
+
+![](figures/hd-full-showcase.png)
+
 [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
 then aggregates those contributions over a chosen event window.
 
@@ -275,6 +279,10 @@ rescales the same event-window contributions into shares:
 ``` r
 plot_hd_event_share(post, start = "1948.25", end = "1948.75", top_n = 3)
 ```
+
+And a pre-rendered event-share composition plot:
+
+![](figures/hd-event-share-showcase.png)
 
 A pre-rendered HD event figure from a richer S = 200 run:
 
