@@ -168,6 +168,12 @@ plot_hd_overlay(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
 ```
 
+A pre-rendered full-sample HD plot from the same S = 200 posterior:
+
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("figures/hd-full-showcase.png")
+```
+
 `tidy_hd_event()` then aggregates those contributions over a chosen event
 window.
 
@@ -191,6 +197,12 @@ same event-window contributions into shares:
 
 ```{r, eval = FALSE}
 plot_hd_event_share(post, start = "1948.25", end = "1948.75", top_n = 3)
+```
+
+And a pre-rendered event-share composition plot:
+
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("figures/hd-event-share-showcase.png")
 ```
 
 A pre-rendered HD event figure from a richer S = 200 run:

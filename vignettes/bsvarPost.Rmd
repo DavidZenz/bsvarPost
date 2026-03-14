@@ -187,6 +187,12 @@ hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
 plot_hd_event_share(post, start = hd_times[1], end = hd_times[2], top_n = 3)
 ```
 
+A pre-rendered full-sample HD composition plot from the same S = 200 posterior:
+
+```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
+knitr::include_graphics("figures/hd-full-showcase.png")
+```
+
 ## Reporting helpers
 
 Most `bsvarPost` outputs are tidy data frames and render directly to any table
