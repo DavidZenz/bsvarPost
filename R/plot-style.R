@@ -44,7 +44,7 @@ theme_bsvarpost <- function(preset = c("default", "paper", "slides"),
 #' Apply a publication-oriented style to a bsvarPost plot
 #'
 #' @param plot A `ggplot` object, typically returned by `ggplot2::autoplot()`,
-#'   `plot_hd_event()`, or `plot_shock_ranking()`.
+#'   `plot_hd_event()`, `plot_hd_stacked()`, or `plot_shock_ranking()`.
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param palette Optional vector of colours used for both line and fill scales.
 #' @param ribbon_alpha Optional alpha override for ribbon layers.
@@ -98,7 +98,7 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 #' Apply an output-family template to a bsvarPost plot
 #'
 #' @param plot A `ggplot` object.
-#' @param family One of `"irf"`, `"cdm"`, `"forecast"`, `"hd_event"`,
+#' @param family One of `"irf"`, `"cdm"`, `"forecast"`, `"hd"`, `"hd_event"`,
 #'   `"shock_ranking"`, `"hypothesis"`, `"restriction_audit"`,
 #'   `"simultaneous"`, `"joint_hypothesis"`, `"acceptance_diagnostics"`,
 #'   `"representative"`, or `"comparison"`.
@@ -114,7 +114,7 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 #' irf_tbl <- tidy_irf(post, horizon = 3)
 #' p <- template_bsvar_plot(ggplot2::autoplot(irf_tbl), family = "irf")
 #' @export
-template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking",
+template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd", "hd_event", "shock_ranking",
                                                  "hypothesis", "restriction_audit", "simultaneous",
                                                  "joint_hypothesis", "acceptance_diagnostics",
                                                  "representative", "comparison"),
@@ -132,6 +132,8 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
     irf = list(palette = c("#1f78b4", "#a6cee3"), ribbon_alpha = 0.14, legend_position = "bottom"),
     cdm = list(palette = c("#0b6e4f", "#88c9a1"), ribbon_alpha = 0.14, legend_position = "bottom"),
     forecast = list(palette = c("#6a3d9a", "#cab2d6"), ribbon_alpha = 0.14, legend_position = "bottom"),
+    hd = list(palette = c("#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#999999"),
+              ribbon_alpha = 0.10, legend_position = "bottom"),
     hd_event = list(palette = c("#8c510a", "#d8b365"), ribbon_alpha = 0.10, legend_position = "bottom"),
     shock_ranking = list(palette = c("#b2182b", "#2166ac"), ribbon_alpha = NULL, legend_position = "bottom"),
     hypothesis = list(palette = c("#1b9e77", "#66a61e", "#d95f02"), ribbon_alpha = NULL, legend_position = "bottom"),
@@ -158,6 +160,7 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd_e
     irf = "impulse response",
     cdm = "cumulative dynamic multiplier",
     forecast = "forecast",
+    hd = "historical contribution",
     hd_event = "event contribution",
     shock_ranking = "median contribution",
     hypothesis = "posterior probability",

@@ -7,8 +7,8 @@ home:
   title: bsvarPost
   description: >
     A post-estimation companion package for bsvars and bsvarSIGNs, focused on
-    cumulative responses, tidy extraction, comparison workflows, diagnostics,
-    and publication-ready reporting.
+    cumulative responses, historical decomposition workflows, tidy extraction,
+    comparison workflows, diagnostics, and publication-ready reporting.
   sidebar:
     structure:
       - links
@@ -68,7 +68,15 @@ reference:
 
   - title: Historical Decomposition and Timing
     contents:
+      - tidy_hd
       - tidy_hd_event
+      - plot_hd_lines
+      - plot_hd_overlay
+      - plot_hd_stacked
+      - plot_hd_total
+      - plot_hd_event_share
+      - plot_hd_event_cumulative
+      - plot_hd_event_distribution
       - shock_ranking
       - peak_response
       - duration_response

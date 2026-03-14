@@ -313,6 +313,9 @@ infer_report_plot <- function(object, ...) {
   }
 
   object_type <- attr(object, "object_type") %||% ""
+  if (identical(object_type, "hd")) {
+    return(plot_hd_stacked(object, ...))
+  }
   if (identical(object_type, "acceptance_diagnostics")) {
     return(plot_acceptance_diagnostics(object, ...))
   }
@@ -356,6 +359,7 @@ default_report_caption <- function(object) {
   object_type <- attr(object, "object_type") %||% ""
   switch(
     object_type,
+    hd = "Historical decomposition",
     acceptance_diagnostics = "Acceptance diagnostics",
     hd_event = "Event-window historical decomposition",
     shock_ranking = "Shock ranking by event contribution",

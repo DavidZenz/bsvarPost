@@ -16,7 +16,7 @@ style_bsvar_plot(
 }
 \arguments{
 \item{plot}{A \code{ggplot} object, typically returned by \code{ggplot2::autoplot()},
-\code{plot_hd_event()}, or \code{plot_shock_ranking()}.}
+\code{plot_hd_event()}, \code{plot_hd_stacked()}, or \code{plot_shock_ranking()}.}
 
 \item{preset}{One of \code{"default"}, \code{"paper"}, or \code{"slides"}.}
 
