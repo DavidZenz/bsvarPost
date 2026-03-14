@@ -154,8 +154,22 @@ reflecting the richer lag dynamics.
 ## Historical decomposition events
 
 Historical decompositions (HD) measure each structural shock's contribution to
-observed variation in each variable at each point in time. `tidy_hd_event()`
-aggregates those contributions over a chosen event window.
+observed variation in each variable at each point in time.
+
+For full-sample interpretation, start with `tidy_hd()` and one of the dedicated
+plot helpers. `plot_hd_stacked()` gives the standard composition view,
+`plot_hd_overlay()` compares shock paths within each variable, and
+`plot_hd_total()` overlays the reconstructed series on the observed path.
+
+```{r, eval = FALSE}
+hd_full <- tidy_hd(post)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
+plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+```
+
+`tidy_hd_event()` then aggregates those contributions over a chosen event
+window.
 
 The `us_fiscal_lsuw` sample begins in 1948. To examine which shocks drove fiscal
 dynamics in the first year (four quarters: 1948.25 through 1948.75):
@@ -170,6 +184,13 @@ target variable over the same window. Which shock moved `gdp` the most?
 
 ```{r, eval = TRUE}
 shock_ranking(post, start = "1948.25", end = "1948.75", ranking = "absolute")
+```
+
+For a composition-oriented event view, `plot_hd_event_share()` rescales the
+same event-window contributions into shares:
+
+```{r, eval = FALSE}
+plot_hd_event_share(post, start = "1948.25", end = "1948.75", top_n = 3)
 ```
 
 A pre-rendered HD event figure from a richer S = 200 run:

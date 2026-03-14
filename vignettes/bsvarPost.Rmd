@@ -167,6 +167,26 @@ A pre-rendered representative-response showcase:
 knitr::include_graphics("figures/representative-showcase.png")
 ```
 
+## Historical decomposition plots
+
+Historical decomposition is now split into two complementary workflows:
+
+- full-sample contribution paths with `tidy_hd()`, `plot_hd_stacked()`,
+  `plot_hd_overlay()`, and `plot_hd_total()`;
+- event-window summaries with `tidy_hd_event()`, `plot_hd_event()`,
+  `plot_hd_event_share()`, `plot_hd_event_cumulative()`, and
+  `plot_hd_event_distribution()`.
+
+```{r, eval = FALSE}
+hd_tbl <- tidy_hd(post)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
+plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+
+hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
+plot_hd_event_share(post, start = hd_times[1], end = hd_times[2], top_n = 3)
+```
+
 ## Reporting helpers
 
 Most `bsvarPost` outputs are tidy data frames and render directly to any table
@@ -194,6 +214,7 @@ as_flextable(cmp_irf, caption = "Impulse-response comparison", digits = 3,
 ## Next steps
 
 - **Post-Estimation Workflows vignette** — covers historical decomposition,
+  including full-sample HD plots and event-window composition views, plus
   hypothesis testing, peak/duration response summaries, and representative-draw
   selection.
 - **Hypothesis Testing vignette** — formal posterior probability statements via

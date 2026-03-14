@@ -6,7 +6,7 @@
 \usage{
 template_bsvar_plot(
   plot,
-  family = c("irf", "cdm", "forecast", "hd_event", "shock_ranking", "hypothesis",
+  family = c("irf", "cdm", "forecast", "hd", "hd_event", "shock_ranking", "hypothesis",
     "restriction_audit", "simultaneous", "joint_hypothesis", "acceptance_diagnostics",
     "representative", "comparison"),
   preset = c("default", "paper", "slides"),
@@ -17,7 +17,7 @@ template_bsvar_plot(
 \arguments{
 \item{plot}{A \code{ggplot} object.}
 
-\item{family}{One of \code{"irf"}, \code{"cdm"}, \code{"forecast"}, \code{"hd_event"},
+\item{family}{One of \code{"irf"}, \code{"cdm"}, \code{"forecast"}, \code{"hd"}, \code{"hd_event"},
 \code{"shock_ranking"}, \code{"hypothesis"}, \code{"restriction_audit"},
 \code{"simultaneous"}, \code{"joint_hypothesis"}, \code{"acceptance_diagnostics"},
 \code{"representative"}, or \code{"comparison"}.}

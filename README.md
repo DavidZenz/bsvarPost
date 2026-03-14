@@ -361,24 +361,31 @@ publish_bsvar_plot(diag_tbl, preset = "slides")
 # "Posterior probability", "Median half-life", and "Critical value".
 ```
 
-## Historical decomposition events
+## Historical decomposition plots
 
 ```r
+hd_tbl <- tidy_hd(post)
+plot_hd_stacked(post, variables = "gdp", top_n = 3)
+plot_hd_overlay(post, variables = "gdp", top_n = 3)
+plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+
 hd_event <- tidy_hd_event(post, start = 1, end = 4)
 shock_ranking(post, start = 1, end = 4, ranking = "absolute")
 
 plot_hd_event(post, start = 1, end = 4)
+plot_hd_event_share(post, start = 1, end = 4, top_n = 5)
+plot_hd_event_cumulative(post, start = 1, end = 4, top_n = 5)
+plot_hd_event_distribution(post, start = 1, end = 4, top_n = 5)
 plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5)
 
 style_bsvar_plot(
-  plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5),
-  preset = "slides"
+  plot_hd_stacked(post, variables = "gdp", top_n = 3),
+  preset = "paper"
 )
 
 annotate_bsvar_plot(
-  plot_hd_event(post, start = 1, end = 4),
-  title = "Event-window contributions",
-  xintercept = 1
+  plot_hd_event_share(post, start = 1, end = 4, top_n = 5),
+  title = "Event-window contribution shares"
 )
 ```
 

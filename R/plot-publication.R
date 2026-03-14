@@ -59,6 +59,7 @@ infer_publication_family <- function(object) {
   if (!inherits(object, "bsvar_post_tbl")) return(NULL)
 
   object_type <- attr(object, "object_type") %||% ""
+  if (identical(object_type, "hd")) return("hd")
   if (identical(object_type, "acceptance_diagnostics")) return("acceptance_diagnostics")
   if (identical(object_type, "hd_event")) return("hd_event")
   if (identical(object_type, "shock_ranking")) return("shock_ranking")
@@ -84,6 +85,7 @@ build_publication_plot <- function(object, family, ...) {
 
   switch(
     family,
+    hd = plot_hd_stacked(object, ...),
     acceptance_diagnostics = plot_acceptance_diagnostics(object, ...),
     hd_event = plot_hd_event(object, ...),
     shock_ranking = plot_shock_ranking(object, ...),
@@ -112,6 +114,7 @@ default_publication_title <- function(object, family) {
     irf = "Impulse responses",
     cdm = "Cumulative dynamic multipliers",
     forecast = "Forecast summary",
+    hd = "Historical decomposition",
     hd_event = "Event-window historical decomposition",
     shock_ranking = "Shock ranking by event contribution",
     hypothesis = "Posterior probability statement",
@@ -136,6 +139,9 @@ default_publication_subtitle <- function(object, family) {
   object_type <- attr(object, "object_type") %||% ""
   if (identical(object_type, "acceptance_diagnostics")) {
     return("Stored-draw admissibility diagnostics")
+  }
+  if (identical(object_type, "hd")) {
+    return("Full-sample contribution paths")
   }
   if (identical(object_type, "hd_event") && all(c("event_start", "event_end") %in% names(object))) {
     return(sprintf("Window: %s to %s", object$event_start[1], object$event_end[1]))

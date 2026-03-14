@@ -13,8 +13,9 @@
 #'
 #' The package currently ships with:
 #'
-#' - \link{bsvarPost-getting-started}
-#' - \link{bsvarPost-workflows}
+#' - Getting Started (`bsvarPost`)
+#' - Post-Estimation Workflows (`post-estimation-workflows`)
+#' - Hypothesis Testing (`hypothesis-testing`)
 #'
 #' @keywords internal
 #' @importFrom tibble tibble as_tibble

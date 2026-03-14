@@ -21,8 +21,9 @@ If no vignettes are listed there, reinstall the GitHub package with
 
 The package currently ships with:
 \itemize{
-\item \link{bsvarPost-getting-started}
-\item \link{bsvarPost-workflows}
+\item Getting Started (\code{bsvarPost})
+\item Post-Estimation Workflows (\code{post-estimation-workflows})
+\item Hypothesis Testing (\code{hypothesis-testing})
 }
 }
 
@@ -35,7 +36,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: David Zenz \email{office@davidzenz.com}
+\strong{Maintainer}: David Zenz \email{office@davidzenz.com} [copyright holder]
 
 }
 \keyword{internal}
