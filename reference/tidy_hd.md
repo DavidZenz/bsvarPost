@@ -6,6 +6,9 @@ Tidy historical decompositions
 
 ``` r
 tidy_hd(object, ...)
+
+# Default S3 method
+tidy_hd(object, ...)
 ```
 
 ## Arguments
@@ -17,3 +20,33 @@ tidy_hd(object, ...)
 - ...:
 
   Additional arguments passed to computation methods.
+
+## Value
+
+A `bsvar_post_tbl` (tibble subclass) with columns `model`,
+`object_type`, `variable`, `shock`, `time`, `mean`, `median`, `sd`,
+`lower`, and `upper`. When `draws = TRUE`, columns `draw` and `value`
+replace the summary statistics.
+
+## Examples
+
+``` r
+# Small posterior (S = 5 draws)
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+# Tidy historical decompositions
+result <- tidy_hd(post)
+head(result)
+#> # A tibble: 6 × 10
+#>   model  object_type variable shock time     mean median    sd lower   upper
+#>   <chr>  <chr>       <chr>    <chr> <chr>   <dbl>  <dbl> <dbl> <dbl>   <dbl>
+#> 1 model1 hd          ttr      ttr   1948.25  0      0    0      0    0      
+#> 2 model1 hd          ttr      ttr   1948.5  -1.14  -1.22 0.942 -2.13 0.00189
+#> 3 model1 hd          ttr      ttr   1948.75 -1.81  -2.18 1.83  -3.51 0.560  
+#> 4 model1 hd          ttr      ttr   1949    -1.77  -2.55 2.57  -3.90 1.69   
+#> 5 model1 hd          ttr      ttr   1949.25 -1.76  -2.95 3.28  -4.27 2.71   
+#> 6 model1 hd          ttr      ttr   1949.5  -1.77  -3.33 3.87  -4.60 3.54   
+```

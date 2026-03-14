@@ -46,3 +46,20 @@ plot_compare_response(
 - facet_scales:
 
   Facet scales passed to `ggplot2`.
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post1 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+comp <- compare_peak_response(m1 = post1, m2 = post2, horizon = 3)
+p <- plot_compare_response(comp)
+```

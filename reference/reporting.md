@@ -161,3 +161,80 @@ print(x, ...)
 
   Passed to
   [`utils::write.csv()`](https://rdrr.io/r/utils/write.table.html).
+
+## Value
+
+- `report_bundle()`:
+
+  A list of class `bsvar_report_bundle` with elements `table`, `plot`,
+  `caption`, and `object_type`.
+
+- `report_table()`:
+
+  A data frame with reporting-ready columns.
+
+- `as_kable()`:
+
+  A [`knitr::kable`](https://rdrr.io/pkg/knitr/man/kable.html) object.
+
+- `as_gt()`:
+
+  A `gt::gt_tbl` object.
+
+- `as_flextable()`:
+
+  A
+  [`flextable::flextable`](https://davidgohel.github.io/flextable/reference/flextable.html)
+  object.
+
+- `write_bsvar_csv()`:
+
+  The file path (returned invisibly).
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+
+# Report table
+rt <- report_table(irf_tbl)
+head(rt)
+#>    Model Variable Shock Horizon        Mean      Median       Lower
+#> 1 model1      ttr   ttr       0  0.05754515  0.04806737  0.04368855
+#> 2 model1      ttr   ttr       1  0.07829688  0.05286291  0.04328229
+#> 3 model1      ttr   ttr       2  0.10079462  0.06200503  0.04332046
+#> 4 model1      ttr   ttr       3  0.12464119  0.07311891  0.04382685
+#> 5 model1      ttr    gs       0  0.00000000  0.00000000  0.00000000
+#> 6 model1      ttr    gs       1 -0.02455106 -0.01044670 -0.07170458
+#>          Upper object_type         sd
+#> 1  0.091199426         irf 0.02472531
+#> 2  0.165635428         irf 0.06446679
+#> 3  0.241270387         irf 0.10386285
+#> 4  0.315650268         irf 0.14087868
+#> 5  0.000000000         irf 0.00000000
+#> 6 -0.006726165         irf 0.03491052
+
+# Report bundle
+rb <- report_bundle(irf_tbl)
+print(rb)
+#> <bsvar_report_bundle>
+#> rows: 36 cols: 10 
+#> object_type: irf 
+#> plot: available
+
+# Write to CSV
+tmp <- tempfile(fileext = ".csv")
+write_bsvar_csv(irf_tbl, file = tmp)
+unlink(tmp)
+
+if (FALSE) { # \dontrun{
+# Requires optional packages
+as_gt(irf_tbl)
+as_flextable(irf_tbl)
+} # }
+```

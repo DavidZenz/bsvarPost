@@ -39,3 +39,21 @@ as_tsibble_post(
 
   Passed to
   [`tsibble::as_tsibble()`](https://tsibble.tidyverts.org/reference/as-tsibble.html).
+
+## Value
+
+A `tsibble::tbl_ts` object.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+ts_tbl <- as_tsibble_post(irf_tbl)
+print(ts_tbl)
+} # }
+```

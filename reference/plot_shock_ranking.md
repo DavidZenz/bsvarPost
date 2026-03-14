@@ -13,7 +13,7 @@ plot_shock_ranking(
   models = NULL,
   ranking = c("absolute", "signed"),
   top_n = NULL,
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 ```
@@ -57,3 +57,18 @@ plot_shock_ranking(
 
   Additional arguments passed to
   [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md).
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+p <- plot_shock_ranking(post, start = "1948.25", end = "1948.5")
+```

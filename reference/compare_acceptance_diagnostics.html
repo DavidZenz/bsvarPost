@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -76,7 +77,43 @@ flag is raised.</p></dd>
 sparse-support warning flag is raised.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A <code>bsvar_post_tbl</code> combining acceptance diagnostic results
+across models, with a <code>model</code> column identifying each input.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">optimism</span>, package <span class="op">=</span> <span class="st">"bsvarSIGNs"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sign_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec_s</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">bsvarSIGNs</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimism</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, p <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>                                     sign_irf <span class="op">=</span> <span class="va">sign_irf</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">post_s1</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_s</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">post_s2</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_s</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu">compare_acceptance_diagnostics</span><span class="op">(</span>m1 <span class="op">=</span> <span class="va">post_s1</span>, m2 <span class="op">=</span> <span class="va">post_s2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 26 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    model object_type            metric                       value flag  message</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> m1    acceptance_diagnostics posterior_draws                  5 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> m1    acceptance_diagnostics effective_sample_size            5 TRUE  <span style="color: #949494;">"</span>ESS b…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> m1    acceptance_diagnostics max_tries                      <span style="color: #BB0000;">Inf</span> FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> m1    acceptance_diagnostics irf_sign_restrictions            1 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> m1    acceptance_diagnostics zero_restrictions                0 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> m1    acceptance_diagnostics structural_sign_restrictions     0 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> m1    acceptance_diagnostics narrative_restrictions           0 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> m1    acceptance_diagnostics kernel_mean                      1 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> m1    acceptance_diagnostics kernel_median                    1 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> m1    acceptance_diagnostics kernel_min                       1 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more rows</span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

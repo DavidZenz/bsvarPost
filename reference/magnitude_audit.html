@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -55,7 +56,7 @@
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  compare_to <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  draws <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  scale_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"shock_sd"</span><span class="op">)</span>,</span>
@@ -77,11 +78,11 @@
 
 
 <dt id="arg-variable">variable<a class="anchor" aria-label="anchor" href="#arg-variable"></a></dt>
-<dd><p>Response variable selection on the left-hand side.</p></dd>
+<dd><p><strong>Deprecated.</strong> Use <code>variables</code> instead.</p></dd>
 
 
 <dt id="arg-shock">shock<a class="anchor" aria-label="anchor" href="#arg-shock"></a></dt>
-<dd><p>Shock selection on the left-hand side.</p></dd>
+<dd><p><strong>Deprecated.</strong> Use <code>shocks</code> instead.</p></dd>
 
 
 <dt id="arg-horizon">horizon<a class="anchor" aria-label="anchor" href="#arg-horizon"></a></dt>
@@ -129,7 +130,36 @@
 <dd><p>Additional arguments passed to computation methods.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A <code>bsvar_post_tbl</code> with hypothesis test results including
+<code>posterior_prob</code>, <code>mean</code>, <code>median</code>, <code>lower</code>, and
+<code>upper</code> columns.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The identification is set to the default option of lower-triangular structural matrix.</span>
+<span class="r-in"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mag</span> <span class="op">&lt;-</span> <span class="fu">magnitude_audit</span><span class="op">(</span><span class="va">post</span>, variable <span class="op">=</span> <span class="st">"gdp"</span>, shock <span class="op">=</span> <span class="st">"gdp"</span>,</span></span>
+<span class="r-in"><span>                       horizon <span class="op">=</span> <span class="fl">0</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>In hypothesis_irf(): 'variable' is deprecated and will be removed in a future version.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> Use 'variables' instead.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>In hypothesis_irf(): 'shock' is deprecated and will be removed in a future version.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> Use 'shocks' instead.</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mag</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 17</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model  object_type variable shock horizon relation posterior_prob mean_gap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> model1 irf         gdp      gdp         0 &gt;                     1   0.018<span style="text-decoration: underline;">6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: median_gap &lt;dbl&gt;, lower_gap &lt;dbl&gt;, upper_gap &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rhs_variable &lt;chr&gt;, rhs_shock &lt;chr&gt;, rhs_horizon &lt;dbl&gt;, rhs_value &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   absolute &lt;lgl&gt;, audit_type &lt;chr&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

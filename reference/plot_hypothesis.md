@@ -15,7 +15,7 @@ plot_hypothesis(
   value = 0,
   compare_to = NULL,
   absolute = FALSE,
-  probability = 0.68,
+  probability = 0.9,
   models = NULL,
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -84,3 +84,24 @@ plot_hypothesis(
 - ...:
 
   Additional arguments passed to computation methods.
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+                    horizon = 0:2, relation = ">", value = 0)
+#> Warning: In hypothesis_irf(): 'variable' is deprecated and will be removed in a future version.
+#> Use 'variables' instead.
+#> Warning: In hypothesis_irf(): 'shock' is deprecated and will be removed in a future version.
+#> Use 'shocks' instead.
+p <- plot_hypothesis(h)
+```

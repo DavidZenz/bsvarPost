@@ -8,12 +8,15 @@ event window.
 ``` r
 tidy_hd_event(object, ...)
 
+# Default S3 method
+tidy_hd_event(object, ...)
+
 # S3 method for class 'bsvar_post_tbl'
 tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   ...
 )
@@ -23,7 +26,7 @@ tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -34,7 +37,7 @@ tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -45,7 +48,7 @@ tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -56,7 +59,7 @@ tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -67,7 +70,7 @@ tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -78,7 +81,7 @@ tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -89,7 +92,7 @@ tidy_hd_event(
   object,
   start,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   model = "model1",
   ...
@@ -126,3 +129,32 @@ tidy_hd_event(
 - model:
 
   Optional model identifier.
+
+## Value
+
+A `bsvar_post_tbl` with columns `model`, `object_type`, `variable`,
+`shock`, `event_start`, `event_end`, `median`, `mean`, `sd`, `lower`,
+and `upper`. When `draws = TRUE`, columns `draw` and `value` replace the
+summary statistics.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.5")
+head(hd_event)
+#> # A tibble: 6 × 11
+#>   model  object_type variable shock event_start event_end    mean  median     sd
+#>   <chr>  <chr>       <chr>    <chr> <chr>       <chr>       <dbl>   <dbl>  <dbl>
+#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5     1.38    1.26   0.406 
+#> 2 model1 hd_event    gs       gdp   1948.25     1948.5     0       0      0     
+#> 3 model1 hd_event    ttr      gdp   1948.25     1948.5     0       0      0     
+#> 4 model1 hd_event    gdp      gs    1948.25     1948.5    -0.0863 -0.0439 0.0879
+#> 5 model1 hd_event    gs       gs    1948.25     1948.5    -0.0415 -0.222  1.34  
+#> 6 model1 hd_event    ttr      gs    1948.25     1948.5     0       0      0     
+#> # ℹ 2 more variables: lower <dbl>, upper <dbl>
+```

@@ -7,6 +7,9 @@ Select a representative impulse-response draw from the posterior.
 ``` r
 representative_irf(object, ...)
 
+# Default S3 method
+representative_irf(object, ...)
+
 # S3 method for class 'PosteriorIR'
 representative_irf(
   object,
@@ -17,14 +20,14 @@ representative_irf(
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 
 # S3 method for class 'PosteriorBSVAR'
 representative_irf(
   object,
-  horizon = 10,
+  horizon = NULL,
   method = c("median_target", "most_likely_admissible"),
   center = c("median", "mean"),
   variables = NULL,
@@ -32,7 +35,7 @@ representative_irf(
   horizons = NULL,
   metric = c("l2", "weighted_l2"),
   standardize = c("none", "sd"),
-  probability = 0.68,
+  probability = 0.9,
   ...
 )
 
@@ -89,6 +92,21 @@ most_likely_admissible_irf(object, ...)
 
 ## Value
 
-A `RepresentativeIR` object. Use
-[`summary()`](https://rdrr.io/r/base/summary.html) to obtain the tidy
-representative table.
+A list of class `RepresentativeIR` (inheriting from
+`RepresentativeResponse`) with elements `representative_draw` (the
+selected IRF array), `posterior_draws` (all IRF draws), `draw_index`
+(integer index of the selected draw), `method`, `score`,
+`target_summary`, `selection_spec`, `probability`, and `object_type`.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+rep_irf <- representative_irf(post, horizon = 3)
+rep_irf$draw_index
+#> [1] 3
+```

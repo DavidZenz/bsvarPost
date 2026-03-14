@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -39,52 +40,105 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="bsvarpost-020">bsvarPost 0.2.0<a class="anchor" aria-label="anchor" href="#bsvarpost-020"></a></h2>
-<ul><li>Added representative-model selection helpers for IRFs and CDMs: <code><a href="../reference/representative_irf.html">representative_irf()</a></code>, <code><a href="../reference/representative_cdm.html">representative_cdm()</a></code>, <code>median_target_*()</code>, and <code>most_likely_admissible_*()</code>.</li>
-<li>Added posterior hypothesis helpers: <code><a href="../reference/hypothesis_irf.html">hypothesis_irf()</a></code> and <code><a href="../reference/hypothesis_cdm.html">hypothesis_cdm()</a></code>.</li>
-<li>Added audit helpers: <code><a href="../reference/restriction_audit.html">restriction_audit()</a></code> and <code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code>.</li>
-<li>Added <code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> and <code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> for event-window historical decomposition summaries.</li>
-<li>Added <code><a href="../reference/peak_response.html">peak_response()</a></code> and <code><a href="../reference/duration_response.html">duration_response()</a></code> for posterior response-shape summaries.</li>
-<li>Added <code><a href="../reference/compare_restrictions.html">compare_restrictions()</a></code> for cross-model restriction-audit comparisons.</li>
-<li>Added <code><a href="../reference/compare_hd_event.html">compare_hd_event()</a></code> for cross-model event-window historical decomposition comparisons.</li>
-<li>Added <code><a href="../reference/compare_peak_response.html">compare_peak_response()</a></code> and <code><a href="../reference/compare_duration_response.html">compare_duration_response()</a></code> for cross-model response-shape comparisons.</li>
-<li>Added <code><a href="../reference/half_life_response.html">half_life_response()</a></code> and <code><a href="../reference/time_to_threshold.html">time_to_threshold()</a></code> for response-decay and threshold-timing summaries.</li>
-<li>Added <code><a href="../reference/compare_half_life_response.html">compare_half_life_response()</a></code> and <code><a href="../reference/compare_time_to_threshold.html">compare_time_to_threshold()</a></code> for cross-model timing-summary comparisons.</li>
-<li>Added <code><a href="../reference/plot_hd_event.html">plot_hd_event()</a></code> and <code><a href="../reference/plot_shock_ranking.html">plot_shock_ranking()</a></code> as dedicated event-study plotting helpers.</li>
-<li>Added <code><a href="../reference/theme_bsvarpost.html">theme_bsvarpost()</a></code> and <code><a href="../reference/style_bsvar_plot.html">style_bsvar_plot()</a></code> for reusable publication-oriented plot styling.</li>
-<li>Added <code><a href="../reference/template_bsvar_plot.html">template_bsvar_plot()</a></code> and <code><a href="../reference/annotate_bsvar_plot.html">annotate_bsvar_plot()</a></code> for output-family templates and publication annotations.</li>
-<li>Added <code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> for stored-draw admissibility diagnostics in <code>bsvarSIGNs</code>.</li>
-<li>Added <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and print support for <code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> outputs.</li>
-<li>Added <code><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics()</a></code> and <code><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics()</a></code> for cross-model diagnostics workflows.</li>
-<li>Added <code><a href="../reference/simultaneous_irf.html">simultaneous_irf()</a></code>, <code><a href="../reference/simultaneous_cdm.html">simultaneous_cdm()</a></code>, <code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code>, and <code><a href="../reference/joint_hypothesis_cdm.html">joint_hypothesis_cdm()</a></code> for first-pass joint inference support.</li>
-<li>Added <code><a href="../reference/plot_simultaneous.html">plot_simultaneous()</a></code> and <code><a href="../reference/plot_joint_hypothesis.html">plot_joint_hypothesis()</a></code> for direct visualisation of simultaneous bands and joint posterior probability statements.</li>
-<li>Added <code><a href="../reference/plot_hypothesis.html">plot_hypothesis()</a></code> and <code><a href="../reference/plot_restriction_audit.html">plot_restriction_audit()</a></code> as dedicated plotting helpers for posterior statements and restriction audits.</li>
-<li>Updated README and vignette comparison examples to use genuinely different model specifications instead of self-comparisons.</li>
-<li>Added <code><a href="../reference/plot_compare_response.html">plot_compare_response()</a></code> and <code><a href="../reference/plot_compare_restrictions.html">plot_compare_restrictions()</a></code> for dedicated visualisation of comparison-table outputs.</li>
-<li>Added <code><a href="../reference/reporting.html">as_kable()</a></code>, <code><a href="../reference/reporting.html">as_gt()</a></code>, <code><a href="../reference/reporting.html">as_flextable()</a></code>, and <code><a href="../reference/reporting.html">write_bsvar_csv()</a></code> as first-pass reporting and export helpers for tidy <code>bsvarPost</code> tables.</li>
-<li>Added <code><a href="../reference/reporting.html">report_bundle()</a></code> as a first-pass plot-and-table bundle for publication workflows.</li>
-<li>Added <code><a href="../reference/reporting.html">report_table()</a></code> and compact/default reporting presets for publication-oriented table layouts.</li>
-<li>Extended <code><a href="../reference/reporting.html">report_bundle()</a></code> to support representative-response and acceptance-diagnostics workflows.</li>
-<li>Extended <code><a href="../reference/reporting.html">report_bundle()</a></code> to support simultaneous-band and joint-hypothesis outputs.</li>
-<li>Extended <code><a href="../reference/reporting.html">report_bundle()</a></code> to support event-study tables and object-family default captions.</li>
-<li>Added <code><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code> for family-aware publication templates across comparison, representative, diagnostics, event-study, and joint-inference outputs.</li>
-<li>Added publication-facing report-table labels and short family-specific subtitles for representative, diagnostics, event-study, simultaneous-band, and joint-hypothesis plots.</li>
-<li>Expanded the vignettes with clearer interpretation notes, non-trivial comparison examples, and lightweight rendered table/plot showcases.</li>
-<li>Added pkgdown site scaffolding, including site configuration, homepage content, reference grouping, and a GitHub Pages deployment workflow.</li>
-<li>Added a second vignette, <code>Post-Estimation Workflows in bsvarPost</code>, to separate workflow/methodology documentation from getting-started material.</li>
-<li>Added restriction constructor helpers for IRF, structural, and narrative audits.</li>
+<h2 class="pkg-version" data-toc-text="1.0.0" id="bsvarpost-100">bsvarPost 1.0.0<a class="anchor" aria-label="anchor" href="#bsvarpost-100"></a></h2>
+<p>Initial CRAN release.</p>
+<div class="section level3">
+<h3 id="breaking-changes-and-deprecations-1-0-0">Breaking changes and deprecations<a class="anchor" aria-label="anchor" href="#breaking-changes-and-deprecations-1-0-0"></a></h3>
+<ul><li>The <code>variable</code> and <code>shock</code> (singular) arguments are deprecated in favour of <code>variables</code> and <code>shocks</code> (plural) throughout the package. The singular forms still work and produce a warning; they will be removed in a future version.</li>
 </ul></div>
-    <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="bsvarpost-010">bsvarPost 0.1.0<a class="anchor" aria-label="anchor" href="#bsvarpost-010"></a></h2>
-<ul><li>Initial release.</li>
-<li>Added cross-package <code><a href="../reference/cdm.html">cdm()</a></code> support for posterior objects from <code>bsvars</code> and <code>bsvarSIGNs</code>.</li>
-<li>Added <code>PosteriorCDM</code> summary and plotting methods.</li>
-<li>Added tidy extractors for impulse responses, cumulative dynamic multipliers, variance decompositions, shocks, historical decompositions, and forecasts.</li>
-<li>Added comparison helpers for IRFs, CDMs, FEVDs, and forecasts.</li>
-<li>Added <code>ggplot2</code> autoplot support for tidy and comparison outputs.</li>
-<li>Added bridge helpers for APRScenario-style forecast tables.</li>
-<li>Added optional <code>tsibble</code> conversion for tidy outputs.</li>
+<div class="section level3">
+<h3 id="core-posterior-extraction-1-0-0">Core posterior extraction<a class="anchor" aria-label="anchor" href="#core-posterior-extraction-1-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/tidy_irf.html">tidy_irf()</a></code> extracts impulse responses from <code>PosteriorBSVAR</code>, <code>PosteriorBSVARSV</code>, <code>PosteriorBSVARMIX</code>, <code>PosteriorBSVARMSH</code>, <code>PosteriorBSVART</code>, and <code>PosteriorBSVARSIGN</code> objects into tidy tibbles with credible-interval columns.</li>
+<li>
+<code><a href="../reference/tidy_cdm.html">tidy_cdm()</a></code> extracts cumulative dynamic multipliers for all supported posterior types.</li>
+<li>
+<code><a href="../reference/tidy_fevd.html">tidy_fevd()</a></code> extracts forecast error variance decompositions (reported on the 0–100 percentage scale used by ‘bsvars’).</li>
+<li>
+<code><a href="../reference/tidy_shocks.html">tidy_shocks()</a></code> extracts structural shocks.</li>
+<li>
+<code><a href="../reference/tidy_hd.html">tidy_hd()</a></code> extracts historical decompositions.</li>
+<li>
+<code><a href="../reference/tidy_forecast.html">tidy_forecast()</a></code> extracts out-of-sample forecasts.</li>
+<li>
+<code><a href="../reference/cdm.html">cdm()</a></code> estimates cumulative dynamic multipliers directly from any supported posterior object, bridging ‘bsvars’ and ‘bsvarSIGNs’ in a single call.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="hypothesis-testing-and-inference-1-0-0">Hypothesis testing and inference<a class="anchor" aria-label="anchor" href="#hypothesis-testing-and-inference-1-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/hypothesis_irf.html">hypothesis_irf()</a></code> and <code><a href="../reference/hypothesis_cdm.html">hypothesis_cdm()</a></code> compute posterior probabilities for user-specified inequality constraints on impulse responses and cumulative dynamic multipliers.</li>
+<li>
+<code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code> and <code><a href="../reference/joint_hypothesis_cdm.html">joint_hypothesis_cdm()</a></code> extend hypothesis testing to joint constraints across multiple variable–shock–horizon combinations.</li>
+<li>
+<code><a href="../reference/simultaneous_irf.html">simultaneous_irf()</a></code> and <code><a href="../reference/simultaneous_cdm.html">simultaneous_cdm()</a></code> compute simultaneous credible bands with exact joint coverage.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="representative-model-selection-1-0-0">Representative model selection<a class="anchor" aria-label="anchor" href="#representative-model-selection-1-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/representative_irf.html">representative_irf()</a></code> and <code><a href="../reference/representative_cdm.html">representative_cdm()</a></code> identify the posterior draw closest to the pointwise median across all impulse-response or CDM paths.</li>
+<li>
+<code><a href="../reference/representative_irf.html">most_likely_admissible_irf()</a></code> and <code><a href="../reference/representative_cdm.html">most_likely_admissible_cdm()</a></code> select the draw with the highest kernel score among sign-restriction-admissible draws.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="response-summaries-1-0-0">Response summaries<a class="anchor" aria-label="anchor" href="#response-summaries-1-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/peak_response.html">peak_response()</a></code> locates the horizon of maximum absolute impulse response and its posterior distribution.</li>
+<li>
+<code><a href="../reference/duration_response.html">duration_response()</a></code> summarises the number of horizons for which a response remains above a threshold.</li>
+<li>
+<code><a href="../reference/half_life_response.html">half_life_response()</a></code> computes the posterior distribution of the half-life of a response decay.</li>
+<li>
+<code><a href="../reference/time_to_threshold.html">time_to_threshold()</a></code> computes the posterior distribution of the first horizon at which a response crosses a user-specified threshold.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="model-comparison-1-0-0">Model comparison<a class="anchor" aria-label="anchor" href="#model-comparison-1-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/compare_irf.html">compare_irf()</a></code>, <code><a href="../reference/compare_cdm.html">compare_cdm()</a></code>, <code><a href="../reference/compare_fevd.html">compare_fevd()</a></code> compare tidy extractions across two models side-by-side.</li>
+<li>
+<code><a href="../reference/compare_peak_response.html">compare_peak_response()</a></code>, <code><a href="../reference/compare_duration_response.html">compare_duration_response()</a></code>, <code><a href="../reference/compare_half_life_response.html">compare_half_life_response()</a></code>, <code><a href="../reference/compare_time_to_threshold.html">compare_time_to_threshold()</a></code> compare response-shape summaries across models.</li>
+<li>
+<code><a href="../reference/compare_restrictions.html">compare_restrictions()</a></code> compares restriction-audit results across models.</li>
+<li>
+<code><a href="../reference/compare_hd_event.html">compare_hd_event()</a></code> compares event-window historical decomposition summaries across models.</li>
+<li>
+<code><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics()</a></code> compares sign-restriction acceptance diagnostics across models.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="restriction-and-acceptance-auditing-1-0-0">Restriction and acceptance auditing<a class="anchor" aria-label="anchor" href="#restriction-and-acceptance-auditing-1-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/restriction_audit.html">restriction_audit()</a></code> evaluates whether posterior draws satisfy a set of structural sign or narrative restrictions.</li>
+<li>
+<code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> checks whether impulse responses satisfy magnitude-based restrictions with explicit <code>variable</code> and <code>shock</code> arguments.</li>
+<li>
+<code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> reports draw-level admissibility statistics for <code>bsvarSIGNs</code> posteriors, with <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> methods.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="event-study-helpers-1-0-0">Event-study helpers<a class="anchor" aria-label="anchor" href="#event-study-helpers-1-0-0"></a></h3>
+<ul><li>
+<code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> summarises historical decomposition contributions within a user-specified event window.</li>
+<li>
+<code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> ranks shocks by their contribution to a target variable within an event window.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="plotting-and-reporting-1-0-0">Plotting and reporting<a class="anchor" aria-label="anchor" href="#plotting-and-reporting-1-0-0"></a></h3>
+<ul><li>
+<code>autoplot()</code> support for all tidy extractors (<code>PosteriorIR</code>, <code>PosteriorCDM</code>, <code>PosteriorFEVD</code>, <code>PosteriorSHOCKS</code>, <code>PosteriorHD</code>, <code>PosteriorFORECAST</code>), all comparison outputs, simultaneous bands, and joint hypothesis objects.</li>
+<li>
+<code><a href="../reference/theme_bsvarpost.html">theme_bsvarpost()</a></code> provides a minimal publication-ready ggplot2 theme.</li>
+<li>
+<code><a href="../reference/style_bsvar_plot.html">style_bsvar_plot()</a></code> applies consistent axis, legend, and colour styling to any bsvarPost ggplot2 output.</li>
+<li>
+<code><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code> applies family-aware publication templates across comparison, representative, diagnostics, event-study, and joint-inference outputs.</li>
+<li>
+<code><a href="../reference/reporting.html">as_gt()</a></code>, <code><a href="../reference/reporting.html">as_flextable()</a></code>, and <code><a href="../reference/reporting.html">as_kable()</a></code> convert tidy bsvarPost tables to formatted gt, flextable, and knitr::kable outputs for publication documents.</li>
+<li>
+<code><a href="../reference/reporting.html">write_bsvar_csv()</a></code> writes any tidy bsvarPost table to CSV.</li>
+<li>
+<code><a href="../reference/reporting.html">report_bundle()</a></code> produces a paired plot-and-table bundle suitable for publication workflows, with support for representative-response, acceptance-diagnostics, simultaneous-band, joint-hypothesis, and event-study objects.</li>
+<li>
+<code><a href="../reference/reporting.html">report_table()</a></code> generates compact or default publication-oriented table layouts with family-specific labels and subtitles.</li>
+</ul></div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

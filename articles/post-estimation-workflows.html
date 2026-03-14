@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,6 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul>
 </li>
@@ -54,8 +55,8 @@
 
 
 
-
-<div class="row">
+<link href="post-estimation-workflows_files/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="post-estimation-workflows_files/tabwid-1.1.3/tabwid.js"></script><div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Post-Estimation Workflows in bsvarPost</h1>
@@ -67,1393 +68,292 @@
 
     
     
-<p>This vignette focuses on the broader analytical surface of
-<code>bsvarPost</code> after a model has already been estimated with
-<code>bsvars</code> or <code>bsvarSIGNs</code>.</p>
-<p>The emphasis is not on estimation itself, but on:</p>
-<ul>
-<li>representative-model summaries</li>
-<li>posterior hypothesis and restriction auditing</li>
-<li>event-window historical decomposition workflows</li>
-<li>response timing summaries</li>
-<li>diagnostics for sign-restricted models</li>
-<li>plot styling and publication-oriented outputs</li>
-</ul>
-<p>Most chunks are shown as workflow templates rather than evaluated
-during the build. A small evaluated showcase is included at the end so
-the rendered document still contains a real table and plot.</p>
-<p>This example uses one sign-restricted baseline specification and one
-lighter alternative lag specification:</p>
-<ul>
-<li>
-<code>post</code>: <code>p = 4</code>
-</li>
-<li>
-<code>post_alt</code>: <code>p = 2</code>
-</li>
-</ul>
-<p>That gives a meaningful surface for representative summaries, audits,
-and event-window comparisons.</p>
+<p>This vignette picks up where “Getting Started” left off. After
+extracting impulse responses and CDMs, deeper analytical questions
+remain: Which draw best represents the posterior as a whole? When
+exactly does a spending shock peak, and how long does it last? Which
+structural shocks drove observed fiscal dynamics? This vignette works
+through those questions using the same <code>us_fiscal_lsuw</code>
+dataset — quarterly US data on tax revenue (<code>ttr</code>),
+government spending (<code>gs</code>), and output (<code>gdp</code>) —
+comparing a one-lag baseline against a three-lag alternative
+specification.</p>
 <div class="section level2">
 <h2 id="representative-model-summaries">Representative-model summaries<a class="anchor" aria-label="anchor" href="#representative-model-summaries"></a>
 </h2>
-<p>For sign-restricted analysis, pointwise posterior medians need not
-correspond to one coherent draw. <code>bsvarPost</code> therefore offers
-representative-model summaries.</p>
+<p>Pointwise posterior medians may not correspond to any one coherent
+structural draw. <code><a href="../reference/representative_irf.html">median_target_irf()</a></code> finds the stored draw
+whose IRF matrix is closest (in L2 distance) to the posterior median.
+The result is a single self-consistent model that typifies the posterior
+center.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/" class="external-link">bsvarSIGNs</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavidZenz/bsvarPost" class="external-link">bsvarPost</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">optimism</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sign_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">23</span><span class="op">)</span><span class="op">)</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span>  <span class="va">optimism</span> <span class="op">*</span> <span class="fl">100</span>,</span>
-<span>  p <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  sign_irf <span class="op">=</span> <span class="va">sign_irf</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">100</span>, thin <span class="op">=</span> <span class="fl">1</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">spec_alt</span> <span class="op">&lt;-</span> <span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span>  <span class="va">optimism</span> <span class="op">*</span> <span class="fl">100</span>,</span>
-<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  sign_irf <span class="op">=</span> <span class="va">sign_irf</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">post_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_alt</span>, S <span class="op">=</span> <span class="fl">100</span>, thin <span class="op">=</span> <span class="fl">1</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">rep_median</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/representative_irf.html">median_target_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="va">rep_mla</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/representative_irf.html">most_likely_admissible_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_median</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_mla</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rep_median</span><span class="op">)</span></span></code></pre></div>
-<p>Use <code>median_target_*()</code> when you want the stored draw
-closest to the posterior center. Use
-<code>most_likely_admissible_*()</code> when you want the stored
-admissible draw with the highest reconstructed admissibility score.</p>
-<p>The comparison to <code>post_alt</code> is useful because it changes
-the dynamic specification while leaving the identifying sign
-restrictions unchanged.</p>
-</div>
-<div class="section level2">
-<h2 id="posterior-hypotheses-and-audits">Posterior hypotheses and audits<a class="anchor" aria-label="anchor" href="#posterior-hypotheses-and-audits"></a>
-</h2>
-<p>Posterior probability statements can be evaluated directly on IRFs or
-CDMs.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span></span>
-<span>  <span class="va">post</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>,</span>
-<span>  relation <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
-<span>  value <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf</a></span><span class="op">(</span></span>
-<span>  <span class="va">post</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>,</span>
-<span>  relation <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
-<span>  value <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/simultaneous_irf.html">simultaneous_irf</a></span><span class="op">(</span></span>
-<span>  <span class="va">post</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>Restriction and magnitude audits are explicit post-estimation
-summaries. They do not modify the estimation problem.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/restriction_audit.html">restriction_audit</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/magnitude_audit.html">magnitude_audit</a></span><span class="op">(</span></span>
-<span>  <span class="va">post</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  relation <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
-<span>  value <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="historical-decomposition-workflows">Historical decomposition workflows<a class="anchor" aria-label="anchor" href="#historical-decomposition-workflows"></a>
-</h2>
-<p>For event studies, aggregate historical decomposition contributions
-over a window and then rank shocks by contribution size.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hd_event</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd_event.html">tidy_hd_event</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="va">hd_event</span></span>
-<span></span>
-<span><span class="va">ranked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shock_ranking.html">shock_ranking</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span>, ranking <span class="op">=</span> <span class="st">"absolute"</span><span class="op">)</span></span>
-<span><span class="va">ranked</span></span></code></pre></div>
-<p>Compare event windows across models:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_hd_event.html">compare_hd_event</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
-<p>Plot the resulting summaries:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event.html">plot_hd_event</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_shock_ranking.html">plot_shock_ranking</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span>, ranking <span class="op">=</span> <span class="st">"absolute"</span>, top_n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">rep_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/representative_irf.html">median_target_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_irf</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 189 × 13</span></span></span>
+<span><span class="co">#&gt;    model  object_type variable shock horizon   mean median    sd  lower  upper</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> model1 irf         ttr      ttr         0 0.029<span style="text-decoration: underline;">6</span> 0.029<span style="text-decoration: underline;">6</span>    <span style="color: #BB0000;">NA</span> 0.029<span style="text-decoration: underline;">6</span> 0.029<span style="text-decoration: underline;">6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> model1 irf         ttr      ttr         1 0.027<span style="text-decoration: underline;">7</span> 0.027<span style="text-decoration: underline;">7</span>    <span style="color: #BB0000;">NA</span> 0.027<span style="text-decoration: underline;">7</span> 0.027<span style="text-decoration: underline;">7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> model1 irf         ttr      ttr         2 0.026<span style="text-decoration: underline;">0</span> 0.026<span style="text-decoration: underline;">0</span>    <span style="color: #BB0000;">NA</span> 0.026<span style="text-decoration: underline;">0</span> 0.026<span style="text-decoration: underline;">0</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> model1 irf         ttr      ttr         3 0.024<span style="text-decoration: underline;">3</span> 0.024<span style="text-decoration: underline;">3</span>    <span style="color: #BB0000;">NA</span> 0.024<span style="text-decoration: underline;">3</span> 0.024<span style="text-decoration: underline;">3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> model1 irf         ttr      ttr         4 0.022<span style="text-decoration: underline;">7</span> 0.022<span style="text-decoration: underline;">7</span>    <span style="color: #BB0000;">NA</span> 0.022<span style="text-decoration: underline;">7</span> 0.022<span style="text-decoration: underline;">7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> model1 irf         ttr      ttr         5 0.021<span style="text-decoration: underline;">2</span> 0.021<span style="text-decoration: underline;">2</span>    <span style="color: #BB0000;">NA</span> 0.021<span style="text-decoration: underline;">2</span> 0.021<span style="text-decoration: underline;">2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> model1 irf         ttr      ttr         6 0.019<span style="text-decoration: underline;">8</span> 0.019<span style="text-decoration: underline;">8</span>    <span style="color: #BB0000;">NA</span> 0.019<span style="text-decoration: underline;">8</span> 0.019<span style="text-decoration: underline;">8</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> model1 irf         ttr      ttr         7 0.018<span style="text-decoration: underline;">5</span> 0.018<span style="text-decoration: underline;">5</span>    <span style="color: #BB0000;">NA</span> 0.018<span style="text-decoration: underline;">5</span> 0.018<span style="text-decoration: underline;">5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> model1 irf         ttr      ttr         8 0.017<span style="text-decoration: underline;">3</span> 0.017<span style="text-decoration: underline;">3</span>    <span style="color: #BB0000;">NA</span> 0.017<span style="text-decoration: underline;">3</span> 0.017<span style="text-decoration: underline;">3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> model1 irf         ttr      ttr         9 0.016<span style="text-decoration: underline;">1</span> 0.016<span style="text-decoration: underline;">1</span>    <span style="color: #BB0000;">NA</span> 0.016<span style="text-decoration: underline;">1</span> 0.016<span style="text-decoration: underline;">1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 179 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: draw_index &lt;int&gt;, method &lt;chr&gt;, score &lt;dbl&gt;</span></span></span></code></pre></div>
+<p>The <code>draw_index</code> slot records which posterior draw was
+selected. This can be used to extract other quantities (CDMs, FEVD) from
+the same draw for a fully coherent representative model.</p>
+<p>A pre-rendered figure from the same posterior at the full S = 200
+resolution:</p>
+<p><img src="figures/representative-showcase.png" class="r-plt" alt="" width="100%"></p>
+<p>The representative IRF for the <code>gs</code> spending shock shows
+the typical fiscal transmission shape: an immediate positive effect on
+government spending itself, with the <code>gdp</code> response peaking a
+few quarters later.</p>
 </div>
 <div class="section level2">
 <h2 id="response-timing-summaries">Response timing summaries<a class="anchor" aria-label="anchor" href="#response-timing-summaries"></a>
 </h2>
-<p><code>bsvarPost</code> includes timing summaries that applied users
-often compute manually for papers and presentations.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/peak_response.html">peak_response</a></span><span class="op">(</span><span class="va">post</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/duration_response.html">duration_response</a></span><span class="op">(</span></span>
+<p>Researchers often need to report precisely <em>when</em> effects
+arrive and <em>how long</em> they persist. <code>bsvarPost</code>
+provides four timing summaries, each with full posterior
+uncertainty.</p>
+<p><strong>Peak response</strong> — at what horizon does the fiscal
+spending shock produce the largest <code>gdp</code> effect?</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/peak_response.html">peak_response</a></span><span class="op">(</span><span class="va">post</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">20</span>, variables <span class="op">=</span> <span class="fl">3</span>, shocks <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 14</span></span></span>
+<span><span class="co">#&gt;   model  object_type variable shock mean_value median_value sd_value lower_value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> model1 peak_irf    gdp      gs        0.037<span style="text-decoration: underline;">9</span>   -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">025</span><span style="color: #BB0000;">0</span>    0.537    -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">14</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: upper_value &lt;dbl&gt;, mean_horizon &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   median_horizon &lt;dbl&gt;, sd_horizon &lt;dbl&gt;, lower_horizon &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   upper_horizon &lt;dbl&gt;</span></span></span></code></pre></div>
+<p><strong>Duration response</strong> — how many quarters does the
+cumulative multiplier remain positive?</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/duration_response.html">duration_response</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"cdm"</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  type     <span class="op">=</span> <span class="st">"cdm"</span>,</span>
+<span>  horizon  <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  shocks   <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  relation <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
-<span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  mode <span class="op">=</span> <span class="st">"total"</span></span>
+<span>  value    <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  mode     <span class="op">=</span> <span class="st">"total"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/half_life_response.html">half_life_response</a></span><span class="op">(</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 12</span></span></span>
+<span><span class="co">#&gt;   model  object_type  variable shock relation threshold mode  mean_duration</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> model1 duration_cdm gdp      gs    &gt;                0 total          4.10</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: median_duration &lt;dbl&gt;, sd_duration &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   lower_duration &lt;dbl&gt;, upper_duration &lt;dbl&gt;</span></span></span></code></pre></div>
+<p><strong>Half-life</strong> — how quickly does the impulse response
+decay from its peak?</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/half_life_response.html">half_life_response</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  type     <span class="op">=</span> <span class="st">"irf"</span>,</span>
+<span>  horizon  <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  shocks   <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  baseline <span class="op">=</span> <span class="st">"peak"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/time_to_threshold.html">time_to_threshold</a></span><span class="op">(</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 12</span></span></span>
+<span><span class="co">#&gt;   model  object_type   variable shock fraction baseline mean_half_life</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> model1 half_life_irf gdp      gs         0.5 peak               5.67</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: median_half_life &lt;dbl&gt;, sd_half_life &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   lower_half_life &lt;dbl&gt;, upper_half_life &lt;dbl&gt;, reached_prob &lt;dbl&gt;</span></span></span></code></pre></div>
+<p><strong>Time to threshold</strong> — when does the cumulative
+multiplier first exceed zero?</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/time_to_threshold.html">time_to_threshold</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"cdm"</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  type     <span class="op">=</span> <span class="st">"cdm"</span>,</span>
+<span>  horizon  <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  shocks   <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  relation <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
-<span>  value <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>The same summaries can be compared across alternative
-specifications.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/compare_duration_response.html">compare_duration_response</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"cdm"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/compare_half_life_response.html">compare_half_life_response</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"irf"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/compare_time_to_threshold.html">compare_time_to_threshold</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span>, type <span class="op">=</span> <span class="st">"cdm"</span>, horizon <span class="op">=</span> <span class="fl">12</span>, variable <span class="op">=</span> <span class="fl">1</span>, shock <span class="op">=</span> <span class="fl">1</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span></span>
-<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  value    <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 12</span></span></span>
+<span><span class="co">#&gt;   model  object_type           variable shock relation threshold mean_horizon</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> model1 time_to_threshold_cdm gdp      gs    &gt;                0        0.351</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: median_horizon &lt;dbl&gt;, sd_horizon &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   lower_horizon &lt;dbl&gt;, upper_horizon &lt;dbl&gt;, reached_prob &lt;dbl&gt;</span></span></span></code></pre></div>
+<p>These four summaries characterise when the fiscal spending effect
+arrives, how large it becomes, and how quickly it dissipates — the
+standard set of timing statistics for fiscal multiplier papers.</p>
+</div>
+<div class="section level2">
+<h2 id="comparing-response-summaries">Comparing response summaries<a class="anchor" aria-label="anchor" href="#comparing-response-summaries"></a>
+</h2>
+<p>Does the estimated timing change under a three-lag specification? The
+<code>compare_*</code> helpers place both posteriors side by side.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cmp_peak</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_peak_response.html">compare_peak_response</a></span><span class="op">(</span></span>
+<span>  baseline    <span class="op">=</span> <span class="va">post</span>,</span>
 <span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  variable <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  shock <span class="op">=</span> <span class="fl">1</span></span>
-<span><span class="op">)</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="diagnostics-for-sign-restricted-models">Diagnostics for sign-restricted models<a class="anchor" aria-label="anchor" href="#diagnostics-for-sign-restricted-models"></a>
-</h2>
-<p><code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> provides a stored-draw
-diagnostics layer for <code>PosteriorBSVARSIGN</code> objects.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">diag_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span></span>
-<span><span class="va">diag_tbl</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">diag_tbl</span><span class="op">)</span></span></code></pre></div>
-<p>Compare diagnostics across models:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, alternative <span class="op">=</span> <span class="va">post_alt</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span><span class="va">diag_tbl</span>, metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/reporting.html">report_bundle</a></span><span class="op">(</span><span class="va">diag_tbl</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>These are not full proposal acceptance histories. They are summaries
-of what is recoverable from the stored posterior draws and
-identification state.</p>
-</div>
-<div class="section level2">
-<h2 id="plot-styling-and-templates">Plot styling and templates<a class="anchor" aria-label="anchor" href="#plot-styling-and-templates"></a>
-</h2>
-<p>All <code>ggplot2</code> outputs returned by <code>bsvarPost</code>
-can be restyled downstream.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">irf_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_irf.html">tidy_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">irf_tbl</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/style_bsvar_plot.html">style_bsvar_plot</a></span><span class="op">(</span></span>
-<span>  <span class="va">p</span>,</span>
-<span>  preset <span class="op">=</span> <span class="st">"paper"</span>,</span>
-<span>  palette <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#1b9e77"</span>, <span class="st">"#d95f02"</span><span class="op">)</span></span>
+<span>  type        <span class="op">=</span> <span class="st">"irf"</span>,</span>
+<span>  horizon     <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  variables   <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  shocks      <span class="op">=</span> <span class="fl">2</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/template_bsvar_plot.html">template_bsvar_plot</a></span><span class="op">(</span></span>
-<span>  <span class="va">p</span>,</span>
-<span>  family <span class="op">=</span> <span class="st">"irf"</span>,</span>
-<span>  preset <span class="op">=</span> <span class="st">"paper"</span></span>
+<span><span class="va">cmp_peak</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 14</span></span></span>
+<span><span class="co">#&gt;   model  object_type variable shock mean_value median_value sd_value lower_value</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> basel… peak_irf    gdp      gs        0.037<span style="text-decoration: underline;">9</span>   -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">025</span><span style="color: #BB0000;">0</span>  5.37<span style="color: #949494;">e</span><span style="color: #BB0000;">-1</span>   -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">14</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> alter… peak_irf    gdp      gs    <span style="text-decoration: underline;">66</span>131.        0.000<span style="text-decoration: underline;">115</span>   9.35<span style="color: #949494;">e</span>+5   -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">904</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: upper_value &lt;dbl&gt;, mean_horizon &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   median_horizon &lt;dbl&gt;, sd_horizon &lt;dbl&gt;, lower_horizon &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   upper_horizon &lt;dbl&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/compare_duration_response.html">compare_duration_response</a></span><span class="op">(</span></span>
+<span>  baseline    <span class="op">=</span> <span class="va">post</span>,</span>
+<span>  alternative <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  type        <span class="op">=</span> <span class="st">"cdm"</span>,</span>
+<span>  horizon     <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  variables   <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  shocks      <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  relation    <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
+<span>  value       <span class="op">=</span> <span class="fl">0</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/annotate_bsvar_plot.html">annotate_bsvar_plot</a></span><span class="op">(</span></span>
-<span>  <span class="va">p</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"Impulse responses"</span>,</span>
-<span>  xintercept <span class="op">=</span> <span class="fl">2</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">diag_tbl</span>, preset <span class="op">=</span> <span class="st">"slides"</span><span class="op">)</span></span></code></pre></div>
-<p>This plotting layer is intended to reduce the amount of manual figure
-code needed to bring posterior outputs into publication-ready form.</p>
-</div>
-<div class="section level2">
-<h2 id="rendered-showcase">Rendered showcase<a class="anchor" aria-label="anchor" href="#rendered-showcase"></a>
-</h2>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/" class="external-link">bsvarSIGNs</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: RcppArmadillo</span></span>
-<span><span class="co">#&gt; Loading required package: bsvars</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/DavidZenz/bsvarPost" class="external-link">bsvarPost</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">optimism</span><span class="op">)</span></span>
-<span><span class="va">sign_irf_demo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">23</span><span class="op">)</span><span class="op">)</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
-<span><span class="va">demo_spec</span> <span class="op">&lt;-</span> <span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span>  <span class="va">optimism</span> <span class="op">*</span> <span class="fl">100</span>,</span>
-<span>  p <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  sign_irf <span class="op">=</span> <span class="va">sign_irf_demo</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">demo_post</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">demo_spec</span>, S <span class="op">=</span> <span class="fl">5</span>, thin <span class="op">=</span> <span class="fl">1</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">demo_diag</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics</a></span><span class="op">(</span><span class="va">demo_post</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
-<span><span class="va">demo_rep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/representative_irf.html">median_target_irf</a></span><span class="op">(</span><span class="va">demo_post</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
-<span><span class="va">demo_audit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/restriction_audit.html">restriction_audit</a></span><span class="op">(</span><span class="va">demo_post</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
-<span><span class="va">demo_hd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd_event.html">tidy_hd_event</a></span><span class="op">(</span><span class="va">demo_post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="../reference/reporting.html">report_bundle</a></span><span class="op">(</span><span class="va">demo_diag</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 12</span></span></span>
+<span><span class="co">#&gt;   model       object_type  variable shock relation threshold mode  mean_duration</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> baseline    duration_cdm gdp      gs    &gt;                0 cons…          3.95</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> alternative duration_cdm gdp      gs    &gt;                0 cons…          4.16</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: median_duration &lt;dbl&gt;, sd_duration &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   lower_duration &lt;dbl&gt;, upper_duration &lt;dbl&gt;</span></span></span></code></pre></div>
+<p><code><a href="../reference/reporting.html">as_kable()</a></code> formats any <code>bsvar_post_tbl</code> as a
+compact <code><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">knitr::kable</a></code> table ready for Rmd reports.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="va">cmp_peak</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>Acceptance diagnostics</caption>
-<thead><tr class="header">
-<th align="left">Model</th>
-<th align="right">Value</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="right">5.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="right">1.8101543</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="right">Inf</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="right">1.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="right">0.0053186</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="right">0.0066128</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="right">0.0033773</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="right">0.0066128</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="right">0.3332004</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">demo_diag</span>, preset <span class="op">=</span> <span class="st">"paper"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Using alpha for a discrete variable is not advised.</span></span></code></pre></div>
-<p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-13-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">demo_rep</span><span class="op">)</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
 <colgroup>
-<col width="8%">
-<col width="23%">
-<col width="23%">
 <col width="9%">
-<col width="8%">
-<col width="8%">
-<col width="8%">
-<col width="8%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Model</th>
-<th align="left">Variable</th>
-<th align="left">Shock</th>
-<th align="right">Horizon</th>
-<th align="right">Mean</th>
-<th align="right">Median</th>
-<th align="right">Lower</th>
-<th align="right">Upper</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">productivity</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">productivity</td>
-<td align="right">1</td>
-<td align="right">-0.013</td>
-<td align="right">-0.013</td>
-<td align="right">-0.013</td>
-<td align="right">-0.013</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">productivity</td>
-<td align="right">2</td>
-<td align="right">-0.030</td>
-<td align="right">-0.030</td>
-<td align="right">-0.030</td>
-<td align="right">-0.030</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">productivity</td>
-<td align="right">3</td>
-<td align="right">-0.040</td>
-<td align="right">-0.040</td>
-<td align="right">-0.040</td>
-<td align="right">-0.040</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">stock_prices</td>
-<td align="right">0</td>
-<td align="right">-0.423</td>
-<td align="right">-0.423</td>
-<td align="right">-0.423</td>
-<td align="right">-0.423</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">stock_prices</td>
-<td align="right">1</td>
-<td align="right">-0.459</td>
-<td align="right">-0.459</td>
-<td align="right">-0.459</td>
-<td align="right">-0.459</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">stock_prices</td>
-<td align="right">2</td>
-<td align="right">-0.473</td>
-<td align="right">-0.473</td>
-<td align="right">-0.473</td>
-<td align="right">-0.473</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">stock_prices</td>
-<td align="right">3</td>
-<td align="right">-0.471</td>
-<td align="right">-0.471</td>
-<td align="right">-0.471</td>
-<td align="right">-0.471</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">consumption</td>
-<td align="right">0</td>
-<td align="right">0.621</td>
-<td align="right">0.621</td>
-<td align="right">0.621</td>
-<td align="right">0.621</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">consumption</td>
-<td align="right">1</td>
-<td align="right">0.610</td>
-<td align="right">0.610</td>
-<td align="right">0.610</td>
-<td align="right">0.610</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">consumption</td>
-<td align="right">2</td>
-<td align="right">0.626</td>
-<td align="right">0.626</td>
-<td align="right">0.626</td>
-<td align="right">0.626</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">consumption</td>
-<td align="right">3</td>
-<td align="right">0.638</td>
-<td align="right">0.638</td>
-<td align="right">0.638</td>
-<td align="right">0.638</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">real_interest_rate</td>
-<td align="right">0</td>
-<td align="right">-0.220</td>
-<td align="right">-0.220</td>
-<td align="right">-0.220</td>
-<td align="right">-0.220</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">real_interest_rate</td>
-<td align="right">1</td>
-<td align="right">-0.102</td>
-<td align="right">-0.102</td>
-<td align="right">-0.102</td>
-<td align="right">-0.102</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">real_interest_rate</td>
-<td align="right">2</td>
-<td align="right">-0.043</td>
-<td align="right">-0.043</td>
-<td align="right">-0.043</td>
-<td align="right">-0.043</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">real_interest_rate</td>
-<td align="right">3</td>
-<td align="right">-0.018</td>
-<td align="right">-0.018</td>
-<td align="right">-0.018</td>
-<td align="right">-0.018</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">hours_worked</td>
-<td align="right">0</td>
-<td align="right">-0.072</td>
-<td align="right">-0.072</td>
-<td align="right">-0.072</td>
-<td align="right">-0.072</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">hours_worked</td>
-<td align="right">1</td>
-<td align="right">-0.164</td>
-<td align="right">-0.164</td>
-<td align="right">-0.164</td>
-<td align="right">-0.164</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">hours_worked</td>
-<td align="right">2</td>
-<td align="right">-0.146</td>
-<td align="right">-0.146</td>
-<td align="right">-0.146</td>
-<td align="right">-0.146</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">hours_worked</td>
-<td align="right">3</td>
-<td align="right">-0.134</td>
-<td align="right">-0.134</td>
-<td align="right">-0.134</td>
-<td align="right">-0.134</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">productivity</td>
-<td align="right">0</td>
-<td align="right">5.644</td>
-<td align="right">5.644</td>
-<td align="right">5.644</td>
-<td align="right">5.644</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">productivity</td>
-<td align="right">1</td>
-<td align="right">6.175</td>
-<td align="right">6.175</td>
-<td align="right">6.175</td>
-<td align="right">6.175</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">productivity</td>
-<td align="right">2</td>
-<td align="right">5.742</td>
-<td align="right">5.742</td>
-<td align="right">5.742</td>
-<td align="right">5.742</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">productivity</td>
-<td align="right">3</td>
-<td align="right">5.552</td>
-<td align="right">5.552</td>
-<td align="right">5.552</td>
-<td align="right">5.552</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">stock_prices</td>
-<td align="right">0</td>
-<td align="right">-3.645</td>
-<td align="right">-3.645</td>
-<td align="right">-3.645</td>
-<td align="right">-3.645</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">stock_prices</td>
-<td align="right">1</td>
-<td align="right">-4.215</td>
-<td align="right">-4.215</td>
-<td align="right">-4.215</td>
-<td align="right">-4.215</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">stock_prices</td>
-<td align="right">2</td>
-<td align="right">-4.915</td>
-<td align="right">-4.915</td>
-<td align="right">-4.915</td>
-<td align="right">-4.915</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">stock_prices</td>
-<td align="right">3</td>
-<td align="right">-5.345</td>
-<td align="right">-5.345</td>
-<td align="right">-5.345</td>
-<td align="right">-5.345</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">consumption</td>
-<td align="right">0</td>
-<td align="right">-3.405</td>
-<td align="right">-3.405</td>
-<td align="right">-3.405</td>
-<td align="right">-3.405</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">consumption</td>
-<td align="right">1</td>
-<td align="right">-3.474</td>
-<td align="right">-3.474</td>
-<td align="right">-3.474</td>
-<td align="right">-3.474</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">consumption</td>
-<td align="right">2</td>
-<td align="right">-3.843</td>
-<td align="right">-3.843</td>
-<td align="right">-3.843</td>
-<td align="right">-3.843</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">consumption</td>
-<td align="right">3</td>
-<td align="right">-4.116</td>
-<td align="right">-4.116</td>
-<td align="right">-4.116</td>
-<td align="right">-4.116</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">real_interest_rate</td>
-<td align="right">0</td>
-<td align="right">-0.378</td>
-<td align="right">-0.378</td>
-<td align="right">-0.378</td>
-<td align="right">-0.378</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">real_interest_rate</td>
-<td align="right">1</td>
-<td align="right">-0.105</td>
-<td align="right">-0.105</td>
-<td align="right">-0.105</td>
-<td align="right">-0.105</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">real_interest_rate</td>
-<td align="right">2</td>
-<td align="right">-0.147</td>
-<td align="right">-0.147</td>
-<td align="right">-0.147</td>
-<td align="right">-0.147</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">real_interest_rate</td>
-<td align="right">3</td>
-<td align="right">-0.231</td>
-<td align="right">-0.231</td>
-<td align="right">-0.231</td>
-<td align="right">-0.231</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">hours_worked</td>
-<td align="right">0</td>
-<td align="right">-0.104</td>
-<td align="right">-0.104</td>
-<td align="right">-0.104</td>
-<td align="right">-0.104</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">hours_worked</td>
-<td align="right">1</td>
-<td align="right">-0.460</td>
-<td align="right">-0.460</td>
-<td align="right">-0.460</td>
-<td align="right">-0.460</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">hours_worked</td>
-<td align="right">2</td>
-<td align="right">-0.243</td>
-<td align="right">-0.243</td>
-<td align="right">-0.243</td>
-<td align="right">-0.243</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">hours_worked</td>
-<td align="right">3</td>
-<td align="right">-0.010</td>
-<td align="right">-0.010</td>
-<td align="right">-0.010</td>
-<td align="right">-0.010</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">productivity</td>
-<td align="right">0</td>
-<td align="right">-0.015</td>
-<td align="right">-0.015</td>
-<td align="right">-0.015</td>
-<td align="right">-0.015</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">productivity</td>
-<td align="right">1</td>
-<td align="right">0.032</td>
-<td align="right">0.032</td>
-<td align="right">0.032</td>
-<td align="right">0.032</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">productivity</td>
-<td align="right">2</td>
-<td align="right">0.034</td>
-<td align="right">0.034</td>
-<td align="right">0.034</td>
-<td align="right">0.034</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">productivity</td>
-<td align="right">3</td>
-<td align="right">0.026</td>
-<td align="right">0.026</td>
-<td align="right">0.026</td>
-<td align="right">0.026</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">stock_prices</td>
-<td align="right">0</td>
-<td align="right">-0.075</td>
-<td align="right">-0.075</td>
-<td align="right">-0.075</td>
-<td align="right">-0.075</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">stock_prices</td>
-<td align="right">1</td>
-<td align="right">-0.103</td>
-<td align="right">-0.103</td>
-<td align="right">-0.103</td>
-<td align="right">-0.103</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">stock_prices</td>
-<td align="right">2</td>
-<td align="right">-0.124</td>
-<td align="right">-0.124</td>
-<td align="right">-0.124</td>
-<td align="right">-0.124</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">stock_prices</td>
-<td align="right">3</td>
-<td align="right">-0.139</td>
-<td align="right">-0.139</td>
-<td align="right">-0.139</td>
-<td align="right">-0.139</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">consumption</td>
-<td align="right">0</td>
-<td align="right">-0.129</td>
-<td align="right">-0.129</td>
-<td align="right">-0.129</td>
-<td align="right">-0.129</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">consumption</td>
-<td align="right">1</td>
-<td align="right">-0.212</td>
-<td align="right">-0.212</td>
-<td align="right">-0.212</td>
-<td align="right">-0.212</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">consumption</td>
-<td align="right">2</td>
-<td align="right">-0.246</td>
-<td align="right">-0.246</td>
-<td align="right">-0.246</td>
-<td align="right">-0.246</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">consumption</td>
-<td align="right">3</td>
-<td align="right">-0.268</td>
-<td align="right">-0.268</td>
-<td align="right">-0.268</td>
-<td align="right">-0.268</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">real_interest_rate</td>
-<td align="right">0</td>
-<td align="right">-0.293</td>
-<td align="right">-0.293</td>
-<td align="right">-0.293</td>
-<td align="right">-0.293</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">real_interest_rate</td>
-<td align="right">1</td>
-<td align="right">-0.356</td>
-<td align="right">-0.356</td>
-<td align="right">-0.356</td>
-<td align="right">-0.356</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">real_interest_rate</td>
-<td align="right">2</td>
-<td align="right">-0.380</td>
-<td align="right">-0.380</td>
-<td align="right">-0.380</td>
-<td align="right">-0.380</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">real_interest_rate</td>
-<td align="right">3</td>
-<td align="right">-0.393</td>
-<td align="right">-0.393</td>
-<td align="right">-0.393</td>
-<td align="right">-0.393</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">hours_worked</td>
-<td align="right">0</td>
-<td align="right">-0.238</td>
-<td align="right">-0.238</td>
-<td align="right">-0.238</td>
-<td align="right">-0.238</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">hours_worked</td>
-<td align="right">1</td>
-<td align="right">-0.293</td>
-<td align="right">-0.293</td>
-<td align="right">-0.293</td>
-<td align="right">-0.293</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">hours_worked</td>
-<td align="right">2</td>
-<td align="right">-0.299</td>
-<td align="right">-0.299</td>
-<td align="right">-0.299</td>
-<td align="right">-0.299</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">hours_worked</td>
-<td align="right">3</td>
-<td align="right">-0.294</td>
-<td align="right">-0.294</td>
-<td align="right">-0.294</td>
-<td align="right">-0.294</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">productivity</td>
-<td align="right">0</td>
-<td align="right">-0.951</td>
-<td align="right">-0.951</td>
-<td align="right">-0.951</td>
-<td align="right">-0.951</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">productivity</td>
-<td align="right">1</td>
-<td align="right">-0.342</td>
-<td align="right">-0.342</td>
-<td align="right">-0.342</td>
-<td align="right">-0.342</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">productivity</td>
-<td align="right">2</td>
-<td align="right">-0.315</td>
-<td align="right">-0.315</td>
-<td align="right">-0.315</td>
-<td align="right">-0.315</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">productivity</td>
-<td align="right">3</td>
-<td align="right">-0.252</td>
-<td align="right">-0.252</td>
-<td align="right">-0.252</td>
-<td align="right">-0.252</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">stock_prices</td>
-<td align="right">0</td>
-<td align="right">-1.197</td>
-<td align="right">-1.197</td>
-<td align="right">-1.197</td>
-<td align="right">-1.197</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">stock_prices</td>
-<td align="right">1</td>
-<td align="right">-0.740</td>
-<td align="right">-0.740</td>
-<td align="right">-0.740</td>
-<td align="right">-0.740</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">stock_prices</td>
-<td align="right">2</td>
-<td align="right">-0.542</td>
-<td align="right">-0.542</td>
-<td align="right">-0.542</td>
-<td align="right">-0.542</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">stock_prices</td>
-<td align="right">3</td>
-<td align="right">-0.388</td>
-<td align="right">-0.388</td>
-<td align="right">-0.388</td>
-<td align="right">-0.388</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">consumption</td>
-<td align="right">0</td>
-<td align="right">-0.740</td>
-<td align="right">-0.740</td>
-<td align="right">-0.740</td>
-<td align="right">-0.740</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">consumption</td>
-<td align="right">1</td>
-<td align="right">-0.483</td>
-<td align="right">-0.483</td>
-<td align="right">-0.483</td>
-<td align="right">-0.483</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">consumption</td>
-<td align="right">2</td>
-<td align="right">-0.347</td>
-<td align="right">-0.347</td>
-<td align="right">-0.347</td>
-<td align="right">-0.347</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">consumption</td>
-<td align="right">3</td>
-<td align="right">-0.254</td>
-<td align="right">-0.254</td>
-<td align="right">-0.254</td>
-<td align="right">-0.254</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">real_interest_rate</td>
-<td align="right">0</td>
-<td align="right">-0.630</td>
-<td align="right">-0.630</td>
-<td align="right">-0.630</td>
-<td align="right">-0.630</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">real_interest_rate</td>
-<td align="right">1</td>
-<td align="right">-0.384</td>
-<td align="right">-0.384</td>
-<td align="right">-0.384</td>
-<td align="right">-0.384</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">real_interest_rate</td>
-<td align="right">2</td>
-<td align="right">-0.304</td>
-<td align="right">-0.304</td>
-<td align="right">-0.304</td>
-<td align="right">-0.304</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">real_interest_rate</td>
-<td align="right">3</td>
-<td align="right">-0.229</td>
-<td align="right">-0.229</td>
-<td align="right">-0.229</td>
-<td align="right">-0.229</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">hours_worked</td>
-<td align="right">0</td>
-<td align="right">0.493</td>
-<td align="right">0.493</td>
-<td align="right">0.493</td>
-<td align="right">0.493</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">hours_worked</td>
-<td align="right">1</td>
-<td align="right">0.356</td>
-<td align="right">0.356</td>
-<td align="right">0.356</td>
-<td align="right">0.356</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">hours_worked</td>
-<td align="right">2</td>
-<td align="right">0.246</td>
-<td align="right">0.246</td>
-<td align="right">0.246</td>
-<td align="right">0.246</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">hours_worked</td>
-<td align="right">3</td>
-<td align="right">0.184</td>
-<td align="right">0.184</td>
-<td align="right">0.184</td>
-<td align="right">0.184</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">productivity</td>
-<td align="right">0</td>
-<td align="right">0.110</td>
-<td align="right">0.110</td>
-<td align="right">0.110</td>
-<td align="right">0.110</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">productivity</td>
-<td align="right">1</td>
-<td align="right">0.136</td>
-<td align="right">0.136</td>
-<td align="right">0.136</td>
-<td align="right">0.136</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">productivity</td>
-<td align="right">2</td>
-<td align="right">0.163</td>
-<td align="right">0.163</td>
-<td align="right">0.163</td>
-<td align="right">0.163</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">productivity</td>
-<td align="right">3</td>
-<td align="right">0.163</td>
-<td align="right">0.163</td>
-<td align="right">0.163</td>
-<td align="right">0.163</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">stock_prices</td>
-<td align="right">0</td>
-<td align="right">0.275</td>
-<td align="right">0.275</td>
-<td align="right">0.275</td>
-<td align="right">0.275</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">stock_prices</td>
-<td align="right">1</td>
-<td align="right">0.293</td>
-<td align="right">0.293</td>
-<td align="right">0.293</td>
-<td align="right">0.293</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">stock_prices</td>
-<td align="right">2</td>
-<td align="right">0.268</td>
-<td align="right">0.268</td>
-<td align="right">0.268</td>
-<td align="right">0.268</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">stock_prices</td>
-<td align="right">3</td>
-<td align="right">0.240</td>
-<td align="right">0.240</td>
-<td align="right">0.240</td>
-<td align="right">0.240</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">consumption</td>
-<td align="right">0</td>
-<td align="right">-0.060</td>
-<td align="right">-0.060</td>
-<td align="right">-0.060</td>
-<td align="right">-0.060</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">consumption</td>
-<td align="right">1</td>
-<td align="right">-0.208</td>
-<td align="right">-0.208</td>
-<td align="right">-0.208</td>
-<td align="right">-0.208</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">consumption</td>
-<td align="right">2</td>
-<td align="right">-0.304</td>
-<td align="right">-0.304</td>
-<td align="right">-0.304</td>
-<td align="right">-0.304</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">consumption</td>
-<td align="right">3</td>
-<td align="right">-0.358</td>
-<td align="right">-0.358</td>
-<td align="right">-0.358</td>
-<td align="right">-0.358</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">real_interest_rate</td>
-<td align="right">0</td>
-<td align="right">-0.569</td>
-<td align="right">-0.569</td>
-<td align="right">-0.569</td>
-<td align="right">-0.569</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">real_interest_rate</td>
-<td align="right">1</td>
-<td align="right">-0.886</td>
-<td align="right">-0.886</td>
-<td align="right">-0.886</td>
-<td align="right">-0.886</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">real_interest_rate</td>
-<td align="right">2</td>
-<td align="right">-1.016</td>
-<td align="right">-1.016</td>
-<td align="right">-1.016</td>
-<td align="right">-1.016</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">real_interest_rate</td>
-<td align="right">3</td>
-<td align="right">-1.073</td>
-<td align="right">-1.073</td>
-<td align="right">-1.073</td>
-<td align="right">-1.073</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">hours_worked</td>
-<td align="right">0</td>
-<td align="right">0.217</td>
-<td align="right">0.217</td>
-<td align="right">0.217</td>
-<td align="right">0.217</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">hours_worked</td>
-<td align="right">1</td>
-<td align="right">0.145</td>
-<td align="right">0.145</td>
-<td align="right">0.145</td>
-<td align="right">0.145</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">hours_worked</td>
-<td align="right">2</td>
-<td align="right">0.104</td>
-<td align="right">0.104</td>
-<td align="right">0.104</td>
-<td align="right">0.104</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">hours_worked</td>
-<td align="right">3</td>
-<td align="right">0.095</td>
-<td align="right">0.095</td>
-<td align="right">0.095</td>
-<td align="right">0.095</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">demo_rep</span>, preset <span class="op">=</span> <span class="st">"paper"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-14-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="va">demo_audit</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<table style="width:100%;" class="table">
-<colgroup>
+<col width="6%">
 <col width="4%">
-<col width="8%">
-<col width="8%">
-<col width="5%">
+<col width="9%">
+<col width="9%">
+<col width="9%">
+<col width="9%">
+<col width="9%">
 <col width="11%">
-<col width="23%">
-<col width="5%">
-<col width="14%">
-<col width="3%">
-<col width="4%">
-<col width="3%">
-<col width="3%">
+<col width="10%">
+<col width="10%">
 </colgroup>
+<thead><tr class="header">
+<th align="left">Model</th>
+<th align="left">Variable</th>
+<th align="left">Shock</th>
+<th align="right">Mean value</th>
+<th align="right">Median value</th>
+<th align="right">Lower value</th>
+<th align="right">Upper value</th>
+<th align="right">Mean horizon</th>
+<th align="right">Median horizon</th>
+<th align="right">Lower horizon</th>
+<th align="right">Upper horizon</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">3.791410e-02</td>
+<td align="right">-0.0000250</td>
+<td align="right">-0.0011445</td>
+<td align="right">0.0009886</td>
+<td align="right">1.105</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">10.5</td>
+</tr>
+<tr class="even">
+<td align="left">alternative</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">6.613149e+04</td>
+<td align="right">0.0001149</td>
+<td align="right">-0.0009040</td>
+<td align="right">0.0033801</td>
+<td align="right">4.740</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">20.0</td>
+</tr>
+</tbody>
+</table>
+<p>The three-lag alternative typically shows a later peak with wider
+credible bands, reflecting the richer lag dynamics.</p>
+</div>
+<div class="section level2">
+<h2 id="historical-decomposition-events">Historical decomposition events<a class="anchor" aria-label="anchor" href="#historical-decomposition-events"></a>
+</h2>
+<p>Historical decompositions (HD) measure each structural shock’s
+contribution to observed variation in each variable at each point in
+time. <code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> aggregates those contributions over a
+chosen event window.</p>
+<p>The <code>us_fiscal_lsuw</code> sample begins in 1948. To examine
+which shocks drove fiscal dynamics in the first year (four quarters:
+1948.25 through 1948.75):</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hd_event</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd_event.html">tidy_hd_event</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hd_event</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 11</span></span></span>
+<span><span class="co">#&gt;   model  object_type variable shock event_start event_end     mean    median</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> model1 hd_event    gdp      gdp   1948.25     1948.75    3.28     3.32    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> model1 hd_event    gs       gdp   1948.25     1948.75    0.011<span style="text-decoration: underline;">6</span>   0.000<span style="text-decoration: underline;">610</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> model1 hd_event    ttr      gdp   1948.25     1948.75   -<span style="color: #BB0000;">0.282</span>   -<span style="color: #BB0000;">0.289</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> model1 hd_event    gdp      gs    1948.25     1948.75   -<span style="color: #BB0000;">0.029</span><span style="color: #BB0000; text-decoration: underline;">5</span>  -<span style="color: #BB0000;">0.018</span><span style="color: #BB0000; text-decoration: underline;">8</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> model1 hd_event    gs       gs    1948.25     1948.75   -<span style="color: #BB0000;">0.906</span>   -<span style="color: #BB0000;">0.880</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> model1 hd_event    ttr      gs    1948.25     1948.75    0.001<span style="text-decoration: underline;">40</span>  0.006<span style="text-decoration: underline;">80</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: sd &lt;dbl&gt;, lower &lt;dbl&gt;, upper &lt;dbl&gt;</span></span></span></code></pre></div>
+<p><code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> ranks the structural shocks by their
+absolute contribution to a target variable over the same window. Which
+shock moved <code>gdp</code> the most?</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/shock_ranking.html">shock_ranking</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, ranking <span class="op">=</span> <span class="st">"absolute"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 14</span></span></span>
+<span><span class="co">#&gt;   model  object_type variable shock event_start event_end     mean    median</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> model1 hd_event    gdp      gdp   1948.25     1948.75    3.28     3.32    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> model1 hd_event    gdp      ttr   1948.25     1948.75    0.520    0.458   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> model1 hd_event    gdp      gs    1948.25     1948.75   -<span style="color: #BB0000;">0.029</span><span style="color: #BB0000; text-decoration: underline;">5</span>  -<span style="color: #BB0000;">0.018</span><span style="color: #BB0000; text-decoration: underline;">8</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> model1 hd_event    gs       gs    1948.25     1948.75   -<span style="color: #BB0000;">0.906</span>   -<span style="color: #BB0000;">0.880</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> model1 hd_event    gs       ttr   1948.25     1948.75    0.064<span style="text-decoration: underline;">6</span>   0.007<span style="text-decoration: underline;">66</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> model1 hd_event    gs       gdp   1948.25     1948.75    0.011<span style="text-decoration: underline;">6</span>   0.000<span style="text-decoration: underline;">610</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> model1 hd_event    ttr      ttr   1948.25     1948.75   -<span style="color: #BB0000;">7.94</span>    -<span style="color: #BB0000;">8.01</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> model1 hd_event    ttr      gdp   1948.25     1948.75   -<span style="color: #BB0000;">0.282</span>   -<span style="color: #BB0000;">0.289</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">9</span> model1 hd_event    ttr      gs    1948.25     1948.75    0.001<span style="text-decoration: underline;">40</span>  0.006<span style="text-decoration: underline;">80</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: sd &lt;dbl&gt;, lower &lt;dbl&gt;, upper &lt;dbl&gt;, ranking &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   rank_score &lt;dbl&gt;, rank &lt;int&gt;</span></span></span></code></pre></div>
+<p>A pre-rendered HD event figure from a richer S = 200 run:</p>
+<p><img src="figures/hd-event-showcase.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="publication-ready-reporting">Publication-ready reporting<a class="anchor" aria-label="anchor" href="#publication-ready-reporting"></a>
+</h2>
+<p>All <code>bsvarPost</code> outputs are <code>bsvar_post_tbl</code>
+data frames and accept the same family of reporting helpers.</p>
+<p><strong>knitr table</strong> (always available):</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_irf</span><span class="op">)</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
 <thead><tr class="header">
 <th align="left">Model</th>
 <th align="left">Variable</th>
 <th align="left">Shock</th>
 <th align="right">Horizon</th>
-<th align="left">Restriction type</th>
-<th align="left">Restriction</th>
-<th align="left">Relation</th>
-<th align="right">Posterior probability</th>
 <th align="right">Mean</th>
 <th align="right">Median</th>
 <th align="right">Lower</th>
@@ -1462,12 +362,228 @@ code needed to bring posterior outputs into publication-ready form.</p>
 <tbody>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">productivity</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
 <td align="right">0</td>
-<td align="left">irf_zero</td>
-<td align="left">irf[productivity,productivity,0]==0</td>
-<td align="left">==0</td>
+<td align="right">0.030</td>
+<td align="right">0.030</td>
+<td align="right">0.030</td>
+<td align="right">0.030</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">1</td>
+<td align="right">0.028</td>
+<td align="right">0.028</td>
+<td align="right">0.028</td>
+<td align="right">0.028</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">2</td>
+<td align="right">0.026</td>
+<td align="right">0.026</td>
+<td align="right">0.026</td>
+<td align="right">0.026</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">3</td>
+<td align="right">0.024</td>
+<td align="right">0.024</td>
+<td align="right">0.024</td>
+<td align="right">0.024</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">4</td>
+<td align="right">0.023</td>
+<td align="right">0.023</td>
+<td align="right">0.023</td>
+<td align="right">0.023</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">5</td>
+<td align="right">0.021</td>
+<td align="right">0.021</td>
+<td align="right">0.021</td>
+<td align="right">0.021</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">6</td>
+<td align="right">0.020</td>
+<td align="right">0.020</td>
+<td align="right">0.020</td>
+<td align="right">0.020</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">7</td>
+<td align="right">0.019</td>
+<td align="right">0.019</td>
+<td align="right">0.019</td>
+<td align="right">0.019</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">8</td>
+<td align="right">0.017</td>
+<td align="right">0.017</td>
+<td align="right">0.017</td>
+<td align="right">0.017</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">9</td>
+<td align="right">0.016</td>
+<td align="right">0.016</td>
+<td align="right">0.016</td>
+<td align="right">0.016</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">10</td>
+<td align="right">0.015</td>
+<td align="right">0.015</td>
+<td align="right">0.015</td>
+<td align="right">0.015</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">11</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">12</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">13</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">14</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">15</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">16</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">17</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">18</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">19</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">ttr</td>
+<td align="right">20</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
 <td align="right">1</td>
 <td align="right">0.000</td>
 <td align="right">0.000</td>
@@ -1476,336 +592,2238 @@ code needed to bring posterior outputs into publication-ready form.</p>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">productivity</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">2</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">3</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">4</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">5</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">6</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">7</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">8</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">9</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">10</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">11</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">12</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">13</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">14</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">15</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">16</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">17</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">18</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">19</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gs</td>
+<td align="right">20</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
 <td align="right">0</td>
-<td align="left">irf_sign</td>
-<td align="left">irf[stock_prices,productivity,0]&gt;0</td>
-<td align="left">&gt;0</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
 <td align="right">1</td>
-<td align="right">4.692</td>
-<td align="right">5.644</td>
-<td align="right">3.263</td>
-<td align="right">5.644</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_restriction_audit.html">plot_restriction_audit</a></span><span class="op">(</span><span class="va">demo_audit</span><span class="op">)</span></span></code></pre></div>
-<p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-15-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="va">demo_hd</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<colgroup>
-<col width="7%">
-<col width="20%">
-<col width="20%">
-<col width="12%">
-<col width="10%">
-<col width="7%">
-<col width="7%">
-<col width="7%">
-<col width="7%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Model</th>
-<th align="left">Variable</th>
-<th align="left">Shock</th>
-<th align="left">Event start</th>
-<th align="left">Event end</th>
-<th align="right">Mean</th>
-<th align="right">Median</th>
-<th align="right">Lower</th>
-<th align="right">Upper</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">consumption</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.015</td>
-<td align="right">0.111</td>
-<td align="right">-0.129</td>
-<td align="right">0.111</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">consumption</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.152</td>
-<td align="right">-0.090</td>
-<td align="right">-0.246</td>
-<td align="right">-0.090</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">consumption</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.315</td>
-<td align="right">0.571</td>
-<td align="right">-0.068</td>
-<td align="right">0.571</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">2</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">consumption</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.112</td>
-<td align="right">0.096</td>
-<td align="right">0.096</td>
-<td align="right">0.136</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">3</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">consumption</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-1.296</td>
-<td align="right">-3.112</td>
-<td align="right">-3.112</td>
-<td align="right">1.428</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">4</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">hours_worked</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.211</td>
-<td align="right">0.205</td>
-<td align="right">0.205</td>
-<td align="right">0.220</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">5</td>
+<td align="right">0.004</td>
+<td align="right">0.004</td>
+<td align="right">0.004</td>
+<td align="right">0.004</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">hours_worked</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.286</td>
-<td align="right">0.328</td>
-<td align="right">0.225</td>
-<td align="right">0.328</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">hours_worked</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.022</td>
-<td align="right">-0.066</td>
-<td align="right">-0.066</td>
-<td align="right">0.156</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">hours_worked</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.015</td>
-<td align="right">-0.064</td>
-<td align="right">-0.064</td>
-<td align="right">0.134</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">hours_worked</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.436</td>
-<td align="right">-0.095</td>
-<td align="right">-0.947</td>
-<td align="right">-0.095</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">productivity</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.118</td>
-<td align="right">0.013</td>
-<td align="right">0.013</td>
-<td align="right">0.277</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">productivity</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.229</td>
-<td align="right">0.166</td>
-<td align="right">-0.821</td>
-<td align="right">0.166</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">productivity</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-<td align="right">0.000</td>
-</tr>
-<tr class="even">
-<td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">productivity</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.076</td>
-<td align="right">0.123</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">6</td>
 <td align="right">0.005</td>
-<td align="right">0.123</td>
-</tr>
-<tr class="odd">
-<td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">productivity</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">4.037</td>
-<td align="right">5.158</td>
-<td align="right">2.357</td>
-<td align="right">5.158</td>
+<td align="right">0.005</td>
+<td align="right">0.005</td>
+<td align="right">0.005</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">real_interest_rate</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.171</td>
-<td align="right">0.252</td>
-<td align="right">0.049</td>
-<td align="right">0.252</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">7</td>
+<td align="right">0.005</td>
+<td align="right">0.005</td>
+<td align="right">0.005</td>
+<td align="right">0.005</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">real_interest_rate</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.360</td>
-<td align="right">-0.858</td>
-<td align="right">-0.858</td>
-<td align="right">0.386</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">8</td>
+<td align="right">0.006</td>
+<td align="right">0.006</td>
+<td align="right">0.006</td>
+<td align="right">0.006</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">real_interest_rate</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.161</td>
-<td align="right">-0.202</td>
-<td align="right">-0.202</td>
-<td align="right">-0.099</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">9</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">real_interest_rate</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.039</td>
-<td align="right">0.082</td>
-<td align="right">-0.025</td>
-<td align="right">0.082</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">10</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
+<td align="right">0.007</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">real_interest_rate</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">1.522</td>
-<td align="right">-0.346</td>
-<td align="right">-0.346</td>
-<td align="right">4.324</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">11</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">consumption</td>
-<td align="left">stock_prices</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.031</td>
-<td align="right">0.065</td>
-<td align="right">-0.020</td>
-<td align="right">0.065</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">12</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">hours_worked</td>
-<td align="left">stock_prices</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.270</td>
-<td align="right">0.414</td>
-<td align="right">0.052</td>
-<td align="right">0.414</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">13</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">productivity</td>
-<td align="left">stock_prices</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-0.411</td>
-<td align="right">-0.389</td>
-<td align="right">-0.444</td>
-<td align="right">-0.389</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">14</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
 </tr>
 <tr class="even">
 <td align="left">model1</td>
-<td align="left">real_interest_rate</td>
-<td align="left">stock_prices</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">0.099</td>
-<td align="right">0.155</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">15</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">16</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">17</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">18</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">19</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">ttr</td>
+<td align="left">gdp</td>
+<td align="right">20</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">1</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">2</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">3</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">4</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">5</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">6</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">7</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">8</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+<td align="right">-0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">9</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">10</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">11</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">12</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">13</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">14</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">15</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">16</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">17</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">18</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">19</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">ttr</td>
+<td align="right">20</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+<td align="right">-0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">0</td>
+<td align="right">0.025</td>
+<td align="right">0.025</td>
+<td align="right">0.025</td>
+<td align="right">0.025</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">1</td>
+<td align="right">0.024</td>
+<td align="right">0.024</td>
+<td align="right">0.024</td>
+<td align="right">0.024</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">2</td>
+<td align="right">0.023</td>
+<td align="right">0.023</td>
+<td align="right">0.023</td>
+<td align="right">0.023</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">3</td>
+<td align="right">0.021</td>
+<td align="right">0.021</td>
+<td align="right">0.021</td>
+<td align="right">0.021</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">4</td>
+<td align="right">0.020</td>
+<td align="right">0.020</td>
+<td align="right">0.020</td>
+<td align="right">0.020</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">5</td>
+<td align="right">0.019</td>
+<td align="right">0.019</td>
+<td align="right">0.019</td>
+<td align="right">0.019</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">6</td>
+<td align="right">0.018</td>
+<td align="right">0.018</td>
+<td align="right">0.018</td>
+<td align="right">0.018</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">7</td>
+<td align="right">0.017</td>
+<td align="right">0.017</td>
+<td align="right">0.017</td>
+<td align="right">0.017</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">8</td>
+<td align="right">0.016</td>
+<td align="right">0.016</td>
+<td align="right">0.016</td>
+<td align="right">0.016</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">9</td>
 <td align="right">0.015</td>
-<td align="right">0.155</td>
+<td align="right">0.015</td>
+<td align="right">0.015</td>
+<td align="right">0.015</td>
 </tr>
 <tr class="odd">
 <td align="left">model1</td>
-<td align="left">stock_prices</td>
-<td align="left">stock_prices</td>
-<td align="left">1</td>
-<td align="left">2</td>
-<td align="right">-2.542</td>
-<td align="right">-3.331</td>
-<td align="right">-3.331</td>
-<td align="right">-1.359</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">10</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">11</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+<td align="right">0.014</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">12</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+<td align="right">0.013</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">13</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">14</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+<td align="right">0.012</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">15</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">16</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">17</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">18</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">19</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gs</td>
+<td align="right">20</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+<td align="right">0.008</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">1</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">2</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">3</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">4</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">5</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">6</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">7</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">8</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">9</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">10</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">11</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">12</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">13</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">14</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">15</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">16</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">17</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">18</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">19</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gs</td>
+<td align="left">gdp</td>
+<td align="right">20</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">0</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">1</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">2</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">3</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">4</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">5</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">6</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">7</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">8</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">9</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">10</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">11</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">12</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">13</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">14</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">15</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">16</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">17</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">18</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">19</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">ttr</td>
+<td align="right">20</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">0</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">1</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">2</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">3</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">4</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">5</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">6</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">7</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">8</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">9</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">10</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">11</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">12</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">13</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">14</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">15</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">16</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">17</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">18</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">19</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">20</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+<td align="right">-0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">0</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">1</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">2</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">3</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">4</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">5</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">6</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">7</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">8</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">9</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">10</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">11</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">12</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">13</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">14</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">15</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">16</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">17</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">18</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">19</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">model1</td>
+<td align="left">gdp</td>
+<td align="left">gdp</td>
+<td align="right">20</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
+<td align="right">0.011</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event.html">plot_hd_event</a></span><span class="op">(</span><span class="va">demo_post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" alt="" width="700"></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_shock_ranking.html">plot_shock_ranking</a></span><span class="op">(</span><span class="va">demo_post</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">2</span>, ranking <span class="op">=</span> <span class="st">"absolute"</span>, top_n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
-<p><img src="post-estimation-workflows_files/figure-html/unnamed-chunk-16-2.png" class="r-plt" alt="" width="700"></p>
-<p>The site also includes a small set of pre-rendered sign-restriction
-figures generated from richer posterior samples. This keeps the checked
-vignette build light while still showing smoother diagnostics and
-event-window plots.</p>
+<p><strong>gt table</strong> (when the <code>gt</code> package is
+installed):</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_gt</a></span><span class="op">(</span><span class="va">cmp_peak</span>, caption <span class="op">=</span> <span class="st">"Peak response: 1-lag vs 3-lag"</span>, digits <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>      preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
+<div id="mwlefoodfi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mwlefoodfi table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#mwlefoodfi thead, #mwlefoodfi tbody, #mwlefoodfi tfoot, #mwlefoodfi tr, #mwlefoodfi td, #mwlefoodfi th {
+  border-style: none;
+}
+
+#mwlefoodfi p {
+  margin: 0;
+  padding: 0;
+}
+
+#mwlefoodfi .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#mwlefoodfi .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#mwlefoodfi .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#mwlefoodfi .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#mwlefoodfi .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#mwlefoodfi .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#mwlefoodfi .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#mwlefoodfi .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#mwlefoodfi .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#mwlefoodfi .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#mwlefoodfi .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#mwlefoodfi .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#mwlefoodfi .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#mwlefoodfi .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#mwlefoodfi .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#mwlefoodfi .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#mwlefoodfi .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#mwlefoodfi .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#mwlefoodfi .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#mwlefoodfi .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#mwlefoodfi .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#mwlefoodfi .gt_left {
+  text-align: left;
+}
+
+#mwlefoodfi .gt_center {
+  text-align: center;
+}
+
+#mwlefoodfi .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#mwlefoodfi .gt_font_normal {
+  font-weight: normal;
+}
+
+#mwlefoodfi .gt_font_bold {
+  font-weight: bold;
+}
+
+#mwlefoodfi .gt_font_italic {
+  font-style: italic;
+}
+
+#mwlefoodfi .gt_super {
+  font-size: 65%;
+}
+
+#mwlefoodfi .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#mwlefoodfi .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#mwlefoodfi .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#mwlefoodfi .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#mwlefoodfi .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#mwlefoodfi .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#mwlefoodfi .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#mwlefoodfi .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#mwlefoodfi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="table gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading">
+<td colspan="11" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>Peak response: 1-lag vs 3-lag</td>
+    </tr>
+<tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Model">Model</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Variable">Variable</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Shock">Shock</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Mean-value">Mean value</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Median-value">Median value</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Lower-value">Lower value</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Upper-value">Upper value</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Mean-horizon">Mean horizon</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Median-horizon">Median horizon</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Lower-horizon">Lower horizon</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="Upper-horizon">Upper horizon</th>
+    </tr>
+</thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="Model" class="gt_row gt_left">baseline</td>
+<td headers="Variable" class="gt_row gt_left">gdp</td>
+<td headers="Shock" class="gt_row gt_left">gs</td>
+<td headers="Mean value" class="gt_row gt_right">0.038</td>
+<td headers="Median value" class="gt_row gt_right">0</td>
+<td headers="Lower value" class="gt_row gt_right">-0.001</td>
+<td headers="Upper value" class="gt_row gt_right">0.001</td>
+<td headers="Mean horizon" class="gt_row gt_right">1.105</td>
+<td headers="Median horizon" class="gt_row gt_right">0</td>
+<td headers="Lower horizon" class="gt_row gt_right">0</td>
+<td headers="Upper horizon" class="gt_row gt_right">10.5</td>
+</tr>
+<tr>
+<td headers="Model" class="gt_row gt_left">alternative</td>
+<td headers="Variable" class="gt_row gt_left">gdp</td>
+<td headers="Shock" class="gt_row gt_left">gs</td>
+<td headers="Mean value" class="gt_row gt_right">66131.493</td>
+<td headers="Median value" class="gt_row gt_right">0</td>
+<td headers="Lower value" class="gt_row gt_right">-0.001</td>
+<td headers="Upper value" class="gt_row gt_right">0.003</td>
+<td headers="Mean horizon" class="gt_row gt_right">4.740</td>
+<td headers="Median horizon" class="gt_row gt_right">1</td>
+<td headers="Lower horizon" class="gt_row gt_right">0</td>
+<td headers="Upper horizon" class="gt_row gt_right">20.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>flextable</strong> (when the <code>flextable</code> package
+is installed):</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_flextable</a></span><span class="op">(</span><span class="va">cmp_peak</span>, caption <span class="op">=</span> <span class="st">"Peak response: 1-lag vs 3-lag"</span>, digits <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>             preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
+<div class="tabwid">
+<style>.cl-4acbfcc8{}.cl-4ac2f7ea{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-4ac6737a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-4ac67384{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-4ac69bf2{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69bfc{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c06{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c07{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c10{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4ac69c11{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-4acbfcc8">
+<caption style="display:table-caption;margin:0pt;text-align:center;border-bottom: 0.00pt solid transparent;border-top: 0.00pt solid transparent;border-left: 0.00pt solid transparent;border-right: 0.00pt solid transparent;padding-top:3pt;padding-bottom:3pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;"><span>Peak response: 1-lag vs 3-lag</span></caption>
+<thead><tr style="overflow-wrap:break-word;">
+<th class="cl-4ac69bf2"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">Model</span></p></th>
+<th class="cl-4ac69bf2"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">Variable</span></p></th>
+<th class="cl-4ac69bf2"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">Shock</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Mean value</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Median value</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Lower value</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Upper value</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Mean horizon</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Median horizon</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Lower horizon</span></p></th>
+<th class="cl-4ac69bfc"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">Upper horizon</span></p></th>
+</tr></thead>
+<tbody>
+<tr style="overflow-wrap:break-word;">
+<td class="cl-4ac69c06"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">baseline</span></p></td>
+<td class="cl-4ac69c06"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gdp</span></p></td>
+<td class="cl-4ac69c06"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gs</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0.038</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">-0.001</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0.001</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">1.105</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
+<td class="cl-4ac69c07"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">10.5</span></p></td>
+</tr>
+<tr style="overflow-wrap:break-word;">
+<td class="cl-4ac69c10"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">alternative</span></p></td>
+<td class="cl-4ac69c10"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gdp</span></p></td>
+<td class="cl-4ac69c10"><p class="cl-4ac6737a"><span class="cl-4ac2f7ea">gs</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">66,131.493</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">-0.001</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0.003</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">4.740</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">1</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">0</span></p></td>
+<td class="cl-4ac69c11"><p class="cl-4ac67384"><span class="cl-4ac2f7ea">20.0</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Publication plot</strong> — <code><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code>
+applies a paper-ready theme and returns the plot object for further
+adjustment or direct saving.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">rep_irf</span>, preset <span class="op">=</span> <span class="st">"paper"</span><span class="op">)</span></span></code></pre></div>
+<p>A pre-rendered diagnostics figure demonstrating the publication
+styling layer:</p>
+<p><img src="figures/diagnostics-showcase.png" class="r-plt" alt="" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="next-steps">Next steps<a class="anchor" aria-label="anchor" href="#next-steps"></a>
+</h2>
+<p>The <strong>Hypothesis Testing vignette</strong> covers formal
+posterior probability statements — <code><a href="../reference/hypothesis_irf.html">hypothesis_irf()</a></code>,
+<code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code>, and <code><a href="../reference/simultaneous_irf.html">simultaneous_irf()</a></code>
+— for testing sign and magnitude restrictions on the fiscal transmission
+mechanism.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

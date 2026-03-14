@@ -9,7 +9,7 @@ condition."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@ condition."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -50,15 +51,20 @@ condition.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">time_to_threshold</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Default S3 method</span></span>
+<span><span class="fu">time_to_threshold</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'PosteriorIR'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -66,14 +72,16 @@ condition.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVAR'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf"</span>, <span class="st">"cdm"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  scale_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"shock_sd"</span><span class="op">)</span>,</span>
 <span>  scale_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -83,14 +91,16 @@ condition.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARMIX'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf"</span>, <span class="st">"cdm"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  scale_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"shock_sd"</span><span class="op">)</span>,</span>
 <span>  scale_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -100,14 +110,16 @@ condition.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARMSH'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf"</span>, <span class="st">"cdm"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  scale_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"shock_sd"</span><span class="op">)</span>,</span>
 <span>  scale_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -117,14 +129,16 @@ condition.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARSV'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf"</span>, <span class="st">"cdm"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  scale_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"shock_sd"</span><span class="op">)</span>,</span>
 <span>  scale_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -134,14 +148,16 @@ condition.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVART'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf"</span>, <span class="st">"cdm"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  scale_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"shock_sd"</span><span class="op">)</span>,</span>
 <span>  scale_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -151,14 +167,16 @@ condition.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARSIGN'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf"</span>, <span class="st">"cdm"</span><span class="op">)</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  scale_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"none"</span>, <span class="st">"shock_sd"</span><span class="op">)</span>,</span>
 <span>  scale_var <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -168,12 +186,14 @@ condition.</p>
 <span><span class="co"># S3 method for class 'PosteriorCDM'</span></span>
 <span><span class="fu">time_to_threshold</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  relation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"&gt;"</span>, <span class="st">"&gt;="</span>, <span class="st">"&lt;"</span>, <span class="st">"&lt;="</span><span class="op">)</span>,</span>
 <span>  value <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  absolute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -191,12 +211,20 @@ condition.</p>
 <dd><p>Additional arguments passed to computation methods.</p></dd>
 
 
+<dt id="arg-variables">variables<a class="anchor" aria-label="anchor" href="#arg-variables"></a></dt>
+<dd><p>Optional response-variable subset (character or integer vector).</p></dd>
+
+
+<dt id="arg-shocks">shocks<a class="anchor" aria-label="anchor" href="#arg-shocks"></a></dt>
+<dd><p>Optional shock subset (character or integer vector).</p></dd>
+
+
 <dt id="arg-variable">variable<a class="anchor" aria-label="anchor" href="#arg-variable"></a></dt>
-<dd><p>Optional response-variable subset.</p></dd>
+<dd><p><strong>Deprecated.</strong> Use <code>variables</code> instead.</p></dd>
 
 
 <dt id="arg-shock">shock<a class="anchor" aria-label="anchor" href="#arg-shock"></a></dt>
-<dd><p>Optional shock subset.</p></dd>
+<dd><p><strong>Deprecated.</strong> Use <code>shocks</code> instead.</p></dd>
 
 
 <dt id="arg-relation">relation<a class="anchor" aria-label="anchor" href="#arg-relation"></a></dt>
@@ -235,7 +263,40 @@ condition.</p>
 <dd><p>Optional scaling variable specification.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A <code>bsvar_post_tbl</code> with columns <code>model</code>,
+<code>object_type</code>, <code>variable</code>, <code>shock</code>, <code>relation</code>,
+<code>threshold</code>, <code>mean_horizon</code>, <code>median_horizon</code>,
+<code>sd_horizon</code>, <code>lower_horizon</code>, <code>upper_horizon</code>,
+and <code>reached_prob</code>.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The identification is set to the default option of lower-triangular structural matrix.</span>
+<span class="r-in"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">ttt</span> <span class="op">&lt;-</span> <span class="fu">time_to_threshold</span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">3</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ttt</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model  object_type           variable shock relation threshold mean_horizon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> model1 time_to_threshold_irf ttr      ttr   &gt;                0            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> model1 time_to_threshold_irf ttr      gs    &gt;                0            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> model1 time_to_threshold_irf ttr      gdp   &gt;                0            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> model1 time_to_threshold_irf gs       ttr   &gt;                0            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> model1 time_to_threshold_irf gs       gs    &gt;                0            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> model1 time_to_threshold_irf gs       gdp   &gt;                0            1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> model1 time_to_threshold_irf gdp      ttr   &gt;                0            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> model1 time_to_threshold_irf gdp      gs    &gt;                0            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> model1 time_to_threshold_irf gdp      gdp   &gt;                0            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: median_horizon &lt;dbl&gt;, sd_horizon &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   lower_horizon &lt;dbl&gt;, upper_horizon &lt;dbl&gt;, reached_prob &lt;dbl&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

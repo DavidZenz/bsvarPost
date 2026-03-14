@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -45,7 +46,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compare_forecast</span><span class="op">(</span><span class="va">...</span>, horizon <span class="op">=</span> <span class="fl">10</span>, probability <span class="op">=</span> <span class="fl">0.68</span>, draws <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compare_forecast</span><span class="op">(</span><span class="va">...</span>, horizon <span class="op">=</span> <span class="cn">NULL</span>, probability <span class="op">=</span> <span class="fl">0.9</span>, draws <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -57,7 +58,8 @@
 
 
 <dt id="arg-horizon">horizon<a class="anchor" aria-label="anchor" href="#arg-horizon"></a></dt>
-<dd><p>Forecast horizon.</p></dd>
+<dd><p>Forecast horizon. If <code>NULL</code> (default), resolves to 20
+periods.</p></dd>
 
 
 <dt id="arg-probability">probability<a class="anchor" aria-label="anchor" href="#arg-probability"></a></dt>
@@ -68,7 +70,33 @@
 <dd><p>If <code>TRUE</code>, return draw-level rows.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A <code>bsvar_post_tbl</code> combining results across models, with a
+<code>model</code> column identifying each input.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The identification is set to the default option of lower-triangular structural matrix.</span>
+<span class="r-in"><span><span class="va">post1</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">post2</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu">compare_forecast</span><span class="op">(</span>m1 <span class="op">=</span> <span class="va">post1</span>, m2 <span class="op">=</span> <span class="va">post2</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 9</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model object_type variable  horizon  mean median     sd lower upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m1    forecast    variable1 1       -<span style="color: #BB0000;">8.90</span>  -<span style="color: #BB0000;">8.91</span> 0.043<span style="text-decoration: underline;">7</span> -<span style="color: #BB0000;">8.94</span> -<span style="color: #BB0000;">8.85</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m1    forecast    variable1 2       -<span style="color: #BB0000;">8.86</span>  -<span style="color: #BB0000;">8.86</span> 0.024<span style="text-decoration: underline;">2</span> -<span style="color: #BB0000;">8.89</span> -<span style="color: #BB0000;">8.83</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> m1    forecast    variable1 3       -<span style="color: #BB0000;">8.82</span>  -<span style="color: #BB0000;">8.83</span> 0.040<span style="text-decoration: underline;">9</span> -<span style="color: #BB0000;">8.86</span> -<span style="color: #BB0000;">8.77</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> m1    forecast    variable2 1       -<span style="color: #BB0000;">9.73</span>  -<span style="color: #BB0000;">9.77</span> 0.090<span style="text-decoration: underline;">2</span> -<span style="color: #BB0000;">9.82</span> -<span style="color: #BB0000;">9.63</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> m1    forecast    variable2 2       -<span style="color: #BB0000;">9.74</span>  -<span style="color: #BB0000;">9.80</span> 0.133  -<span style="color: #BB0000;">9.84</span> -<span style="color: #BB0000;">9.56</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> m1    forecast    variable2 3       -<span style="color: #BB0000;">9.73</span>  -<span style="color: #BB0000;">9.78</span> 0.214  -<span style="color: #BB0000;">9.92</span> -<span style="color: #BB0000;">9.45</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

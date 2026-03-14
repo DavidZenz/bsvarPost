@@ -8,8 +8,8 @@ Plot simultaneous posterior bands
 plot_simultaneous(
   object,
   type = c("irf", "cdm"),
-  horizon = 10,
-  probability = 0.68,
+  horizon = NULL,
+  probability = 0.9,
   variable = NULL,
   shock = NULL,
   models = NULL,
@@ -69,3 +69,18 @@ plot_simultaneous(
 - ...:
 
   Additional arguments passed to computation methods.
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+p <- plot_simultaneous(post, horizon = 3)
+```

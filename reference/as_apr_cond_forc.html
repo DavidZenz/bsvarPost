@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -59,7 +60,7 @@
 <span><span class="co"># S3 method for class 'Forecasts'</span></span>
 <span><span class="fu">as_apr_cond_forc</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  center <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"median"</span>, <span class="st">"mean"</span><span class="op">)</span>,</span>
 <span>  origin <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  frequency <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quarter"</span>, <span class="st">"month"</span>, <span class="st">"year"</span>, <span class="st">"day"</span><span class="op">)</span>,</span>
@@ -70,8 +71,8 @@
 <span><span class="co"># S3 method for class 'PosteriorBSVAR'</span></span>
 <span><span class="fu">as_apr_cond_forc</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>  center <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"median"</span>, <span class="st">"mean"</span><span class="op">)</span>,</span>
 <span>  origin <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  frequency <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"quarter"</span>, <span class="st">"month"</span>, <span class="st">"year"</span>, <span class="st">"day"</span><span class="op">)</span>,</span>
@@ -119,7 +120,31 @@ style <code>hor</code> dates.</p></dd>
 <dd><p>Forecast horizon when <code>object</code> is a posterior model object.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A data frame with columns <code>hor</code>, <code>variable</code>,
+<code>lower</code>, <code>center</code>, and <code>upper</code>, suitable for use with
+APRScenario conditioning workflows.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The identification is set to the default option of lower-triangular structural matrix.</span>
+<span class="r-in"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">apr_forc</span> <span class="op">&lt;-</span> <span class="fu">as_apr_cond_forc</span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">apr_forc</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   hor  variable      lower    center     upper  model</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1 variable1  -9.082878 -8.941584 -8.875381 model1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   2 variable1  -9.247464 -8.865970 -8.432210 model1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   3 variable1 -10.528405 -8.887696 -8.639741 model1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1 variable2  -9.842239 -9.824889 -9.793765 model1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2 variable2 -16.175162 -9.817265 -9.791415 model1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   3 variable2 -26.722178 -9.804719 -9.736834 model1</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -9,7 +9,7 @@ plot_hd_event(
   object,
   start = NULL,
   end = start,
-  probability = 0.68,
+  probability = 0.9,
   draws = FALSE,
   variables = NULL,
   shocks = NULL,
@@ -62,3 +62,18 @@ plot_hd_event(
 
   Additional arguments passed to
   [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md).
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+p <- plot_hd_event(post, start = "1948.25", end = "1948.5")
+```

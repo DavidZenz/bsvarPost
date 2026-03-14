@@ -75,3 +75,20 @@ plot_joint_hypothesis(
 - ...:
 
   Additional arguments passed to computation methods.
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+jh <- joint_hypothesis_irf(post, variable = "gdp", shock = "gdp",
+                           horizon = 0:2, relation = ">", value = 0)
+p <- plot_joint_hypothesis(jh)
+```

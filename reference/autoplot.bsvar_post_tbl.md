@@ -41,3 +41,19 @@ autoplot(
 - ...:
 
   Unused.
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+irf_tbl <- tidy_irf(post, horizon = 3)
+p <- ggplot2::autoplot(irf_tbl)
+```

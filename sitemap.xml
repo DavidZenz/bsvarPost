@@ -3,6 +3,7 @@
 <url><loc>https://davidzenz.github.io/bsvarPost/DEVELOPMENT.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/ROADMAP.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/articles/bsvarPost.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/articles/hypothesis-testing.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/articles/index.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/articles/post-estimation-workflows.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/authors.html</loc></url>
@@ -29,6 +30,7 @@
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/compare_peak_response.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/compare_restrictions.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/compare_time_to_threshold.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/deprecate_arg.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/duration_response.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/half_life_response.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.html</loc></url>
@@ -53,6 +55,7 @@
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/reporting.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/representative_cdm.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/representative_irf.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/resolve_horizon.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/restriction_audit.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/shock_ranking.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/simultaneous_cdm.html</loc></url>
@@ -70,5 +73,8 @@
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/tidy_irf.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/tidy_shocks.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/time_to_threshold.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/validate_horizon.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/validate_posterior_object.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/validate_probability.html</loc></url>
 </urlset>
 

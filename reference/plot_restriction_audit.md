@@ -9,7 +9,7 @@ plot_restriction_audit(
   object,
   restrictions = NULL,
   zero_tol = 1e-08,
-  probability = 0.68,
+  probability = 0.9,
   models = NULL,
   label_style = c("raw", "pretty"),
   labels = NULL,
@@ -60,3 +60,20 @@ plot_restriction_audit(
 
   Additional arguments passed to
   [`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md).
+
+## Value
+
+A `ggplot` object.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
+audit <- restriction_audit(post, restrictions = r)
+p <- plot_restriction_audit(audit)
+```

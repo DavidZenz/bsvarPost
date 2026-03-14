@@ -25,3 +25,13 @@ theme_bsvarpost(
 - base_family:
 
   Base font family.
+
+## Value
+
+A `ggplot2` theme object.
+
+## Examples
+
+``` r
+th <- theme_bsvarpost(preset = "paper")
+```

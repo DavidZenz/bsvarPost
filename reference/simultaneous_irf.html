@@ -9,7 +9,7 @@ the empirical sup-norm around the posterior median path."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@ the empirical sup-norm around the posterior median path."></head><body>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/hypothesis-testing.html">Hypothesis Testing</a></li>
     <li><a class="dropdown-item" href="../articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -50,10 +51,15 @@ the empirical sup-norm around the posterior median path.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">simultaneous_irf</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Default S3 method</span></span>
+<span><span class="fu">simultaneous_irf</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for class 'PosteriorIR'</span></span>
 <span><span class="fu">simultaneous_irf</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
@@ -63,8 +69,10 @@ the empirical sup-norm around the posterior median path.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVAR'</span></span>
 <span><span class="fu">simultaneous_irf</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
@@ -74,8 +82,10 @@ the empirical sup-norm around the posterior median path.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARMIX'</span></span>
 <span><span class="fu">simultaneous_irf</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
@@ -85,8 +95,10 @@ the empirical sup-norm around the posterior median path.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARMSH'</span></span>
 <span><span class="fu">simultaneous_irf</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
@@ -96,8 +108,10 @@ the empirical sup-norm around the posterior median path.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARSV'</span></span>
 <span><span class="fu">simultaneous_irf</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
@@ -107,8 +121,10 @@ the empirical sup-norm around the posterior median path.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVART'</span></span>
 <span><span class="fu">simultaneous_irf</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
@@ -118,8 +134,10 @@ the empirical sup-norm around the posterior median path.</p>
 <span><span class="co"># S3 method for class 'PosteriorBSVARSIGN'</span></span>
 <span><span class="fu">simultaneous_irf</span><span class="op">(</span></span>
 <span>  <span class="va">object</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.9</span>,</span>
+<span>  variables <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  shocks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  variable <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shock <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"model1"</span>,</span>
@@ -143,12 +161,20 @@ the empirical sup-norm around the posterior median path.</p>
 <dd><p>Coverage probability for the simultaneous band.</p></dd>
 
 
+<dt id="arg-variables">variables<a class="anchor" aria-label="anchor" href="#arg-variables"></a></dt>
+<dd><p>Optional response-variable subset (character or integer vector).</p></dd>
+
+
+<dt id="arg-shocks">shocks<a class="anchor" aria-label="anchor" href="#arg-shocks"></a></dt>
+<dd><p>Optional shock subset (character or integer vector).</p></dd>
+
+
 <dt id="arg-variable">variable<a class="anchor" aria-label="anchor" href="#arg-variable"></a></dt>
-<dd><p>Optional response-variable subset.</p></dd>
+<dd><p><strong>Deprecated.</strong> Use <code>variables</code> instead.</p></dd>
 
 
 <dt id="arg-shock">shock<a class="anchor" aria-label="anchor" href="#arg-shock"></a></dt>
-<dd><p>Optional shock subset.</p></dd>
+<dd><p><strong>Deprecated.</strong> Use <code>shocks</code> instead.</p></dd>
 
 
 <dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
@@ -159,7 +185,35 @@ the empirical sup-norm around the posterior median path.</p>
 <dd><p>Maximum horizon used when <code>object</code> is a posterior model object.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>A <code>bsvar_post_tbl</code> with columns <code>model</code>,
+<code>object_type</code>, <code>variable</code>, <code>shock</code>, <code>horizon</code>,
+<code>median</code>, <code>lower</code>, <code>upper</code>, <code>simultaneous_prob</code>,
+and <code>critical_value</code>.</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The identification is set to the default option of lower-triangular structural matrix.</span>
+<span class="r-in"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">sb</span> <span class="op">&lt;-</span> <span class="fu">simultaneous_irf</span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sb</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model  object_type      variable shock horizon    median   lower  upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> model1 simultaneous_irf ttr      ttr         0  0.030<span style="text-decoration: underline;">8</span>   -<span style="color: #BB0000;">0.019</span><span style="color: #BB0000; text-decoration: underline;">8</span> 0.081<span style="text-decoration: underline;">4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> model1 simultaneous_irf gs       ttr         0 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">30</span>  -<span style="color: #BB0000;">0.052</span><span style="color: #BB0000; text-decoration: underline;">9</span> 0.048<span style="text-decoration: underline;">3</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> model1 simultaneous_irf gdp      ttr         0  0.005<span style="text-decoration: underline;">09</span>  -<span style="color: #BB0000;">0.045</span><span style="color: #BB0000; text-decoration: underline;">5</span> 0.055<span style="text-decoration: underline;">7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> model1 simultaneous_irf ttr      gs          0  0        -<span style="color: #BB0000;">0.050</span><span style="color: #BB0000; text-decoration: underline;">6</span> 0.050<span style="text-decoration: underline;">6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> model1 simultaneous_irf gs       gs          0  0.027<span style="text-decoration: underline;">5</span>   -<span style="color: #BB0000;">0.023</span><span style="color: #BB0000; text-decoration: underline;">2</span> 0.078<span style="text-decoration: underline;">1</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> model1 simultaneous_irf gdp      gs          0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">823</span> -<span style="color: #BB0000;">0.051</span><span style="color: #BB0000; text-decoration: underline;">4</span> 0.049<span style="text-decoration: underline;">8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: simultaneous_prob &lt;dbl&gt;, critical_value &lt;dbl&gt;</span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

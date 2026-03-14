@@ -8,16 +8,21 @@ available horizons.
 ``` r
 duration_response(object, ...)
 
+# Default S3 method
+duration_response(object, ...)
+
 # S3 method for class 'PosteriorIR'
 duration_response(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -25,15 +30,17 @@ duration_response(
 # S3 method for class 'PosteriorBSVAR'
 duration_response(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -43,15 +50,17 @@ duration_response(
 # S3 method for class 'PosteriorBSVARMIX'
 duration_response(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -61,15 +70,17 @@ duration_response(
 # S3 method for class 'PosteriorBSVARMSH'
 duration_response(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -79,15 +90,17 @@ duration_response(
 # S3 method for class 'PosteriorBSVARSV'
 duration_response(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -97,15 +110,17 @@ duration_response(
 # S3 method for class 'PosteriorBSVART'
 duration_response(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -115,15 +130,17 @@ duration_response(
 # S3 method for class 'PosteriorBSVARSIGN'
 duration_response(
   object,
-  horizon = 10,
+  horizon = NULL,
   type = c("irf", "cdm"),
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   scale_by = c("none", "shock_sd"),
   scale_var = NULL,
@@ -133,13 +150,15 @@ duration_response(
 # S3 method for class 'PosteriorCDM'
 duration_response(
   object,
+  variables = NULL,
+  shocks = NULL,
   variable = NULL,
   shock = NULL,
   relation = c(">", ">=", "<", "<="),
   value = 0,
   absolute = FALSE,
   mode = c("consecutive", "total"),
-  probability = 0.68,
+  probability = 0.9,
   model = "model1",
   ...
 )
@@ -155,13 +174,21 @@ duration_response(
 
   Additional arguments passed to computation methods.
 
+- variables:
+
+  Optional response-variable subset (character or integer vector).
+
+- shocks:
+
+  Optional shock subset (character or integer vector).
+
 - variable:
 
-  Optional response-variable subset.
+  **Deprecated.** Use `variables` instead.
 
 - shock:
 
-  Optional shock subset.
+  **Deprecated.** Use `shocks` instead.
 
 - relation:
 
@@ -203,3 +230,36 @@ duration_response(
 - scale_var:
 
   Optional scaling variable specification.
+
+## Value
+
+A `bsvar_post_tbl` with columns `model`, `object_type`, `variable`,
+`shock`, `relation`, `threshold`, `mode`, `mean_duration`,
+`median_duration`, `sd_duration`, `lower_duration`, and
+`upper_duration`.
+
+## Examples
+
+``` r
+data(us_fiscal_lsuw, package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#> The identification is set to the default option of lower-triangular structural matrix.
+post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+
+dur <- duration_response(post, horizon = 3, relation = ">", value = 0)
+print(dur)
+#> # A tibble: 9 × 12
+#>   model  object_type  variable shock relation threshold mode       mean_duration
+#>   <chr>  <chr>        <chr>    <chr> <chr>        <dbl> <chr>              <dbl>
+#> 1 model1 duration_irf ttr      ttr   >                0 consecuti…           4  
+#> 2 model1 duration_irf ttr      gs    >                0 consecuti…           0  
+#> 3 model1 duration_irf ttr      gdp   >                0 consecuti…           0  
+#> 4 model1 duration_irf gs       ttr   >                0 consecuti…           2.2
+#> 5 model1 duration_irf gs       gs    >                0 consecuti…           4  
+#> 6 model1 duration_irf gs       gdp   >                0 consecuti…           0  
+#> 7 model1 duration_irf gdp      ttr   >                0 consecuti…           2.6
+#> 8 model1 duration_irf gdp      gs    >                0 consecuti…           2.6
+#> 9 model1 duration_irf gdp      gdp   >                0 consecuti…           4  
+#> # ℹ 4 more variables: median_duration <dbl>, sd_duration <dbl>,
+#> #   lower_duration <dbl>, upper_duration <dbl>
+```
