@@ -466,6 +466,21 @@ hd_panel_labels <- function(model, variable) {
   }
 }
 
+hd_stacked_palette <- function(components) {
+  components <- unique(as.character(components))
+  base_map <- c(
+    Baseline = "#4d4d4d",
+    Other = "#b07d12"
+  )
+  remaining <- setdiff(components, names(base_map))
+  if (length(remaining)) {
+    remaining_cols <- grDevices::hcl.colors(length(remaining), "Dark 3")
+    names(remaining_cols) <- remaining
+    base_map <- c(base_map, remaining_cols)
+  }
+  base_map[components]
+}
+
 prepare_hd_plot_data <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
                                  include_observed = FALSE, include_baseline = FALSE, shock_groups = NULL,
                                  top_n = NULL, collapse_other = TRUE, model = "model1", ...) {
@@ -879,7 +894,8 @@ plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks
       group = .data[["component"]]
     )
   ) +
-    ggplot2::geom_area(position = "stack", alpha = 0.98, colour = NA) +
+    ggplot2::geom_area(position = "stack", alpha = 1, colour = "#ffffff", linewidth = 0.1) +
+    ggplot2::scale_fill_manual(values = hd_stacked_palette(plot_data$component)) +
     ggplot2::facet_wrap(ggplot2::vars(panel_variable), scales = facet_scales) +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "time", y = if (identical(stack, "absolute")) "absolute contribution" else "contribution",
