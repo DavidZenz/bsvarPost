@@ -13,11 +13,10 @@
 #' @param shocks Optional shock filter applied before grouping.
 #' @param models Optional model filter.
 #' @param facet_scales Facet scales passed to \code{ggplot2}.
-#' @param include_observed If \code{TRUE}, overlay the observed series when it
-#'   can be recovered from a posterior model object.
-#' @param include_residual If \code{TRUE}, include a residual/unexplained
-#'   component whenever the observed path differs materially from the fitted
-#'   contribution sum.
+#' @param include_observed If \code{TRUE}, include the observed series for plot
+#'   types that compare decomposition totals against the realised path.
+#' @param include_baseline If \code{TRUE}, include the non-shock baseline
+#'   component when building a full decomposition.
 #' @param shock_groups Optional named character vector mapping shock names to
 #'   display groups.
 #' @param top_n Optional number of largest contributors to retain within each
@@ -25,6 +24,9 @@
 #' @param collapse_other If \code{TRUE}, contributors outside \code{top_n} (or
 #'   unmapped shocks under \code{shock_groups}) are collapsed into `"Other"`.
 #' @param by One of `"variable"` or `"shock"` for line-based displays.
+#' @param intervals If \code{TRUE}, show uncertainty ribbons for overlay plots.
+#'   Defaults to \code{FALSE} because multiple component intervals in a single
+#'   panel are usually hard to read.
 #' @param stack One of `"signed"` or `"absolute"` for stacked plots.
 #' @param start,end Event-window start and end indexes for event-specific plots.
 #' @param share One of `"absolute"` or `"signed"` for event share plots.
@@ -267,6 +269,13 @@ summarise_hd_draw_table <- function(df, probability = 0.90, time_col = "time") {
   do.call(rbind, rows)
 }
 
+summarise_hd_plot_draws <- function(df, probability = 0.90, summary_stat = c("median", "mean"), time_col = "time") {
+  summary_stat <- match.arg(summary_stat)
+  out <- summarise_hd_draw_table(df, probability = probability, time_col = time_col)
+  out$centre <- if (identical(summary_stat, "mean")) out$mean else out$median
+  out
+}
+
 summarise_hd_contributors <- function(df, time_col = "time", value_col = "median") {
   split_cols <- interaction(df$model, df$variable, df$component, drop = TRUE)
   pieces <- split(df, split_cols)
@@ -347,33 +356,105 @@ extract_hd_observed_data <- function(object, model = "model1") {
   do.call(rbind, rows)
 }
 
-build_hd_totals <- function(component_tbl, observed_tbl = NULL, include_residual = TRUE) {
-  totals <- split(component_tbl, interaction(component_tbl$model, component_tbl$variable, component_tbl$time, drop = TRUE))
-  fitted <- do.call(rbind, lapply(totals, function(part) {
-    tibble::tibble(
-      model = part$model[1],
-      variable = part$variable[1],
-      time = part$time[1],
-      fitted = sum(part$median, na.rm = TRUE)
+expand_hd_observed_draws <- function(observed_tbl, draw_ids) {
+  rows <- vector("list", nrow(observed_tbl))
+  for (i in seq_len(nrow(observed_tbl))) {
+    rows[[i]] <- tibble::tibble(
+      model = observed_tbl$model[i],
+      variable = observed_tbl$variable[i],
+      time = observed_tbl$time[i],
+      draw = draw_ids,
+      observed = rep(observed_tbl$observed[i], length(draw_ids))
     )
-  }))
+  }
+  do.call(rbind, rows)
+}
 
+compute_hd_baseline_draws <- function(shock_draws, observed_tbl, include_baseline = TRUE) {
   if (is.null(observed_tbl)) {
-    return(list(fitted = fitted, observed = NULL, residual = NULL))
+    stop("A coherent HD decomposition requires an observed series from a posterior model object.", call. = FALSE)
   }
 
-  merged <- merge(fitted, observed_tbl, by = c("model", "variable", "time"), all.x = TRUE, all.y = FALSE, sort = FALSE)
-  residual <- merged
-  residual$residual <- residual$observed - residual$fitted
+  draw_ids <- sort(unique(shock_draws$draw))
+  observed_draws <- expand_hd_observed_draws(observed_tbl, draw_ids)
+  shock_sums <- aggregate_hd_draw_rows(
+    shock_draws,
+    group_cols = c("model", "variable", "time", "draw")
+  )
+  names(shock_sums)[names(shock_sums) == "value"] <- "shock_total"
+  merged <- merge(
+    observed_draws,
+    shock_sums,
+    by = c("model", "variable", "time", "draw"),
+    all.x = TRUE,
+    all.y = FALSE,
+    sort = FALSE
+  )
+  merged$shock_total[is.na(merged$shock_total)] <- 0
+  merged$baseline <- merged$observed - merged$shock_total
 
-  if (!isTRUE(include_residual) || !any(abs(residual$residual) > 1e-8, na.rm = TRUE)) {
-    residual <- NULL
+  baseline_draws <- NULL
+  if (isTRUE(include_baseline)) {
+    baseline_draws <- tibble::tibble(
+      model = merged$model,
+      object_type = "hd",
+      variable = merged$variable,
+      component = "Baseline",
+      time = merged$time,
+      draw = merged$draw,
+      value = merged$baseline
+    )
+  }
+
+  total_draws <- tibble::tibble(
+    model = merged$model,
+    variable = merged$variable,
+    time = merged$time,
+    draw = merged$draw,
+    observed = merged$observed,
+    total = merged$observed,
+    baseline = merged$baseline
+  )
+
+  list(baseline = baseline_draws, totals = total_draws)
+}
+
+prepare_hd_decomposition_draws <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
+                                           shock_groups = NULL, top_n = NULL, collapse_other = TRUE,
+                                           include_baseline = TRUE, model = "model1", ...) {
+  if (!is_supported_posterior_model(object)) {
+    stop(
+      "A full historical decomposition plot requires a posterior model object from bsvars or bsvarSIGNs.",
+      call. = FALSE
+    )
+  }
+
+  shock_groups <- validate_shock_groups(shock_groups, "prepare_hd_decomposition_draws")
+  draw_tbl <- tidy_hd(object, probability = probability, draws = TRUE, model = model, ...)
+  draw_tbl <- filter_hd_rows(draw_tbl, variables = variables, shocks = shocks, models = models)
+  if (!nrow(draw_tbl)) {
+    stop("No historical decomposition draw rows remain after filtering.", call. = FALSE)
+  }
+
+  shock_draws <- prepare_hd_component_draws(
+    draw_tbl,
+    shock_groups = shock_groups,
+    top_n = top_n,
+    collapse_other = collapse_other
+  )
+  observed_tbl <- extract_hd_observed_data(object, model = model)
+  observed_tbl <- filter_hd_rows(observed_tbl, variables = variables, models = models)
+  baseline_parts <- compute_hd_baseline_draws(shock_draws, observed_tbl, include_baseline = include_baseline)
+
+  components <- shock_draws
+  if (!is.null(baseline_parts$baseline)) {
+    components <- rbind(components, baseline_parts$baseline)
   }
 
   list(
-    fitted = fitted,
-    observed = observed_tbl,
-    residual = residual
+    components = components,
+    totals = baseline_parts$totals,
+    observed = observed_tbl
   )
 }
 
@@ -386,7 +467,7 @@ hd_panel_labels <- function(model, variable) {
 }
 
 prepare_hd_plot_data <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
-                                 include_observed = TRUE, include_residual = TRUE, shock_groups = NULL,
+                                 include_observed = FALSE, include_baseline = FALSE, shock_groups = NULL,
                                  top_n = NULL, collapse_other = TRUE, model = "model1", ...) {
   shock_groups <- validate_shock_groups(shock_groups, "prepare_hd_plot_data")
   summary_tbl <- resolve_hd_summary_table(object, caller = "plot_hd", probability = probability, model = model, ...)
@@ -404,32 +485,79 @@ prepare_hd_plot_data <- function(object, probability = 0.90, variables = NULL, s
   )
 
   observed_tbl <- NULL
-  if (isTRUE(include_observed) && is_supported_posterior_model(object)) {
+  if ((isTRUE(include_observed) || isTRUE(include_baseline)) && is_supported_posterior_model(object)) {
     observed_tbl <- extract_hd_observed_data(object, model = model)
     observed_tbl <- filter_hd_rows(observed_tbl, variables = variables, models = models)
   }
-  totals <- build_hd_totals(component_tbl, observed_tbl = observed_tbl, include_residual = include_residual)
-  if (!is.null(totals$residual)) {
-    residual_component <- tibble::tibble(
-      model = totals$residual$model,
-      object_type = "hd",
-      variable = totals$residual$variable,
-      component = "Residual",
-      time = totals$residual$time,
-      mean = totals$residual$residual,
-      median = totals$residual$residual,
-      lower = totals$residual$residual,
-      upper = totals$residual$residual
+
+  if (isTRUE(include_baseline)) {
+    if (is.null(observed_tbl)) {
+      stop("A baseline component requires a posterior model object with an observed series.", call. = FALSE)
+    }
+    pieces <- split(
+      component_tbl,
+      interaction(component_tbl$model, component_tbl$variable, component_tbl$time, drop = TRUE)
     )
-    component_tbl <- rbind(component_tbl, residual_component)
+    shock_totals <- do.call(rbind, lapply(pieces, function(part) {
+      tibble::tibble(
+        model = part$model[1],
+        variable = part$variable[1],
+        time = part$time[1],
+        shock_centre = sum(part$median, na.rm = TRUE)
+      )
+    }))
+    merged <- merge(
+      observed_tbl,
+      shock_totals,
+      by = c("model", "variable", "time"),
+      all.x = TRUE,
+      all.y = FALSE,
+      sort = FALSE
+    )
+    merged$shock_centre[is.na(merged$shock_centre)] <- 0
+
+    baseline_rows <- tibble::tibble(
+      model = merged$model,
+      object_type = "hd",
+      variable = merged$variable,
+      component = "Baseline",
+      time = merged$time,
+      mean = merged$observed - merged$shock_centre,
+      median = merged$observed - merged$shock_centre,
+      lower = merged$observed - merged$shock_centre,
+      upper = merged$observed - merged$shock_centre
+    )
+
+    component_tbl <- rbind(component_tbl, baseline_rows)
   }
 
   list(
     components = component_tbl,
-    observed = totals$observed,
-    fitted = totals$fitted,
-    residual = totals$residual
+    observed = observed_tbl
   )
+}
+
+prepare_hd_baseline_summary <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
+                                        shock_groups = NULL, top_n = NULL, collapse_other = TRUE,
+                                        model = "model1", ...) {
+  prepared <- prepare_hd_plot_data(
+    object,
+    probability = probability,
+    variables = variables,
+    shocks = shocks,
+    models = models,
+    include_observed = TRUE,
+    include_baseline = TRUE,
+    shock_groups = shock_groups,
+    top_n = top_n,
+    collapse_other = collapse_other,
+    model = model,
+    ...
+  )
+  if (is.null(prepared$observed)) {
+    stop("A coherent HD decomposition requires a posterior model object with an observed series.", call. = FALSE)
+  }
+  prepared
 }
 
 prepare_hd_event_plot_data <- function(object, start = NULL, end = start, probability = 0.90, variables = NULL,
@@ -563,7 +691,7 @@ event_distribution_data <- function(object, start = NULL, end = start, probabili
 #' @rdname plot_hd_lines
 #' @export
 plot_hd_lines <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
-                          facet_scales = "free_y", include_observed = TRUE, include_residual = TRUE,
+                          facet_scales = "free_y", include_observed = FALSE, include_baseline = FALSE,
                           shock_groups = NULL, top_n = NULL, collapse_other = TRUE,
                           by = c("variable", "shock"), model = "model1", ...) {
   by <- match.arg(by)
@@ -574,7 +702,7 @@ plot_hd_lines <- function(object, probability = 0.90, variables = NULL, shocks =
     shocks = shocks,
     models = models,
     include_observed = include_observed,
-    include_residual = include_residual,
+    include_baseline = include_baseline,
     shock_groups = shock_groups,
     top_n = top_n,
     collapse_other = collapse_other,
@@ -627,12 +755,16 @@ plot_hd_lines <- function(object, probability = 0.90, variables = NULL, shocks =
 
 #' Overlay historical decomposition component paths
 #'
+#' This is a component-comparison plot. By default it does not overlay the
+#' observed series because the raw level path is not directly comparable to a
+#' shock-only component panel.
+#'
 #' @inheritParams plot_hd_lines
 #' @export
 plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
-                            facet_scales = "free_y", include_observed = TRUE, include_residual = TRUE,
+                            facet_scales = "free_y", include_observed = FALSE, include_baseline = FALSE,
                             shock_groups = NULL, top_n = NULL, collapse_other = TRUE,
-                            by = c("variable", "shock"), model = "model1", ...) {
+                            by = c("variable", "shock"), intervals = FALSE, model = "model1", ...) {
   by <- match.arg(by)
   prepared <- prepare_hd_plot_data(
     object,
@@ -641,7 +773,7 @@ plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks
     shocks = shocks,
     models = models,
     include_observed = include_observed,
-    include_residual = include_residual,
+    include_baseline = include_baseline,
     shock_groups = shock_groups,
     top_n = top_n,
     collapse_other = collapse_other,
@@ -670,17 +802,20 @@ plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks
       group = .data[["series"]]
     )
   ) +
-    ggplot2::geom_ribbon(
-      ggplot2::aes(ymin = .data[["lower"]], ymax = .data[["upper"]]),
-      alpha = 0.08,
-      colour = NA
-    ) +
     ggplot2::geom_line(linewidth = 0.7) +
     ggplot2::geom_hline(yintercept = 0, linetype = 2, colour = "grey50") +
     ggplot2::facet_wrap(ggplot2::vars(panel), scales = facet_scales) +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "time", y = "contribution", colour = if (identical(by, "variable")) "shock" else "variable",
                   fill = if (identical(by, "variable")) "shock" else "variable")
+
+  if (isTRUE(intervals)) {
+    p <- p + ggplot2::geom_ribbon(
+      ggplot2::aes(ymin = .data[["lower"]], ymax = .data[["upper"]]),
+      alpha = 0.08,
+      colour = NA
+    )
+  }
 
   if (!is.null(prepared$observed)) {
     observed_df <- normalise_hd_time_axis(prepared$observed)
@@ -693,7 +828,7 @@ plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks
         ggplot2::aes(x = .data[["time_plot"]], y = .data[["observed"]]),
         inherit.aes = FALSE,
         colour = "black",
-        linewidth = 0.7
+        linewidth = 0.85
       )
     }
   }
@@ -703,27 +838,32 @@ plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks
 
 #' Stacked historical decomposition contributions over time
 #'
+#' This plot builds a coherent decomposition by adding an explicit
+#' \code{"Baseline"} component to the selected shock contributions. The plotted
+#' series therefore sum to the observed path on the displayed summary scale.
+#'
 #' @inheritParams plot_hd_lines
 #' @export
 plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
-                            facet_scales = "free_y", include_observed = TRUE, include_residual = TRUE,
+                            facet_scales = "free_y", include_observed = FALSE, include_baseline = TRUE,
                             shock_groups = NULL, top_n = NULL, collapse_other = TRUE,
                             stack = c("signed", "absolute"), model = "model1", ...) {
   stack <- match.arg(stack)
-  prepared <- prepare_hd_plot_data(
+  prepared <- prepare_hd_baseline_summary(
     object,
     probability = probability,
     variables = variables,
     shocks = shocks,
     models = models,
-    include_observed = include_observed,
-    include_residual = include_residual,
     shock_groups = shock_groups,
     top_n = top_n,
     collapse_other = collapse_other,
     model = model,
     ...
   )
+  if (!isTRUE(include_baseline)) {
+    prepared$components <- prepared$components[prepared$components$component != "Baseline", , drop = FALSE]
+  }
 
   df <- normalise_hd_time_axis(prepared$components)
   plot_data <- df$data
@@ -739,24 +879,11 @@ plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks
       group = .data[["component"]]
     )
   ) +
-    ggplot2::geom_area(position = "stack", alpha = 0.82, colour = "white", linewidth = 0.12) +
+    ggplot2::geom_area(position = "stack", alpha = 0.98, colour = NA) +
     ggplot2::facet_wrap(ggplot2::vars(panel_variable), scales = facet_scales) +
     ggplot2::theme_minimal() +
     ggplot2::labs(x = "time", y = if (identical(stack, "absolute")) "absolute contribution" else "contribution",
-                  fill = "shock")
-
-  if (!is.null(prepared$observed)) {
-    observed_df <- normalise_hd_time_axis(prepared$observed)
-    observed_data <- observed_df$data
-    observed_data$panel_variable <- hd_panel_labels(observed_data$model, observed_data$variable)
-    p <- p + ggplot2::geom_line(
-      data = observed_data,
-      ggplot2::aes(x = .data[["time_plot"]], y = .data[["observed"]]),
-      inherit.aes = FALSE,
-      colour = "black",
-      linewidth = 0.7
-    )
-  }
+                  fill = "component")
 
   if (identical(stack, "signed")) {
     p <- p + ggplot2::geom_hline(yintercept = 0, linetype = 2, colour = "grey50")
@@ -765,53 +892,82 @@ plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks
   apply_hd_time_scale(p, df$axis, df$numeric)
 }
 
-#' Plot observed, fitted, and selected decomposition totals
+#' Plot observed and reconstructed decomposition totals
+#'
+#' This plot compares the observed series to the reconstructed decomposition
+#' total and can optionally show the baseline component plus selected
+#' contributor lines. The decomposition total is built from the same explicit
+#' baseline-plus-shock summary used in \code{plot_hd_stacked()}.
 #'
 #' @inheritParams plot_hd_lines
 #' @export
 plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
-                          facet_scales = "free_y", include_observed = TRUE, include_residual = TRUE,
+                          facet_scales = "free_y", include_observed = TRUE, include_baseline = TRUE,
                           shock_groups = NULL, top_n = NULL, collapse_other = TRUE,
                           model = "model1", ...) {
-  prepared <- prepare_hd_plot_data(
+  prepared <- prepare_hd_baseline_summary(
     object,
     probability = probability,
     variables = variables,
     shocks = shocks,
     models = models,
-    include_observed = include_observed,
-    include_residual = include_residual,
     shock_groups = shock_groups,
     top_n = top_n,
     collapse_other = collapse_other,
     model = model,
     ...
   )
-
-  if (is.null(prepared$observed)) {
-    totals <- prepared$fitted
-    totals$observed <- NA_real_
-  } else {
-    totals <- merge(prepared$fitted, prepared$observed, by = c("model", "variable", "time"), all = TRUE, sort = FALSE)
+  component_summary <- prepared$components
+  total_summary <- do.call(
+    rbind,
+    lapply(
+      split(component_summary, interaction(component_summary$model, component_summary$variable, component_summary$time, drop = TRUE)),
+      function(part) {
+        tibble::tibble(
+          model = part$model[1],
+          variable = part$variable[1],
+          time = part$time[1],
+          centre = sum(part$median, na.rm = TRUE)
+        )
+      }
+    )
+  )
+  baseline_summary <- NULL
+  if (isTRUE(include_baseline)) {
+    baseline_summary <- component_summary[component_summary$component == "Baseline", , drop = FALSE]
   }
-  totals$series <- "Fitted"
-  totals$value <- totals$fitted
 
-  series_rows <- list(totals[, c("model", "variable", "time", "series", "value")])
-  if (!all(is.na(totals$observed))) {
-    observed_rows <- totals[, c("model", "variable", "time", "observed")]
-    names(observed_rows)[names(observed_rows) == "observed"] <- "value"
-    observed_rows$series <- "Observed"
-    series_rows[[length(series_rows) + 1L]] <- observed_rows[, c("model", "variable", "time", "series", "value")]
+  observed_summary <- tibble::tibble(
+    model = prepared$observed$model,
+    variable = prepared$observed$variable,
+    time = prepared$observed$time,
+    centre = prepared$observed$observed
+  )
+
+  series_rows <- list(
+    tibble::tibble(model = total_summary$model, variable = total_summary$variable, time = total_summary$time,
+                   series = "Decomposition total", value = total_summary$centre)
+  )
+  if (isTRUE(include_observed)) {
+    series_rows[[length(series_rows) + 1L]] <- tibble::tibble(
+      model = observed_summary$model,
+      variable = observed_summary$variable,
+      time = observed_summary$time,
+      series = "Observed",
+      value = observed_summary$centre
+    )
   }
-  if (!is.null(prepared$residual)) {
-    residual_rows <- prepared$residual[, c("model", "variable", "time", "residual")]
-    names(residual_rows)[names(residual_rows) == "residual"] <- "value"
-    residual_rows$series <- "Residual"
-    series_rows[[length(series_rows) + 1L]] <- residual_rows[, c("model", "variable", "time", "series", "value")]
+  if (!is.null(baseline_summary)) {
+    series_rows[[length(series_rows) + 1L]] <- tibble::tibble(
+      model = baseline_summary$model,
+      variable = baseline_summary$variable,
+      time = baseline_summary$time,
+      series = "Baseline",
+      value = baseline_summary$median
+    )
   }
   if (!is.null(shocks) || !is.null(top_n) || !is.null(shock_groups)) {
-    component_rows <- prepared$components[, c("model", "variable", "time", "component", "median")]
+    component_rows <- component_summary[component_summary$component != "Baseline", c("model", "variable", "time", "component", "median")]
     names(component_rows)[names(component_rows) == "median"] <- "value"
     component_rows$series <- paste0("Contribution: ", component_rows$component)
     series_rows[[length(series_rows) + 1L]] <- component_rows[, c("model", "variable", "time", "series", "value")]
@@ -822,10 +978,14 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
   plot_data <- time_info$data
   plot_data$panel_variable <- hd_panel_labels(plot_data$model, plot_data$variable)
 
-  manual_cols <- c(Observed = "black", Fitted = "#2166ac", Residual = "#7f7f7f")
+  manual_cols <- c(Observed = "black", `Decomposition total` = "#2166ac", Baseline = "#6c757d")
   extra_series <- setdiff(unique(plot_data$series), names(manual_cols))
   if (length(extra_series)) {
     manual_cols <- c(manual_cols, setNames(grDevices::hcl.colors(length(extra_series), "Dark 3"), extra_series))
+  }
+  manual_ltypes <- c(Observed = "solid", `Decomposition total` = "longdash", Baseline = "dotdash")
+  if (length(extra_series)) {
+    manual_ltypes <- c(manual_ltypes, setNames(rep("solid", length(extra_series)), extra_series))
   }
 
   p <- ggplot2::ggplot(
@@ -834,15 +994,17 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
       x = .data[["time_plot"]],
       y = .data[["value"]],
       colour = .data[["series"]],
+      linetype = .data[["series"]],
       group = .data[["series"]]
     )
   ) +
     ggplot2::geom_line(linewidth = 0.8) +
     ggplot2::scale_colour_manual(values = manual_cols) +
+    ggplot2::scale_linetype_manual(values = manual_ltypes) +
     ggplot2::geom_hline(yintercept = 0, linetype = 2, colour = "grey50") +
     ggplot2::facet_wrap(ggplot2::vars(panel_variable), scales = facet_scales) +
     ggplot2::theme_minimal() +
-    ggplot2::labs(x = "time", y = "level", colour = NULL)
+    ggplot2::labs(x = "time", y = "level", colour = NULL, linetype = NULL)
 
   apply_hd_time_scale(p, time_info$axis, time_info$numeric)
 }

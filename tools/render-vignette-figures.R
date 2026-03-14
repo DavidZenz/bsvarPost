@@ -96,11 +96,23 @@ rep_bsvar <- median_target_irf(post_bsvar, horizon = 20)
   height = 5
 )
 
-# hd-full-showcase.png: full-sample HD composition view
+# hd-overlay-showcase.png: full-sample HD overlay view
+.save_gg(
+  "vignettes/figures/hd-overlay-showcase.png",
+  template_bsvar_plot(
+    plot_hd_overlay(post_bsvar, variables = "gdp", top_n = 3),
+    family = "hd",
+    preset = "paper"
+  ),
+  width = 8,
+  height = 5
+)
+
+# hd-full-showcase.png: full-sample HD stacked composition view
 .save_gg(
   "vignettes/figures/hd-full-showcase.png",
   template_bsvar_plot(
-    plot_hd_stacked(post_bsvar, variables = "gdp", top_n = 3),
+    plot_hd_stacked(post_bsvar, variables = "gdp", top_n = 2),
     family = "hd",
     preset = "paper"
   ),

@@ -11,8 +11,8 @@ plot_hd_stacked(
   shocks = NULL,
   models = NULL,
   facet_scales = "free_y",
-  include_observed = TRUE,
-  include_residual = TRUE,
+  include_observed = FALSE,
+  include_baseline = TRUE,
   shock_groups = NULL,
   top_n = NULL,
   collapse_other = TRUE,
@@ -36,12 +36,11 @@ is not already a tidy table.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 
-\item{include_observed}{If \code{TRUE}, overlay the observed series when it
-can be recovered from a posterior model object.}
+\item{include_observed}{If \code{TRUE}, include the observed series for plot
+types that compare decomposition totals against the realised path.}
 
-\item{include_residual}{If \code{TRUE}, include a residual/unexplained
-component whenever the observed path differs materially from the fitted
-contribution sum.}
+\item{include_baseline}{If \code{TRUE}, include the non-shock baseline
+component when building a full decomposition.}
 
 \item{shock_groups}{Optional named character vector mapping shock names to
 display groups.}
@@ -58,5 +57,7 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-Stacked historical decomposition contributions over time
+This plot builds a coherent decomposition by adding an explicit
+\code{"Baseline"} component to the selected shock contributions. The plotted
+series therefore sum to the observed path on the displayed summary scale.
 }
