@@ -151,25 +151,28 @@ as_kable(cmp_peak, preset = "compact")
 The three-lag alternative typically shows a later peak with wider credible bands,
 reflecting the richer lag dynamics.
 
-## Historical decomposition events
+## Historical decomposition workflows
 
-Historical decompositions (HD) measure each structural shock's contribution to
-observed variation in each variable at each point in time.
+Historical decompositions (HD) answer two complementary questions:
+how do structural shock contributions evolve over the full sample, and how do
+those same contributions aggregate over a selected event window?
 
-For full-sample interpretation, start with `tidy_hd()` and one of the dedicated
-plot helpers. `plot_hd_overlay()` is the best first-look diagnostic because it
-compares shock paths within each variable without mixing in the raw level path.
-`plot_hd_stacked()` then gives the stacked shock-contribution view. Add
-`include_baseline = TRUE` when you want the explicit `Baseline` component and
-the full displayed decomposition, and use `plot_hd_total()` to compare the
-observed path against that reconstructed total.
+Start with the full-sample HD object. `tidy_hd()` returns the contribution of
+each structural shock to each variable at each point in time, which then feeds
+the dedicated plotting helpers.
 
 ```{r, eval = FALSE}
 hd_full <- tidy_hd(post)
 plot_hd_overlay(post, variables = "gdp", top_n = 3)
 plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+plot_hd_lines(post, variables = "gdp", top_n = 3)
 ```
+
+Use `plot_hd_overlay()` first when you want to compare how the main shock
+contributions move over time within one variable. This is the best first-look
+diagnostic because it keeps the contribution paths in a common panel without
+mixing in the raw observed level.
 
 A pre-rendered full-sample HD overlay plot from the same S = 200 posterior:
 
@@ -177,17 +180,25 @@ A pre-rendered full-sample HD overlay plot from the same S = 200 posterior:
 knitr::include_graphics("figures/hd-overlay-showcase.png")
 ```
 
-The stacked view now shows a full baseline-plus-shock decomposition on the
-displayed summary scale:
+`plot_hd_stacked()` then gives the composition view over time. By default it
+shows the stacked structural shock contributions; add `include_baseline = TRUE`
+when you want the explicit non-shock reconstruction term as well.
 
 ```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
 knitr::include_graphics("figures/hd-full-showcase.png")
 ```
 
-And the totals view checks that decomposition against the realised series:
+`plot_hd_total()` plays a different role: it compares the observed series to the
+reconstructed decomposition total, so it is the natural validation view once the
+main shock drivers are clear.
 
-`tidy_hd_event()` then aggregates those contributions over a chosen event
-window.
+When overlay and stacked views become too compressed, `plot_hd_lines()` gives
+the detailed inspection view by separating the component paths rather than
+forcing them into one panel.
+
+After the full-sample HD plots have identified a period of interest, move to the
+event-window summaries. `tidy_hd_event()` aggregates those contributions over a
+chosen window.
 
 The `us_fiscal_lsuw` sample begins in 1948. To examine which shocks drove fiscal
 dynamics in the first year (four quarters: 1948.25 through 1948.75):
@@ -197,8 +208,15 @@ hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.75")
 head(hd_event)
 ```
 
-`shock_ranking()` ranks the structural shocks by their absolute contribution to a
-target variable over the same window. Which shock moved `gdp` the most?
+`plot_hd_event()` keeps the window summary in contribution units, while
+`plot_hd_event_share()` converts the same event into within-window shares.
+`plot_hd_event_cumulative()` shows how those contributions accumulate inside the
+window, and `plot_hd_event_distribution()` focuses on posterior uncertainty for
+each shock.
+
+`shock_ranking()` is the event-summary ranking tool: it orders the structural
+shocks by their absolute contribution to a target variable over the selected
+window. Which shock moved `gdp` the most?
 
 ```{r, eval = TRUE}
 shock_ranking(post, start = "1948.25", end = "1948.75", ranking = "absolute")
@@ -208,7 +226,10 @@ For a composition-oriented event view, `plot_hd_event_share()` rescales the
 same event-window contributions into shares:
 
 ```{r, eval = FALSE}
+plot_hd_event(post, start = "1948.25", end = "1948.75")
 plot_hd_event_share(post, start = "1948.25", end = "1948.75", top_n = 3)
+plot_hd_event_cumulative(post, start = "1948.25", end = "1948.75", top_n = 3)
+plot_hd_event_distribution(post, start = "1948.25", end = "1948.75", top_n = 3)
 ```
 
 And a pre-rendered event-share composition plot:

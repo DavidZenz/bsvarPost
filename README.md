@@ -368,14 +368,14 @@ hd_tbl <- tidy_hd(post)
 plot_hd_overlay(post, variables = "gdp", top_n = 3)
 plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+plot_hd_lines(post, variables = "gdp", top_n = 3)
 
 hd_event <- tidy_hd_event(post, start = 1, end = 4)
-shock_ranking(post, start = 1, end = 4, ranking = "absolute")
-
 plot_hd_event(post, start = 1, end = 4)
 plot_hd_event_share(post, start = 1, end = 4, top_n = 5)
 plot_hd_event_cumulative(post, start = 1, end = 4, top_n = 5)
 plot_hd_event_distribution(post, start = 1, end = 4, top_n = 5)
+shock_ranking(post, start = 1, end = 4, ranking = "absolute")
 plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5)
 
 style_bsvar_plot(
@@ -398,6 +398,10 @@ For full-sample interpretation, the intended workflow is:
   the full displayed decomposition.
 - `plot_hd_total()` third, to check the observed path against that same
   reconstructed decomposition total.
+- `plot_hd_lines()` fourth, when you want a detailed component-by-component
+  inspection view.
+- event-window helpers last, once the full-sample HD plots have identified a
+  period worth summarizing.
 
 Event-window comparisons:
 
