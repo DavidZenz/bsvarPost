@@ -12,7 +12,7 @@ plot_hd_stacked(
   models = NULL,
   facet_scales = "free_y",
   include_observed = FALSE,
-  include_baseline = TRUE,
+  include_baseline = FALSE,
   shock_groups = NULL,
   top_n = NULL,
   collapse_other = TRUE,
@@ -57,7 +57,7 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-This plot builds a coherent decomposition by adding an explicit
-\code{"Baseline"} component to the selected shock contributions. The plotted
-series therefore sum to the observed path on the displayed summary scale.
+This plot shows stacked historical shock contributions over time. Set
+\code{include_baseline = TRUE} to add the non-shock \code{"Baseline"}
+component and obtain the full displayed decomposition.
 }

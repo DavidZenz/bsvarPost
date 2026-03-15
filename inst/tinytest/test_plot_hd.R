@@ -13,6 +13,7 @@ p_lines <- plot_hd_lines(hd_tbl, variables = "gdp")
 p_overlay <- plot_hd_overlay(post, variables = "gdp", top_n = 2)
 p_overlay_intervals <- plot_hd_overlay(post, variables = "gdp", top_n = 2, intervals = TRUE)
 p_stacked <- plot_hd_stacked(post, variables = "gdp", top_n = 2)
+p_stacked_baseline <- plot_hd_stacked(post, variables = "gdp", top_n = 2, include_baseline = TRUE)
 p_total <- plot_hd_total(post, variables = "gdp", shocks = "gs")
 p_share <- plot_hd_event_share(post, start = event_start, end = event_end, top_n = 2)
 p_cum <- plot_hd_event_cumulative(post, start = event_start, end = event_end, top_n = 2)
@@ -22,6 +23,7 @@ expect_true(inherits(p_lines, "ggplot"))
 expect_true(inherits(p_overlay, "ggplot"))
 expect_true(inherits(p_overlay_intervals, "ggplot"))
 expect_true(inherits(p_stacked, "ggplot"))
+expect_true(inherits(p_stacked_baseline, "ggplot"))
 expect_true(inherits(p_total, "ggplot"))
 expect_true(inherits(p_share, "ggplot"))
 expect_true(inherits(p_cum, "ggplot"))
@@ -32,6 +34,7 @@ expect_true(any(vapply(p_overlay$layers, function(layer) inherits(layer$geom, "G
 expect_true(!any(vapply(p_overlay$layers, function(layer) inherits(layer$geom, "GeomRibbon"), logical(1))))
 expect_true(any(vapply(p_overlay_intervals$layers, function(layer) inherits(layer$geom, "GeomRibbon"), logical(1))))
 expect_true(any(vapply(p_stacked$layers, function(layer) inherits(layer$geom, "GeomArea"), logical(1))))
+expect_true(any(vapply(p_stacked_baseline$layers, function(layer) inherits(layer$geom, "GeomArea"), logical(1))))
 expect_true(any(vapply(p_total$layers, function(layer) inherits(layer$geom, "GeomLine"), logical(1))))
 expect_true(any(vapply(p_share$layers, function(layer) inherits(layer$geom, "GeomCol"), logical(1))))
 expect_true(any(vapply(p_cum$layers, function(layer) inherits(layer$geom, "GeomRibbon"), logical(1))))
@@ -77,6 +80,12 @@ expect_true(isTRUE(all.equal(reconciled_summary$total, reconciled_summary$observ
 baseline_overlay <- plot_hd_overlay(post, variables = "gdp", top_n = 2, include_baseline = TRUE)
 overlay_data <- ggplot2::ggplot_build(baseline_overlay)$plot$data
 expect_true(any(overlay_data$series == "Baseline"))
+
+stacked_default_data <- ggplot2::ggplot_build(p_stacked)$data[[1]]
+expect_true(!any(stacked_default_data$fill == "#b3b3b3"))
+
+stacked_baseline_data <- ggplot2::ggplot_build(p_stacked_baseline)$data[[1]]
+expect_true(any(stacked_baseline_data$fill == "#b3b3b3"))
 
 event_summary <- bsvarPost:::prepare_hd_event_plot_data(post, start = event_start, end = event_end, top_n = 2)
 event_abs <- bsvarPost:::compute_hd_event_shares(event_summary, share = "absolute")

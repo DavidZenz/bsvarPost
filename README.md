@@ -393,9 +393,9 @@ For full-sample interpretation, the intended workflow is:
 
 - `plot_hd_overlay()` first, to compare shock paths over time without mixing in
   the raw observed level.
-- `plot_hd_stacked()` second, for a coherent composition view. It adds an
-  explicit `Baseline` component so the stacked areas sum to the realised series
-  on the plotted summary scale.
+- `plot_hd_stacked()` second, for a stacked shock-contribution view. Add
+  `include_baseline = TRUE` when you want the explicit `Baseline` component and
+  the full displayed decomposition.
 - `plot_hd_total()` third, to check the observed path against that same
   reconstructed decomposition total.
 
