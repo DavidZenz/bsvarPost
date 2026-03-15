@@ -469,12 +469,13 @@ hd_panel_labels <- function(model, variable) {
 hd_stacked_palette <- function(components) {
   components <- unique(as.character(components))
   base_map <- c(
-    Baseline = "#4d4d4d",
-    Other = "#b07d12"
+    Baseline = "#b3b3b3",
+    Other = "#8c8c8c"
   )
   remaining <- setdiff(components, names(base_map))
   if (length(remaining)) {
-    remaining_cols <- grDevices::hcl.colors(length(remaining), "Dark 3")
+    hd_palette <- c("#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#999999")
+    remaining_cols <- rep(hd_palette, length.out = length(remaining))
     names(remaining_cols) <- remaining
     base_map <- c(base_map, remaining_cols)
   }
@@ -853,14 +854,14 @@ plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks
 
 #' Stacked historical decomposition contributions over time
 #'
-#' This plot builds a coherent decomposition by adding an explicit
-#' \code{"Baseline"} component to the selected shock contributions. The plotted
-#' series therefore sum to the observed path on the displayed summary scale.
+#' This plot shows stacked historical shock contributions over time. Set
+#' \code{include_baseline = TRUE} to add the non-shock \code{"Baseline"}
+#' component and obtain the full displayed decomposition.
 #'
 #' @inheritParams plot_hd_lines
 #' @export
 plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
-                            facet_scales = "free_y", include_observed = FALSE, include_baseline = TRUE,
+                            facet_scales = "free_y", include_observed = FALSE, include_baseline = FALSE,
                             shock_groups = NULL, top_n = NULL, collapse_other = TRUE,
                             stack = c("signed", "absolute"), model = "model1", ...) {
   stack <- match.arg(stack)
@@ -894,7 +895,7 @@ plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks
       group = .data[["component"]]
     )
   ) +
-    ggplot2::geom_area(position = "stack", alpha = 1, colour = "#ffffff", linewidth = 0.1) +
+    ggplot2::geom_area(position = "stack", alpha = 1, colour = NA) +
     ggplot2::scale_fill_manual(values = hd_stacked_palette(plot_data$component)) +
     ggplot2::facet_wrap(ggplot2::vars(panel_variable), scales = facet_scales) +
     ggplot2::theme_minimal() +
