@@ -240,9 +240,9 @@ posterior:
 
 ![](figures/hd-overlay-showcase.png)
 
-For composition, the stacked view is the coherent decomposition plot: it
-adds an explicit `Baseline` component so the displayed areas sum to the
-realised series on the plotted summary scale.
+For composition, the stacked view now shows the structural shock
+contributions by default. Add `include_baseline = TRUE` when you want
+the explicit `Baseline` component and the full displayed decomposition.
 
 ![](figures/hd-full-showcase.png)
 

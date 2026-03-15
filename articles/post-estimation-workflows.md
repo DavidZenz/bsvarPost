@@ -214,11 +214,11 @@ and one of the dedicated plot helpers.
 is the best first-look diagnostic because it compares shock paths within
 each variable without mixing in the raw level path.
 [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
-then gives the coherent composition view by adding an explicit
-`Baseline` component, and
+then gives the stacked shock-contribution view. Add
+`include_baseline = TRUE` when you want the explicit `Baseline`
+component and the full displayed decomposition, and use
 [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
-compares the observed path against that same reconstructed decomposition
-total.
+to compare the observed path against that reconstructed total.
 
 ``` r
 hd_full <- tidy_hd(post)
