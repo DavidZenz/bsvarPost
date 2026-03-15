@@ -82,7 +82,8 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
 
   if (!is.null(ribbon_alpha)) {
     for (i in seq_along(plot$layers)) {
-      if (inherits(plot$layers[[i]]$geom, "GeomRibbon")) {
+      if (inherits(plot$layers[[i]]$geom, "GeomRibbon") &&
+          !inherits(plot$layers[[i]]$geom, "GeomArea")) {
         plot$layers[[i]]$aes_params$alpha <- ribbon_alpha
       }
     }
