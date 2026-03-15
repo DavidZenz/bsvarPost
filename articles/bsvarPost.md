@@ -209,14 +209,15 @@ A pre-rendered representative-response showcase:
 
 ## Historical decomposition plots
 
-Historical decomposition is now split into two complementary workflows:
+Historical decomposition is split into two complementary workflows:
 
 - full-sample contribution paths with
   [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md),
   [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md),
   [`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md),
+  [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md),
   and
-  [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md);
+  [`plot_hd_lines()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_lines.md);
 - event-window summaries with
   [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md),
   [`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md),
@@ -230,26 +231,47 @@ hd_tbl <- tidy_hd(post)
 plot_hd_overlay(post, variables = "gdp", top_n = 3)
 plot_hd_stacked(post, variables = "gdp", top_n = 3)
 plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
+plot_hd_lines(post, variables = "gdp", top_n = 3)
 
 hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
+plot_hd_event(post, start = hd_times[1], end = hd_times[2])
 plot_hd_event_share(post, start = hd_times[1], end = hd_times[2], top_n = 3)
+plot_hd_event_cumulative(post, start = hd_times[1], end = hd_times[2], top_n = 3)
+plot_hd_event_distribution(post, start = hd_times[1], end = hd_times[2], top_n = 3)
+shock_ranking(post, start = hd_times[1], end = hd_times[2], ranking = "absolute")
 ```
 
-A pre-rendered full-sample HD overlay plot from the same S = 200
-posterior:
+Use
+[`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md)
+first to compare the main contribution paths within one variable over
+time:
 
 ![](figures/hd-overlay-showcase.png)
 
-For composition, the stacked view now shows the structural shock
-contributions by default. Add `include_baseline = TRUE` when you want
-the explicit `Baseline` component and the full displayed decomposition.
+Then use
+[`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
+for the composition view. It stacks the structural shock contributions
+over time, with `include_baseline = TRUE` available when you want the
+explicit non-shock reconstruction term as well.
 
 ![](figures/hd-full-showcase.png)
 
-And
 [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
-shows the same decomposition from a validation angle by comparing the
-observed path to the reconstructed total.
+then checks the same decomposition against the observed path, while
+[`plot_hd_lines()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_lines.md)
+provides the detailed component-by-component inspection view when the
+combined plots are too compressed.
+
+Once the full-sample plots have identified a period worth summarizing,
+move to the event-window helpers.
+[`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md),
+[`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md),
+[`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md),
+[`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md),
+[`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.md),
+and
+[`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md)
+summarize and rank the same HD information over a selected window.
 
 ## Reporting helpers
 

@@ -296,35 +296,43 @@ compact <code><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external
 credible bands, reflecting the richer lag dynamics.</p>
 </div>
 <div class="section level2">
-<h2 id="historical-decomposition-events">Historical decomposition events<a class="anchor" aria-label="anchor" href="#historical-decomposition-events"></a>
+<h2 id="historical-decomposition-workflows">Historical decomposition workflows<a class="anchor" aria-label="anchor" href="#historical-decomposition-workflows"></a>
 </h2>
-<p>Historical decompositions (HD) measure each structural shock’s
-contribution to observed variation in each variable at each point in
-time.</p>
-<p>For full-sample interpretation, start with <code><a href="../reference/tidy_hd.html">tidy_hd()</a></code> and
-one of the dedicated plot helpers. <code><a href="../reference/plot_hd_overlay.html">plot_hd_overlay()</a></code> is the
-best first-look diagnostic because it compares shock paths within each
-variable without mixing in the raw level path.
-<code><a href="../reference/plot_hd_stacked.html">plot_hd_stacked()</a></code> then gives the stacked shock-contribution
-view. Add <code>include_baseline = TRUE</code> when you want the
-explicit <code>Baseline</code> component and the full displayed
-decomposition, and use <code><a href="../reference/plot_hd_total.html">plot_hd_total()</a></code> to compare the
-observed path against that reconstructed total.</p>
+<p>Historical decompositions (HD) answer two complementary questions:
+how do structural shock contributions evolve over the full sample, and
+how do those same contributions aggregate over a selected event
+window?</p>
+<p>Start with the full-sample HD object. <code><a href="../reference/tidy_hd.html">tidy_hd()</a></code> returns
+the contribution of each structural shock to each variable at each point
+in time, which then feeds the dedicated plotting helpers.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hd_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd.html">tidy_hd</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_hd_overlay.html">plot_hd_overlay</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plot_hd_stacked.html">plot_hd_stacked</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/plot_hd_total.html">plot_hd_total</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, shocks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gs"</span>, <span class="st">"ttr"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/plot_hd_total.html">plot_hd_total</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, shocks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gs"</span>, <span class="st">"ttr"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_hd_lines.html">plot_hd_lines</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<p>Use <code><a href="../reference/plot_hd_overlay.html">plot_hd_overlay()</a></code> first when you want to compare how
+the main shock contributions move over time within one variable. This is
+the best first-look diagnostic because it keeps the contribution paths
+in a common panel without mixing in the raw observed level.</p>
 <p>A pre-rendered full-sample HD overlay plot from the same S = 200
 posterior:</p>
 <p><img src="figures/hd-overlay-showcase.png" class="r-plt" alt="" width="100%"></p>
-<p>The stacked view now shows a full baseline-plus-shock decomposition
-on the displayed summary scale:</p>
+<p><code><a href="../reference/plot_hd_stacked.html">plot_hd_stacked()</a></code> then gives the composition view over
+time. By default it shows the stacked structural shock contributions;
+add <code>include_baseline = TRUE</code> when you want the explicit
+non-shock reconstruction term as well.</p>
 <p><img src="figures/hd-full-showcase.png" class="r-plt" alt="" width="100%"></p>
-<p>And the totals view checks that decomposition against the realised
-series:</p>
-<p><code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> then aggregates those contributions over
-a chosen event window.</p>
+<p><code><a href="../reference/plot_hd_total.html">plot_hd_total()</a></code> plays a different role: it compares the
+observed series to the reconstructed decomposition total, so it is the
+natural validation view once the main shock drivers are clear.</p>
+<p>When overlay and stacked views become too compressed,
+<code><a href="../reference/plot_hd_lines.html">plot_hd_lines()</a></code> gives the detailed inspection view by
+separating the component paths rather than forcing them into one
+panel.</p>
+<p>After the full-sample HD plots have identified a period of interest,
+move to the event-window summaries. <code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code>
+aggregates those contributions over a chosen window.</p>
 <p>The <code>us_fiscal_lsuw</code> sample begins in 1948. To examine
 which shocks drove fiscal dynamics in the first year (four quarters:
 1948.25 through 1948.75):</p>
@@ -341,9 +349,16 @@ which shocks drove fiscal dynamics in the first year (four quarters:
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> model1 hd_event    gs       gs    1948.25     1948.75   -<span style="color: #BB0000;">0.906</span>   -<span style="color: #BB0000;">0.880</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> model1 hd_event    ttr      gs    1948.25     1948.75    0.001<span style="text-decoration: underline;">40</span>  0.006<span style="text-decoration: underline;">80</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: sd &lt;dbl&gt;, lower &lt;dbl&gt;, upper &lt;dbl&gt;</span></span></span></code></pre></div>
-<p><code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> ranks the structural shocks by their
-absolute contribution to a target variable over the same window. Which
-shock moved <code>gdp</code> the most?</p>
+<p><code><a href="../reference/plot_hd_event.html">plot_hd_event()</a></code> keeps the window summary in contribution
+units, while <code><a href="../reference/plot_hd_event_share.html">plot_hd_event_share()</a></code> converts the same event
+into within-window shares. <code><a href="../reference/plot_hd_event_cumulative.html">plot_hd_event_cumulative()</a></code> shows
+how those contributions accumulate inside the window, and
+<code><a href="../reference/plot_hd_event_distribution.html">plot_hd_event_distribution()</a></code> focuses on posterior
+uncertainty for each shock.</p>
+<p><code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> is the event-summary ranking tool: it
+orders the structural shocks by their absolute contribution to a target
+variable over the selected window. Which shock moved <code>gdp</code>
+the most?</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/shock_ranking.html">shock_ranking</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, ranking <span class="op">=</span> <span class="st">"absolute"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 9 × 14</span></span></span>
@@ -364,7 +379,10 @@ shock moved <code>gdp</code> the most?</p>
 <code><a href="../reference/plot_hd_event_share.html">plot_hd_event_share()</a></code> rescales the same event-window
 contributions into shares:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event_share.html">plot_hd_event_share</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_hd_event.html">plot_hd_event</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_hd_event_share.html">plot_hd_event_share</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_hd_event_cumulative.html">plot_hd_event_cumulative</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_hd_event_distribution.html">plot_hd_event_distribution</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.75"</span>, top_n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p>And a pre-rendered event-share composition plot:</p>
 <p><img src="figures/hd-event-share-showcase.png" class="r-plt" alt="" width="100%"></p>
 <p>A pre-rendered HD event figure from a richer S = 200 run:</p>
@@ -2791,48 +2809,48 @@ is installed):</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_flextable</a></span><span class="op">(</span><span class="va">cmp_peak</span>, caption <span class="op">=</span> <span class="st">"Peak response: 1-lag vs 3-lag"</span>, digits <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>             preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
 <div class="tabwid">
-<style>.cl-978daa2a{}.cl-978651b2{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-978983c8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-978983d2{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-9789aa2e{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9789aa38{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9789aa39{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9789aa3a{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9789aa3b{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-9789aa42{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table data-quarto-disable-processing="true" class="table cl-978daa2a">
+<style>.cl-3e60cbe6{}.cl-3e592738{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-3e5c8586{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-3e5c859a{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-3e5cac28{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e5cac32{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e5cac33{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e5cac3c{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e5cac3d{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-3e5cac46{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table data-quarto-disable-processing="true" class="table cl-3e60cbe6">
 <caption style="display:table-caption;margin:0pt;text-align:center;border-bottom: 0.00pt solid transparent;border-top: 0.00pt solid transparent;border-left: 0.00pt solid transparent;border-right: 0.00pt solid transparent;padding-top:3pt;padding-bottom:3pt;padding-left:3pt;padding-right:3pt;line-height: 1;background-color:transparent;"><span>Peak response: 1-lag vs 3-lag</span></caption>
 <thead><tr style="overflow-wrap:break-word;">
-<th class="cl-9789aa2e"><p class="cl-978983c8"><span class="cl-978651b2">Model</span></p></th>
-<th class="cl-9789aa2e"><p class="cl-978983c8"><span class="cl-978651b2">Variable</span></p></th>
-<th class="cl-9789aa2e"><p class="cl-978983c8"><span class="cl-978651b2">Shock</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Mean value</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Median value</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Lower value</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Upper value</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Mean horizon</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Median horizon</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Lower horizon</span></p></th>
-<th class="cl-9789aa38"><p class="cl-978983d2"><span class="cl-978651b2">Upper horizon</span></p></th>
+<th class="cl-3e5cac28"><p class="cl-3e5c8586"><span class="cl-3e592738">Model</span></p></th>
+<th class="cl-3e5cac28"><p class="cl-3e5c8586"><span class="cl-3e592738">Variable</span></p></th>
+<th class="cl-3e5cac28"><p class="cl-3e5c8586"><span class="cl-3e592738">Shock</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Mean value</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Median value</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Lower value</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Upper value</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Mean horizon</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Median horizon</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Lower horizon</span></p></th>
+<th class="cl-3e5cac32"><p class="cl-3e5c859a"><span class="cl-3e592738">Upper horizon</span></p></th>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-9789aa39"><p class="cl-978983c8"><span class="cl-978651b2">baseline</span></p></td>
-<td class="cl-9789aa39"><p class="cl-978983c8"><span class="cl-978651b2">gdp</span></p></td>
-<td class="cl-9789aa39"><p class="cl-978983c8"><span class="cl-978651b2">gs</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">0.038</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">0</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">-0.001</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">0.001</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">1.105</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">0</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">0</span></p></td>
-<td class="cl-9789aa3a"><p class="cl-978983d2"><span class="cl-978651b2">10.5</span></p></td>
+<td class="cl-3e5cac33"><p class="cl-3e5c8586"><span class="cl-3e592738">baseline</span></p></td>
+<td class="cl-3e5cac33"><p class="cl-3e5c8586"><span class="cl-3e592738">gdp</span></p></td>
+<td class="cl-3e5cac33"><p class="cl-3e5c8586"><span class="cl-3e592738">gs</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">0.038</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">0</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">-0.001</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">0.001</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">1.105</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">0</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">0</span></p></td>
+<td class="cl-3e5cac3c"><p class="cl-3e5c859a"><span class="cl-3e592738">10.5</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-9789aa3b"><p class="cl-978983c8"><span class="cl-978651b2">alternative</span></p></td>
-<td class="cl-9789aa3b"><p class="cl-978983c8"><span class="cl-978651b2">gdp</span></p></td>
-<td class="cl-9789aa3b"><p class="cl-978983c8"><span class="cl-978651b2">gs</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">66,131.493</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">0</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">-0.001</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">0.003</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">4.740</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">1</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">0</span></p></td>
-<td class="cl-9789aa42"><p class="cl-978983d2"><span class="cl-978651b2">20.0</span></p></td>
+<td class="cl-3e5cac3d"><p class="cl-3e5c8586"><span class="cl-3e592738">alternative</span></p></td>
+<td class="cl-3e5cac3d"><p class="cl-3e5c8586"><span class="cl-3e592738">gdp</span></p></td>
+<td class="cl-3e5cac3d"><p class="cl-3e5c8586"><span class="cl-3e592738">gs</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">66,131.493</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">0</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">-0.001</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">0.003</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">4.740</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">1</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">0</span></p></td>
+<td class="cl-3e5cac46"><p class="cl-3e5c859a"><span class="cl-3e592738">20.0</span></p></td>
 </tr>
 </tbody>
 </table>
