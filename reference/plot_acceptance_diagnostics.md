@@ -32,7 +32,7 @@ plot_acceptance_diagnostics(
 
 - show_flags:
 
-  If `TRUE`, highlight flagged diagnostics in a different colour.
+  If `TRUE`, highlight flagged diagnostics in a different marker.
 
 - ...:
 
