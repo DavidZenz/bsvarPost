@@ -17,6 +17,10 @@ p1 <- plot_acceptance_diagnostics(cmp_diag, metrics = c("effective_sample_size",
 p2 <- plot_acceptance_diagnostics(post_a, metrics = c("effective_sample_size", "kernel_zero_share"))
 expect_true(inherits(p1, "ggplot"))
 expect_true(inherits(p2, "ggplot"))
+expect_true(inherits(p1$facet, "FacetGrid"))
+expect_true(inherits(p2$facet, "FacetGrid"))
+expect_true(any(vapply(p1$layers, function(layer) inherits(layer$geom, "GeomSegment"), logical(1))))
+expect_true(any(vapply(p1$layers, function(layer) inherits(layer$geom, "GeomPoint"), logical(1))))
 
 expect_error(
   plot_acceptance_diagnostics(cmp_diag, metrics = "does_not_exist"),

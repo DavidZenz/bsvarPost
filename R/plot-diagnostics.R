@@ -5,7 +5,7 @@
 #' @param metrics Optional metric filter.
 #' @param models Optional model filter.
 #' @param show_flags If `TRUE`, highlight flagged diagnostics in a different
-#'   colour.
+#'   marker.
 #' @param ... Additional arguments passed to `acceptance_diagnostics()` when
 #'   `object` is not already a diagnostics table.
 #' @return A \code{ggplot} object.
@@ -40,15 +40,54 @@ plot_acceptance_diagnostics <- function(object, metrics = NULL, models = NULL, s
     stop("No diagnostics remain after filtering.", call. = FALSE)
   }
 
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = stats::reorder(metric, value), y = value, fill = model))
-  if (isTRUE(show_flags)) {
-    p <- p + ggplot2::geom_col(ggplot2::aes(alpha = !flag), position = "dodge")
-  } else {
-    p <- p + ggplot2::geom_col(position = "dodge")
+  df <- attach_acceptance_diagnostic_metadata(df)
+  label_levels <- unique(df[order(df$family_order, df$metric_order), "label"])
+  df$label <- factor(df$label, levels = rev(label_levels))
+
+  dodge <- ggplot2::position_dodge(width = 0.6)
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = value, y = label, colour = model))
+  p <- p +
+    ggplot2::geom_segment(
+      ggplot2::aes(x = 0, xend = value, yend = label),
+      linewidth = 0.6,
+      position = dodge,
+      alpha = 0.8
+    ) +
+    ggplot2::geom_point(
+      size = 2.4,
+      position = dodge
+    )
+
+  if (isTRUE(show_flags) && any(df$flag)) {
+    p <- p + ggplot2::geom_point(
+      data = df[df$flag, , drop = FALSE],
+      ggplot2::aes(x = value, y = label),
+      inherit.aes = FALSE,
+      shape = 21,
+      size = 3.2,
+      stroke = 0.7,
+      fill = "#e45756",
+      colour = "#7f1d1d",
+      position = dodge
+    )
   }
 
-  p +
-    ggplot2::coord_flip() +
+  p <- p +
+    ggplot2::facet_grid(rows = ggplot2::vars(family), scales = "free_y", space = "free_y") +
     ggplot2::theme_minimal() +
-    ggplot2::labs(x = "metric", y = "value", fill = if (length(unique(df$model)) > 1L) "model" else NULL)
+    ggplot2::theme(
+      panel.grid.major.y = ggplot2::element_blank(),
+      strip.text.y = ggplot2::element_text(angle = 0, face = "bold")
+    ) +
+    ggplot2::labs(
+      x = "value",
+      y = NULL,
+      colour = if (length(unique(df$model)) > 1L) "model" else NULL
+    )
+
+  if (length(unique(df$model)) <= 1L) {
+    p <- p + ggplot2::guides(colour = "none") + ggplot2::theme(legend.position = "none")
+  }
+
+  p
 }

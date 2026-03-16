@@ -259,6 +259,10 @@ compare_acceptance_diagnostics(baseline = post, alternative = post_alt)
 plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
 ```
 
+`plot_acceptance_diagnostics()` is a sample-health summary for sign-restricted
+models, not an economic-effects plot. The first diagnostics to inspect are
+usually `effective_sample_size` and `kernel_zero_share`.
+
 ## Model comparison
 
 ```r

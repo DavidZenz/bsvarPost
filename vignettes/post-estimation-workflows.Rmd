@@ -282,6 +282,14 @@ A pre-rendered diagnostics figure demonstrating the publication styling layer:
 knitr::include_graphics("figures/diagnostics-showcase.png")
 ```
 
+This diagnostics plot is not an economic-effects plot. It summarizes the health
+of the stored admissible-draw sample for the sign-restricted model. Start with
+`effective_sample_size` and `kernel_zero_share`: they tell you whether the
+accepted draws contain enough effective information and whether a large share of
+the admissible support is effectively degenerate. The restriction counts and
+other kernel summaries then provide context for how demanding the identification
+problem is.
+
 ## Next steps
 
 The **Hypothesis Testing vignette** covers formal posterior probability
