@@ -19,6 +19,8 @@ expect_true(inherits(p1, "ggplot"))
 expect_true(inherits(p2, "ggplot"))
 expect_true(inherits(p1$facet, "FacetGrid"))
 expect_true(inherits(p2$facet, "FacetGrid"))
+expect_true(isTRUE(p1$facet$params$free$x))
+expect_true(isTRUE(p2$facet$params$free$x))
 expect_true(any(vapply(p1$layers, function(layer) inherits(layer$geom, "GeomSegment"), logical(1))))
 expect_true(any(vapply(p1$layers, function(layer) inherits(layer$geom, "GeomPoint"), logical(1))))
 

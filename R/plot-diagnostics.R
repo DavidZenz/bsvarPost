@@ -73,7 +73,7 @@ plot_acceptance_diagnostics <- function(object, metrics = NULL, models = NULL, s
   }
 
   p <- p +
-    ggplot2::facet_grid(rows = ggplot2::vars(family), scales = "free_y", space = "free_y") +
+    ggplot2::facet_grid(rows = ggplot2::vars(family), scales = "free", space = "free_y") +
     ggplot2::theme_minimal() +
     ggplot2::theme(
       panel.grid.major.y = ggplot2::element_blank(),
