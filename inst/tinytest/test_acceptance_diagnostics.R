@@ -23,6 +23,10 @@ expect_true(all(c(
   "kernel_zero_share"
 ) %in% metrics))
 
+diag_meta <- bsvarPost:::attach_acceptance_diagnostic_metadata(diag_tbl)
+expect_true(all(c("family", "label", "family_order", "metric_order") %in% names(diag_meta)))
+expect_true(all(c("Sampling", "Restrictions", "Kernel") %in% as.character(unique(diag_meta$family))))
+
 draw_row <- subset(diag_tbl, metric == "posterior_draws")
 expect_equal(draw_row$value[[1]], 5)
 

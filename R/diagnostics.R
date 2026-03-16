@@ -35,6 +35,83 @@ acceptance_diagnostics <- function(object, ...) {
   UseMethod("acceptance_diagnostics")
 }
 
+acceptance_diagnostic_spec <- function() {
+  tibble::tibble(
+    metric = c(
+      "posterior_draws",
+      "effective_sample_size",
+      "max_tries",
+      "irf_sign_restrictions",
+      "zero_restrictions",
+      "structural_sign_restrictions",
+      "narrative_restrictions",
+      "kernel_mean",
+      "kernel_median",
+      "kernel_min",
+      "kernel_max",
+      "kernel_zero_share",
+      "kernel_cv"
+    ),
+    family = c(
+      "Sampling",
+      "Sampling",
+      "Sampling",
+      "Restrictions",
+      "Restrictions",
+      "Restrictions",
+      "Restrictions",
+      "Kernel",
+      "Kernel",
+      "Kernel",
+      "Kernel",
+      "Kernel",
+      "Kernel"
+    ),
+    label = c(
+      "Posterior draws",
+      "Effective sample size",
+      "Max tries",
+      "IRF sign restrictions",
+      "Zero restrictions",
+      "Structural sign restrictions",
+      "Narrative restrictions",
+      "Kernel mean",
+      "Kernel median",
+      "Kernel min",
+      "Kernel max",
+      "Kernel zero share",
+      "Kernel CV"
+    ),
+    family_order = c(
+      1L, 1L, 1L,
+      2L, 2L, 2L, 2L,
+      3L, 3L, 3L, 3L, 3L, 3L
+    ),
+    metric_order = c(
+      1L, 2L, 3L,
+      1L, 2L, 3L, 4L,
+      1L, 2L, 3L, 4L, 5L, 6L
+    )
+  )
+}
+
+attach_acceptance_diagnostic_metadata <- function(df) {
+  meta <- acceptance_diagnostic_spec()
+  out <- merge(df, meta, by = "metric", all.x = TRUE, sort = FALSE)
+  missing <- is.na(out$family)
+  if (any(missing)) {
+    out$family[missing] <- "Other"
+    out$label[missing] <- out$metric[missing]
+    out$family_order[missing] <- max(meta$family_order) + 1L
+    out$metric_order[missing] <- seq_len(sum(missing))
+  }
+  out$family <- factor(
+    out$family,
+    levels = unique(meta$family[order(meta$family_order)])
+  )
+  out
+}
+
 count_sign_restrictions <- function(sign_irf) {
   if (is.null(sign_irf) || !length(sign_irf)) return(0L)
   sum(!is.na(sign_irf) & sign_irf != 0)

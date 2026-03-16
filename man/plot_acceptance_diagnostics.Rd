@@ -21,7 +21,7 @@ object that can be converted with \code{acceptance_diagnostics()}.}
 \item{models}{Optional model filter.}
 
 \item{show_flags}{If \code{TRUE}, highlight flagged diagnostics in a different
-colour.}
+marker.}
 
 \item{...}{Additional arguments passed to \code{acceptance_diagnostics()} when
 \code{object} is not already a diagnostics table.}
