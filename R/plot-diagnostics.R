@@ -61,9 +61,8 @@ plot_acceptance_diagnostics <- function(object, metrics = NULL, models = NULL, s
   if (isTRUE(show_flags) && any(df$flag)) {
     p <- p + ggplot2::geom_point(
       data = df[df$flag, , drop = FALSE],
-      ggplot2::aes(x = value, y = label),
+      ggplot2::aes(x = value, y = label, shape = "Warning flag"),
       inherit.aes = FALSE,
-      shape = 21,
       size = 3.2,
       stroke = 0.7,
       fill = "#e45756",
@@ -73,11 +72,20 @@ plot_acceptance_diagnostics <- function(object, metrics = NULL, models = NULL, s
   }
 
   p <- p +
-    ggplot2::facet_grid(rows = ggplot2::vars(family), scales = "free", space = "free_y") +
+    ggplot2::facet_wrap(~ family, ncol = 1, scales = "free") +
+    ggplot2::scale_x_continuous(
+      breaks = function(x) pretty(x, n = 5),
+      expand = ggplot2::expansion(mult = c(0.02, 0.16))
+    ) +
+    ggplot2::scale_shape_manual(
+      values = c("Warning flag" = 21),
+      name = NULL,
+      labels = c("Warning flag" = "Warning threshold exceeded")
+    ) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
       panel.grid.major.y = ggplot2::element_blank(),
-      strip.text.y = ggplot2::element_text(angle = 0, face = "bold")
+      strip.text = ggplot2::element_text(face = "bold")
     ) +
     ggplot2::labs(
       x = "value",
@@ -86,7 +94,23 @@ plot_acceptance_diagnostics <- function(object, metrics = NULL, models = NULL, s
     )
 
   if (length(unique(df$model)) <= 1L) {
-    p <- p + ggplot2::guides(colour = "none") + ggplot2::theme(legend.position = "none")
+    p <- p + ggplot2::guides(colour = "none")
+  }
+
+  if (isTRUE(show_flags) && any(df$flag)) {
+    p <- p + ggplot2::guides(
+      shape = ggplot2::guide_legend(
+        override.aes = list(
+          fill = "#e45756",
+          colour = "#7f1d1d",
+          size = 3.2,
+          stroke = 0.7
+        ),
+        order = 2
+      )
+    ) + ggplot2::theme(legend.position = "bottom")
+  } else if (length(unique(df$model)) <= 1L) {
+    p <- p + ggplot2::theme(legend.position = "none")
   }
 
   p
