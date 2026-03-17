@@ -43,8 +43,8 @@ diag_tbl <- acceptance_diagnostics(
   )
 )
 p_diag <- publish_bsvar_plot(diag_tbl, preset = "paper")
-expect_true(inherits(p_diag, "ggplot"))
-expect_true(identical(p_diag$labels$subtitle, "Stored-draw admissibility diagnostics"))
+expect_true(inherits(p_diag, "bsvar_diagnostics_plot"))
+expect_true(identical(attr(p_diag, "plot_meta")$subtitle, "Stored-draw admissibility and sample-health diagnostics"))
 
 expect_error(
   publish_bsvar_plot(1),

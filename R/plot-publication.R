@@ -35,6 +35,19 @@ publish_bsvar_plot <- function(object, family = NULL,
     stop("`publish_bsvar_plot()` could not infer a supported output family.", call. = FALSE)
   }
 
+  if (identical(detected_family, "acceptance_diagnostics") && !inherits(object, "ggplot")) {
+    return(plot_acceptance_diagnostics(
+      object,
+      preset = preset,
+      base_size = base_size,
+      base_family = base_family,
+      title = title %||% default_publication_title(object, detected_family),
+      subtitle = subtitle %||% default_publication_subtitle(object, detected_family),
+      caption = caption,
+      ...
+    ))
+  }
+
   plot <- build_publication_plot(object, detected_family, ...)
   plot <- template_bsvar_plot(
     plot,

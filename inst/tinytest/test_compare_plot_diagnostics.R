@@ -15,16 +15,10 @@ expect_true(all(c("model", "metric", "value", "flag") %in% names(cmp_diag)))
 
 p1 <- plot_acceptance_diagnostics(cmp_diag, metrics = c("effective_sample_size", "kernel_zero_share"))
 p2 <- plot_acceptance_diagnostics(post_a, metrics = c("effective_sample_size", "kernel_zero_share"))
-expect_true(inherits(p1, "ggplot"))
-expect_true(inherits(p2, "ggplot"))
-expect_true(inherits(p1$facet, "FacetWrap"))
-expect_true(inherits(p2$facet, "FacetWrap"))
-expect_equal(p1$facet$params$ncol, 1)
-expect_equal(p2$facet$params$ncol, 1)
-expect_true(identical(p1$facet$params$free, list(x = TRUE, y = TRUE)))
-expect_true(identical(p2$facet$params$free, list(x = TRUE, y = TRUE)))
-expect_true(any(vapply(p1$layers, function(layer) inherits(layer$geom, "GeomSegment"), logical(1))))
-expect_true(any(vapply(p1$layers, function(layer) inherits(layer$geom, "GeomPoint"), logical(1))))
+expect_true(inherits(p1, "bsvar_diagnostics_plot"))
+expect_true(inherits(p2, "bsvar_diagnostics_plot"))
+expect_true(inherits(p1, "grob"))
+expect_true(inherits(p2, "grob"))
 
 expect_error(
   plot_acceptance_diagnostics(cmp_diag, metrics = "does_not_exist"),
