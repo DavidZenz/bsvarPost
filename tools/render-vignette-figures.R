@@ -136,7 +136,7 @@ diag_sign <- acceptance_diagnostics(post_sign)
   "vignettes/figures/diagnostics-showcase.png",
   publish_bsvar_plot(diag_sign, preset = "paper"),
   width = 8,
-  height = 5.5
+  height = 8
 )
 
 hd_sign <- plot_hd_event(post_sign, start = 1, end = 4)
