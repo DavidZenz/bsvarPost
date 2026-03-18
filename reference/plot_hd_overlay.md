@@ -88,6 +88,11 @@ plot_hd_overlay(
   `FALSE` because multiple component intervals in a single panel are
   usually hard to read.
 
+- model:
+
+  Model label used when converting posterior objects to tidy plotting
+  tables.
+
 - ...:
 
   Additional arguments passed to

@@ -78,6 +78,11 @@ plot_hd_total(
   If `TRUE`, contributors outside `top_n` (or unmapped shocks under
   `shock_groups`) are collapsed into `"Other"`.
 
+- model:
+
+  Model label used when converting posterior objects to tidy plotting
+  tables.
+
 - ...:
 
   Additional arguments passed to

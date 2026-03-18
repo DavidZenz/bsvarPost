@@ -10,6 +10,12 @@ plot_acceptance_diagnostics(
   metrics = NULL,
   models = NULL,
   show_flags = TRUE,
+  preset = c("default", "paper", "slides"),
+  base_size = 11,
+  base_family = "",
+  title = NULL,
+  subtitle = NULL,
+  caption = NULL,
   ...
 )
 ```
@@ -34,6 +40,30 @@ plot_acceptance_diagnostics(
 
   If `TRUE`, highlight flagged diagnostics in a different marker.
 
+- preset:
+
+  One of `"default"`, `"paper"`, or `"slides"`.
+
+- base_size:
+
+  Base font size.
+
+- base_family:
+
+  Base font family.
+
+- title:
+
+  Optional plot title.
+
+- subtitle:
+
+  Optional plot subtitle.
+
+- caption:
+
+  Optional plot caption.
+
 - ...:
 
   Additional arguments passed to
@@ -42,7 +72,7 @@ plot_acceptance_diagnostics(
 
 ## Value
 
-A `ggplot` object.
+A grid plot object.
 
 ## Examples
 

@@ -68,6 +68,11 @@ plot_hd_event_cumulative(
 
   Facet scales passed to `ggplot2`.
 
+- model:
+
+  Model label used when converting posterior objects to tidy plotting
+  tables.
+
 - ...:
 
   Additional arguments passed to

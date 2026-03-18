@@ -81,6 +81,11 @@ plot_hd_stacked(
 
   One of `"signed"` or `"absolute"` for stacked plots.
 
+- model:
+
+  Model label used when converting posterior objects to tidy plotting
+  tables.
+
 - ...:
 
   Additional arguments passed to

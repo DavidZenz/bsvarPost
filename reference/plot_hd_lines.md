@@ -81,6 +81,11 @@ plot_hd_lines(
 
   One of `"variable"` or `"shock"` for line-based displays.
 
+- model:
+
+  Model label used when converting posterior objects to tidy plotting
+  tables.
+
 - ...:
 
   Additional arguments passed to
@@ -89,24 +94,6 @@ plot_hd_lines(
   [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
   when conversion is required.
 
-- intervals:
-
-  If `TRUE`, show uncertainty ribbons for overlay plots. Defaults to
-  `FALSE` because multiple component intervals in a single panel are
-  usually hard to read.
-
-- stack:
-
-  One of `"signed"` or `"absolute"` for stacked plots.
-
-- start, end:
-
-  Event-window start and end indexes for event-specific plots.
-
-- share:
-
-  One of `"absolute"` or `"signed"` for event share plots.
-
 ## Value
 
 A `ggplot` object.
@@ -114,6 +101,7 @@ A `ggplot` object.
 ## Examples
 
 ``` r
+# \donttest{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
@@ -129,4 +117,5 @@ hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
 p_share <- plot_hd_event_share(post, start = hd_times[1], end = hd_times[2])
 p_cum <- plot_hd_event_cumulative(post, start = hd_times[1], end = hd_times[2])
 p_dist <- plot_hd_event_distribution(post, start = hd_times[1], end = hd_times[2])
+# }
 ```

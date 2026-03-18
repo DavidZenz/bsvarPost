@@ -126,27 +126,14 @@ unmapped shocks under <code>shock_groups</code>) are collapsed into <code>"Other
 <dd><p>One of <code>"variable"</code> or <code>"shock"</code> for line-based displays.</p></dd>
 
 
+<dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
+<dd><p>Model label used when converting posterior objects to tidy
+plotting tables.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to <code><a href="tidy_hd.html">tidy_hd()</a></code> or
 <code><a href="tidy_hd_event.html">tidy_hd_event()</a></code> when conversion is required.</p></dd>
-
-
-<dt id="arg-intervals">intervals<a class="anchor" aria-label="anchor" href="#arg-intervals"></a></dt>
-<dd><p>If <code>TRUE</code>, show uncertainty ribbons for overlay plots.
-Defaults to <code>FALSE</code> because multiple component intervals in a single
-panel are usually hard to read.</p></dd>
-
-
-<dt id="arg-stack">stack<a class="anchor" aria-label="anchor" href="#arg-stack"></a></dt>
-<dd><p>One of <code>"signed"</code> or <code>"absolute"</code> for stacked plots.</p></dd>
-
-
-<dt id="arg-start-end">start, end<a class="anchor" aria-label="anchor" href="#arg-start-end"></a></dt>
-<dd><p>Event-window start and end indexes for event-specific plots.</p></dd>
-
-
-<dt id="arg-share">share<a class="anchor" aria-label="anchor" href="#arg-share"></a></dt>
-<dd><p>One of <code>"absolute"</code> or <code>"signed"</code> for event share plots.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -156,7 +143,8 @@ panel are usually hard to read.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The identification is set to the default option of lower-triangular structural matrix.</span>
 <span class="r-in"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">5</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
@@ -171,6 +159,7 @@ panel are usually hard to read.</p></dd>
 <span class="r-in"><span><span class="va">p_share</span> <span class="op">&lt;-</span> <span class="fu"><a href="plot_hd_event_share.html">plot_hd_event_share</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="va">hd_times</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, end <span class="op">=</span> <span class="va">hd_times</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p_cum</span> <span class="op">&lt;-</span> <span class="fu"><a href="plot_hd_event_cumulative.html">plot_hd_event_cumulative</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="va">hd_times</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, end <span class="op">=</span> <span class="va">hd_times</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="plot_hd_event_distribution.html">plot_hd_event_distribution</a></span><span class="op">(</span><span class="va">post</span>, start <span class="op">=</span> <span class="va">hd_times</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, end <span class="op">=</span> <span class="va">hd_times</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

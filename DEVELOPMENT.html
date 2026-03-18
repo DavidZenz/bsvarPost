@@ -74,12 +74,36 @@
 <ul><li>make sure only the intended feature, tests, and docs are included</li>
 </ul></li>
 <li>Push only after GitHub <code>R-CMD-check</code> is green.</li>
+<li>If you changed vignette/showcase visuals, verify that committed files under <a href="vignettes/figures">vignettes/figures</a> are only the images actually referenced by articles and README content.</li>
 </ol><p>Additional rules:</p>
 <ul><li>Do not assume suggested packages are installed.</li>
 <li>Do not assume suggested packages are absent.</li>
 <li>Tests for optional dependencies must branch on <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace(...)</a></code>.</li>
 <li>If a step depends on generated files, do not parallelize it. Run it after the generation step completes.</li>
 <li>If CI fails, inspect <code>00check.log</code> before changing code blindly.</li>
+</ul></div>
+<div class="section level2">
+<h2 id="pre-generated-figures-and-pkgdown-assets">Pre-generated Figures and pkgdown Assets<a class="anchor" aria-label="anchor" href="#pre-generated-figures-and-pkgdown-assets"></a></h2>
+<p>The package intentionally versions a small set of pre-rendered PNGs used by the pkgdown site and vignette prose.</p>
+<p>Policy:</p>
+<ul><li>The source of truth for these assets is <a href="tools/render-vignette-figures.R">tools/render-vignette-figures.R</a>.</li>
+<li>Only commit figures that are actually referenced by:
+<ul><li>vignettes under <a href="vignettes">vignettes</a>
+</li>
+<li>the package README</li>
+</ul></li>
+<li>Pre-generated figures are documentation assets, not CRAN validation artifacts.</li>
+<li>Do not keep unused generated files in the repository.</li>
+<li>Do not treat figure regeneration as part of the minimum CRAN check path unless the code or vignette text that produces them changed.</li>
+</ul><p>Operational rules:</p>
+<ul><li>Keep the renderer deterministic.</li>
+<li>Keep fixture sizes modest and stable.</li>
+<li>Regenerate only the affected figures when plot code or article usage changes.</li>
+<li>Ignore or remove local render leftovers such as:
+<ul><li><code>Rplots.pdf</code></li>
+<li>unused showcase images</li>
+<li>editor swap files</li>
+</ul></li>
 </ul><p>There is a helper script for the local portion of this checklist:</p>
 <ul><li><code>tools/prepush-check.sh</code></li>
 </ul></div>
