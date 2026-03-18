@@ -96,10 +96,13 @@ build_acceptance_diagnostics_panel <- function(df, preset, base_size, base_famil
   df$label <- factor(df$label, levels = rev(label_levels))
 
   dodge <- ggplot2::position_dodge(width = 0.6)
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = value, y = label, colour = model))
+  p <- ggplot2::ggplot(
+    df,
+    ggplot2::aes(x = .data[["value"]], y = .data[["label"]], colour = .data[["model"]])
+  )
   p <- p +
     ggplot2::geom_segment(
-      ggplot2::aes(x = 0, xend = value, yend = label),
+      ggplot2::aes(x = 0, xend = .data[["value"]], yend = .data[["label"]]),
       linewidth = 0.6,
       position = dodge,
       alpha = 0.8
@@ -112,7 +115,7 @@ build_acceptance_diagnostics_panel <- function(df, preset, base_size, base_famil
   if (isTRUE(show_flags) && any(df$flag)) {
     p <- p + ggplot2::geom_point(
       data = df[df$flag, , drop = FALSE],
-      ggplot2::aes(x = value, y = label, shape = "Warning flag"),
+      ggplot2::aes(x = .data[["value"]], y = .data[["label"]], shape = "Warning flag"),
       inherit.aes = FALSE,
       size = 3.2,
       stroke = 0.7,

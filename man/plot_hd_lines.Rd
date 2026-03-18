@@ -53,18 +53,11 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
 \item{by}{One of \code{"variable"} or \code{"shock"} for line-based displays.}
 
+\item{model}{Model label used when converting posterior objects to tidy
+plotting tables.}
+
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
-
-\item{intervals}{If \code{TRUE}, show uncertainty ribbons for overlay plots.
-Defaults to \code{FALSE} because multiple component intervals in a single
-panel are usually hard to read.}
-
-\item{stack}{One of \code{"signed"} or \code{"absolute"} for stacked plots.}
-
-\item{start, end}{Event-window start and end indexes for event-specific plots.}
-
-\item{share}{One of \code{"absolute"} or \code{"signed"} for event share plots.}
 }
 \value{
 A \code{ggplot} object.
@@ -74,6 +67,7 @@ These helpers provide dedicated historical decomposition visualisations for
 full-sample contribution paths and event-window composition summaries.
 }
 \examples{
+\donttest{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
@@ -88,4 +82,5 @@ hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
 p_share <- plot_hd_event_share(post, start = hd_times[1], end = hd_times[2])
 p_cum <- plot_hd_event_cumulative(post, start = hd_times[1], end = hd_times[2])
 p_dist <- plot_hd_event_distribution(post, start = hd_times[1], end = hd_times[2])
+}
 }

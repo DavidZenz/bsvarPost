@@ -58,6 +58,9 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 Defaults to \code{FALSE} because multiple component intervals in a single
 panel are usually hard to read.}
 
+\item{model}{Model label used when converting posterior objects to tidy
+plotting tables.}
+
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }

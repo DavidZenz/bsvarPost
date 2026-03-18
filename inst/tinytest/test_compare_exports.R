@@ -20,7 +20,7 @@ expect_true(isTRUE(attr(cmp_forecast_draws, "draws")))
 expect_equal(sort(unique(cmp_fevd$model)), c("alt", "base"))
 expect_equal(sort(unique(cmp_forecast$model)), c("alt", "base"))
 expect_true(all(c("variable", "shock", "horizon", "median", "lower", "upper") %in% names(cmp_fevd)))
-expect_true(all(c("variable", "time", "median", "lower", "upper") %in% names(cmp_forecast)))
+expect_true(all(c("variable", "horizon", "median", "lower", "upper") %in% names(cmp_forecast)))
 expect_true(all(c("draw", "value") %in% names(cmp_forecast_draws)))
 
 expect_error(

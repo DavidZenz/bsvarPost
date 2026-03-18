@@ -50,6 +50,9 @@ model-variable panel.}
 \item{collapse_other}{If \code{TRUE}, contributors outside \code{top_n} (or
 unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
+\item{model}{Model label used when converting posterior objects to tidy
+plotting tables.}
+
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }

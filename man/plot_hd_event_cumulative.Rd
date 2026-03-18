@@ -46,6 +46,9 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 
+\item{model}{Model label used when converting posterior objects to tidy
+plotting tables.}
+
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }

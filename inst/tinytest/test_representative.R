@@ -60,13 +60,13 @@ expect_error(
 
 expect_error(
   representative_irf(post_bsvar, horizon = -1),
-  pattern = "non-negative integer",
+  pattern = "non-negative",
   info = "representative_irf: invalid horizon is rejected."
 )
 
 expect_error(
   representative_cdm(post_bsvar, horizon = 4, probability = 1),
-  pattern = "single number in \\(0, 1\\)",
+  pattern = "strictly between 0 and 1",
   info = "representative_cdm: invalid probability is rejected."
 )
 

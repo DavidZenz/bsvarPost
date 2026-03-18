@@ -9,3 +9,5 @@
 vignettes/*.html
 .planning/
 CRAN-SUBMISSION
+Rplots.pdf
+vignettes/figures/hd-total-showcase.png
