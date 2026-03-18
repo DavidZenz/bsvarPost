@@ -23,17 +23,14 @@
 #'   model-variable panel.
 #' @param collapse_other If \code{TRUE}, contributors outside \code{top_n} (or
 #'   unmapped shocks under \code{shock_groups}) are collapsed into `"Other"`.
+#' @param model Model label used when converting posterior objects to tidy
+#'   plotting tables.
 #' @param by One of `"variable"` or `"shock"` for line-based displays.
-#' @param intervals If \code{TRUE}, show uncertainty ribbons for overlay plots.
-#'   Defaults to \code{FALSE} because multiple component intervals in a single
-#'   panel are usually hard to read.
-#' @param stack One of `"signed"` or `"absolute"` for stacked plots.
-#' @param start,end Event-window start and end indexes for event-specific plots.
-#' @param share One of `"absolute"` or `"signed"` for event share plots.
 #' @param ... Additional arguments passed to \code{tidy_hd()} or
 #'   \code{tidy_hd_event()} when conversion is required.
 #' @return A \code{ggplot} object.
 #' @examples
+#' \donttest{
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
@@ -48,6 +45,7 @@
 #' p_share <- plot_hd_event_share(post, start = hd_times[1], end = hd_times[2])
 #' p_cum <- plot_hd_event_cumulative(post, start = hd_times[1], end = hd_times[2])
 #' p_dist <- plot_hd_event_distribution(post, start = hd_times[1], end = hd_times[2])
+#' }
 NULL
 
 validate_hd_plot_table <- function(object, caller, object_type = "hd", draws = NULL) {
@@ -776,6 +774,9 @@ plot_hd_lines <- function(object, probability = 0.90, variables = NULL, shocks =
 #' shock-only component panel.
 #'
 #' @inheritParams plot_hd_lines
+#' @param intervals If \code{TRUE}, show uncertainty ribbons for overlay plots.
+#'   Defaults to \code{FALSE} because multiple component intervals in a single
+#'   panel are usually hard to read.
 #' @export
 plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
                             facet_scales = "free_y", include_observed = FALSE, include_baseline = FALSE,
@@ -859,6 +860,7 @@ plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks
 #' component and obtain the full displayed decomposition.
 #'
 #' @inheritParams plot_hd_lines
+#' @param stack One of `"signed"` or `"absolute"` for stacked plots.
 #' @export
 plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
                             facet_scales = "free_y", include_observed = FALSE, include_baseline = FALSE,
@@ -998,11 +1000,11 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
   manual_cols <- c(Observed = "black", `Decomposition total` = "#2166ac", Baseline = "#6c757d")
   extra_series <- setdiff(unique(plot_data$series), names(manual_cols))
   if (length(extra_series)) {
-    manual_cols <- c(manual_cols, setNames(grDevices::hcl.colors(length(extra_series), "Dark 3"), extra_series))
+    manual_cols <- c(manual_cols, stats::setNames(grDevices::hcl.colors(length(extra_series), "Dark 3"), extra_series))
   }
   manual_ltypes <- c(Observed = "solid", `Decomposition total` = "longdash", Baseline = "dotdash")
   if (length(extra_series)) {
-    manual_ltypes <- c(manual_ltypes, setNames(rep("solid", length(extra_series)), extra_series))
+    manual_ltypes <- c(manual_ltypes, stats::setNames(rep("solid", length(extra_series)), extra_series))
   }
 
   p <- ggplot2::ggplot(
@@ -1029,6 +1031,8 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
 #' Plot event contribution shares
 #'
 #' @inheritParams plot_hd_lines
+#' @param start,end Event-window start and end indexes for event-specific plots.
+#' @param share One of `"absolute"` or `"signed"` for event share plots.
 #' @export
 plot_hd_event_share <- function(object, start = NULL, end = start, probability = 0.90, variables = NULL,
                                 shocks = NULL, models = NULL, shock_groups = NULL, top_n = NULL,
@@ -1078,6 +1082,7 @@ plot_hd_event_share <- function(object, start = NULL, end = start, probability =
 #' Plot cumulative event-window contribution paths
 #'
 #' @inheritParams plot_hd_lines
+#' @param start,end Event-window start and end indexes for event-specific plots.
 #' @export
 plot_hd_event_cumulative <- function(object, start, end = start, probability = 0.90, variables = NULL,
                                      shocks = NULL, models = NULL, shock_groups = NULL, top_n = NULL,
@@ -1124,6 +1129,7 @@ plot_hd_event_cumulative <- function(object, start, end = start, probability = 0
 #' Plot event-window contribution uncertainty by shock
 #'
 #' @inheritParams plot_hd_lines
+#' @param start,end Event-window start and end indexes for event-specific plots.
 #' @export
 plot_hd_event_distribution <- function(object, start = NULL, end = start, probability = 0.90, variables = NULL,
                                        shocks = NULL, models = NULL, shock_groups = NULL, top_n = NULL,

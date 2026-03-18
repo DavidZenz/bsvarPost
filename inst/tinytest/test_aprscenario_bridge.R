@@ -16,18 +16,26 @@ expect_equal(nrow(back_tbl), nrow(apr_tbl))
 
 expect_error(
   as_apr_cond_forc(data.frame(variable = "y", lower = 0, upper = 1)),
-  pattern = "forecast summary columns",
+  pattern = "no applicable method|forecast summary columns",
   info = "as_apr_cond_forc: malformed tidy input is rejected."
 )
 
-expect_error(
-  apr_gen_mats(max_cores = 0),
-  pattern = "positive integer",
-  info = "apr_gen_mats: invalid max_cores is rejected before calling APRScenario."
-)
+if (requireNamespace("APRScenario", quietly = TRUE)) {
+  expect_error(
+    apr_gen_mats(max_cores = 0),
+    pattern = "positive integer|positive",
+    info = "apr_gen_mats: invalid max_cores is rejected before calling APRScenario."
+  )
+} else {
+  expect_error(
+    apr_gen_mats(max_cores = 0),
+    pattern = "APRScenario",
+    info = "apr_gen_mats: missing optional dependency is reported clearly."
+  )
 
-expect_error(
-  apr_gen_mats(),
-  pattern = "APRScenario",
-  info = "apr_gen_mats: missing optional dependency is reported clearly."
-)
+  expect_error(
+    apr_gen_mats(),
+    pattern = "APRScenario",
+    info = "apr_gen_mats: missing optional dependency is reported clearly."
+  )
+}

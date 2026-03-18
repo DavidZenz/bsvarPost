@@ -2,22 +2,20 @@
 
 * macOS (arm64, Apple M), R 4.5.3 (2026-03-11), macOS Tahoe 26.3.1 -- local R CMD check --as-cran
 * GitHub Actions: macOS/release, windows/release, ubuntu/devel, ubuntu/release, ubuntu/oldrel-1
-* WinBuilder (R-devel): tarball submitted for cross-platform validation;
-  results pending at office@davidzenz.com (~30 min)
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 1 warning | 3 notes
 
-NOTE: New submission
+The local `R CMD check --as-cran` result is clean with respect to package code,
+tests, documentation, and examples.
 
-This is the first CRAN submission of bsvarPost. The "New submission" NOTE
-is expected for first-time packages.
+The remaining warning and notes are local environment issues:
 
-Additional local-environment NOTEs (not package issues, will not appear on CRAN servers):
-- "unable to verify current time" — network time check blocked locally
-- "qpdf WARNING" — qpdf binary not installed locally (PDF size check)
-- "Skipping checking HTML validation: 'tidy' doesn't look like recent enough HTML Tidy" — local tidy version
+- WARNING: `qpdf` is not installed locally, so PDF size reduction checks are skipped.
+- NOTE: `unable to verify current time` because the local network time check is blocked.
+- NOTE: HTML validation is skipped because the local `tidy` binary is not recent enough.
+- NOTE: URL checks failed because this machine could not resolve external hosts during the check.
 
 ## Downstream dependencies
 

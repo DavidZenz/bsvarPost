@@ -45,6 +45,9 @@ Minimum pre-push checklist:
 6. Review the staged diff:
    - make sure only the intended feature, tests, and docs are included
 7. Push only after GitHub `R-CMD-check` is green.
+8. If you changed vignette/showcase visuals, verify that committed files under
+   [vignettes/figures](vignettes/figures) are only the images actually
+   referenced by articles and README content.
 
 Additional rules:
 
@@ -54,6 +57,34 @@ Additional rules:
 - If a step depends on generated files, do not parallelize it. Run it after the
   generation step completes.
 - If CI fails, inspect `00check.log` before changing code blindly.
+
+## Pre-generated Figures and pkgdown Assets
+
+The package intentionally versions a small set of pre-rendered PNGs used by the
+pkgdown site and vignette prose.
+
+Policy:
+
+- The source of truth for these assets is
+  [tools/render-vignette-figures.R](tools/render-vignette-figures.R).
+- Only commit figures that are actually referenced by:
+  - vignettes under [vignettes](vignettes)
+  - the package README
+- Pre-generated figures are documentation assets, not CRAN validation
+  artifacts.
+- Do not keep unused generated files in the repository.
+- Do not treat figure regeneration as part of the minimum CRAN check path unless
+  the code or vignette text that produces them changed.
+
+Operational rules:
+
+- Keep the renderer deterministic.
+- Keep fixture sizes modest and stable.
+- Regenerate only the affected figures when plot code or article usage changes.
+- Ignore or remove local render leftovers such as:
+  - `Rplots.pdf`
+  - unused showcase images
+  - editor swap files
 
 There is a helper script for the local portion of this checklist:
 

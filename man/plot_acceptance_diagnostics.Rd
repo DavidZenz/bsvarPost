@@ -9,6 +9,12 @@ plot_acceptance_diagnostics(
   metrics = NULL,
   models = NULL,
   show_flags = TRUE,
+  preset = c("default", "paper", "slides"),
+  base_size = 11,
+  base_family = "",
+  title = NULL,
+  subtitle = NULL,
+  caption = NULL,
   ...
 )
 }
@@ -23,11 +29,23 @@ object that can be converted with \code{acceptance_diagnostics()}.}
 \item{show_flags}{If \code{TRUE}, highlight flagged diagnostics in a different
 marker.}
 
+\item{preset}{One of \code{"default"}, \code{"paper"}, or \code{"slides"}.}
+
+\item{base_size}{Base font size.}
+
+\item{base_family}{Base font family.}
+
+\item{title}{Optional plot title.}
+
+\item{subtitle}{Optional plot subtitle.}
+
+\item{caption}{Optional plot caption.}
+
 \item{...}{Additional arguments passed to \code{acceptance_diagnostics()} when
 \code{object} is not already a diagnostics table.}
 }
 \value{
-A \code{ggplot} object.
+A grid plot object.
 }
 \description{
 Plot acceptance diagnostics across metrics and models

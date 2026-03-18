@@ -38,7 +38,7 @@ diag_tbl <- acceptance_diagnostics(
   )
 )
 diag_bundle <- report_bundle(diag_tbl, caption = "Acceptance diagnostics")
-expect_true(inherits(diag_bundle$plot, "ggplot"))
+expect_true(inherits(diag_bundle$plot, "bsvar_diagnostics_plot") || inherits(diag_bundle$plot, "ggplot"))
 expect_true("Metric" %in% names(diag_bundle$table))
 
 sim_tbl <- simultaneous_irf(post, horizon = 2, variable = 1, shock = 1)

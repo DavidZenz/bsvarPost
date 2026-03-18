@@ -53,6 +53,9 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
 \item{stack}{One of \code{"signed"} or \code{"absolute"} for stacked plots.}
 
+\item{model}{Model label used when converting posterior objects to tidy
+plotting tables.}
+
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }
