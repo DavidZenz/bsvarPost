@@ -1,51 +1,8 @@
-#' Export bsvarPost tables as reporting objects
+#' Create reporting bundles from bsvarPost outputs
 #'
-#' These helpers target the package's tidy tabular outputs, especially
-#' `bsvar_post_tbl` objects returned by the extraction, comparison, hypothesis,
-#' audit, and summary helpers.
+#' Bundle a reporting-ready table, a plot, and a caption into a compact object
+#' for downstream publication workflows.
 #'
-#' @param x A `bsvar_post_tbl` or data frame.
-#' @param ... Additional arguments passed to the backend formatter.
-#' @return
-#' \describe{
-#'   \item{\code{report_bundle()}}{A list of class \code{bsvar_report_bundle}
-#'     with elements \code{table}, \code{plot}, \code{caption}, and
-#'     \code{object_type}.}
-#'   \item{\code{report_table()}}{A data frame with reporting-ready columns.}
-#'   \item{\code{as_kable()}}{A \code{knitr::kable} object.}
-#'   \item{\code{as_gt()}}{A \code{gt::gt_tbl} object.}
-#'   \item{\code{as_flextable()}}{A \code{flextable::flextable} object.}
-#'   \item{\code{write_bsvar_csv()}}{The file path (returned invisibly).}
-#' }
-#' @examples
-#' data(us_fiscal_lsuw, package = "bsvars")
-#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
-#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
-#'
-#' irf_tbl <- tidy_irf(post, horizon = 3)
-#'
-#' # Report table
-#' rt <- report_table(irf_tbl)
-#' head(rt)
-#'
-#' # Report bundle
-#' rb <- report_bundle(irf_tbl)
-#' print(rb)
-#'
-#' # Write to CSV
-#' tmp <- tempfile(fileext = ".csv")
-#' write_bsvar_csv(irf_tbl, file = tmp)
-#' unlink(tmp)
-#'
-#' \dontrun{
-#' # Requires optional packages
-#' as_gt(irf_tbl)
-#' as_flextable(irf_tbl)
-#' }
-#' @name reporting
-NULL
-
-#' @rdname reporting
 #' @param object A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param plot Optional `ggplot` object. If omitted, `bsvarPost` will try to
 #'   choose a sensible default plot for the supplied table.
@@ -54,6 +11,17 @@ NULL
 #'   rendering.
 #' @param preset Reporting preset. Use `"compact"` for a narrower,
 #'   publication-oriented column selection.
+#' @param ... Additional arguments passed to the inferred plot builder.
+#' @return A list of class `bsvar_report_bundle` with elements `table`, `plot`,
+#'   `caption`, and `object_type`.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#'
+#' rb <- report_bundle(irf_tbl)
+#' print(rb)
 #' @export
 report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
                           preset = c("default", "compact"), ...) {
@@ -71,43 +39,72 @@ report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
   )
 }
 
-#' @rdname reporting
+#' Prepare reporting-ready tables
+#'
+#' Format `bsvarPost` outputs into data frames with stable column order and
+#' presentation-oriented names.
+#'
+#' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
+#' @param digits Optional number of digits used to round numeric columns before
+#'   rendering.
+#' @param preset Reporting preset. Use `"compact"` for a narrower,
+#'   publication-oriented column selection.
+#' @param ... Additional arguments passed to methods.
+#' @return A data frame with reporting-ready columns.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#'
+#' head(report_table(irf_tbl))
 #' @export
 report_table <- function(x, ...) {
   UseMethod("report_table")
 }
 
-#' @rdname reporting
+#' @rdname report_table
 #' @export
 report_table.bsvar_post_tbl <- function(x, digits = NULL, preset = c("default", "compact"), ...) {
   prepare_report_table(x, digits = digits, preset = preset)
 }
 
-#' @rdname reporting
+#' @rdname report_table
 #' @export
 report_table.data.frame <- function(x, digits = NULL, preset = c("default", "compact"), ...) {
   prepare_report_table(x, digits = digits, preset = preset)
 }
 
-#' @rdname reporting
+#' @rdname report_table
 #' @export
 report_table.bsvar_report_bundle <- function(x, digits = NULL, preset = c("default", "compact"), ...) {
   prepare_report_table(x, digits = digits, preset = preset)
 }
 
-#' @rdname reporting
+#' @rdname report_table
 #' @export
 report_table.default <- function(x, ...) {
   stop("`report_table()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' @rdname reporting
+#' Render bsvarPost tables with knitr::kable
+#'
+#' Convert `bsvarPost` tables or report bundles to a `knitr::kable` object.
+#'
+#' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
+#' @param caption Optional table caption.
+#' @param digits Optional number of digits used to round numeric columns before
+#'   rendering.
+#' @param preset Reporting preset. Use `"compact"` for a narrower,
+#'   publication-oriented column selection.
+#' @param ... Additional arguments passed to `knitr::kable()`.
+#' @return A `knitr::kable` object.
 #' @export
 as_kable <- function(x, ...) {
   UseMethod("as_kable")
 }
 
-#' @rdname reporting
+#' @rdname as_kable
 #' @export
 as_kable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
                                     preset = c("default", "compact"), ...) {
@@ -115,7 +112,7 @@ as_kable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
   knitr::kable(report_table, caption = caption, ...)
 }
 
-#' @rdname reporting
+#' @rdname as_kable
 #' @export
 as_kable.data.frame <- function(x, caption = NULL, digits = NULL,
                                 preset = c("default", "compact"), ...) {
@@ -123,7 +120,7 @@ as_kable.data.frame <- function(x, caption = NULL, digits = NULL,
   knitr::kable(report_table, caption = caption, ...)
 }
 
-#' @rdname reporting
+#' @rdname as_kable
 #' @export
 as_kable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
                                          preset = c("default", "compact"), ...) {
@@ -131,19 +128,30 @@ as_kable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
   knitr::kable(report_table, caption = caption %||% x$caption, ...)
 }
 
-#' @rdname reporting
+#' @rdname as_kable
 #' @export
 as_kable.default <- function(x, ...) {
   stop("`as_kable()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' @rdname reporting
+#' Render bsvarPost tables with gt
+#'
+#' Convert `bsvarPost` tables or report bundles to a `gt::gt_tbl` object.
+#'
+#' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
+#' @param caption Optional table caption.
+#' @param digits Optional number of digits used to round numeric columns before
+#'   rendering.
+#' @param preset Reporting preset. Use `"compact"` for a narrower,
+#'   publication-oriented column selection.
+#' @param ... Additional arguments passed to `gt::gt()`.
+#' @return A `gt::gt_tbl` object.
 #' @export
 as_gt <- function(x, ...) {
   UseMethod("as_gt")
 }
 
-#' @rdname reporting
+#' @rdname as_gt
 #' @export
 as_gt.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
                                  preset = c("default", "compact"), ...) {
@@ -156,7 +164,7 @@ as_gt.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
   out
 }
 
-#' @rdname reporting
+#' @rdname as_gt
 #' @export
 as_gt.data.frame <- function(x, caption = NULL, digits = NULL,
                              preset = c("default", "compact"), ...) {
@@ -169,7 +177,7 @@ as_gt.data.frame <- function(x, caption = NULL, digits = NULL,
   out
 }
 
-#' @rdname reporting
+#' @rdname as_gt
 #' @export
 as_gt.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
                                       preset = c("default", "compact"), ...) {
@@ -183,19 +191,31 @@ as_gt.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
   out
 }
 
-#' @rdname reporting
+#' @rdname as_gt
 #' @export
 as_gt.default <- function(x, ...) {
   stop("`as_gt()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' @rdname reporting
+#' Render bsvarPost tables with flextable
+#'
+#' Convert `bsvarPost` tables or report bundles to a
+#' `flextable::flextable` object.
+#'
+#' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
+#' @param caption Optional table caption.
+#' @param digits Optional number of digits used to round numeric columns before
+#'   rendering.
+#' @param preset Reporting preset. Use `"compact"` for a narrower,
+#'   publication-oriented column selection.
+#' @param ... Additional arguments passed to `flextable::flextable()`.
+#' @return A `flextable::flextable` object.
 #' @export
 as_flextable <- function(x, ...) {
   UseMethod("as_flextable")
 }
 
-#' @rdname reporting
+#' @rdname as_flextable
 #' @export
 as_flextable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
                                         preset = c("default", "compact"), ...) {
@@ -208,7 +228,7 @@ as_flextable.bsvar_post_tbl <- function(x, caption = NULL, digits = NULL,
   out
 }
 
-#' @rdname reporting
+#' @rdname as_flextable
 #' @export
 as_flextable.data.frame <- function(x, caption = NULL, digits = NULL,
                                     preset = c("default", "compact"), ...) {
@@ -221,7 +241,7 @@ as_flextable.data.frame <- function(x, caption = NULL, digits = NULL,
   out
 }
 
-#' @rdname reporting
+#' @rdname as_flextable
 #' @export
 as_flextable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
                                              preset = c("default", "compact"), ...) {
@@ -235,15 +255,31 @@ as_flextable.bsvar_report_bundle <- function(x, caption = NULL, digits = NULL,
   out
 }
 
-#' @rdname reporting
+#' @rdname as_flextable
 #' @export
 as_flextable.default <- function(x, ...) {
   stop("`as_flextable()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' @rdname reporting
+#' Export bsvarPost tables to CSV
+#'
+#' Write a reporting-ready table to disk as a CSV file.
+#'
+#' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param file Output CSV path.
 #' @param row.names Passed to [utils::write.csv()].
+#' @param preset Reporting preset. Use `"compact"` for a narrower,
+#'   publication-oriented column selection.
+#' @param ... Additional arguments passed to [utils::write.csv()].
+#' @return The normalized file path, invisibly.
+#' @examples
+#' data(us_fiscal_lsuw, package = "bsvars")
+#' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+#' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
+#' irf_tbl <- tidy_irf(post, horizon = 3)
+#' tmp <- tempfile(fileext = ".csv")
+#' write_bsvar_csv(irf_tbl, file = tmp)
+#' unlink(tmp)
 #' @export
 write_bsvar_csv <- function(x, file, row.names = FALSE,
                             preset = c("default", "compact"), ...) {
@@ -252,7 +288,11 @@ write_bsvar_csv <- function(x, file, row.names = FALSE,
   invisible(normalizePath(file, winslash = "/", mustWork = FALSE))
 }
 
-#' @rdname reporting
+#' Print bsvar_report_bundle objects
+#'
+#' @param x A `bsvar_report_bundle`.
+#' @param ... Unused.
+#' @return `x`, invisibly.
 #' @export
 print.bsvar_report_bundle <- function(x, ...) {
   cat("<bsvar_report_bundle>\n", sep = "")

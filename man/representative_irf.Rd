@@ -5,8 +5,6 @@
 \alias{representative_irf.default}
 \alias{representative_irf.PosteriorIR}
 \alias{representative_irf.PosteriorBSVAR}
-\alias{median_target_irf}
-\alias{most_likely_admissible_irf}
 \title{Representative impulse responses}
 \usage{
 representative_irf(object, ...)
@@ -39,10 +37,6 @@ representative_irf(object, ...)
   probability = 0.9,
   ...
 )
-
-median_target_irf(object, ...)
-
-most_likely_admissible_irf(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or a \code{PosteriorIR}.}
