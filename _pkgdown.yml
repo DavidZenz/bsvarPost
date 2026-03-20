@@ -106,6 +106,7 @@ reference:
       - as_gt
       - as_flextable
       - write_bsvar_csv
+      - print.bsvar_report_bundle
 
   - title: Bridges
     contents:
