@@ -17,6 +17,15 @@ rep_irf_direct <- representative_irf(irf_draws, center = "median")
 expect_true(inherits(rep_irf_direct, "RepresentativeIR"))
 expect_equal(attr(summary(rep_irf_direct), "object_type"), "irf")
 
+rep_irf_50 <- representative_irf(post_bsvar, horizon = 4, probability = 0.5)
+rep_irf_90 <- representative_irf(post_bsvar, horizon = 4, probability = 0.9)
+expect_equal(rep_irf_50$probability, 0.5)
+expect_true(
+  mean(rep_irf_50$target_summary$upper - rep_irf_50$target_summary$lower) <
+    mean(rep_irf_90$target_summary$upper - rep_irf_90$target_summary$lower),
+  info = "representative_irf: target_summary respects the requested probability."
+)
+
 rep_cdm <- median_target_cdm(post_bsvar, horizon = 4)
 expect_true(inherits(rep_cdm, "RepresentativeCDM"))
 cdm_draws <- cdm(post_bsvar, horizon = 4)

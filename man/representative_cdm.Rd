@@ -5,8 +5,6 @@
 \alias{representative_cdm.default}
 \alias{representative_cdm.PosteriorCDM}
 \alias{representative_cdm.PosteriorBSVAR}
-\alias{median_target_cdm}
-\alias{most_likely_admissible_cdm}
 \title{Representative cumulative dynamic multipliers}
 \usage{
 representative_cdm(object, ...)
@@ -41,10 +39,6 @@ representative_cdm(object, ...)
   scale_var = NULL,
   ...
 )
-
-median_target_cdm(object, ...)
-
-most_likely_admissible_cdm(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object or a \code{PosteriorIR}.}

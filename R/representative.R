@@ -214,25 +214,47 @@ representative_cdm.PosteriorBSVART <- representative_cdm_model
 #' @export
 representative_cdm.PosteriorBSVARSIGN <- representative_cdm_model
 
-#' @rdname representative_irf
+#' Median-target representative impulse responses
+#'
+#' Convenience wrapper for [representative_irf()] with `method = "median_target"`.
+#'
+#' @inheritParams representative_irf
+#' @returns Same as [representative_irf()].
 #' @export
 median_target_irf <- function(object, ...) {
   representative_irf(object, method = "median_target", ...)
 }
 
-#' @rdname representative_cdm
+#' Median-target representative cumulative dynamic multipliers
+#'
+#' Convenience wrapper for [representative_cdm()] with `method = "median_target"`.
+#'
+#' @inheritParams representative_cdm
+#' @returns Same as [representative_cdm()].
 #' @export
 median_target_cdm <- function(object, ...) {
   representative_cdm(object, method = "median_target", ...)
 }
 
-#' @rdname representative_irf
+#' Most-likely-admissible representative impulse responses
+#'
+#' Convenience wrapper for [representative_irf()] with
+#' `method = "most_likely_admissible"`.
+#'
+#' @inheritParams representative_irf
+#' @returns Same as [representative_irf()].
 #' @export
 most_likely_admissible_irf <- function(object, ...) {
   representative_irf(object, method = "most_likely_admissible", ...)
 }
 
-#' @rdname representative_cdm
+#' Most-likely-admissible representative cumulative dynamic multipliers
+#'
+#' Convenience wrapper for [representative_cdm()] with
+#' `method = "most_likely_admissible"`.
+#'
+#' @inheritParams representative_cdm
+#' @returns Same as [representative_cdm()].
 #' @export
 most_likely_admissible_cdm <- function(object, ...) {
   representative_cdm(object, method = "most_likely_admissible", ...)
