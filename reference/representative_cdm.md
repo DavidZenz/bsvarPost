@@ -40,10 +40,6 @@ representative_cdm(
   scale_var = NULL,
   ...
 )
-
-median_target_cdm(object, ...)
-
-most_likely_admissible_cdm(object, ...)
 ```
 
 ## Arguments
@@ -118,5 +114,5 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 rep_cdm <- representative_cdm(post, horizon = 3)
 rep_cdm$draw_index
-#> [1] 3
+#> [1] 4
 ```

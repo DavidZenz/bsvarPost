@@ -237,7 +237,7 @@ are allowed.
 ## Comparing hypothesis results across models
 
 Collecting pointwise probabilities for both models and formatting with
-[`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
+[`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/as_kable.md)
 gives a compact comparison:
 
 ``` r

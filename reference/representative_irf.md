@@ -38,10 +38,6 @@ representative_irf(
   probability = 0.9,
   ...
 )
-
-median_target_irf(object, ...)
-
-most_likely_admissible_irf(object, ...)
 ```
 
 ## Arguments
@@ -108,5 +104,5 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 rep_irf <- representative_irf(post, horizon = 3)
 rep_irf$draw_index
-#> [1] 4
+#> [1] 3
 ```

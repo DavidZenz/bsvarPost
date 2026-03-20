@@ -65,11 +65,11 @@ It focuses on what happens after estimation:
 ### Publication outputs
 
 - [`publish_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/publish_bsvar_plot.md)
-- [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-- [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-- [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md),
-  [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md),
-  [`as_flextable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
+- [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
+- [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/report_table.md)
+- [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/as_kable.md),
+  [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/as_gt.md),
+  [`as_flextable()`](https://davidzenz.github.io/bsvarPost/reference/as_flextable.md)
 
 ## Notes
 

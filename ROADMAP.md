@@ -74,8 +74,8 @@ Representative-model summaries for sign-restricted settings.
 
 Planned functions:
 
-- [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
-- [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
+- [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/median_target_irf.md)
+- [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.md)
 - `plot_median_target()`
 
 Goal:
@@ -364,9 +364,9 @@ Goal:
 
 Recommended next implementation order:
 
-1.  [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
+1.  [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/median_target_irf.md)
     /
-    [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
+    [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.md)
 2.  [`hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_irf.md)
     /
     [`hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.md)

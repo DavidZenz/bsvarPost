@@ -281,13 +281,13 @@ lag dynamics are allowed.</p>
 <h2 id="comparing-hypothesis-results-across-models">Comparing hypothesis results across models<a class="anchor" aria-label="anchor" href="#comparing-hypothesis-results-across-models"></a>
 </h2>
 <p>Collecting pointwise probabilities for both models and formatting
-with <code><a href="../reference/reporting.html">as_kable()</a></code> gives a compact comparison:</p>
+with <code><a href="../reference/as_kable.html">as_kable()</a></code> gives a compact comparison:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h_base</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="fl">3</span>, shocks <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                         horizon <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">8</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span>, model <span class="op">=</span> <span class="st">"p=1"</span><span class="op">)</span></span>
 <span><span class="va">h_alt</span>  <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span><span class="va">post_alt</span>, variables <span class="op">=</span> <span class="fl">3</span>, shocks <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                         horizon <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">8</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span>, model <span class="op">=</span> <span class="st">"p=3"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="va">h_base</span>, digits <span class="op">=</span> <span class="fl">2</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span><span class="va">h_base</span>, digits <span class="op">=</span> <span class="fl">2</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="6%">
@@ -425,7 +425,7 @@ with <code><a href="../reference/reporting.html">as_kable()</a></code> gives a c
 </tbody>
 </table>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/reporting.html">as_kable</a></span><span class="op">(</span><span class="va">h_alt</span>,  digits <span class="op">=</span> <span class="fl">2</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span><span class="va">h_alt</span>,  digits <span class="op">=</span> <span class="fl">2</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%;" class="table">
 <colgroup>
 <col width="6%">

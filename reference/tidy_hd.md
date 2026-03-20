@@ -41,12 +41,12 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 result <- tidy_hd(post)
 head(result)
 #> # A tibble: 6 × 10
-#>   model  object_type variable shock time     mean median    sd  lower upper
-#>   <chr>  <chr>       <chr>    <chr> <chr>   <dbl>  <dbl> <dbl>  <dbl> <dbl>
-#> 1 model1 hd          ttr      ttr   1948.25  0      0    0       0     0   
-#> 2 model1 hd          ttr      ttr   1948.5  -3.15  -3.32 0.621  -3.80 -2.41
-#> 3 model1 hd          ttr      ttr   1948.75 -5.08  -5.27 1.09   -6.35 -3.93
-#> 4 model1 hd          ttr      ttr   1949    -5.84  -5.84 1.48   -7.70 -4.34
-#> 5 model1 hd          ttr      ttr   1949.25 -6.76  -6.58 2.01   -9.31 -4.74
-#> 6 model1 hd          ttr      ttr   1949.5  -7.95  -7.63 2.61  -11.3  -5.41
+#>   model  object_type variable shock time     mean median    sd lower  upper
+#>   <chr>  <chr>       <chr>    <chr> <chr>   <dbl>  <dbl> <dbl> <dbl>  <dbl>
+#> 1 model1 hd          ttr      ttr   1948.25  0      0    0      0     0    
+#> 2 model1 hd          ttr      ttr   1948.5  -1.55  -1.91 0.935 -2.05 -0.283
+#> 3 model1 hd          ttr      ttr   1948.75 -2.23  -2.93 1.88  -3.31  0.306
+#> 4 model1 hd          ttr      ttr   1949    -1.96  -2.87 2.71  -3.77  1.69 
+#> 5 model1 hd          ttr      ttr   1949.25 -1.82  -2.95 3.57  -4.24  2.98 
+#> 6 model1 hd          ttr      ttr   1949.5  -1.91  -3.44 4.48  -4.78  4.14 
 ```

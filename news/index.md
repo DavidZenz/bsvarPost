@@ -58,9 +58,9 @@ Initial CRAN release.
   [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
   identify the posterior draw closest to the pointwise median across all
   impulse-response or CDM paths.
-- [`most_likely_admissible_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
+- [`most_likely_admissible_irf()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.md)
   and
-  [`most_likely_admissible_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
+  [`most_likely_admissible_cdm()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_cdm.md)
   select the draw with the highest kernel score among
   sign-restriction-admissible draws.
 
@@ -134,19 +134,19 @@ Initial CRAN release.
 - [`publish_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/publish_bsvar_plot.md)
   applies family-aware publication templates across comparison,
   representative, diagnostics, event-study, and joint-inference outputs.
-- [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md),
-  [`as_flextable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md),
+- [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/as_gt.md),
+  [`as_flextable()`](https://davidzenz.github.io/bsvarPost/reference/as_flextable.md),
   and
-  [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
+  [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/as_kable.md)
   convert tidy bsvarPost tables to formatted gt, flextable, and
   knitr::kable outputs for publication documents.
-- [`write_bsvar_csv()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
+- [`write_bsvar_csv()`](https://davidzenz.github.io/bsvarPost/reference/write_bsvar_csv.md)
   writes any tidy bsvarPost table to CSV.
-- [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
+- [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
   produces a paired plot-and-table bundle suitable for publication
   workflows, with support for representative-response,
   acceptance-diagnostics, simultaneous-band, joint-hypothesis, and
   event-study objects.
-- [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
+- [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/report_table.md)
   generates compact or default publication-oriented table layouts with
   family-specific labels and subtitles.

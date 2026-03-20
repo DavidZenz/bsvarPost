@@ -14,7 +14,7 @@ alternative specification.
 
 Pointwise posterior medians may not correspond to any one coherent
 structural draw.
-[`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
+[`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/median_target_irf.md)
 finds the stored draw whose IRF matrix is closest (in L2 distance) to
 the posterior median. The result is a single self-consistent model that
 typifies the posterior center.
@@ -184,7 +184,7 @@ compare_duration_response(
 #> #   lower_duration <dbl>, upper_duration <dbl>
 ```
 
-[`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
+[`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/as_kable.md)
 formats any `bsvar_post_tbl` as a compact
 [`knitr::kable`](https://rdrr.io/pkg/knitr/man/kable.html) table ready
 for Rmd reports.

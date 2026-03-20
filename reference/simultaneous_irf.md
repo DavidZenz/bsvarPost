@@ -157,13 +157,13 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 sb <- simultaneous_irf(post, horizon = 3)
 head(sb)
 #> # A tibble: 6 × 10
-#>   model  object_type      variable shock horizon median   lower upper
-#>   <chr>  <chr>            <chr>    <chr>   <dbl>  <dbl>   <dbl> <dbl>
-#> 1 model1 simultaneous_irf ttr      ttr         0 0.0441 -0.0751 0.163
-#> 2 model1 simultaneous_irf gs       ttr         0 0.0371 -0.0822 0.156
-#> 3 model1 simultaneous_irf gdp      ttr         0 0.0359 -0.0834 0.155
-#> 4 model1 simultaneous_irf ttr      gs          0 0      -0.119  0.119
-#> 5 model1 simultaneous_irf gs       gs          0 0.0586 -0.0606 0.178
-#> 6 model1 simultaneous_irf gdp      gs          0 0.0309 -0.0883 0.150
+#>   model  object_type      variable shock horizon  median  lower upper
+#>   <chr>  <chr>            <chr>    <chr>   <dbl>   <dbl>  <dbl> <dbl>
+#> 1 model1 simultaneous_irf ttr      ttr         0 0.0346  -0.301 0.370
+#> 2 model1 simultaneous_irf gs       ttr         0 0.0211  -0.315 0.357
+#> 3 model1 simultaneous_irf gdp      ttr         0 0.00933 -0.326 0.345
+#> 4 model1 simultaneous_irf ttr      gs          0 0       -0.336 0.336
+#> 5 model1 simultaneous_irf gs       gs          0 0.0939  -0.242 0.430
+#> 6 model1 simultaneous_irf gdp      gs          0 0.0122  -0.324 0.348
 #> # ℹ 2 more variables: simultaneous_prob <dbl>, critical_value <dbl>
 ```

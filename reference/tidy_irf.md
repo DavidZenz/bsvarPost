@@ -67,13 +67,12 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 result <- tidy_irf(post, horizon = 3)
 head(result)
 #> # A tibble: 6 × 10
-#>   model  object_type variable shock horizon    mean  median      sd     lower
-#>   <chr>  <chr>       <chr>    <chr>   <dbl>   <dbl>   <dbl>   <dbl>     <dbl>
-#> 1 model1 irf         ttr      ttr         0 0.0376  0.0333  0.01000  0.0322  
-#> 2 model1 irf         ttr      ttr         1 0.0354  0.0295  0.0114   0.0293  
-#> 3 model1 irf         ttr      ttr         2 0.0347  0.0267  0.0159   0.0251  
-#> 4 model1 irf         ttr      ttr         3 0.0363  0.0241  0.0251   0.0213  
-#> 5 model1 irf         ttr      gs          0 0       0       0        0       
-#> 6 model1 irf         ttr      gs          1 0.00817 0.00186 0.0131  -0.000285
-#> # ℹ 1 more variable: upper <dbl>
+#>   model  object_type variable shock horizon   mean   median     sd   lower upper
+#>   <chr>  <chr>       <chr>    <chr>   <dbl>  <dbl>    <dbl>  <dbl>   <dbl> <dbl>
+#> 1 model1 irf         ttr      ttr         0 0.0521 0.0316   0.0354  0.0291 0.101
+#> 2 model1 irf         ttr      ttr         1 0.0739 0.0286   0.0713  0.0263 0.171
+#> 3 model1 irf         ttr      ttr         2 0.0868 0.0261   0.104   0.0236 0.231
+#> 4 model1 irf         ttr      ttr         3 0.0950 0.0240   0.123   0.0209 0.265
+#> 5 model1 irf         ttr      gs          0 0      0        0       0      0    
+#> 6 model1 irf         ttr      gs          1 0.0306 0.000989 0.0823 -0.0209 0.141
 ```

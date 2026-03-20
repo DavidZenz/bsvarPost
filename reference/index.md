@@ -46,13 +46,17 @@
 ## Representative Summaries and Audits
 
 - [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
-  [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
-  [`most_likely_admissible_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
   : Representative cumulative dynamic multipliers
 - [`representative_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
-  [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
-  [`most_likely_admissible_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
   : Representative impulse responses
+- [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.md)
+  : Median-target representative cumulative dynamic multipliers
+- [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/median_target_irf.md)
+  : Median-target representative impulse responses
+- [`most_likely_admissible_cdm()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_cdm.md)
+  : Most-likely-admissible representative cumulative dynamic multipliers
+- [`most_likely_admissible_irf()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.md)
+  : Most-likely-admissible representative impulse responses
 - [`hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.md)
   : Posterior probability statements for cumulative dynamic multipliers
 - [`hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_irf.md)
@@ -159,14 +163,20 @@
   : Add publication-oriented annotations to a bsvarPost plot
 - [`publish_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/publish_bsvar_plot.md)
   : Build a publication-ready bsvarPost plot
-- [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-  [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-  [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-  [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-  [`as_flextable()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-  [`write_bsvar_csv()`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-  [`print(`*`<bsvar_report_bundle>`*`)`](https://davidzenz.github.io/bsvarPost/reference/reporting.md)
-  : Export bsvarPost tables as reporting objects
+- [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
+  : Create reporting bundles from bsvarPost outputs
+- [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/report_table.md)
+  : Prepare reporting-ready tables
+- [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/as_kable.md)
+  : Render bsvarPost tables with knitr::kable
+- [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/as_gt.md)
+  : Render bsvarPost tables with gt
+- [`as_flextable()`](https://davidzenz.github.io/bsvarPost/reference/as_flextable.md)
+  : Render bsvarPost tables with flextable
+- [`write_bsvar_csv()`](https://davidzenz.github.io/bsvarPost/reference/write_bsvar_csv.md)
+  : Export bsvarPost tables to CSV
+- [`print(`*`<bsvar_report_bundle>`*`)`](https://davidzenz.github.io/bsvarPost/reference/print.bsvar_report_bundle.md)
+  : Print bsvar_report_bundle objects
 
 ## Bridges
 

@@ -72,13 +72,13 @@ print(sr)
 #> # A tibble: 9 × 14
 #>   model object_type variable shock event_start event_end    mean   median     sd
 #>   <chr> <chr>       <chr>    <chr> <chr>       <chr>       <dbl>    <dbl>  <dbl>
-#> 1 mode… hd_event    gdp      gdp   1948.25     1948.5     1.27    1.18    0.884 
-#> 2 mode… hd_event    gdp      ttr   1948.25     1948.5     0.254   0.168   0.245 
-#> 3 mode… hd_event    gdp      gs    1948.25     1948.5     0.0344  0.00353 0.0888
-#> 4 mode… hd_event    gs       gs    1948.25     1948.5     0.654   0.391   0.679 
-#> 5 mode… hd_event    gs       ttr   1948.25     1948.5    -0.0352 -0.00373 0.0821
+#> 1 mode… hd_event    gdp      gdp   1948.25     1948.5     1.24    1.39    1.02  
+#> 2 mode… hd_event    gdp      ttr   1948.25     1948.5     0.184   0.201   0.215 
+#> 3 mode… hd_event    gdp      gs    1948.25     1948.5    -0.0123 -0.0199  0.0418
+#> 4 mode… hd_event    gs       gs    1948.25     1948.5    -0.0438  0.0790  0.252 
+#> 5 mode… hd_event    gs       ttr   1948.25     1948.5    -0.0137 -0.00600 0.0695
 #> 6 mode… hd_event    gs       gdp   1948.25     1948.5     0       0       0     
-#> 7 mode… hd_event    ttr      ttr   1948.25     1948.5    -2.42   -2.52    1.27  
+#> 7 mode… hd_event    ttr      ttr   1948.25     1948.5    -2.66   -2.96    0.853 
 #> 8 mode… hd_event    ttr      gdp   1948.25     1948.5     0       0       0     
 #> 9 mode… hd_event    ttr      gs    1948.25     1948.5     0       0       0     
 #> # ℹ 5 more variables: lower <dbl>, upper <dbl>, ranking <chr>,

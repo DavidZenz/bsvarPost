@@ -148,13 +148,13 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.5")
 head(hd_event)
 #> # A tibble: 6 × 11
-#>   model  object_type variable shock event_start event_end    mean  median     sd
-#>   <chr>  <chr>       <chr>    <chr> <chr>       <chr>       <dbl>   <dbl>  <dbl>
-#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5     1.38    1.58   1.05  
-#> 2 model1 hd_event    gs       gdp   1948.25     1948.5     0       0      0     
-#> 3 model1 hd_event    ttr      gdp   1948.25     1948.5     0       0      0     
-#> 4 model1 hd_event    gdp      gs    1948.25     1948.5     0.0327  0.0523 0.0754
-#> 5 model1 hd_event    gs       gs    1948.25     1948.5    -0.503  -0.402  0.874 
-#> 6 model1 hd_event    ttr      gs    1948.25     1948.5     0       0      0     
+#>   model  object_type variable shock event_start event_end   mean  median    sd
+#>   <chr>  <chr>       <chr>    <chr> <chr>       <chr>      <dbl>   <dbl> <dbl>
+#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5    0.872   1.49   1.79 
+#> 2 model1 hd_event    gs       gdp   1948.25     1948.5    0       0      0    
+#> 3 model1 hd_event    ttr      gdp   1948.25     1948.5    0       0      0    
+#> 4 model1 hd_event    gdp      gs    1948.25     1948.5    0.0469  0.0461 0.115
+#> 5 model1 hd_event    gs       gs    1948.25     1948.5    0.0715 -0.232  0.703
+#> 6 model1 hd_event    ttr      gs    1948.25     1948.5    0       0      0    
 #> # ℹ 2 more variables: lower <dbl>, upper <dbl>
 ```
