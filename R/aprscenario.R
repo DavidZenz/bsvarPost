@@ -150,6 +150,9 @@ apr_gen_mats <- function(posterior = NULL, specification = NULL, max_cores = 1) 
   if (!requireNamespace("APRScenario", quietly = TRUE)) {
     stop("Package `APRScenario` must be installed to use `apr_gen_mats()`.", call. = FALSE)
   }
+  if (!is.numeric(max_cores) || length(max_cores) != 1 || max_cores < 1 || max_cores != as.integer(max_cores)) {
+    stop("`max_cores` must be a positive integer.", call. = FALSE)
+  }
   APRScenario::gen_mats(posterior = posterior, specification = specification, max_cores = max_cores)
 }
 
