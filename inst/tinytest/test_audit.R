@@ -26,6 +26,16 @@ set.seed(1)
 spec_sign <- specify_bsvarSIGN$new(optimism * 100, p = 4, sign_irf = sign_irf)
 post_sign <- estimate(spec_sign, S = 5, thin = 1, show_progress = FALSE)
 
+# The sign-identified posterior uses shared tidy implementations but distinct
+# S3 registrations and upstream draw shapes. Exercise that boundary once here,
+# reusing the audit fixture.
+sign_tidy_results <- list(
+  tidy_irf(post_sign, horizon = 2),
+  tidy_cdm(post_sign, horizon = 2),
+  tidy_fevd(post_sign, horizon = 2)
+)
+expect_true(all(vapply(sign_tidy_results, inherits, logical(1), "bsvar_post_tbl")))
+
 default_audit <- restriction_audit(post_sign, zero_tol = 1e-6)
 expect_true(any(default_audit$restriction_type == "irf_zero"))
 expect_true(any(default_audit$restriction_type == "irf_sign"))

@@ -51,3 +51,14 @@ expect_equal(total_tbl$median_duration, stats::median(manual_total))
 duration_cdm_tbl <- duration_response(post_bsvar, type = "cdm", horizon = 4, variable = 1, shock = 1, relation = ">=", value = 0, mode = "total")
 manual_cdm_total <- vapply(seq_len(dim(cdm_draws)[4]), function(s) sum(cdm_draws[1, 1, , s] >= 0), numeric(1))
 expect_equal(duration_cdm_tbl$median_duration, stats::median(manual_cdm_total))
+
+# Consecutive duration includes the full path when no horizon violates the
+# predicate, including the final-horizon branch.
+always_positive <- array(
+  c(1, 2, 3, 2, 3, 4),
+  dim = c(1, 1, 3, 2),
+  dimnames = list("y", "shock", as.character(0:2), as.character(1:2))
+)
+class(always_positive) <- c("PosteriorIR", class(always_positive))
+full_duration <- duration_response(always_positive, relation = ">", value = 0)
+expect_equal(full_duration$median_duration, 3)

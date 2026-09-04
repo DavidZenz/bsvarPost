@@ -22,6 +22,17 @@ manual_pair <- irf_draws[1:2, 1, 3, , drop = FALSE] - array(irf_draws[1, 1, 1, ]
 expect_equal(pair_res$posterior_prob, c(mean(manual_pair[1, 1, 1, ] > 0), mean(manual_pair[2, 1, 1, ] > 0)))
 expect_equal(pair_res$rhs_horizon, c(0, 0))
 
+# A one-to-one comparison takes the non-broadcast pairing path.
+single_pair <- hypothesis_irf(
+  post_bsvar,
+  variable = 1,
+  shock = 1,
+  horizon = 2,
+  relation = ">",
+  compare_to = list(variable = 1, shock = 1, horizon = 0)
+)
+expect_equal(single_pair$posterior_prob, mean(irf_draws[1, 1, 3, ] > irf_draws[1, 1, 1, ]))
+
 abs_draws <- hypothesis_irf(
   post_bsvar,
   variable = 1,

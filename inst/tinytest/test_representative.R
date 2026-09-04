@@ -38,6 +38,11 @@ expect_error(
   pattern = "PosteriorBSVARSIGN",
   info = "most_likely_admissible_irf: unsupported classes error clearly."
 )
+expect_error(
+  most_likely_admissible_cdm(post_bsvar, horizon = 4),
+  pattern = "PosteriorBSVARSIGN",
+  info = "most_likely_admissible_cdm: unsupported classes error clearly."
+)
 
 data(optimism)
 sign_irf <- matrix(c(0, 1, rep(NA, 23)), 5, 5)

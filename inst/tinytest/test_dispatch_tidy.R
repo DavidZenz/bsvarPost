@@ -3,50 +3,43 @@ Sys.setenv(KMP_DUPLICATE_LIB_OK = "TRUE")
 data(us_fiscal_lsuw, package = "bsvars")
 set.seed(1)
 spec_sv <- bsvars::specify_bsvar_sv$new(us_fiscal_lsuw, p = 1)
-post_sv <- bsvars::estimate(spec_sv, S = 5, thin = 1, show_progress = FALSE)
+post_sv <- bsvars::estimate(spec_sv, S = 2, thin = 1, show_progress = FALSE)
 
-# tidy_irf dispatches for PosteriorBSVARSV
-irf_sv <- tidy_irf(post_sv, horizon = 2)
-expect_true(inherits(irf_sv, "bsvar_post_tbl"))
-expect_true(nrow(irf_sv) > 0)
-expect_true(all(c("variable", "shock", "horizon", "median", "lower", "upper") %in% names(irf_sv)))
+# One vertical smoke matrix protects the PosteriorBSVARSV registrations. The
+# detailed numerical contracts for each function are covered by focused tests.
+tidy_results <- list(
+  tidy_irf(post_sv, horizon = 2),
+  tidy_cdm(post_sv, horizon = 2),
+  tidy_fevd(post_sv, horizon = 2),
+  tidy_forecast(post_sv, horizon = 2),
+  tidy_shocks(post_sv),
+  tidy_hd(post_sv)
+)
+expect_true(all(vapply(tidy_results, inherits, logical(1), "bsvar_post_tbl")))
 
-# tidy_cdm dispatches for PosteriorBSVARSV
-cdm_sv <- tidy_cdm(post_sv, horizon = 2)
-expect_true(inherits(cdm_sv, "bsvar_post_tbl"))
-expect_true(nrow(cdm_sv) > 0)
-expect_true(all(c("variable", "shock", "horizon", "median", "lower", "upper") %in% names(cdm_sv)))
+inference_results <- list(
+  hypothesis_irf(post_sv, variable = 1, shock = 1, horizon = 1, relation = ">"),
+  hypothesis_cdm(post_sv, variable = 1, shock = 1, horizon = 1, relation = ">"),
+  joint_hypothesis_irf(post_sv, variable = 1, shock = 1, horizon = 0:1, relation = ">"),
+  joint_hypothesis_cdm(post_sv, variable = 1, shock = 1, horizon = 0:1, relation = ">"),
+  simultaneous_irf(post_sv, horizon = 2),
+  simultaneous_cdm(post_sv, horizon = 2)
+)
+expect_true(all(vapply(inference_results, inherits, logical(1), "bsvar_post_tbl")))
 
-# tidy_fevd dispatches for PosteriorBSVARSV
-fevd_sv <- tidy_fevd(post_sv, horizon = 2)
-expect_true(inherits(fevd_sv, "bsvar_post_tbl"))
-expect_true(nrow(fevd_sv) > 0)
-expect_true(all(c("variable", "shock", "horizon", "median", "lower", "upper") %in% names(fevd_sv)))
+representative_results <- list(
+  representative_irf(post_sv, horizon = 2),
+  representative_cdm(post_sv, horizon = 2)
+)
+expect_true(
+  inherits(representative_results[[1]], "RepresentativeIR") &&
+    inherits(representative_results[[2]], "RepresentativeCDM")
+)
 
-# tidy_forecast dispatches for PosteriorBSVARSV
-fc_sv <- tidy_forecast(post_sv, horizon = 2)
-expect_true(inherits(fc_sv, "bsvar_post_tbl"))
-expect_true(nrow(fc_sv) > 0)
-expect_true("variable" %in% names(fc_sv))
-
-# tidy_shocks dispatches for PosteriorBSVARSV
-sh_sv <- tidy_shocks(post_sv)
-expect_true(inherits(sh_sv, "bsvar_post_tbl"))
-expect_true(nrow(sh_sv) > 0)
-expect_true(all(c("variable", "median", "lower", "upper") %in% names(sh_sv)))
-
-# tidy_hd dispatches for PosteriorBSVARSV
-hd_sv <- tidy_hd(post_sv)
-expect_true(inherits(hd_sv, "bsvar_post_tbl"))
-expect_true(nrow(hd_sv) > 0)
-expect_true(all(c("variable", "shock", "median", "lower", "upper") %in% names(hd_sv)))
-
-# Variable names are consistent with model input
-expected_names <- rownames(post_sv$last_draw$data_matrices$Y)
-expect_equal(sort(unique(irf_sv$variable)), sort(expected_names))
-expect_equal(sort(unique(irf_sv$shock)), sort(expected_names))
-expect_equal(sort(unique(cdm_sv$shock)), sort(expected_names))
-expect_equal(sort(unique(fevd_sv$shock)), sort(expected_names))
-expect_equal(sort(unique(sh_sv$variable)), sort(expected_names))
-expect_equal(sort(unique(hd_sv$variable)), sort(expected_names))
-expect_equal(sort(unique(hd_sv$shock)), sort(expected_names))
+summary_results <- list(
+  peak_response(post_sv, horizon = 2),
+  duration_response(post_sv, horizon = 2, relation = ">", value = 0),
+  half_life_response(post_sv, horizon = 2),
+  time_to_threshold(post_sv, horizon = 2, relation = ">", value = 0)
+)
+expect_true(all(vapply(summary_results, inherits, logical(1), "bsvar_post_tbl")))
