@@ -26,6 +26,11 @@ if (requireNamespace("APRScenario", quietly = TRUE)) {
     pattern = "positive integer|positive",
     info = "apr_gen_mats: invalid max_cores is rejected before calling APRScenario."
   )
+  expect_error(
+    apr_gen_mats(max_cores = Inf),
+    pattern = "positive integer",
+    info = "apr_gen_mats: infinite max_cores is rejected before integer coercion."
+  )
 } else {
   expect_error(
     apr_gen_mats(max_cores = 0),

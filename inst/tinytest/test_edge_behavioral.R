@@ -102,3 +102,15 @@ expect_error(
   "out of bounds",
   info = "resolve_selection: out-of-range integer produces informative error"
 )
+
+expect_error(
+  bsvarPost:::resolve_selection(1.9, c("a", "b")),
+  "finite whole numbers",
+  info = "resolve_selection: fractional numeric indices are rejected instead of truncated"
+)
+
+expect_error(
+  bsvarPost:::resolve_selection(Inf, c("a", "b")),
+  "finite whole numbers",
+  info = "resolve_selection: infinite numeric indices are rejected before coercion"
+)

@@ -14,6 +14,23 @@ diag_summary <- summary(diag_tbl)
 expect_true(inherits(diag_summary, "SummaryAcceptanceDiagnostics"))
 expect_true(all(c("warnings", "diagnostics") %in% names(diag_summary)))
 
+flagged_tbl <- diag_tbl
+flagged_tbl$flag <- FALSE
+flagged_tbl$message <- ""
+flagged_tbl$flag[1:2] <- TRUE
+flagged_tbl$message[1:2] <- c("first warning", "second warning")
+flagged_summary <- summary(flagged_tbl)
+expect_equal(
+  flagged_summary$warnings$metric,
+  flagged_tbl$metric[1:2],
+  info = "summary.bsvar_post_tbl: vectorized diagnostic flags are retained."
+)
+expect_equal(
+  flagged_summary$warnings$message,
+  c("first warning", "second warning"),
+  info = "summary.bsvar_post_tbl: warning messages remain paired with flagged metrics."
+)
+
 metrics <- diag_tbl$metric
 expect_true(all(c(
   "posterior_draws",

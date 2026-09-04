@@ -82,6 +82,12 @@ resolve_selection <- function(values, labels) {
     }
     return(idx)
   }
+  if (!is.numeric(values)) {
+    stop("Selections must use character labels or numeric indices.", call. = FALSE)
+  }
+  if (anyNA(values) || any(!is.finite(values)) || any(values != floor(values))) {
+    stop("Selection indices must be finite whole numbers.", call. = FALSE)
+  }
   idx <- as.integer(values)
   if (anyNA(idx) || any(idx < 1L) || any(idx > length(labels))) {
     stop("Selection indices are out of bounds.", call. = FALSE)

@@ -20,6 +20,26 @@ expect_true(inherits(p2, "bsvar_diagnostics_plot"))
 expect_true(inherits(p1, "grob"))
 expect_true(inherits(p2, "grob"))
 
+cmp_summary <- summary(cmp_diag)
+draw_rows <- cmp_diag[cmp_diag$metric == "posterior_draws", , drop = FALSE]
+expected_draws <- stats::setNames(draw_rows$value, draw_rows$model)
+expect_equal(
+  cmp_summary$posterior_draws,
+  expected_draws,
+  info = "summary.bsvar_post_tbl: comparison diagnostics retain one value per model."
+)
+expect_true(
+  "model" %in% names(cmp_summary$warnings),
+  info = "summary.bsvar_post_tbl: comparison warnings retain their model grouping."
+)
+summary_output <- capture.output(print(cmp_summary))
+expect_true(
+  all(vapply(names(expected_draws), function(model) {
+    any(grepl(paste0("model: ", model), summary_output, fixed = TRUE))
+  }, logical(1))),
+  info = "print.SummaryAcceptanceDiagnostics: comparison output prints every model."
+)
+
 expect_error(
   plot_acceptance_diagnostics(cmp_diag, metrics = "does_not_exist"),
   "No diagnostics remain",

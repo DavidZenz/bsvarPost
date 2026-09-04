@@ -188,8 +188,16 @@ acceptance_diagnostics.default <- function(object, ...) {
 
 diagnostic_value <- function(object, metric) {
   row <- object[object$metric == metric, , drop = FALSE]
-  if (!nrow(row)) return(NA)
-  row$value[[1]]
+  models <- unique(as.character(object$model))
+  values <- vapply(models, function(model) {
+    model_row <- row[as.character(row$model) == model, , drop = FALSE]
+    if (!nrow(model_row)) NA_real_ else as.numeric(model_row$value[[1]])
+  }, numeric(1))
+
+  if (length(values) == 1L) {
+    return(unname(values[[1]]))
+  }
+  stats::setNames(values, models)
 }
 
 #' @export
@@ -198,13 +206,20 @@ summary.bsvar_post_tbl <- function(object, ...) {
     return(object)
   }
 
-  warnings <- object[isTRUE(object$flag), c("metric", "value", "message"), drop = FALSE]
+  models <- unique(as.character(object$model))
+  flagged <- !is.na(object$flag) & object$flag
+  warning_columns <- c(if (length(models) > 1L) "model", "metric", "value", "message")
+  warnings <- object[flagged, warning_columns, drop = FALSE]
   if (!nrow(warnings)) {
-    warnings <- tibble::tibble(metric = character(), value = numeric(), message = character())
+    warnings <- if (length(models) > 1L) {
+      tibble::tibble(model = character(), metric = character(), value = numeric(), message = character())
+    } else {
+      tibble::tibble(metric = character(), value = numeric(), message = character())
+    }
   }
 
   out <- list(
-    model = unique(object$model),
+    model = models,
     posterior_draws = diagnostic_value(object, "posterior_draws"),
     effective_sample_size = diagnostic_value(object, "effective_sample_size"),
     irf_sign_restrictions = diagnostic_value(object, "irf_sign_restrictions"),
@@ -223,20 +238,32 @@ summary.bsvar_post_tbl <- function(object, ...) {
 #' @export
 print.SummaryAcceptanceDiagnostics <- function(x, ...) {
   cat("Acceptance diagnostics\n")
-  cat("  model: ", paste(x$model, collapse = ", "), "\n", sep = "")
-  cat("  posterior draws: ", x$posterior_draws, "\n", sep = "")
-  cat("  effective sample size: ", format(x$effective_sample_size, digits = 4), "\n", sep = "")
-  cat("  IRF sign restrictions: ", x$irf_sign_restrictions, "\n", sep = "")
-  cat("  zero restrictions: ", x$zero_restrictions, "\n", sep = "")
-  cat("  structural sign restrictions: ", x$structural_sign_restrictions, "\n", sep = "")
-  cat("  narrative restrictions: ", x$narrative_restrictions, "\n", sep = "")
-  cat("  kernel zero share: ", format(x$kernel_zero_share, digits = 4), "\n", sep = "")
-  cat("  kernel CV: ", format(x$kernel_cv, digits = 4), "\n", sep = "")
+  value_for_model <- function(value, model) {
+    if (length(x$model) == 1L) value else unname(value[[model]])
+  }
 
-  if (nrow(x$warnings) > 0) {
-    cat("\nWarnings\n")
-    for (i in seq_len(nrow(x$warnings))) {
-      cat("  - ", x$warnings$metric[i], ": ", x$warnings$message[i], "\n", sep = "")
+  for (model in x$model) {
+    if (length(x$model) > 1L) cat("\n")
+    cat("  model: ", model, "\n", sep = "")
+    cat("  posterior draws: ", value_for_model(x$posterior_draws, model), "\n", sep = "")
+    cat("  effective sample size: ", format(value_for_model(x$effective_sample_size, model), digits = 4), "\n", sep = "")
+    cat("  IRF sign restrictions: ", value_for_model(x$irf_sign_restrictions, model), "\n", sep = "")
+    cat("  zero restrictions: ", value_for_model(x$zero_restrictions, model), "\n", sep = "")
+    cat("  structural sign restrictions: ", value_for_model(x$structural_sign_restrictions, model), "\n", sep = "")
+    cat("  narrative restrictions: ", value_for_model(x$narrative_restrictions, model), "\n", sep = "")
+    cat("  kernel zero share: ", format(value_for_model(x$kernel_zero_share, model), digits = 4), "\n", sep = "")
+    cat("  kernel CV: ", format(value_for_model(x$kernel_cv, model), digits = 4), "\n", sep = "")
+
+    model_warnings <- if ("model" %in% names(x$warnings)) {
+      x$warnings[as.character(x$warnings$model) == model, , drop = FALSE]
+    } else {
+      x$warnings
+    }
+    if (nrow(model_warnings) > 0) {
+      cat("\n  Warnings\n")
+      for (i in seq_len(nrow(model_warnings))) {
+        cat("    - ", model_warnings$metric[i], ": ", model_warnings$message[i], "\n", sep = "")
+      }
     }
   }
 

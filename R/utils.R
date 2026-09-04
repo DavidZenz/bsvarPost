@@ -21,7 +21,7 @@ new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
 
 validate_nonnegative_horizon <- function(horizon, caller) {
   if (!is.numeric(horizon) || length(horizon) != 1L || is.na(horizon) ||
-      horizon < 0 || horizon != as.integer(horizon)) {
+      !is.finite(horizon) || horizon < 0 || horizon != as.integer(horizon)) {
     stop(sprintf("`%s` requires `horizon` to be a single non-negative integer.", caller), call. = FALSE)
   }
   as.integer(horizon)
@@ -29,7 +29,7 @@ validate_nonnegative_horizon <- function(horizon, caller) {
 
 validate_positive_count <- function(value, caller, arg = deparse(substitute(value))) {
   if (!is.numeric(value) || length(value) != 1L || is.na(value) ||
-      value < 1 || value != as.integer(value)) {
+      !is.finite(value) || value < 1 || value != as.integer(value)) {
     stop(sprintf("`%s` requires `%s` to be a single positive integer.", caller, arg), call. = FALSE)
   }
   as.integer(value)
@@ -197,7 +197,7 @@ compute_cdm_draws <- function(irf, scale_by = c("none", "shock_sd"), scale_var =
   scale_factors <- rep(1, dim(cdm_draws)[2])
   if (identical(scale_by, "shock_sd")) {
     scale_factors <- resolve_scale_factors(model, dim(cdm_draws)[2], scale_var)
-    for (shock in seq_along(scale_factors)) {
+    for (shock in seq_len(dim(cdm_draws)[2])) {
       cdm_draws[, shock, , ] <- cdm_draws[, shock, , ] / scale_factors[shock]
     }
   }
@@ -209,20 +209,42 @@ resolve_scale_factors <- function(model, n_shocks, scale_var = NULL) {
   sample_sds <- apply(y_matrix, 1, stats::sd, na.rm = TRUE)
 
   if (is.null(scale_var)) {
-    return(unname(sample_sds[seq_len(n_shocks)]))
+    if (length(sample_sds) < n_shocks) {
+      stop("Cannot resolve one scaling variable for every shock.", call. = FALSE)
+    }
+    indices <- seq_len(n_shocks)
+  } else {
+    if (length(scale_var) != 1L && length(scale_var) != n_shocks) {
+      stop("'scale_var' must have length 1 or one entry per shock.", call. = FALSE)
+    }
+
+    if (is.character(scale_var)) {
+      indices <- match(scale_var, names(sample_sds))
+      if (anyNA(indices)) {
+        stop("Unknown 'scale_var' label(s): ", paste(scale_var[is.na(indices)], collapse = ", "), call. = FALSE)
+      }
+    } else if (is.numeric(scale_var)) {
+      if (anyNA(scale_var) || any(!is.finite(scale_var)) ||
+          any(scale_var != floor(scale_var)) || any(scale_var < 1) ||
+          any(scale_var > length(sample_sds))) {
+        stop("Numeric 'scale_var' values must be finite, whole-number indices within the model variables.", call. = FALSE)
+      }
+      indices <- as.integer(scale_var)
+    } else {
+      stop("'scale_var' must be NULL, character, or numeric.", call. = FALSE)
+    }
+
+    if (length(indices) == 1L) {
+      indices <- rep(indices, n_shocks)
+    }
   }
 
-  if (is.character(scale_var)) {
-    if (length(scale_var) == 1L) return(rep(unname(sample_sds[[scale_var]]), n_shocks))
-    return(unname(sample_sds[scale_var]))
+  scale_factors <- unname(sample_sds[indices])
+  if (length(scale_factors) != n_shocks || anyNA(scale_factors) ||
+      any(!is.finite(scale_factors)) || any(scale_factors <= 0)) {
+    stop("Resolved shock standard deviations must be finite and strictly positive for every shock.", call. = FALSE)
   }
-
-  if (is.numeric(scale_var)) {
-    if (length(scale_var) == 1L) return(rep(unname(sample_sds[[scale_var]]), n_shocks))
-    return(unname(sample_sds[scale_var]))
-  }
-
-  stop("'scale_var' must be NULL, character, or numeric.", call. = FALSE)
+  scale_factors
 }
 
 as_tidy_response_array <- function(x, object_type, model = "model1", probability = 0.90, draws = FALSE) {
