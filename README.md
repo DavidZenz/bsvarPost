@@ -1,466 +1,187 @@
+<!-- generated-by: gsd-doc-writer -->
 # bsvarPost
 
-`bsvarPost` is a companion post-estimation toolkit for
+`bsvarPost` turns posterior objects from
 [`bsvars`](https://cran.r-project.org/package=bsvars) and
-[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs).
+[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs) into focused
+post-estimation answers: cumulative effects, tidy results, model comparisons,
+posterior statements, coherent representative draws, event studies, diagnostics,
+and publication-ready outputs.
 
-It focuses on the layer after estimation:
+It deliberately starts **after model estimation**. Use the parent packages to
+specify, estimate, and inspect a BSVAR; use `bsvarPost` when you want to ask
+questions of its posterior.
 
-- cumulative dynamic multipliers via `cdm()`
-- tidy extractors for posterior objects
-- comparison helpers across multiple models
-- `ggplot2` plotting for tidy outputs
-- optional `tsibble` conversion for tidy outputs
-- bridge helpers for APRScenario-style forecast tables
-- representative-model summaries and posterior audit helpers
+## What question are you trying to answer?
 
-Package documentation is split into:
+| Research question | Start here |
+|---|---|
+| How do I put posterior results into a tidy workflow? | `tidy_irf()` |
+| What is the cumulative response through a chosen horizon? | `cdm()` |
+| Are conclusions robust across specifications? | `compare_irf()` or `compare_cdm()` |
+| How probable is an economically meaningful claim? | `hypothesis_irf()` or `hypothesis_cdm()` |
+| Does a claim hold jointly, or across a whole response path? | `joint_hypothesis_irf()` or `simultaneous_irf()` |
+| Which posterior draw gives a coherent summary? | `median_target_irf()` |
+| When does a response peak, persist, or decay? | `peak_response()` and the timing summaries |
+| Which shocks explain a particular historical episode? | `tidy_hd_event()` and `shock_ranking()` |
+| Is a sign-restricted posterior well supported? | `restriction_audit()` and `acceptance_diagnostics()` |
 
-- `Getting Started with bsvarPost`
-- `Post-Estimation Workflows in bsvarPost`
-
-A pkgdown site is configured at:
-
-- <https://davidzenz.github.io/bsvarPost/>
+The examples use one question throughout: **how does a government-spending
+shock affect cumulative US GDP?**
 
 ## Installation
 
-From GitHub:
+Install the two modelling packages first, then install `bsvarPost` from GitHub:
 
 ```r
-install.packages(c("bsvars", "bsvarSIGNs"))
+install.packages(c("bsvars", "bsvarSIGNs", "remotes"))
 remotes::install_github("DavidZenz/bsvarPost", build_vignettes = TRUE)
 ```
 
-If `browseVignettes("bsvarPost")` shows no entries, the package was installed
-without built vignettes. Reinstall with `build_vignettes = TRUE`.
+## The shortest useful path
 
-## `bsvars` example
+### 1. Start with a posterior
+
+If you already have a posterior from `bsvars` or `bsvarSIGNs`, call it `post`
+and skip this step. This minimal fit only establishes the object used below;
+model specification and estimation are documented by
+[`bsvars`](https://bsvars.org/bsvars/).
 
 ```r
 library(bsvars)
 library(bsvarPost)
 
 data(us_fiscal_lsuw)
-set.seed(1)
-
+set.seed(123)
 spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
-post <- estimate(spec, S = 100, thin = 1, show_progress = FALSE)
-
-spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 2)
-post_alt <- estimate(spec_alt, S = 100, thin = 1, show_progress = FALSE)
-
-cdm_obj <- cdm(post, horizon = 8)
-summary(cdm_obj)
-plot(cdm_obj)
-
-irf_tbl <- tidy_irf(post, horizon = 8)
-cdm_tbl <- tidy_cdm(post, horizon = 8)
-fevd_tbl <- tidy_fevd(post, horizon = 8)
-fc_tbl <- tidy_forecast(post, horizon = 8)
-
-ggplot2::autoplot(cdm_tbl)
-
-style_bsvar_plot(
-  ggplot2::autoplot(cdm_tbl),
-  preset = "paper",
-  palette = c("#1b9e77", "#d95f02")
-)
-
-template_bsvar_plot(
-  ggplot2::autoplot(irf_tbl),
-  family = "irf",
-  preset = "paper"
-)
+post <- estimate(spec, S = 1e3, thin = 1, show_progress = FALSE)
 ```
 
-Representative-model summaries and posterior probability statements:
+### 2. Extract one result tidily
+
+`tidy_irf()` converts posterior draws into one row per model, response variable,
+shock, and horizon, with posterior summaries and credible intervals.
 
 ```r
-rep_irf <- median_target_irf(post, horizon = 8)
-summary(rep_irf)
-plot(rep_irf)
-
-hypothesis_irf(post, variable = 1, shock = 1, horizon = 4, relation = ">", value = 0)
-magnitude_audit(post, type = "cdm", variable = 1, shock = 1, horizon = 8, relation = ">", value = 0)
-joint_hypothesis_irf(post, variable = 1, shock = 1, horizon = 0:2, relation = ">", value = 0)
-simultaneous_irf(post, horizon = 8, variable = 1, shock = 1)
-plot_simultaneous(post, type = "irf", horizon = 8, variable = 1, shock = 1)
-plot_joint_hypothesis(
-  post,
-  type = "irf",
-  variable = 1,
-  shock = 1,
-  horizon = 0:2,
-  relation = ">",
-  value = 0
-)
-plot_hypothesis(post, type = "irf", variable = 1, shock = 1, horizon = 0:4, relation = ">", value = 0)
+irf_tbl <- tidy_irf(post, horizon = 20, probability = 0.90)
+subset(irf_tbl, variable == "gdp" & shock == "gs" &
+                  horizon %in% c(0, 4, 8, 20))
 ```
 
-Response-shape summaries:
+This is the canonical extraction pattern. The same shape extends to cumulative
+dynamic multipliers, FEVDs, historical decompositions, forecasts, and shocks via
+the corresponding `tidy_*()` function. Set `draws = TRUE` only when an analysis
+needs draw-level output.
+
+### 3. Ask the cumulative question
+
+`cdm()` adds cumulative dynamic multipliers to the parent packages' standard
+posterior outputs. It returns posterior draws, so uncertainty is accumulated
+draw by draw rather than by summing reported quantiles.
 
 ```r
-peak_tbl <- peak_response(
-  post,
-  type = "irf",
-  horizon = 8,
-  variable = 1,
-  shock = 1
-)
-peak_tbl
-
-duration_tbl <- duration_response(
-  post,
-  type = "cdm",
-  horizon = 8,
-  variable = 1,
-  shock = 1,
-  relation = ">",
-  value = 0,
-  mode = "total"
-)
-duration_tbl
-
-half_life_tbl <- half_life_response(
-  post,
-  type = "irf",
-  horizon = 8,
-  variable = 1,
-  shock = 1,
-  baseline = "peak"
-)
-half_life_tbl
-
-time_tbl <- time_to_threshold(
-  post,
-  type = "cdm",
-  horizon = 8,
-  variable = 1,
-  shock = 1,
-  relation = ">",
-  value = 0
-)
-time_tbl
+multiplier <- cdm(post, horizon = 20)
+multiplier_tbl <- tidy_cdm(multiplier)
+gdp_multiplier <- subset(multiplier_tbl, variable == "gdp" & shock == "gs")
+ggplot2::autoplot(gdp_multiplier)
 ```
 
-The same summaries can be compared across several models:
+When the economic question calls for shock-size normalization, use
+`scale_by = "shock_sd"`; otherwise the default preserves the model's original
+shock scale.
+
+## Go beyond one posterior summary
+
+### Is the conclusion robust to specification choices?
+
+Given a second already-fitted posterior, named arguments become readable model
+labels in a combined tidy result:
 
 ```r
-compare_peak_response(
-  baseline = post,
-  alternative = post_alt,
-  type = "irf",
-  horizon = 8,
-  variable = 1,
-  shock = 1
-)
-
-compare_duration_response(
-  baseline = post,
-  alternative = post_alt,
-  type = "cdm",
-  horizon = 8,
-  variable = 1,
-  shock = 1,
-  relation = ">",
-  value = 0,
-  mode = "total"
-)
-
-compare_half_life_response(
-  baseline = post,
-  alternative = post_alt,
-  type = "irf",
-  horizon = 8,
-  variable = 1,
-  shock = 1,
-  baseline = "peak"
-)
-
-compare_time_to_threshold(
-  baseline = post,
-  alternative = post_alt,
-  type = "cdm",
-  horizon = 8,
-  variable = 1,
-  shock = 1,
-  relation = ">",
-  value = 0
-)
-
-plot_compare_response(compare_peak_response(
-  baseline = post,
-  alternative = post_alt,
-  type = "irf",
-  horizon = 8,
-  variable = 1,
-  shock = 1
-))
+comparison <- compare_cdm(baseline = post, alternative = post_alt,
+                          horizon = 20)
+ggplot2::autoplot(comparison)
 ```
 
-Optional normalization:
+The same pattern applies to IRFs, FEVDs, forecasts, historical events, response
+timing, and sign restrictions. The
+[Inference and Comparison article](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html)
+shows how to choose the comparison that matches the research claim.
+
+### How strong is the posterior evidence?
+
+Ask the question directly instead of inferring it from overlapping pointwise
+intervals:
 
 ```r
-cdm_scaled <- cdm(post, horizon = 8, scale_by = "shock_sd")
+hypothesis_cdm(post, variables = "gdp", shocks = "gs", horizon = 8,
+               relation = ">", value = 0)
+
+joint_hypothesis_cdm(post, variable = "gdp", shock = "gs", horizon = 0:8,
+                     relation = ">", value = 0)
 ```
 
-## `bsvarSIGNs` example
+Use `magnitude_audit()` for economically relevant thresholds and
+`simultaneous_irf()` or `simultaneous_cdm()` when uncertainty must cover a whole
+selected path. See [Inference and Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html)
+for pointwise, joint, magnitude, and simultaneous statements.
+
+### Which single draw should represent the posterior?
+
+Quantiles taken separately at every horizon need not correspond to any one
+admissible model draw. `median_target_irf()` and `median_target_cdm()` select a
+coherent representative draw. `peak_response()`, `duration_response()`,
+`half_life_response()`, and `time_to_threshold()` then summarise the shape and
+timing of responses without requiring manual draw-level calculations.
+
+### What drove a historical episode?
+
+Build on the parent package's historical decomposition with `tidy_hd_event()`:
+aggregate a chosen event window, rank shocks with `shock_ranking()`, and compare
+the same window across specifications with `compare_hd_event()`. The
+[Historical-Decomposition Events article](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html)
+develops that workflow without repeating basic HD construction.
+
+### What changes for sign-restricted models?
+
+For a `PosteriorBSVARSIGN`, use `most_likely_admissible_irf()` or
+`most_likely_admissible_cdm()` for representative admissible draws. Then use
+`restriction_audit()` to check identifying restrictions and
+`acceptance_diagnostics()` to inspect the effective stored sample and sparse
+admissibility support. See [Sign-Restricted Workflows](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.html).
+
+## From results to a figure or table
+
+Tidy outputs work directly with `ggplot2::autoplot()`. For a consistent final
+artifact, bundle the plot, compact table, and caption once:
 
 ```r
-library(bsvarSIGNs)
-library(bsvarPost)
+result <- compare_cdm(baseline = post, alternative = post_alt, horizon = 20)
+publication <- report_bundle(result,
+  caption = "Cumulative output response to a government-spending shock",
+  preset = "compact", digits = 3)
 
-data(optimism)
-
-sign_irf <- matrix(c(0, 1, rep(NA, 23)), 5, 5)
-
-spec <- specify_bsvarSIGN$new(
-  optimism * 100,
-  p = 4,
-  sign_irf = sign_irf
-)
-
-post <- estimate(spec, S = 100, thin = 1, show_progress = FALSE)
-
-spec_alt <- specify_bsvarSIGN$new(
-  optimism * 100,
-  p = 2,
-  sign_irf = sign_irf
-)
-post_alt <- estimate(spec_alt, S = 100, thin = 1, show_progress = FALSE)
-
-cdm_obj <- cdm(post, horizon = 12)
-summary(cdm_obj)
-
-irf_tbl <- tidy_irf(post, horizon = 12)
-cdm_tbl <- tidy_cdm(post, horizon = 12)
-
-ggplot2::autoplot(irf_tbl)
-ggplot2::autoplot(cdm_tbl)
+publication$plot
+publication$table
 ```
 
-Representative sign-restricted summaries and restriction auditing:
+Use `publish_bsvar_plot()` when only a styled plot is needed. Reference pages
+cover optional output backends and integration bridges without placing them on
+the main workflow.
 
-```r
-rep_irf <- most_likely_admissible_irf(post, horizon = 12)
-summary(rep_irf)
+## Where next?
 
-audit_tbl <- restriction_audit(post)
-audit_tbl
-plot_restriction_audit(audit_tbl)
+- [Getting Started](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.html)
+  develops the fiscal example from posterior to interpretable result.
+- [Inference and Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html)
+  covers specification sensitivity and posterior claims.
+- [Historical-Decomposition Events](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html)
+  turns HD draws into focused episode analysis.
+- [Sign-Restricted Workflows](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.html)
+  covers admissible summaries, audits, and diagnostics.
+- [Function reference](https://davidzenz.github.io/bsvarPost/reference/)
+  is the discoverability layer for variants and optional integrations.
 
-diag_tbl <- acceptance_diagnostics(post)
-diag_tbl
+## License
 
-summary(diag_tbl)
-
-compare_acceptance_diagnostics(baseline = post, alternative = post_alt)
-plot_acceptance_diagnostics(diag_tbl, metrics = c("effective_sample_size", "kernel_zero_share"))
-```
-
-`plot_acceptance_diagnostics()` is a sample-health summary for sign-restricted
-models, not an economic-effects plot. The first diagnostics to inspect are
-usually `effective_sample_size` and `kernel_zero_share`.
-
-## Model comparison
-
-```r
-cmp <- compare_cdm(
-  baseline = post,
-  alternative = post,
-  horizon = 8
-)
-
-ggplot2::autoplot(cmp)
-```
-
-Restriction comparisons:
-
-```r
-compare_restrictions(model_a = post, model_b = post, restrictions = list(
-  irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1)
-))
-
-plot_compare_restrictions(compare_restrictions(
-  model_a = post,
-  model_b = post,
-  restrictions = list(irf_restriction(variable = 1, shock = 1, horizon = 0, sign = 1))
-))
-```
-
-## Reporting helpers
-
-`bsvarPost` tables can also be sent directly to common reporting backends.
-Use `preset = "compact"` when you want a narrower publication-oriented column
-selection:
-
-```r
-cmp_tbl <- compare_irf(
-  baseline = post,
-  alternative = post_alt,
-  horizon = 8
-)
-
-report_table(cmp_tbl, preset = "compact", digits = 3)
-as_kable(cmp_tbl, caption = "Impulse-response comparison", digits = 3, preset = "compact")
-write_bsvar_csv(cmp_tbl, tempfile(fileext = ".csv"), preset = "compact")
-
-if (requireNamespace("gt", quietly = TRUE)) {
-  as_gt(cmp_tbl, caption = "Impulse-response comparison", digits = 3, preset = "compact")
-}
-
-if (requireNamespace("flextable", quietly = TRUE)) {
-  as_flextable(cmp_tbl, caption = "Impulse-response comparison", digits = 3, preset = "compact")
-}
-
-bundle <- report_bundle(
-  cmp_tbl,
-  caption = "Impulse-response comparison",
-  digits = 3,
-  preset = "compact"
-)
-
-bundle
-bundle$plot
-as_kable(bundle)
-
-rep_bundle <- report_bundle(
-  median_target_irf(post, horizon = 8),
-  caption = "Representative impulse response"
-)
-
-rep_bundle$plot
-as_kable(rep_bundle, preset = "compact")
-
-diag_bundle <- report_bundle(
-  acceptance_diagnostics(post),
-  caption = "Acceptance diagnostics",
-  preset = "compact"
-)
-
-diag_bundle$plot
-
-joint_bundle <- report_bundle(
-  joint_hypothesis_irf(post, variable = 1, shock = 1, horizon = 0:2, relation = ">", value = 0),
-  caption = "Joint posterior statement",
-  preset = "compact"
-)
-
-joint_bundle$plot
-
-hd_bundle <- report_bundle(
-  tidy_hd_event(post, start = 1, end = 4),
-  preset = "compact"
-)
-
-hd_bundle$caption
-hd_bundle$plot
-
-publish_bsvar_plot(cmp_tbl, preset = "paper")
-publish_bsvar_plot(median_target_irf(post, horizon = 8), preset = "paper")
-publish_bsvar_plot(diag_tbl, preset = "slides")
-
-# report_table() now uses publication-facing column labels such as
-# "Posterior probability", "Median half-life", and "Critical value".
-```
-
-## Historical decomposition plots
-
-```r
-hd_tbl <- tidy_hd(post)
-plot_hd_overlay(post, variables = "gdp", top_n = 3)
-plot_hd_stacked(post, variables = "gdp", top_n = 3)
-plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
-plot_hd_lines(post, variables = "gdp", top_n = 3)
-
-hd_event <- tidy_hd_event(post, start = 1, end = 4)
-plot_hd_event(post, start = 1, end = 4)
-plot_hd_event_share(post, start = 1, end = 4, top_n = 5)
-plot_hd_event_cumulative(post, start = 1, end = 4, top_n = 5)
-plot_hd_event_distribution(post, start = 1, end = 4, top_n = 5)
-shock_ranking(post, start = 1, end = 4, ranking = "absolute")
-plot_shock_ranking(post, start = 1, end = 4, ranking = "absolute", top_n = 5)
-
-style_bsvar_plot(
-  plot_hd_stacked(post, variables = "gdp", top_n = 3),
-  preset = "paper"
-)
-
-annotate_bsvar_plot(
-  plot_hd_event_share(post, start = 1, end = 4, top_n = 5),
-  title = "Event-window contribution shares"
-)
-```
-
-For full-sample interpretation, the intended workflow is:
-
-- `plot_hd_overlay()` first, to compare shock paths over time without mixing in
-  the raw observed level.
-- `plot_hd_stacked()` second, for a stacked shock-contribution view. Add
-  `include_baseline = TRUE` when you want the explicit `Baseline` component and
-  the full displayed decomposition.
-- `plot_hd_total()` third, to check the observed path against that same
-  reconstructed decomposition total.
-- `plot_hd_lines()` fourth, when you want a detailed component-by-component
-  inspection view.
-- event-window helpers last, once the full-sample HD plots have identified a
-  period worth summarizing.
-
-Event-window comparisons:
-
-```r
-compare_hd_event(model_a = post, model_b = post, start = 1, end = 4)
-```
-
-## `tsibble` bridge
-
-If `tsibble` is installed:
-
-```r
-library(tsibble)
-
-fc_tbl <- tidy_forecast(post, horizon = 8)
-fc_tsbl <- as_tsibble_post(fc_tbl)
-```
-
-For IRF/CDM/FEVD outputs, `horizon` is used as the tsibble index and
-`model`/`variable`/`shock` columns are used as keys when available.
-
-## APRScenario bridge
-
-APRScenario expects forecast summaries with columns:
-
-- `hor`
-- `variable`
-- `lower`
-- `center`
-- `upper`
-
-Convert a `bsvarPost` forecast summary into that shape with:
-
-```r
-fc_tbl <- tidy_forecast(post, horizon = 8)
-
-apr_tbl <- as_apr_cond_forc(
-  fc_tbl,
-  origin = as.Date("2024-01-01"),
-  frequency = "quarter"
-)
-```
-
-Convert an APRScenario-style table back into a `bsvarPost` tidy table with:
-
-```r
-fc_tbl <- tidy_apr_forecast(apr_tbl)
-ggplot2::autoplot(fc_tbl)
-```
-
-If `APRScenario` is installed, `apr_gen_mats()` forwards to
-`APRScenario::gen_mats()`.
-
-```r
-if (requireNamespace("APRScenario", quietly = TRUE)) {
-  mats <- apr_gen_mats(post, specification = spec)
-}
-```
+`bsvarPost` is licensed under GPL (>= 3).

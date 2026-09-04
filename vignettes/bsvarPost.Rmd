@@ -6,246 +6,229 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+<!-- generated-by: gsd-doc-writer -->
 
 ```{r, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
-```
-
-```{r setup, eval = TRUE, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>",
+                      fig.width = 7, fig.height = 4)
 library(bsvarPost)
-post     <- readRDS("fixtures/fiscal_post_bsvar.rds")
+post <- readRDS("fixtures/fiscal_post_bsvar.rds")
 post_alt <- readRDS("fixtures/fiscal_post_bsvar_alt.rds")
 ```
 
-`bsvarPost` is a companion post-estimation package for `bsvars` and `bsvarSIGNs`.
-It does not estimate models. Instead it provides:
+`bsvarPost` starts where `bsvars` and `bsvarSIGNs` stop: with an estimated
+posterior. It turns posterior results into tidy tables, cumulative responses,
+comparisons, probability statements, coherent representative draws, event
+summaries, and publication-ready output.
 
-- tidy extraction of impulse responses, CDMs, FEVD, and forecasts
-- model comparison utilities across lag specifications or identifying assumptions
-- `ggplot2` plot methods and publication-oriented styling
-- reporting helpers for `knitr`, `gt`, `flextable`, and CSV
+This guide assumes that you already know how to specify and estimate a model
+with one of the parent packages. In one short workflow, we examine the response
+of US GDP (`gdp`) to the government-spending shock (`gs`) in the
+`bsvars::us_fiscal_lsuw` data. The included fixtures keep the article fast; use
+the same calls with your own posterior object.
 
-The core question answered in this vignette is: **How do fiscal spending shocks
-propagate through the US economy?** We use the `us_fiscal_lsuw` dataset from
-`bsvars`, which contains quarterly US data on three variables — `ttr`
-(tax-to-revenue), `gs` (government spending), and `gdp` — to estimate a
-structural VAR and post-process the results with `bsvarPost`.
+## Start from a posterior
 
-## Estimation setup
+Only the estimation handoff matters here. For example, a minimal `bsvars`
+workflow is:
 
-The code below produces two posterior objects. We use pre-computed results for
-build speed — the `readRDS()` calls in the hidden setup chunk have already
-loaded them.
-
-```{r, eval = FALSE}
-library(bsvars)
-library(bsvarPost)
-
-data(us_fiscal_lsuw)
-# Variables: ttr (tax-to-revenue), gs (government spending), gdp
-
-# Baseline: p = 1 lag
-set.seed(123)
-spec     <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
-post     <- estimate(spec, S = 200, thin = 1, show_progress = FALSE)
-
-# Alternative: p = 3 lags
-set.seed(456)
-spec_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 3)
-post_alt <- estimate(spec_alt, S = 200, thin = 1, show_progress = FALSE)
+```{r estimate, eval = FALSE}
+data("us_fiscal_lsuw", package = "bsvars")
+spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
+post <- bsvars::estimate(spec, S = 2000, thin = 1,
+                         show_progress = FALSE)
 ```
 
-## Extracting impulse responses
+The rest of the guide uses the precomputed `post` loaded above. It is a regular
+`PosteriorBSVAR` object, so there is no import or conversion step.
 
-`tidy_irf()` returns a tidy table with posterior summaries (median, credible
-interval bounds) for every variable-shock pair at each horizon. The column
-`variable` names the responding variable and `shock` names the structural shock.
+## Use one tidy extraction pattern
 
-```{r, eval = TRUE}
-irf_tbl <- tidy_irf(post, horizon = 20)
-head(irf_tbl)
+The canonical pattern is: pass the posterior to a `tidy_*()` function, then
+filter the resulting tibble to the research question. Here we request 90%
+pointwise intervals and keep four horizons from the GDP response to a spending
+shock.
+
+```{r tidy-irf}
+irf_tbl <- tidy_irf(post, horizon = 12, probability = 0.90)
+irf_focus <- subset(irf_tbl, variable == "gdp" & shock == "gs" &
+                    horizon %in% c(0, 4, 8, 12),
+                    select = c(variable, shock, horizon, median, lower, upper))
+irf_focus
 ```
 
-`ggplot2::autoplot()` produces a faceted fan chart — one panel per
-variable-shock pair, with shaded credible bands:
+The same shape extends to other posterior quantities. Summary tables contain
+posterior location and interval columns; set `draws = TRUE` when downstream
+work needs individual draws.
 
-```{r, eval = TRUE}
-ggplot2::autoplot(irf_tbl)
+```{r tidy-family, eval = FALSE}
+tidy_cdm(post, horizon = 12)       # cumulative responses
+tidy_fevd(post, horizon = 12)      # variance shares
+tidy_hd(post)                      # historical contributions
+tidy_forecast(post, horizon = 8)   # predictive paths
+tidy_shocks(post)                  # structural shocks
 ```
 
-The `gs` shock column shows how a one-standard-deviation increase in government
-spending affects `ttr`, `gs`, and `gdp` over 20 quarters.
+This is usually enough to join results to annotations, filter panels, or use a
+different graphics system without unpacking posterior arrays by hand.
 
-## Cumulative dynamic multipliers
+## Accumulate responses with `cdm()`
 
-Cumulative dynamic multipliers (CDMs) integrate the impulse responses over the
-horizon, making them the natural quantity for fiscal multiplier analysis.
+`cdm()` retains the posterior draws while accumulating the response at each
+horizon. `tidy_cdm()` then applies the same extraction pattern used above.
 
-```{r, eval = TRUE}
-cdm_obj <- cdm(post, horizon = 20)
-summary(cdm_obj)
+```{r cdm}
+cdm_draws <- cdm(post, horizon = 12)
+cdm_tbl <- tidy_cdm(cdm_draws, probability = 0.90)
+cdm_focus <- subset(cdm_tbl, variable == "gdp" & shock == "gs" &
+                    horizon %in% c(0, 4, 8, 12),
+                    select = c(variable, shock, horizon, median, lower, upper))
+cdm_focus
 ```
 
-The pre-rendered figure below, generated from the same posterior at a longer
-horizon, gives a cleaner view of the multiplier path:
+These are cumulative dynamic responses. Whether they have an economic
+multiplier interpretation depends on the model's transformations and scaling;
+see `?cdm` for the `scale_by` and `scale_var` options.
 
-```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
-knitr::include_graphics("figures/cdm-showcase.png")
+## Compare specifications in the same table
+
+The second fixture is the same three-variable system with a longer lag order.
+Named posterior arguments become stable labels in the `model` column.
+
+```{r compare}
+cdm_comparison <- compare_cdm(
+  baseline = post,
+  longer_lag = post_alt,
+  horizon = 12,
+  probability = 0.90
+)
+subset(cdm_comparison, variable == "gdp" & shock == "gs" &
+       horizon %in% c(4, 8, 12),
+       select = c(model, horizon, median, lower, upper))
 ```
 
-The `gdp` row of the CDM table answers the fiscal-multiplier question directly:
-by horizon 20, how much has cumulative GDP responded to the `gs` spending shock?
+Use the same pattern with `compare_irf()`, `compare_fevd()`, and the other
+`compare_*()` helpers. The comparison is descriptive: it puts like-for-like
+posterior summaries together but does not choose a preferred specification.
 
-## Comparing model specifications
+## Ask a posterior probability question
 
-Different lag orders can shift the estimated multiplier meaningfully. The
-comparison helpers place two posteriors side by side in a single tidy table.
+Suppose the question is: *what is the posterior probability that the GDP
+response to the spending shock is positive at each selected horizon?*
 
-```{r, eval = TRUE}
-cmp_irf <- compare_irf(baseline = post, alternative = post_alt, horizon = 20)
-head(cmp_irf)
+```{r hypothesis}
+prob_positive <- hypothesis_irf(
+  post,
+  variables = "gdp",
+  shocks = "gs",
+  horizon = c(0, 4, 8, 12),
+  relation = ">",
+  value = 0
+)
+prob_positive[, c("variable", "shock", "horizon", "posterior_prob")]
 ```
 
-The named arguments `baseline` and `alternative` become the `model` column
-labels in the output. `ggplot2::autoplot()` overlays both posterior bands:
+`posterior_prob` is a model-conditional posterior probability, not a
+frequentist p-value. For questions that must hold across several horizons use
+`joint_hypothesis_irf()`; for economically meaningful thresholds use
+`magnitude_audit()`; and for a band covering an entire selected path use
+`simultaneous_irf()`. The
+[Inference and Comparison](inference-and-comparison.html) article develops
+these distinctions.
 
-```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
-knitr::include_graphics("figures/compare-irf-showcase.png")
+## Keep one coherent draw and summarize timing
+
+Pointwise medians need not correspond to any single posterior draw.
+`median_target_irf()` instead selects one internally coherent draw closest to
+the median response path over the requested subset.
+
+```{r representative}
+representative <- median_target_irf(
+  post,
+  horizon = 12,
+  variables = "gdp",
+  shocks = "gs"
+)
+representative_path <- subset(summary(representative),
+                              variable == "gdp" & shock == "gs")
+subset(representative_path, horizon %in% c(0, 4, 8, 12),
+       select = c(variable, shock, horizon, median, draw_index, method))
 ```
 
-CDMs can be compared the same way:
+For a compact timing statement, `peak_response()` reports both the response
+level and the horizon of the peak for every posterior draw, then summarizes
+those quantities.
 
-```{r, eval = TRUE}
-cmp_cdm <- compare_cdm(baseline = post, alternative = post_alt, horizon = 20)
-head(cmp_cdm)
+```{r timing}
+peak <- peak_response(
+  post,
+  horizon = 12,
+  variables = "gdp",
+  shocks = "gs",
+  absolute = TRUE
+)
+peak[, c("variable", "shock", "median_value", "median_horizon")]
 ```
 
-The `p = 3` alternative typically shows a slower decay in the `gdp` multiplier,
-reflecting richer lag dynamics.
+For persistence questions, `duration_response()`, `half_life_response()`, and
+`time_to_threshold()` provide related summaries without reducing the posterior
+to a single curve.
 
-## Forecast error variance decomposition
+## Move from an HD path to an event question
 
-FEVD measures which structural shocks account for most of the forecast error
-variance in each variable. For fiscal analysis, the key question is: what share
-of `gdp` volatility is explained by the `gs` shock?
+Start with draw-level `tidy_hd()` data, then choose a window
+that is substantively meaningful for the application. This illustrative
+four-quarter window shows the handoff from event aggregation to shock ranking.
 
-```{r, eval = TRUE}
-fevd_tbl <- tidy_fevd(post, horizon = 20)
-head(fevd_tbl)
-```
-
-The `share` column sums to 100 within each variable-horizon cell (FEVD values
-are on a 0-100 percentage scale).
-
-## Plot styling
-
-`bsvarPost` ships three layered styling helpers. They all accept any tidy output
-object and apply theme and color presets.
-
-```{r, eval = FALSE}
-# Apply a publication theme to an existing autoplot
-style_bsvar_plot(
-  ggplot2::autoplot(irf_tbl),
-  preset  = "paper",
-  palette = c("#1b9e77", "#d95f02")
+```{r hd-event}
+hd_draws <- tidy_hd(post, draws = TRUE)
+event_tbl <- tidy_hd_event(
+  hd_draws,
+  start = "1958",
+  end = "1958.75"
 )
 
-# Apply a family-aware template (adds axis labels, titles, etc.)
-template_bsvar_plot(
-  ggplot2::autoplot(irf_tbl),
-  family = "irf",
-  preset = "paper"
-)
+subset(event_tbl, variable == "gdp",
+       select = c(variable, shock, event_start, event_end, median))
 
-# One-shot publication-ready export
-publish_bsvar_plot(irf_tbl, preset = "paper")
+ranking <- shock_ranking(hd_draws, start = "1958", end = "1958.75",
+                         variables = "gdp")
+ranking[, c("variable", "shock", "median", "rank")]
 ```
 
-A pre-rendered representative-response showcase:
+This adds event-level questions to the parent package's historical
+decomposition rather than replacing its standard HD workflow. Window choice
+and contribution interpretation are covered in
+[Historical-Decomposition Events](historical-decomposition-events.html).
 
-```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
-knitr::include_graphics("figures/representative-showcase.png")
+## Finish with publication-ready output
+
+One call turns the representative draw into a consistently styled `ggplot2`
+figure. The returned object remains a normal `ggplot`, so annotations can still
+be added before saving.
+
+```{r publication-plot}
+publish_bsvar_plot(representative_path, family = "irf", preset = "paper",
+  title = "GDP response to a government-spending shock",
+  caption = "Median-target posterior draw")
 ```
 
-## Historical decomposition plots
+For a table, keep one backend and the same focused result:
 
-Historical decomposition is split into two complementary workflows:
-
-- full-sample contribution paths with `tidy_hd()`, `plot_hd_stacked()`,
-  `plot_hd_overlay()`, `plot_hd_total()`, and `plot_hd_lines()`;
-- event-window summaries with `tidy_hd_event()`, `plot_hd_event()`,
-  `plot_hd_event_share()`, `plot_hd_event_cumulative()`, and
-  `plot_hd_event_distribution()`.
-
-```{r, eval = FALSE}
-hd_tbl <- tidy_hd(post)
-plot_hd_overlay(post, variables = "gdp", top_n = 3)
-plot_hd_stacked(post, variables = "gdp", top_n = 3)
-plot_hd_total(post, variables = "gdp", shocks = c("gs", "ttr"))
-plot_hd_lines(post, variables = "gdp", top_n = 3)
-
-hd_times <- unique(as.character(tidy_hd(post, draws = TRUE)$time))
-plot_hd_event(post, start = hd_times[1], end = hd_times[2])
-plot_hd_event_share(post, start = hd_times[1], end = hd_times[2], top_n = 3)
-plot_hd_event_cumulative(post, start = hd_times[1], end = hd_times[2], top_n = 3)
-plot_hd_event_distribution(post, start = hd_times[1], end = hd_times[2], top_n = 3)
-shock_ranking(post, start = hd_times[1], end = hd_times[2], ranking = "absolute")
+```{r publication-table}
+as_kable(peak, caption = "Peak absolute GDP response",
+         digits = 3, preset = "compact")
 ```
 
-Use `plot_hd_overlay()` first to compare the main contribution paths within one
-variable over time:
+## Where next?
 
-```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
-knitr::include_graphics("figures/hd-overlay-showcase.png")
-```
+- [Inference and Comparison](inference-and-comparison.html) covers joint and
+  magnitude questions, simultaneous bands, and richer model comparisons.
+- [Historical-Decomposition Events](historical-decomposition-events.html)
+  covers event windows, contribution views, and shock ranking.
+- [Sign-Restricted Workflows](sign-restricted-workflows.html) covers
+  `most_likely_admissible_*()`, `restriction_audit()`,
+  `acceptance_diagnostics()`, and sign-model comparisons.
 
-Then use `plot_hd_stacked()` for the composition view. It stacks the structural
-shock contributions over time, with `include_baseline = TRUE` available when
-you want the explicit non-shock reconstruction term as well.
-
-```{r, echo = FALSE, eval = TRUE, out.width = "100%"}
-knitr::include_graphics("figures/hd-full-showcase.png")
-```
-
-`plot_hd_total()` then checks the same decomposition against the observed path,
-while `plot_hd_lines()` provides the detailed component-by-component inspection
-view when the combined plots are too compressed.
-
-Once the full-sample plots have identified a period worth summarizing, move to
-the event-window helpers. `tidy_hd_event()`, `plot_hd_event()`,
-`plot_hd_event_share()`, `plot_hd_event_cumulative()`,
-`plot_hd_event_distribution()`, and `shock_ranking()` summarize and rank the
-same HD information over a selected window.
-
-## Reporting helpers
-
-Most `bsvarPost` outputs are tidy data frames and render directly to any table
-format. The `preset = "compact"` argument selects a narrower publication column
-set.
-
-```{r, eval = TRUE}
-as_kable(summary(cdm_obj), preset = "compact", digits = 3)
-```
-
-```{r, eval = TRUE}
-write_bsvar_csv(cmp_irf, tempfile(fileext = ".csv"), preset = "compact")
-```
-
-```{r, eval = requireNamespace("gt", quietly = TRUE)}
-as_gt(cmp_irf, caption = "Impulse-response comparison", digits = 3,
-      preset = "compact")
-```
-
-```{r, eval = requireNamespace("flextable", quietly = TRUE)}
-as_flextable(cmp_irf, caption = "Impulse-response comparison", digits = 3,
-             preset = "compact")
-```
-
-## Next steps
-
-- **Post-Estimation Workflows vignette** — covers historical decomposition,
-  including full-sample HD plots and event-window composition views, plus
-  hypothesis testing, peak/duration response summaries, and representative-draw
-  selection.
-- **Hypothesis Testing vignette** — formal posterior probability statements via
-  `hypothesis_irf()`, `joint_hypothesis_irf()`, and `simultaneous_irf()`.
+The [reference index](https://davidzenz.github.io/bsvarPost/reference/index.html) lists variants and lower-level
+helpers when a workflow needs more control.

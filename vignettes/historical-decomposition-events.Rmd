@@ -1,0 +1,203 @@
+---
+title: "Historical-Decomposition Event Workflows"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Historical-Decomposition Event Workflows}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+<!-- generated-by: gsd-doc-writer -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+library(bsvarPost)
+post <- readRDS("fixtures/fiscal_post_bsvar.rds")
+post_alt <- readRDS("fixtures/fiscal_post_bsvar_alt.rds")
+```
+
+Historical decompositions from `bsvars` and `bsvarSIGNs` describe how structural
+shock contributions evolve through the sample. `bsvarPost` adds a narrower
+workflow: aggregate those contributions over a substantively chosen window,
+rank the shocks within it, and compare the same event across specifications.
+
+This article assumes that you already have a fitted posterior and understand
+the identification behind its shock labels. See the parent-package
+documentation for estimation and the standard historical-decomposition
+workflow. The precomputed fiscal posteriors used here avoid re-estimation and
+keep the vignette reproducible.
+
+## Start from draw-level contributions
+
+Event summaries need the posterior draws, not a table that has already collapsed
+them to pointwise intervals. The canonical handoff is therefore
+[`tidy_hd(draws = TRUE)`](../reference/tidy_hd.html):
+
+```{r hd-draws}
+hd_draws <- tidy_hd(post, draws = TRUE)
+
+data.frame(
+  first = head(unique(as.character(hd_draws$time)), 1),
+  last = tail(unique(as.character(hd_draws$time)), 1),
+  draws = length(unique(hd_draws$draw))
+)
+```
+
+Each row now identifies a model, variable, shock, observation, and posterior
+draw. Keep this draw-level table when defining events so uncertainty is
+aggregated *after* contributions are summed within the window.
+
+## Choose the window before ranking shocks
+
+An event window is an analytical decision, not something the ranking algorithm
+discovers. A defensible workflow usually does three things:
+
+1. Define the dates from the research question or an external chronology,
+   before inspecting which shock ranks first.
+2. Match `start` and `end` to the model's time labels and use a window consistent
+   with the data frequency.
+3. Repeat the analysis over reasonable neighboring windows as a sensitivity
+   check, without silently replacing the prespecified result.
+
+For this compact example, we use the complete four-quarter span from `1958` to
+`1958.75`. It is a convenient, bounded window inside both fixtures—not a claim
+that these documentation fixtures establish a particular historical narrative.
+They contain only 200 stored draws, and the shock names inherit whatever
+interpretation the fitted model's identification supports.
+
+```{r event-window}
+event_start <- "1958"
+event_end <- "1958.75"
+
+event <- tidy_hd_event(
+  hd_draws,
+  start = event_start,
+  end = event_end,
+  probability = 0.90
+)
+
+subset(
+  event,
+  variable == "gdp",
+  select = c(variable, shock, event_start, event_end,
+             median, lower, upper)
+)
+```
+
+[`tidy_hd_event()`](../reference/tidy_hd_event.html) sums each shock's
+contribution across the inclusive window separately for every draw, then reports
+posterior summaries. Set `draws = TRUE` when a downstream calculation needs the
+aggregated draws themselves.
+
+Do not read the largest median as certainty about a shock's historical role.
+The interval columns retain posterior uncertainty, while the structural meaning
+of each label still comes from the original model.
+
+## Rank the contributions relevant to the question
+
+[`shock_ranking()`](../reference/shock_ranking.html) orders shocks separately
+within each model-variable panel. Restricting to `gdp` keeps the result aligned
+with one research question.
+
+```{r rank-shocks}
+ranking <- shock_ranking(
+  hd_draws,
+  start = event_start,
+  end = event_end,
+  variables = "gdp",
+  ranking = "absolute",
+  probability = 0.90
+)
+
+ranking[, c("variable", "shock", "median", "lower", "upper", "rank")]
+```
+
+`ranking = "absolute"` answers which shock has the largest median contribution
+in magnitude. Use `ranking = "signed"` only when the ordering by direction is
+the intended estimand. In either case, `rank` summarizes the point estimate; it
+does not turn overlapping posterior intervals into a decisive ordering.
+
+One useful event figure is the ranked contribution plot. It keeps the sign and
+scale of the contribution visible while ordering the bars by importance.
+
+```{r ranking-plot}
+ranking_plot <- publish_bsvar_plot(
+  ranking,
+  family = "shock_ranking",
+  preset = "paper",
+  title = "GDP contributions during the selected window",
+  caption = "Bars are posterior medians; uncertainty remains in the event table."
+)
+ranking_plot
+```
+
+For a direct contribution plot rather than a ranking, use
+[`plot_hd_event()`](../reference/plot_hd_event.html). The more specialized
+[`plot_hd_event_share()`](../reference/plot_hd_event_share.html),
+[`plot_hd_event_cumulative()`](../reference/plot_hd_event_cumulative.html), and
+[`plot_hd_event_distribution()`](../reference/plot_hd_event_distribution.html)
+are documented in the reference index; use them when the question genuinely
+concerns composition, within-window accumulation, or the full draw distribution.
+
+## Hold the event fixed across specifications
+
+Changing a lag order or prior should not also change the event definition.
+[`compare_hd_event()`](../reference/compare_hd_event.html) applies the identical
+window to named posterior objects and returns a tidy model column.
+
+```{r compare-event}
+event_comparison <- compare_hd_event(
+  baseline = post,
+  alternative = post_alt,
+  start = event_start,
+  end = event_end,
+  probability = 0.90
+)
+
+comparison_gdp <- subset(
+  event_comparison,
+  variable == "gdp",
+  select = c(model, shock, event_start, event_end,
+             median, lower, upper)
+)
+comparison_gdp
+```
+
+This comparison is descriptive. Stability across columns can support a
+robustness discussion, but `compare_hd_event()` neither selects a preferred
+model nor computes a posterior probability that the specifications differ.
+When comparing additional windows, preserve names such as `baseline` and
+`alternative` so tables and figures remain traceable.
+
+## Hand results to a report
+
+Finish with one focused table and save the already styled plot. Both objects
+remain ordinary R outputs, so captions, annotations, and journal-specific
+formatting can be added downstream.
+
+```{r publication-table}
+as_kable(
+  comparison_gdp,
+  caption = "GDP shock contributions in the selected event window",
+  digits = 2,
+  preset = "compact"
+)
+```
+
+```{r save-plot, eval = FALSE}
+ggplot2::ggsave(
+  "shock-ranking-1958.pdf",
+  ranking_plot,
+  width = 7,
+  height = 4
+)
+```
+
+For the broader path from posterior objects to response comparisons and
+probability statements, return to [Getting Started](bsvarPost.html). For
+sign-restricted identification diagnostics, continue to the dedicated
+bsvarSIGNs workflow article.

@@ -1,0 +1,240 @@
+---
+title: "Inference and Comparison"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Inference and Comparison}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+<!-- generated-by: gsd-doc-writer -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(bsvarPost)
+post <- readRDS("fixtures/fiscal_post_bsvar.rds")
+post_alt <- readRDS("fixtures/fiscal_post_bsvar_alt.rds")
+```
+
+This article starts with estimated posteriors and asks questions that cannot be
+answered by plotting a pointwise median alone. The running example compares two
+lag specifications for the `bsvars::us_fiscal_lsuw` system. We focus on the GDP
+response to a government-spending shock, without presuming that its sign or
+magnitude is known in advance.
+
+The fixtures contain 200 stored draws and keep the article quick to build. Replace
+them with your own compatible `bsvars` or `bsvarSIGNs` posterior objects.
+
+## Is the conclusion sensitive to specification?
+
+Start with the comparison rather than two separate tables. Named arguments to
+`compare_irf()` become stable model labels, and every other column has the same
+meaning as in `tidy_irf()`.
+
+```{r compare-specifications}
+comparison <- compare_irf(
+  baseline = post,
+  longer_lag = post_alt,
+  horizon = 12,
+  probability = 0.90
+)
+
+subset(
+  comparison,
+  variable == "gdp" & shock == "gs" & horizon %in% c(0, 4, 8, 12),
+  select = c(model, horizon, median, lower, upper))
+```
+
+Read this descriptively: shifts in the center or interval show specification
+sensitivity; they do not constitute a model-selection rule. The same named-
+posterior pattern is available for [CDMs](../reference/compare_cdm.html),
+[FEVDs](../reference/compare_fevd.html),
+[forecasts](../reference/compare_forecast.html), and
+[historical-decomposition events](../reference/compare_hd_event.html).
+
+## How much posterior support does a statement have?
+
+### Pointwise support
+
+For a claim at particular horizons, ask directly what share of posterior draws
+satisfies it. Here the claim is that the GDP response is positive.
+
+```{r pointwise-probability}
+positive_gdp <- hypothesis_irf(
+  post,
+  variables = "gdp",
+  shocks = "gs",
+  horizon = c(0, 4, 8, 12),
+  relation = ">",
+  value = 0
+)
+
+positive_gdp[, c("horizon", "posterior_prob", "median_gap",
+                 "lower_gap", "upper_gap")]
+```
+
+`posterior_prob` is the model-conditional probability of the stated inequality,
+not a p-value. The gap columns summarize the response minus the threshold, so
+they retain information about effect size. Use
+[`hypothesis_cdm()`](../reference/hypothesis_cdm.html) for the same question
+about cumulative responses.
+
+### Joint support across a path
+
+Pointwise probabilities do not answer whether one draw satisfies every
+condition. For the stronger claim that the response is positive from impact
+through horizon 8, intersect the conditions draw by draw.
+
+```{r joint-probability}
+positive_path <- joint_hypothesis_irf(
+  post,
+  variable = "gdp",
+  shock = "gs",
+  horizon = 0:8,
+  relation = ">",
+  value = 0
+)
+
+positive_path[, c("posterior_prob", "n_constraints")]
+```
+
+The joint probability can be much smaller than the probability at any one
+horizon because all nine inequalities must hold in the same draw. See
+[`joint_hypothesis_cdm()`](../reference/joint_hypothesis_cdm.html) for cumulative
+paths.
+
+### A magnitude question
+
+A sign may be too weak for the research question. Suppose `0.001` is a
+pre-specified, substantively meaningful response size on the scale used to fit
+the model. We can ask for the probability that the absolute response exceeds
+that threshold at horizon 8.
+
+```{r magnitude-question, warning = FALSE}
+material_response <- magnitude_audit(
+  post,
+  type = "irf",
+  variable = "gdp",
+  shock = "gs",
+  horizon = 8,
+  relation = ">",
+  value = 0.001,
+  absolute = TRUE
+)
+
+material_response[, c("posterior_prob", "median_gap",
+                       "lower_gap", "upper_gap")]
+```
+
+Choose the threshold from the variable transformation and application, not
+from the posterior output. For cumulative multiplier questions, set
+`type = "cdm"` and review the scaling options in
+[`magnitude_audit()`](../reference/magnitude_audit.html).
+
+## Does an interval cover the whole path?
+
+Ordinary credible intervals are pointwise. A 90% simultaneous band uses one
+sup-norm critical value for the selected response path, giving the stronger
+statement that 90% of draws lie inside the band over the selection as a whole.
+
+```{r simultaneous-band}
+gdp_band <- simultaneous_irf(
+  post,
+  horizon = 12,
+  probability = 0.90,
+  variables = "gdp",
+  shocks = "gs"
+)
+
+gdp_band[gdp_band$horizon %in% c(0, 4, 8, 12),
+         c("horizon", "median", "lower", "upper", "simultaneous_prob")]
+```
+
+The band applies only to the variables, shocks, and horizons used to construct
+it. Expanding that family generally widens the band. Use
+[`simultaneous_cdm()`](../reference/simultaneous_cdm.html) for cumulative
+responses and [`plot_simultaneous()`](../reference/plot_simultaneous.html) when
+the path is easier to assess graphically.
+
+## Which single draw represents the posterior center?
+
+A grid of pointwise medians need not be generated by any stored parameter draw.
+`median_target_irf()` instead selects the one draw closest to the median target
+over the requested responses and horizons. Including both GDP and government
+spending in the target keeps their displayed paths coherent with each other.
+
+```{r median-target}
+representative <- median_target_irf(
+  post, horizon = 12,
+  variables = c("gdp", "gs"),
+  shocks = "gs", horizons = 0:12
+)
+
+representative$draw_index
+
+rep_path <- summary(representative)
+subset(
+  rep_path,
+  variable == "gdp" & shock == "gs" & horizon %in% c(0, 4, 8, 12),
+  select = c(horizon, median, draw_index, method))
+```
+
+Use this draw when a downstream calculation requires one internally consistent
+structural model. Do not describe it as posterior uncertainty: retain the full
+posterior and its intervals alongside it. The same selection is available for
+[CDMs](../reference/median_target_cdm.html); sign-restricted models also have a
+distinct [most-likely admissible draw](../reference/most_likely_admissible_irf.html).
+
+## When does the response arrive and fade?
+
+Response-shape summaries operate draw by draw before summarizing, so uncertainty
+in timing is not inferred from one median curve. For an interpretable persistence
+example, examine the government-spending shock's own response over 20 quarters.
+
+```{r response-timing}
+peak <- peak_response(post, horizon = 20, variables = "gs", shocks = "gs",
+                      absolute = TRUE)
+duration <- duration_response(
+  post, horizon = 20, variables = "gs", shocks = "gs",
+  relation = ">", value = 0, mode = "consecutive")
+half_life <- half_life_response(
+  post, horizon = 20, variables = "gs", shocks = "gs", baseline = "peak")
+threshold <- time_to_threshold(
+  post, horizon = 20, variables = "gs", shocks = "gs",
+  relation = "<", value = 0.015)
+
+data.frame(
+  question = c("absolute peak", "positive spell", "half-life", "below 0.015"),
+  posterior_median = c(
+    peak$median_horizon,
+    duration$median_duration,
+    half_life$median_half_life,
+    threshold$median_horizon
+  ),
+  unit = c("horizon", "periods", "periods after peak", "horizon"),
+  reached_prob = c(NA, NA, half_life$reached_prob, threshold$reached_prob)
+)
+```
+
+`reached_prob` matters for half-life and threshold summaries: a conditional
+median can look precise even when few draws reach the event within the requested
+horizon. `peak_response()` additionally reports the posterior distribution of
+the peak value. Use the dedicated reference pages for alternative definitions:
+[`duration_response()`](../reference/duration_response.html),
+[`half_life_response()`](../reference/half_life_response.html), and
+[`time_to_threshold()`](../reference/time_to_threshold.html).
+
+## Choose the statement that matches the question
+
+- Use a `compare_*()` table to expose specification sensitivity.
+- Use `hypothesis_*()` for one or more pointwise posterior probabilities.
+- Use `joint_hypothesis_*()` when all selected inequalities must hold together.
+- Use `magnitude_audit()` for a pre-specified economically relevant threshold.
+- Use `simultaneous_*()` when coverage of an entire selected path is the claim.
+- Use a median-target draw only when one coherent stored model is required.
+- Use timing summaries for when, how long, and whether a response reaches an
+  event—not as substitutes for the response distribution itself.
+
+For sign-restricted posterior diagnostics and admissibility-based representative
+draws, continue to [Sign-Restricted Workflows](sign-restricted-workflows.html).
+The [reference index](https://davidzenz.github.io/bsvarPost/reference/index.html) lists lower-level variants and
+plotting methods without repeating them here.
