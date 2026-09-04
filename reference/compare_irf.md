@@ -43,13 +43,13 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 comp <- compare_irf(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
 #> # A tibble: 6 × 10
-#>   model object_type variable shock horizon     mean   median      sd     lower
-#>   <chr> <chr>       <chr>    <chr>   <dbl>    <dbl>    <dbl>   <dbl>     <dbl>
-#> 1 m1    irf         ttr      ttr         0 0.0406   0.0312   0.0201   0.0296  
-#> 2 m1    irf         ttr      ttr         1 0.0356   0.0310   0.0119   0.0269  
-#> 3 m1    irf         ttr      ttr         2 0.0318   0.0309   0.00705  0.0244  
-#> 4 m1    irf         ttr      ttr         3 0.0287   0.0308   0.00522  0.0221  
-#> 5 m1    irf         ttr      gs          0 0        0        0        0       
-#> 6 m1    irf         ttr      gs          1 0.000625 0.000339 0.00148 -0.000775
+#>   model object_type variable shock horizon    mean   median     sd   lower
+#>   <chr> <chr>       <chr>    <chr>   <dbl>   <dbl>    <dbl>  <dbl>   <dbl>
+#> 1 m1    irf         ttr      ttr         0  0.105   0.0966  0.0178  0.0956
+#> 2 m1    irf         ttr      ttr         1  0.101   0.123   0.0525  0.0304
+#> 3 m1    irf         ttr      ttr         2  0.105   0.159   0.121  -0.0589
+#> 4 m1    irf         ttr      ttr         3  0.116   0.206   0.193  -0.145 
+#> 5 m1    irf         ttr      gs          0  0       0       0       0     
+#> 6 m1    irf         ttr      gs          1 -0.0428 -0.00909 0.0718 -0.141 
 #> # ℹ 1 more variable: upper <dbl>
 ```

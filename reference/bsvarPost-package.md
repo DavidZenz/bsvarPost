@@ -18,9 +18,12 @@ The package currently ships with:
 
 - Getting Started (`bsvarPost`)
 
-- Post-Estimation Workflows (`post-estimation-workflows`)
+- Inference and Comparison (`inference-and-comparison`)
 
-- Hypothesis Testing (`hypothesis-testing`)
+- Historical-Decomposition Event Workflows
+  (`historical-decomposition-events`)
+
+- Sign-Restricted Workflows (`sign-restricted-workflows`)
 
 ## See also
 

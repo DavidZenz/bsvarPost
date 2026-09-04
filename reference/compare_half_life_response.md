@@ -96,12 +96,12 @@ head(comp)
 #> # A tibble: 6 × 12
 #>   model object_type   variable shock fraction baseline mean_half_life
 #>   <chr> <chr>         <chr>    <chr>    <dbl> <chr>             <dbl>
-#> 1 m1    half_life_irf ttr      ttr        0.5 peak                 NA
-#> 2 m1    half_life_irf ttr      gs         0.5 peak                 NA
-#> 3 m1    half_life_irf ttr      gdp        0.5 peak                 NA
-#> 4 m1    half_life_irf gs       ttr        0.5 peak                  3
-#> 5 m1    half_life_irf gs       gs         0.5 peak                 NA
-#> 6 m1    half_life_irf gs       gdp        0.5 peak                 NA
+#> 1 m1    half_life_irf ttr      ttr        0.5 peak               1   
+#> 2 m1    half_life_irf ttr      gs         0.5 peak              NA   
+#> 3 m1    half_life_irf ttr      gdp        0.5 peak               1.5 
+#> 4 m1    half_life_irf gs       ttr        0.5 peak               1.75
+#> 5 m1    half_life_irf gs       gs         0.5 peak               1   
+#> 6 m1    half_life_irf gs       gdp        0.5 peak              NA   
 #> # ℹ 5 more variables: median_half_life <dbl>, sd_half_life <dbl>,
 #> #   lower_half_life <dbl>, upper_half_life <dbl>, reached_prob <dbl>
 ```

@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>bsvarPost • bsvarPost</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="bsvarPost">
 <meta name="description" content="A post-estimation companion package for bsvars and bsvarSIGNs, focused on cumulative responses, historical decomposition workflows, tidy extraction, comparison workflows, diagnostics, and publication-ready reporting.
@@ -39,8 +39,9 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/bsvarPost.html">Getting Started</a></li>
-    <li><a class="dropdown-item" href="articles/hypothesis-testing.html">Hypothesis Testing</a></li>
-    <li><a class="dropdown-item" href="articles/post-estimation-workflows.html">Post-Estimation Workflows</a></li>
+    <li><a class="dropdown-item" href="articles/inference-and-comparison.html">Inference and Comparison</a></li>
+    <li><a class="dropdown-item" href="articles/historical-decomposition-events.html">Historical-Decomposition Events</a></li>
+    <li><a class="dropdown-item" href="articles/sign-restricted-workflows.html">Sign-Restricted Workflows</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -49,7 +50,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/DavidZenz/bsvarPost"><span class="fa fab fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/DavidZenz/bsvarPost" aria-label="GitHub"><span class="fa fab fa-github"></span></a></li>
       </ul>
 </div>
 
@@ -57,104 +58,63 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><p><code>bsvarPost</code> is a post-estimation companion package for <a href="https://cran.r-project.org/package=bsvars" class="external-link"><code>bsvars</code></a> and <a href="https://cran.r-project.org/package=bsvarSIGNs" class="external-link"><code>bsvarSIGNs</code></a>.</p>
-<p>It focuses on what happens after estimation:</p>
-<ul>
-<li>cumulative dynamic multipliers</li>
-<li>tidy extraction of posterior objects</li>
-<li>model comparison</li>
-<li>representative-model summaries</li>
-<li>restriction, magnitude, and hypothesis audits</li>
-<li>diagnostics for sign-restricted models</li>
-<li>historical-decomposition event workflows</li>
-<li>publication-oriented plotting and reporting</li>
-</ul>
+  <main id="main" class="col-md-9"><p><strong>Ask more of your structural VAR posterior.</strong></p>
+<p><code>bsvarPost</code> begins where <a href="https://cran.r-project.org/package=bsvars" class="external-link"><code>bsvars</code></a> and <a href="https://cran.r-project.org/package=bsvarSIGNs" class="external-link"><code>bsvarSIGNs</code></a> leave off. Bring an estimated posterior and use it to answer research questions, compare specifications, diagnose identifying restrictions, and prepare results for communication.</p>
+<p>The package does not provide another estimation workflow. It adds a consistent post-estimation layer for the questions that arise after a model has been fit.</p>
 <div class="section level2">
-<h2 id="start-here">Start Here<a class="anchor" aria-label="anchor" href="#start-here"></a>
+<h2 id="the-shortest-path">The shortest path<a class="anchor" aria-label="anchor" href="#the-shortest-path"></a>
 </h2>
-<ul>
-<li>New to the package: <a href="articles/bsvarPost.html">Getting Started</a>
-</li>
-<li>Looking for the broader workflow surface: <a href="articles/post-estimation-workflows.html">Post-Estimation Workflows</a>
-</li>
-</ul>
+<p>If you already have a <code>bsvars</code> or <code>bsvarSIGNs</code> posterior, you are ready to start. A typical first step turns a posterior result into a compact tidy table:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidzenz.github.io/bsvarPost/">bsvarPost</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tidy_irf.html">tidy_irf</a></span><span class="op">(</span><span class="va">posterior</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">responses</span><span class="op">)</span></span></code></pre></div>
+<p>The same tidy shape is available for cumulative dynamic multipliers, forecast error variance decompositions, historical decompositions, forecasts, and structural shocks. Learn the pattern once, then filter, plot, join, or report the result with familiar tools.</p>
+<p>For cumulative effects, compute the posterior object explicitly with <a href="reference/cdm.html"><code>cdm()</code></a>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">multipliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cdm.html">cdm</a></span><span class="op">(</span><span class="va">posterior</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">multipliers</span><span class="op">)</span></span></code></pre></div>
+<p>Start with <a href="articles/bsvarPost.html">Getting Started</a> for a short, reproducible walkthrough from an existing posterior to tidy results, cumulative effects, and a publication-ready figure.</p>
 </div>
 <div class="section level2">
-<h2 id="core-workflow">Core Workflow<a class="anchor" aria-label="anchor" href="#core-workflow"></a>
-</h2>
-<ol style="list-style-type: decimal">
-<li>Estimate a model with <code>bsvars</code> or <code>bsvarSIGNs</code>.</li>
-<li>Extract responses or summaries with <code>tidy_*()</code> or <code><a href="reference/cdm.html">cdm()</a></code>.</li>
-<li>Compare specifications with <code>compare_*()</code>.</li>
-<li>Audit hypotheses and restrictions.</li>
-<li>Move results into publication-oriented tables and plots.</li>
-</ol>
-</div>
-<div class="section level2">
-<h2 id="main-feature-families">Main Feature Families<a class="anchor" aria-label="anchor" href="#main-feature-families"></a>
+<h2 id="what-question-are-you-asking">What question are you asking?<a class="anchor" aria-label="anchor" href="#what-question-are-you-asking"></a>
 </h2>
 <div class="section level3">
-<h3 id="responses-and-extraction">Responses and extraction<a class="anchor" aria-label="anchor" href="#responses-and-extraction"></a>
+<h3 id="do-conclusions-survive-a-different-specification">Do conclusions survive a different specification?<a class="anchor" aria-label="anchor" href="#do-conclusions-survive-a-different-specification"></a>
 </h3>
-<ul>
-<li><code><a href="reference/cdm.html">cdm()</a></code></li>
-<li>
-<code><a href="reference/tidy_irf.html">tidy_irf()</a></code>, <code><a href="reference/tidy_cdm.html">tidy_cdm()</a></code>, <code><a href="reference/tidy_fevd.html">tidy_fevd()</a></code>, <code><a href="reference/tidy_hd.html">tidy_hd()</a></code>, <code><a href="reference/tidy_forecast.html">tidy_forecast()</a></code>
-</li>
-</ul>
+<p>Use the comparison workflow to place results from named posterior objects in one table. You can compare responses, cumulative effects, decompositions, forecasts, timing summaries, and diagnostics without manually binding model outputs.</p>
+<p><a href="articles/inference-and-comparison.html">Inference and Comparison</a> shows how to compare specifications, state posterior probability and magnitude questions, evaluate joint hypotheses, construct simultaneous bands, and select coherent representative draws. It also covers useful response-shape summaries such as peaks, duration, half-life, and time to a threshold.</p>
 </div>
 <div class="section level3">
-<h3 id="comparison">Comparison<a class="anchor" aria-label="anchor" href="#comparison"></a>
+<h3 id="which-shocks-mattered-during-a-particular-episode">Which shocks mattered during a particular episode?<a class="anchor" aria-label="anchor" href="#which-shocks-mattered-during-a-particular-episode"></a>
 </h3>
-<ul>
-<li>
-<code><a href="reference/compare_irf.html">compare_irf()</a></code>, <code><a href="reference/compare_cdm.html">compare_cdm()</a></code>, <code><a href="reference/compare_fevd.html">compare_fevd()</a></code>, <code><a href="reference/compare_forecast.html">compare_forecast()</a></code>
-</li>
-<li>comparison helpers for response-shape summaries and diagnostics</li>
-</ul>
+<p>Rather than reproducing a full historical decomposition, define an event window and summarize the posterior contribution of each shock. Rank shocks by their contribution and compare the same episode across models.</p>
+<p><a href="articles/historical-decomposition-events.html">Historical-Decomposition Events</a> develops this event-centred workflow with <code><a href="reference/tidy_hd_event.html">tidy_hd_event()</a></code>, <code><a href="reference/shock_ranking.html">shock_ranking()</a></code>, and focused visual summaries.</p>
 </div>
 <div class="section level3">
-<h3 id="representative-summaries-and-audits">Representative summaries and audits<a class="anchor" aria-label="anchor" href="#representative-summaries-and-audits"></a>
+<h3 id="are-sign-restricted-results-well-supported">Are sign-restricted results well supported?<a class="anchor" aria-label="anchor" href="#are-sign-restricted-results-well-supported"></a>
 </h3>
-<ul>
-<li><code>median_target_*()</code></li>
-<li><code>most_likely_admissible_*()</code></li>
-<li><code>hypothesis_*()</code></li>
-<li><code><a href="reference/restriction_audit.html">restriction_audit()</a></code></li>
-<li><code><a href="reference/magnitude_audit.html">magnitude_audit()</a></code></li>
-</ul>
+<p>Sign-restricted posteriors carry questions that do not arise in the same way for other identification schemes: which admissible draw best represents the posterior, whether stated restrictions hold in saved draws, and whether the admissibility weights indicate weak or sparse support.</p>
+<p><a href="articles/sign-restricted-workflows.html">Sign-Restricted Workflows</a> brings together <code>most_likely_admissible_*()</code>, <code><a href="reference/restriction_audit.html">restriction_audit()</a></code>, <code><a href="reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code>, and the corresponding comparison and plotting workflows.</p>
 </div>
 <div class="section level3">
-<h3 id="historical-decomposition-workflows">Historical decomposition workflows<a class="anchor" aria-label="anchor" href="#historical-decomposition-workflows"></a>
+<h3 id="how-do-i-turn-results-into-a-figure-or-table">How do I turn results into a figure or table?<a class="anchor" aria-label="anchor" href="#how-do-i-turn-results-into-a-figure-or-table"></a>
 </h3>
-<ul>
-<li><code><a href="reference/tidy_hd_event.html">tidy_hd_event()</a></code></li>
-<li><code><a href="reference/shock_ranking.html">shock_ranking()</a></code></li>
-<li><code><a href="reference/compare_hd_event.html">compare_hd_event()</a></code></li>
-</ul>
-</div>
-<div class="section level3">
-<h3 id="publication-outputs">Publication outputs<a class="anchor" aria-label="anchor" href="#publication-outputs"></a>
-</h3>
-<ul>
-<li><code><a href="reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code></li>
-<li><code><a href="reference/report_bundle.html">report_bundle()</a></code></li>
-<li><code><a href="reference/report_table.html">report_table()</a></code></li>
-<li>
-<code><a href="reference/as_kable.html">as_kable()</a></code>, <code><a href="reference/as_gt.html">as_gt()</a></code>, <code><a href="reference/as_flextable.html">as_flextable()</a></code>
-</li>
-</ul>
+<p>Tidy outputs work directly with <code>ggplot2</code> and table tools. <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">ggplot2::autoplot()</a></code> provides a useful first view; the publication helpers add consistent styling, annotations, and export settings. Reporting helpers convert the same focused result into a labelled table, so analysis and presentation stay connected.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="notes">Notes<a class="anchor" aria-label="anchor" href="#notes"></a>
+<h2 id="a-small-package-by-design">A small package by design<a class="anchor" aria-label="anchor" href="#a-small-package-by-design"></a>
 </h2>
+<p>Use <code>bsvars</code> or <code>bsvarSIGNs</code> to specify, estimate, and inspect the underlying model. Use <code>bsvarPost</code> when you need to:</p>
 <ul>
-<li>
-<code>bsvarPost</code> does not estimate models itself.</li>
-<li>Magnitude restrictions are handled as post-estimation audits, not estimation-time admissibility filters.</li>
-<li>For sign-restricted models, <code>most_likely_admissible_*()</code> is available only for <code>PosteriorBSVARSIGN</code>.</li>
+<li>express a posterior result as a tidy, reusable data set;</li>
+<li>answer a cumulative, comparative, probabilistic, or timing question;</li>
+<li>investigate a historical episode or sign-restriction diagnostic; or</li>
+<li>carry a focused result into a publication-ready plot or table.</li>
 </ul>
+<p>Function-level details and variants remain available in the <a href="reference/index.html">reference index</a>. The articles above are the recommended route through the package.</p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
@@ -198,7 +158,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

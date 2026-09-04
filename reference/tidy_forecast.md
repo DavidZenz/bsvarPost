@@ -41,12 +41,12 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 result <- tidy_forecast(post, horizon = 3)
 head(result)
 #> # A tibble: 6 × 9
-#>   model  object_type variable  horizon  mean median     sd  lower upper
-#>   <chr>  <chr>       <chr>     <chr>   <dbl>  <dbl>  <dbl>  <dbl> <dbl>
-#> 1 model1 forecast    variable1 1       -8.92  -8.92 0.0120  -8.92 -8.90
-#> 2 model1 forecast    variable1 2       -8.91  -8.91 0.0318  -8.94 -8.87
-#> 3 model1 forecast    variable1 3       -8.94  -8.91 0.0703  -9.03 -8.87
-#> 4 model1 forecast    variable2 1       -9.74  -9.76 0.206   -9.93 -9.47
-#> 5 model1 forecast    variable2 2       -9.69  -9.63 0.371  -10.1  -9.26
-#> 6 model1 forecast    variable2 3       -9.70  -9.57 0.761  -10.6  -8.95
+#>   model  object_type variable  horizon   mean median    sd  lower  upper
+#>   <chr>  <chr>       <chr>     <chr>    <dbl>  <dbl> <dbl>  <dbl>  <dbl>
+#> 1 model1 forecast    variable1 1        -8.70  -8.79 0.218  -8.88  -8.41
+#> 2 model1 forecast    variable1 2        -8.73  -8.77 0.145  -8.86  -8.54
+#> 3 model1 forecast    variable1 3        -8.50  -8.50 0.137  -8.62  -8.33
+#> 4 model1 forecast    variable2 1       -10.3  -10.1  0.612 -11.0   -9.71
+#> 5 model1 forecast    variable2 2       -10.2  -10.0  0.371 -10.7   -9.88
+#> 6 model1 forecast    variable2 3       -10.8  -10.9  0.482 -11.3  -10.2 
 ```

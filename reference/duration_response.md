@@ -251,15 +251,15 @@ print(dur)
 #> # A tibble: 9 × 12
 #>   model  object_type  variable shock relation threshold mode       mean_duration
 #>   <chr>  <chr>        <chr>    <chr> <chr>        <dbl> <chr>              <dbl>
-#> 1 model1 duration_irf ttr      ttr   >                0 consecuti…           4  
+#> 1 model1 duration_irf ttr      ttr   >                0 consecuti…           1.6
 #> 2 model1 duration_irf ttr      gs    >                0 consecuti…           0  
 #> 3 model1 duration_irf ttr      gdp   >                0 consecuti…           0  
-#> 4 model1 duration_irf gs       ttr   >                0 consecuti…           2.2
-#> 5 model1 duration_irf gs       gs    >                0 consecuti…           4  
+#> 4 model1 duration_irf gs       ttr   >                0 consecuti…           1.2
+#> 5 model1 duration_irf gs       gs    >                0 consecuti…           1.6
 #> 6 model1 duration_irf gs       gdp   >                0 consecuti…           0  
-#> 7 model1 duration_irf gdp      ttr   >                0 consecuti…           2.6
-#> 8 model1 duration_irf gdp      gs    >                0 consecuti…           2.6
-#> 9 model1 duration_irf gdp      gdp   >                0 consecuti…           4  
+#> 7 model1 duration_irf gdp      ttr   >                0 consecuti…           1.6
+#> 8 model1 duration_irf gdp      gs    >                0 consecuti…           1  
+#> 9 model1 duration_irf gdp      gdp   >                0 consecuti…           3.8
 #> # ℹ 4 more variables: median_duration <dbl>, sd_duration <dbl>,
 #> #   lower_duration <dbl>, upper_duration <dbl>
 ```

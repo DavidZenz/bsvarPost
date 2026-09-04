@@ -144,9 +144,9 @@ print(h)
 #> # A tibble: 3 × 16
 #>   model  object_type variable shock horizon relation posterior_prob mean_gap
 #>   <chr>  <chr>       <chr>    <chr>   <dbl> <chr>             <dbl>    <dbl>
-#> 1 model1 cdm         gdp      gdp         0 >                     1   0.0189
-#> 2 model1 cdm         gdp      gdp         1 >                     1   0.0371
-#> 3 model1 cdm         gdp      gdp         2 >                     1   0.0543
+#> 1 model1 cdm         gdp      gdp         0 >                     1    0.344
+#> 2 model1 cdm         gdp      gdp         1 >                     1    0.938
+#> 3 model1 cdm         gdp      gdp         2 >                     1    1.72 
 #> # ℹ 8 more variables: median_gap <dbl>, lower_gap <dbl>, upper_gap <dbl>,
 #> #   rhs_variable <chr>, rhs_shock <chr>, rhs_horizon <dbl>, rhs_value <dbl>,
 #> #   absolute <lgl>

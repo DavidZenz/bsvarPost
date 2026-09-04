@@ -114,5 +114,5 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 rep_cdm <- representative_cdm(post, horizon = 3)
 rep_cdm$draw_index
-#> [1] 4
+#> [1] 3
 ```

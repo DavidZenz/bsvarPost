@@ -102,10 +102,10 @@ head(comp)
 #> # A tibble: 6 × 12
 #>   model object_type  variable shock relation threshold mode        mean_duration
 #>   <chr> <chr>        <chr>    <chr> <chr>        <dbl> <chr>               <dbl>
-#> 1 m1    duration_irf ttr      ttr   >                0 consecutive           4  
+#> 1 m1    duration_irf ttr      ttr   >                0 consecutive           2.2
 #> 2 m1    duration_irf ttr      gs    >                0 consecutive           0  
 #> 3 m1    duration_irf ttr      gdp   >                0 consecutive           0  
-#> 4 m1    duration_irf gs       ttr   >                0 consecutive           0.6
+#> 4 m1    duration_irf gs       ttr   >                0 consecutive           1.8
 #> 5 m1    duration_irf gs       gs    >                0 consecutive           4  
 #> 6 m1    duration_irf gs       gdp   >                0 consecutive           0  
 #> # ℹ 4 more variables: median_duration <dbl>, sd_duration <dbl>,

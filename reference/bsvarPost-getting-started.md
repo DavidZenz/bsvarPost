@@ -1,8 +1,8 @@
 # Getting Started with bsvarPost
 
-This article introduces the main `bsvars` and `bsvarSIGNs` workflows in
-`bsvarPost`, including CDMs, tidy summaries, comparison helpers, and
-reporting utilities.
+This article gives the shortest path from an existing `bsvars` or
+`bsvarSIGNs` posterior to tidy summaries, CDMs, comparison and
+inference, and publication-ready output.
 
 ## Details
 

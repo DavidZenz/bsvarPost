@@ -98,11 +98,11 @@ head(comp)
 #>   model object_type           variable shock relation threshold mean_horizon
 #>   <chr> <chr>                 <chr>    <chr> <chr>        <dbl>        <dbl>
 #> 1 m1    time_to_threshold_irf ttr      ttr   >                0            0
-#> 2 m1    time_to_threshold_irf ttr      gs    >                0           NA
+#> 2 m1    time_to_threshold_irf ttr      gs    >                0            1
 #> 3 m1    time_to_threshold_irf ttr      gdp   >                0            1
-#> 4 m1    time_to_threshold_irf gs       ttr   >                0            2
+#> 4 m1    time_to_threshold_irf gs       ttr   >                0            0
 #> 5 m1    time_to_threshold_irf gs       gs    >                0            0
-#> 6 m1    time_to_threshold_irf gs       gdp   >                0           NA
+#> 6 m1    time_to_threshold_irf gs       gdp   >                0            1
 #> # ℹ 5 more variables: median_horizon <dbl>, sd_horizon <dbl>,
 #> #   lower_horizon <dbl>, upper_horizon <dbl>, reached_prob <dbl>
 ```

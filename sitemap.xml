@@ -3,9 +3,10 @@
 <url><loc>https://davidzenz.github.io/bsvarPost/DEVELOPMENT.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/ROADMAP.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/articles/bsvarPost.html</loc></url>
-<url><loc>https://davidzenz.github.io/bsvarPost/articles/hypothesis-testing.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/articles/index.html</loc></url>
-<url><loc>https://davidzenz.github.io/bsvarPost/articles/post-estimation-workflows.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/authors.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/index.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/news/index.html</loc></url>
@@ -19,8 +20,10 @@
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/as_tsibble_post.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/autoplot.bsvar_post_tbl.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/bsvarPost-getting-started.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/bsvarPost-historical-decomposition-events.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/bsvarPost-inference-and-comparison.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/bsvarPost-package.html</loc></url>
-<url><loc>https://davidzenz.github.io/bsvarPost/reference/bsvarPost-workflows.html</loc></url>
+<url><loc>https://davidzenz.github.io/bsvarPost/reference/bsvarPost-sign-restricted-workflows.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/cdm.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/compare_acceptance_diagnostics.html</loc></url>
 <url><loc>https://davidzenz.github.io/bsvarPost/reference/compare_cdm.html</loc></url>

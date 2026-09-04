@@ -42,7 +42,7 @@ print(jh)
 #> # A tibble: 1 × 13
 #>   model object_type relation posterior_prob n_constraints variable shock horizon
 #>   <chr> <chr>       <chr>             <dbl>         <int> <chr>    <chr> <chr>  
-#> 1 mode… joint_irf   >                     0             3 gdp      gdp   0,1,2  
+#> 1 mode… joint_irf   >                     1             3 gdp      gdp   0,1,2  
 #> # ℹ 5 more variables: rhs_variable <chr>, rhs_shock <chr>, rhs_horizon <dbl>,
 #> #   rhs_value <dbl>, absolute <lgl>
 ```

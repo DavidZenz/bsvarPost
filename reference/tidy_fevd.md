@@ -41,13 +41,12 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 result <- tidy_fevd(post, horizon = 3)
 head(result)
 #> # A tibble: 6 × 10
-#>   model  object_type variable shock horizon    mean  median     sd   lower
-#>   <chr>  <chr>       <chr>    <chr>   <dbl>   <dbl>   <dbl>  <dbl>   <dbl>
-#> 1 model1 fevd        ttr      ttr         0 100     100      0     100    
-#> 2 model1 fevd        ttr      ttr         1  98.3    98.1    0.924  97.2  
-#> 3 model1 fevd        ttr      ttr         2  92.7    90.8    4.05   88.7  
-#> 4 model1 fevd        ttr      ttr         3  80.5    74.3   10.2    72.9  
-#> 5 model1 fevd        ttr      gs          0   0       0      0       0    
-#> 6 model1 fevd        ttr      gs          1   0.370   0.265  0.263   0.192
-#> # ℹ 1 more variable: upper <dbl>
+#>   model  object_type variable shock horizon    mean  median    sd   lower  upper
+#>   <chr>  <chr>       <chr>    <chr>   <dbl>   <dbl>   <dbl> <dbl>   <dbl>  <dbl>
+#> 1 model1 fevd        ttr      ttr         0 100     100     0     1   e+2 100   
+#> 2 model1 fevd        ttr      ttr         1  98.9    99.3   0.742 9.79e+1  99.5 
+#> 3 model1 fevd        ttr      ttr         2  97.2    97.6   1.96  9.47e+1  99.0 
+#> 4 model1 fevd        ttr      ttr         3  95.0    95.1   3.28  9.12e+1  98.6 
+#> 5 model1 fevd        ttr      gs          0   0       0     0     0         0   
+#> 6 model1 fevd        ttr      gs          1   0.511   0.248 0.577 5.45e-2   1.29
 ```

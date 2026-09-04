@@ -1,11 +1,12 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   bsvarPost: bsvarPost.html
-  hypothesis-testing: hypothesis-testing.html
-  post-estimation-workflows: post-estimation-workflows.html
-last_built: 2026-03-21T17:13Z
+  historical-decomposition-events: historical-decomposition-events.html
+  inference-and-comparison: inference-and-comparison.html
+  sign-restricted-workflows: sign-restricted-workflows.html
+last_built: 2026-09-04T18:28Z
 urls:
   reference: https://davidzenz.github.io/bsvarPost/reference
   article: https://davidzenz.github.io/bsvarPost/articles

@@ -1,180 +1,181 @@
-`bsvarPost` is a post-estimation companion package for
+**Ask more of your structural VAR posterior.**
+
+`bsvarPost` begins where
 [`bsvars`](https://cran.r-project.org/package=bsvars) and
-[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs).
+[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs) leave off.
+Bring an estimated posterior and use it to answer research questions,
+compare specifications, diagnose identifying restrictions, and prepare
+results for communication.
 
-It focuses on what happens after estimation:
+The package does not provide another estimation workflow. It adds a
+consistent post-estimation layer for the questions that arise after a
+model has been fit.
 
-- cumulative dynamic multipliers
-- tidy extraction of posterior objects
-- model comparison
-- representative-model summaries
-- restriction, magnitude, and hypothesis audits
-- diagnostics for sign-restricted models
-- historical-decomposition event workflows
-- publication-oriented plotting and reporting
+## The shortest path
 
-## Start Here
+If you already have a `bsvars` or `bsvarSIGNs` posterior, you are ready
+to start. A typical first step turns a posterior result into a compact
+tidy table:
 
-- New to the package: [Getting
-  Started](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md)
-- Looking for the broader workflow surface: [Post-Estimation
-  Workflows](https://davidzenz.github.io/bsvarPost/articles/post-estimation-workflows.md)
+``` r
 
-## Core Workflow
+library(bsvarPost)
 
-1.  Estimate a model with `bsvars` or `bsvarSIGNs`.
-2.  Extract responses or summaries with `tidy_*()` or
-    [`cdm()`](https://davidzenz.github.io/bsvarPost/reference/cdm.md).
-3.  Compare specifications with `compare_*()`.
-4.  Audit hypotheses and restrictions.
-5.  Move results into publication-oriented tables and plots.
+responses <- tidy_irf(posterior, horizon = 12, probability = 0.90)
+head(responses)
+```
 
-## Main Feature Families
+The same tidy shape is available for cumulative dynamic multipliers,
+forecast error variance decompositions, historical decompositions,
+forecasts, and structural shocks. Learn the pattern once, then filter,
+plot, join, or report the result with familiar tools.
 
-### Responses and extraction
+For cumulative effects, compute the posterior object explicitly with
+[`cdm()`](https://davidzenz.github.io/bsvarPost/reference/cdm.md):
 
-- [`cdm()`](https://davidzenz.github.io/bsvarPost/reference/cdm.md)
-- [`tidy_irf()`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md),
-  [`tidy_cdm()`](https://davidzenz.github.io/bsvarPost/reference/tidy_cdm.md),
-  [`tidy_fevd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_fevd.md),
-  [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md),
-  [`tidy_forecast()`](https://davidzenz.github.io/bsvarPost/reference/tidy_forecast.md)
+``` r
 
-### Comparison
+multipliers <- cdm(posterior, horizon = 12)
+tidy_cdm(multipliers)
+```
 
-- [`compare_irf()`](https://davidzenz.github.io/bsvarPost/reference/compare_irf.md),
-  [`compare_cdm()`](https://davidzenz.github.io/bsvarPost/reference/compare_cdm.md),
-  [`compare_fevd()`](https://davidzenz.github.io/bsvarPost/reference/compare_fevd.md),
-  [`compare_forecast()`](https://davidzenz.github.io/bsvarPost/reference/compare_forecast.md)
-- comparison helpers for response-shape summaries and diagnostics
+Start with [Getting
+Started](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md)
+for a short, reproducible walkthrough from an existing posterior to tidy
+results, cumulative effects, and a publication-ready figure.
 
-### Representative summaries and audits
+## What question are you asking?
 
-- `median_target_*()`
-- `most_likely_admissible_*()`
-- `hypothesis_*()`
-- [`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md)
-- [`magnitude_audit()`](https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.md)
+### Do conclusions survive a different specification?
 
-### Historical decomposition workflows
+Use the comparison workflow to place results from named posterior
+objects in one table. You can compare responses, cumulative effects,
+decompositions, forecasts, timing summaries, and diagnostics without
+manually binding model outputs.
 
-- [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
-- [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md)
-- [`compare_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md)
+[Inference and
+Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.md)
+shows how to compare specifications, state posterior probability and
+magnitude questions, evaluate joint hypotheses, construct simultaneous
+bands, and select coherent representative draws. It also covers useful
+response-shape summaries such as peaks, duration, half-life, and time to
+a threshold.
 
-### Publication outputs
+### Which shocks mattered during a particular episode?
 
-- [`publish_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/publish_bsvar_plot.md)
-- [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
-- [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/report_table.md)
-- [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/as_kable.md),
-  [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/as_gt.md),
-  [`as_flextable()`](https://davidzenz.github.io/bsvarPost/reference/as_flextable.md)
+Rather than reproducing a full historical decomposition, define an event
+window and summarize the posterior contribution of each shock. Rank
+shocks by their contribution and compare the same episode across models.
 
-## Notes
+[Historical-Decomposition
+Events](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md)
+develops this event-centred workflow with
+[`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md),
+[`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md),
+and focused visual summaries.
 
-- `bsvarPost` does not estimate models itself.
-- Magnitude restrictions are handled as post-estimation audits, not
-  estimation-time admissibility filters.
-- For sign-restricted models, `most_likely_admissible_*()` is available
-  only for `PosteriorBSVARSIGN`.
+### Are sign-restricted results well supported?
+
+Sign-restricted posteriors carry questions that do not arise in the same
+way for other identification schemes: which admissible draw best
+represents the posterior, whether stated restrictions hold in saved
+draws, and whether the admissibility weights indicate weak or sparse
+support.
+
+[Sign-Restricted
+Workflows](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.md)
+brings together `most_likely_admissible_*()`,
+[`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md),
+[`acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/acceptance_diagnostics.md),
+and the corresponding comparison and plotting workflows.
+
+### How do I turn results into a figure or table?
+
+Tidy outputs work directly with `ggplot2` and table tools.
+[`ggplot2::autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
+provides a useful first view; the publication helpers add consistent
+styling, annotations, and export settings. Reporting helpers convert the
+same focused result into a labelled table, so analysis and presentation
+stay connected.
+
+## A small package by design
+
+Use `bsvars` or `bsvarSIGNs` to specify, estimate, and inspect the
+underlying model. Use `bsvarPost` when you need to:
+
+- express a posterior result as a tidy, reusable data set;
+- answer a cumulative, comparative, probabilistic, or timing question;
+- investigate a historical episode or sign-restriction diagnostic; or
+- carry a focused result into a publication-ready plot or table.
+
+Function-level details and variants remain available in the [reference
+index](https://davidzenz.github.io/bsvarPost/reference/index.md). The
+articles above are the recommended route through the package.
 
 # Package index
 
-## Core Responses
+## Tidy and Cumulative Extraction
 
 - [`cdm()`](https://davidzenz.github.io/bsvarPost/reference/cdm.md) :
   Cumulative Dynamic Multipliers
-- [`tidy_apr_forecast()`](https://davidzenz.github.io/bsvarPost/reference/tidy_apr_forecast.md)
-  : Convert APRScenario-style forecast tables to bsvarPost tidy format
+- [`tidy_irf()`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md)
+  : Tidy posterior impulse responses
 - [`tidy_cdm()`](https://davidzenz.github.io/bsvarPost/reference/tidy_cdm.md)
   : Tidy cumulative dynamic multipliers
 - [`tidy_fevd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_fevd.md)
   : Tidy forecast error variance decompositions
-- [`tidy_forecast()`](https://davidzenz.github.io/bsvarPost/reference/tidy_forecast.md)
-  : Tidy forecasts
 - [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md)
   : Tidy historical decompositions
-- [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
-  : Tidy event-window historical decompositions
-- [`tidy_irf()`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md)
-  : Tidy posterior impulse responses
+- [`tidy_forecast()`](https://davidzenz.github.io/bsvarPost/reference/tidy_forecast.md)
+  : Tidy forecasts
 - [`tidy_shocks()`](https://davidzenz.github.io/bsvarPost/reference/tidy_shocks.md)
   : Tidy structural shocks
-- [`compare_acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/compare_acceptance_diagnostics.md)
-  : Compare acceptance diagnostics across models
+
+## Compare Models and Specifications
+
+- [`compare_irf()`](https://davidzenz.github.io/bsvarPost/reference/compare_irf.md)
+  : Compare posterior impulse responses across models
 - [`compare_cdm()`](https://davidzenz.github.io/bsvarPost/reference/compare_cdm.md)
   : Compare cumulative dynamic multipliers across models
-- [`compare_duration_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_duration_response.md)
-  : Compare duration summaries across models
 - [`compare_fevd()`](https://davidzenz.github.io/bsvarPost/reference/compare_fevd.md)
   : Compare FEVDs across models
 - [`compare_forecast()`](https://davidzenz.github.io/bsvarPost/reference/compare_forecast.md)
   : Compare forecasts across models
-- [`compare_half_life_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_half_life_response.md)
-  : Compare half-life summaries across models
-- [`compare_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md)
-  : Compare event-window historical decompositions across models
-- [`compare_irf()`](https://davidzenz.github.io/bsvarPost/reference/compare_irf.md)
-  : Compare posterior impulse responses across models
-- [`compare_peak_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_peak_response.md)
-  : Compare peak response summaries across models
-- [`compare_restrictions()`](https://davidzenz.github.io/bsvarPost/reference/compare_restrictions.md)
-  : Compare restriction audits across models
-- [`compare_time_to_threshold()`](https://davidzenz.github.io/bsvarPost/reference/compare_time_to_threshold.md)
-  : Compare time-to-threshold summaries across models
 
-## Representative Summaries and Audits
+## Posterior Statements and Joint Inference
 
-- [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
-  : Representative cumulative dynamic multipliers
-- [`representative_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
-  : Representative impulse responses
-- [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.md)
-  : Median-target representative cumulative dynamic multipliers
-- [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/median_target_irf.md)
-  : Median-target representative impulse responses
-- [`most_likely_admissible_cdm()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_cdm.md)
-  : Most-likely-admissible representative cumulative dynamic multipliers
-- [`most_likely_admissible_irf()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.md)
-  : Most-likely-admissible representative impulse responses
-- [`hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.md)
-  : Posterior probability statements for cumulative dynamic multipliers
 - [`hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_irf.md)
   : Posterior probability statements for impulse responses
-- [`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md)
-  : Audit sign, zero, structural, and narrative restrictions
+- [`hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.md)
+  : Posterior probability statements for cumulative dynamic multipliers
+- [`joint_hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_irf.md)
+  : Joint posterior probability statements for impulse responses
+- [`joint_hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_cdm.md)
+  : Joint posterior probability statements for cumulative dynamic
+  multipliers
 - [`magnitude_audit()`](https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.md)
   : Audit magnitude statements for IRFs or CDMs
-- [`irf_restriction()`](https://davidzenz.github.io/bsvarPost/reference/irf_restriction.md)
-  : Create an impulse-response restriction specification
-- [`structural_restriction()`](https://davidzenz.github.io/bsvarPost/reference/structural_restriction.md)
-  : Create a structural restriction specification
-- [`narrative_restriction()`](https://davidzenz.github.io/bsvarPost/reference/narrative_restriction.md)
-  : Create a narrative restriction specification
+- [`simultaneous_irf()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_irf.md)
+  : Simultaneous posterior bands for impulse responses
+- [`simultaneous_cdm()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_cdm.md)
+  : Simultaneous posterior bands for cumulative dynamic multipliers
+- [`plot_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_hypothesis.md)
+  : Plot posterior probability statements for IRFs or CDMs
+- [`plot_joint_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_joint_hypothesis.md)
+  : Plot joint posterior probability statements
+- [`plot_simultaneous()`](https://davidzenz.github.io/bsvarPost/reference/plot_simultaneous.md)
+  : Plot simultaneous posterior bands
 
-## Historical Decomposition and Timing
+## Representative Draws and Response Timing
 
-- [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md)
-  : Tidy historical decompositions
-- [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
-  : Tidy event-window historical decompositions
-- [`plot_hd_lines()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_lines.md)
-  : Plot full-sample historical decomposition components
-- [`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md)
-  : Overlay historical decomposition component paths
-- [`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md)
-  : Stacked historical decomposition contributions over time
-- [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
-  : Plot observed and reconstructed decomposition totals
-- [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
-  : Plot event contribution shares
-- [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md)
-  : Plot cumulative event-window contribution paths
-- [`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.md)
-  : Plot event-window contribution uncertainty by shock
-- [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md)
-  : Rank shocks by event-window historical decomposition contributions
+- [`representative_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
+  : Representative impulse responses
+- [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
+  : Representative cumulative dynamic multipliers
+- [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/median_target_irf.md)
+  : Median-target representative impulse responses
+- [`median_target_cdm()`](https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.md)
+  : Median-target representative cumulative dynamic multipliers
 - [`peak_response()`](https://davidzenz.github.io/bsvarPost/reference/peak_response.md)
   : Peak response summaries for posterior IRFs and CDMs
 - [`duration_response()`](https://davidzenz.github.io/bsvarPost/reference/duration_response.md)
@@ -183,39 +184,35 @@ It focuses on what happens after estimation:
   : Half-life summaries for posterior IRFs and CDMs
 - [`time_to_threshold()`](https://davidzenz.github.io/bsvarPost/reference/time_to_threshold.md)
   : Time-to-threshold summaries for posterior IRFs and CDMs
-
-## Diagnostics and Joint Inference
-
-- [`acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/acceptance_diagnostics.md)
-  : Acceptance and admissibility diagnostics for bsvarSIGNs
-- [`simultaneous_irf()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_irf.md)
-  : Simultaneous posterior bands for impulse responses
-- [`simultaneous_cdm()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_cdm.md)
-  : Simultaneous posterior bands for cumulative dynamic multipliers
-- [`joint_hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_irf.md)
-  : Joint posterior probability statements for impulse responses
-- [`joint_hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_cdm.md)
-  : Joint posterior probability statements for cumulative dynamic
-  multipliers
-
-## Plotting and Reporting
-
-- [`autoplot(`*`<bsvar_post_tbl>`*`)`](https://davidzenz.github.io/bsvarPost/reference/autoplot.bsvar_post_tbl.md)
-  : Autoplot tidy posterior outputs
-- [`plot_acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/plot_acceptance_diagnostics.md)
-  : Plot acceptance diagnostics across metrics and models
+- [`compare_peak_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_peak_response.md)
+  : Compare peak response summaries across models
+- [`compare_duration_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_duration_response.md)
+  : Compare duration summaries across models
+- [`compare_half_life_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_half_life_response.md)
+  : Compare half-life summaries across models
+- [`compare_time_to_threshold()`](https://davidzenz.github.io/bsvarPost/reference/compare_time_to_threshold.md)
+  : Compare time-to-threshold summaries across models
 - [`plot_compare_response()`](https://davidzenz.github.io/bsvarPost/reference/plot_compare_response.md)
   : Plot comparison summaries for response-shape tables
-- [`plot_compare_restrictions()`](https://davidzenz.github.io/bsvarPost/reference/plot_compare_restrictions.md)
-  : Plot comparison summaries for restriction-audit tables
+
+## Historical-Decomposition Events and Shock Ranking
+
+- [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
+  : Tidy event-window historical decompositions
+- [`compare_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md)
+  : Compare event-window historical decompositions across models
+- [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md)
+  : Rank shocks by event-window historical decomposition contributions
+- [`plot_shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/plot_shock_ranking.md)
+  : Plot ranked event-window shock contributions
 - [`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md)
   : Plot event-window historical decomposition summaries
+- [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
+  : Plot event contribution shares
 - [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md)
   : Plot cumulative event-window contribution paths
 - [`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.md)
   : Plot event-window contribution uncertainty by shock
-- [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
-  : Plot event contribution shares
 - [`plot_hd_lines()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_lines.md)
   : Plot full-sample historical decomposition components
 - [`plot_hd_overlay()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_overlay.md)
@@ -224,16 +221,38 @@ It focuses on what happens after estimation:
   : Stacked historical decomposition contributions over time
 - [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
   : Plot observed and reconstructed decomposition totals
-- [`plot_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_hypothesis.md)
-  : Plot posterior probability statements for IRFs or CDMs
-- [`plot_joint_hypothesis()`](https://davidzenz.github.io/bsvarPost/reference/plot_joint_hypothesis.md)
-  : Plot joint posterior probability statements
+
+## Sign-Restricted Audits and Diagnostics
+
+- [`most_likely_admissible_irf()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.md)
+  : Most-likely-admissible representative impulse responses
+- [`most_likely_admissible_cdm()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_cdm.md)
+  : Most-likely-admissible representative cumulative dynamic multipliers
+- [`irf_restriction()`](https://davidzenz.github.io/bsvarPost/reference/irf_restriction.md)
+  : Create an impulse-response restriction specification
+- [`structural_restriction()`](https://davidzenz.github.io/bsvarPost/reference/structural_restriction.md)
+  : Create a structural restriction specification
+- [`narrative_restriction()`](https://davidzenz.github.io/bsvarPost/reference/narrative_restriction.md)
+  : Create a narrative restriction specification
+- [`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md)
+  : Audit sign, zero, structural, and narrative restrictions
+- [`acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/acceptance_diagnostics.md)
+  : Acceptance and admissibility diagnostics for bsvarSIGNs
+- [`compare_restrictions()`](https://davidzenz.github.io/bsvarPost/reference/compare_restrictions.md)
+  : Compare restriction audits across models
+- [`compare_acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/compare_acceptance_diagnostics.md)
+  : Compare acceptance diagnostics across models
 - [`plot_restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/plot_restriction_audit.md)
   : Plot restriction-audit summaries
-- [`plot_shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/plot_shock_ranking.md)
-  : Plot ranked event-window shock contributions
-- [`plot_simultaneous()`](https://davidzenz.github.io/bsvarPost/reference/plot_simultaneous.md)
-  : Plot simultaneous posterior bands
+- [`plot_compare_restrictions()`](https://davidzenz.github.io/bsvarPost/reference/plot_compare_restrictions.md)
+  : Plot comparison summaries for restriction-audit tables
+- [`plot_acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/plot_acceptance_diagnostics.md)
+  : Plot acceptance diagnostics across metrics and models
+
+## Publication and Reporting
+
+- [`autoplot(`*`<bsvar_post_tbl>`*`)`](https://davidzenz.github.io/bsvarPost/reference/autoplot.bsvar_post_tbl.md)
+  : Autoplot tidy posterior outputs
 - [`theme_bsvarpost()`](https://davidzenz.github.io/bsvarPost/reference/theme_bsvarpost.md)
   : Plot theme for bsvarPost outputs
 - [`style_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/style_bsvar_plot.md)
@@ -259,7 +278,7 @@ It focuses on what happens after estimation:
 - [`print(`*`<bsvar_report_bundle>`*`)`](https://davidzenz.github.io/bsvarPost/reference/print.bsvar_report_bundle.md)
   : Print bsvar_report_bundle objects
 
-## Bridges
+## Optional Integrations
 
 - [`as_tsibble_post()`](https://davidzenz.github.io/bsvarPost/reference/as_tsibble_post.md)
   : Convert bsvarPost tidy outputs to tsibble
@@ -270,13 +289,28 @@ It focuses on what happens after estimation:
 - [`apr_gen_mats()`](https://davidzenz.github.io/bsvarPost/reference/apr_gen_mats.md)
   : Optional wrapper around APRScenario::gen_mats
 
+## API Utilities
+
+- [`resolve_horizon()`](https://davidzenz.github.io/bsvarPost/reference/resolve_horizon.md)
+  : Resolve horizon to a validated integer, defaulting to 20
+- [`validate_horizon()`](https://davidzenz.github.io/bsvarPost/reference/validate_horizon.md)
+  : Validate a horizon parameter
+- [`validate_probability()`](https://davidzenz.github.io/bsvarPost/reference/validate_probability.md)
+  : Validate a probability parameter
+- [`validate_posterior_object()`](https://davidzenz.github.io/bsvarPost/reference/validate_posterior_object.md)
+  : Validate a posterior model object
+- [`deprecate_arg()`](https://davidzenz.github.io/bsvarPost/reference/deprecate_arg.md)
+  : Handle deprecated argument with warning
+
 # Articles
 
 ### Articles
 
 - [Getting Started with
   bsvarPost](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md):
-- [Hypothesis Testing in
-  bsvarPost](https://davidzenz.github.io/bsvarPost/articles/hypothesis-testing.md):
-- [Post-Estimation Workflows in
-  bsvarPost](https://davidzenz.github.io/bsvarPost/articles/post-estimation-workflows.md):
+- [Inference and
+  Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.md):
+- [Historical-Decomposition Event
+  Workflows](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md):
+- [Sign-Restricted
+  Workflows](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.md):

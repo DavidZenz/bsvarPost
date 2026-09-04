@@ -86,12 +86,12 @@ head(comp)
 #> # A tibble: 6 × 14
 #>   model object_type variable shock mean_value median_value sd_value lower_value
 #>   <chr> <chr>       <chr>    <chr>      <dbl>        <dbl>    <dbl>       <dbl>
-#> 1 m1    peak_irf    ttr      ttr      0.0459      0.0346    0.0278      0.0313 
-#> 2 m1    peak_irf    ttr      gs       0           0         0           0      
-#> 3 m1    peak_irf    ttr      gdp      0.0211      0.00933   0.0228      0.00233
-#> 4 m1    peak_irf    gs       ttr     -0.00394    -0.00232   0.00332    -0.00852
-#> 5 m1    peak_irf    gs       gs       0.0336      0.0291    0.0135      0.0249 
-#> 6 m1    peak_irf    gs       gdp      0.00462     0.000737  0.00894     0      
+#> 1 m1    peak_irf    ttr      ttr     0.532         0.0823   0.984      0.0327  
+#> 2 m1    peak_irf    ttr      gs      0.0434        0.0111   0.0825     0.000153
+#> 3 m1    peak_irf    ttr      gdp     0.0126        0.00884  0.0155     0.000738
+#> 4 m1    peak_irf    gs       ttr     0.308         0.0124   0.670     -0.000665
+#> 5 m1    peak_irf    gs       gs      0.0576        0.0328   0.0585     0.0281  
+#> 6 m1    peak_irf    gs       gdp     0.000469      0        0.00105    0       
 #> # ℹ 6 more variables: upper_value <dbl>, mean_horizon <dbl>,
 #> #   median_horizon <dbl>, sd_horizon <dbl>, lower_horizon <dbl>,
 #> #   upper_horizon <dbl>

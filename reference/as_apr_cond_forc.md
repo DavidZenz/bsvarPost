@@ -95,10 +95,10 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 apr_forc <- as_apr_cond_forc(post, horizon = 3)
 head(apr_forc)
 #>   hor  variable      lower    center     upper  model
-#> 1   1 variable1  -9.082878 -8.941584 -8.875381 model1
-#> 2   2 variable1  -9.247464 -8.865970 -8.432210 model1
-#> 3   3 variable1 -10.528405 -8.887696 -8.639741 model1
-#> 4   1 variable2  -9.842239 -9.824889 -9.793765 model1
-#> 5   2 variable2 -16.175162 -9.817265 -9.791415 model1
-#> 6   3 variable2 -26.722178 -9.804719 -9.736834 model1
+#> 1   1 variable1  -8.996956 -8.868245 -8.828637 model1
+#> 2   2 variable1  -9.283976 -8.837319 -8.728452 model1
+#> 3   3 variable1 -10.456010 -8.788829 -8.731512 model1
+#> 4   1 variable2  -9.874547 -9.779793 -8.668058 model1
+#> 5   2 variable2  -9.968457 -9.723177 -8.843310 model1
+#> 6   3 variable2 -10.269563 -9.857588 -9.284399 model1
 ```

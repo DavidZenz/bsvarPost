@@ -110,7 +110,7 @@ print(mag)
 #> # A tibble: 1 × 17
 #>   model  object_type variable shock horizon relation posterior_prob mean_gap
 #>   <chr>  <chr>       <chr>    <chr>   <dbl> <chr>             <dbl>    <dbl>
-#> 1 model1 irf         gdp      gdp         0 >                     1   0.0186
+#> 1 model1 irf         gdp      gdp         0 >                     1   0.0455
 #> # ℹ 9 more variables: median_gap <dbl>, lower_gap <dbl>, upper_gap <dbl>,
 #> #   rhs_variable <chr>, rhs_shock <chr>, rhs_horizon <dbl>, rhs_value <dbl>,
 #> #   absolute <lgl>, audit_type <chr>

@@ -43,12 +43,12 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 comp <- compare_forecast(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
 #> # A tibble: 6 × 9
-#>   model object_type variable  horizon  mean median     sd lower upper
-#>   <chr> <chr>       <chr>     <chr>   <dbl>  <dbl>  <dbl> <dbl> <dbl>
-#> 1 m1    forecast    variable1 1       -8.90  -8.91 0.0437 -8.94 -8.85
-#> 2 m1    forecast    variable1 2       -8.86  -8.86 0.0242 -8.89 -8.83
-#> 3 m1    forecast    variable1 3       -8.82  -8.83 0.0409 -8.86 -8.77
-#> 4 m1    forecast    variable2 1       -9.73  -9.77 0.0902 -9.82 -9.63
-#> 5 m1    forecast    variable2 2       -9.74  -9.80 0.133  -9.84 -9.56
-#> 6 m1    forecast    variable2 3       -9.73  -9.78 0.214  -9.92 -9.45
+#>   model object_type variable  horizon   mean median    sd lower upper
+#>   <chr> <chr>       <chr>     <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl>
+#> 1 m1    forecast    variable1 1        -9.25  -9.09 0.607 -10.1 -8.81
+#> 2 m1    forecast    variable1 2        -9.92  -8.98 2.47  -13.3 -8.56
+#> 3 m1    forecast    variable1 3       -10.9   -9.16 4.10  -16.5 -8.92
+#> 4 m1    forecast    variable2 1        -9.76  -9.83 0.256 -10.1 -9.51
+#> 5 m1    forecast    variable2 2        -9.72  -9.68 0.449 -10.2 -9.20
+#> 6 m1    forecast    variable2 3       -10.5   -9.53 2.36  -13.7 -9.15
 ```

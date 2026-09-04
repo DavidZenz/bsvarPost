@@ -58,13 +58,13 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 comp <- compare_cdm(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
 #> # A tibble: 6 × 10
-#>   model object_type variable shock horizon     mean   median      sd   lower
-#>   <chr> <chr>       <chr>    <chr>   <dbl>    <dbl>    <dbl>   <dbl>   <dbl>
-#> 1 m1    cdm         ttr      ttr         0  0.0440  0.0404   0.0120   0.0336
-#> 2 m1    cdm         ttr      ttr         1  0.0881  0.0790   0.0253   0.0676
-#> 3 m1    cdm         ttr      ttr         2  0.133   0.117    0.0423   0.102 
-#> 4 m1    cdm         ttr      ttr         3  0.181   0.156    0.0673   0.136 
-#> 5 m1    cdm         ttr      gs          0  0       0        0        0     
-#> 6 m1    cdm         ttr      gs          1 -0.00244 0.000759 0.00725 -0.0123
+#>   model object_type variable shock horizon    mean  median     sd      lower
+#>   <chr> <chr>       <chr>    <chr>   <dbl>   <dbl>   <dbl>  <dbl>      <dbl>
+#> 1 m1    cdm         ttr      ttr         0  0.0424 0.0295  0.0296   0.0283  
+#> 2 m1    cdm         ttr      ttr         1 -0.671  0.0542  1.62    -2.85    
+#> 3 m1    cdm         ttr      ttr         2 -1.78   0.0777  4.16    -7.36    
+#> 4 m1    cdm         ttr      ttr         3 -2.92   0.0920  6.74   -12.0     
+#> 5 m1    cdm         ttr      gs          0  0      0       0        0       
+#> 6 m1    cdm         ttr      gs          1  0.753  0.00191 1.68    -0.000456
 #> # ℹ 1 more variable: upper <dbl>
 ```
