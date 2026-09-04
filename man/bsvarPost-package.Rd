@@ -22,8 +22,9 @@ If no vignettes are listed there, reinstall the GitHub package with
 The package currently ships with:
 \itemize{
 \item Getting Started (\code{bsvarPost})
-\item Post-Estimation Workflows (\code{post-estimation-workflows})
-\item Hypothesis Testing (\code{hypothesis-testing})
+\item Inference and Comparison (\code{inference-and-comparison})
+\item Historical-Decomposition Event Workflows (\code{historical-decomposition-events})
+\item Sign-Restricted Workflows (\code{sign-restricted-workflows})
 }
 }
 

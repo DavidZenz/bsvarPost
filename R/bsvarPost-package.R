@@ -14,8 +14,9 @@
 #' The package currently ships with:
 #'
 #' - Getting Started (`bsvarPost`)
-#' - Post-Estimation Workflows (`post-estimation-workflows`)
-#' - Hypothesis Testing (`hypothesis-testing`)
+#' - Inference and Comparison (`inference-and-comparison`)
+#' - Historical-Decomposition Event Workflows (`historical-decomposition-events`)
+#' - Sign-Restricted Workflows (`sign-restricted-workflows`)
 #'
 #' @keywords internal
 #' @importFrom tibble tibble as_tibble

@@ -31,12 +31,15 @@ navbar:
       menu:
         - text: Getting Started
           href: articles/bsvarPost.html
-        - text: Hypothesis Testing
-          href: articles/hypothesis-testing.html
-        - text: Post-Estimation Workflows
-          href: articles/post-estimation-workflows.html
+        - text: Inference and Comparison
+          href: articles/inference-and-comparison.html
+        - text: Historical-Decomposition Events
+          href: articles/historical-decomposition-events.html
+        - text: Sign-Restricted Workflows
+          href: articles/sign-restricted-workflows.html
     github:
       icon: fab fa-github
+      aria-label: GitHub
       href: https://github.com/DavidZenz/bsvarPost
 
 articles:
@@ -44,57 +47,90 @@ articles:
     navbar: Articles
     contents:
       - bsvarPost
-      - hypothesis-testing
-      - post-estimation-workflows
+      - inference-and-comparison
+      - historical-decomposition-events
+      - sign-restricted-workflows
 
 reference:
-  - title: Core Responses
+  - title: Tidy and Cumulative Extraction
     contents:
       - cdm
-      - starts_with("tidy_")
-      - starts_with("compare_")
-
-  - title: Representative Summaries and Audits
-    contents:
-      - starts_with("representative_")
-      - starts_with("median_target_")
-      - starts_with("most_likely_admissible_")
-      - starts_with("hypothesis_")
-      - restriction_audit
-      - magnitude_audit
-      - irf_restriction
-      - structural_restriction
-      - narrative_restriction
-
-  - title: Historical Decomposition and Timing
-    contents:
+      - tidy_irf
+      - tidy_cdm
+      - tidy_fevd
       - tidy_hd
-      - tidy_hd_event
-      - plot_hd_lines
-      - plot_hd_overlay
-      - plot_hd_stacked
-      - plot_hd_total
-      - plot_hd_event_share
-      - plot_hd_event_cumulative
-      - plot_hd_event_distribution
-      - shock_ranking
+      - tidy_forecast
+      - tidy_shocks
+
+  - title: Compare Models and Specifications
+    contents:
+      - compare_irf
+      - compare_cdm
+      - compare_fevd
+      - compare_forecast
+
+  - title: Posterior Statements and Joint Inference
+    contents:
+      - hypothesis_irf
+      - hypothesis_cdm
+      - joint_hypothesis_irf
+      - joint_hypothesis_cdm
+      - magnitude_audit
+      - simultaneous_irf
+      - simultaneous_cdm
+      - plot_hypothesis
+      - plot_joint_hypothesis
+      - plot_simultaneous
+
+  - title: Representative Draws and Response Timing
+    contents:
+      - representative_irf
+      - representative_cdm
+      - median_target_irf
+      - median_target_cdm
       - peak_response
       - duration_response
       - half_life_response
       - time_to_threshold
+      - compare_peak_response
+      - compare_duration_response
+      - compare_half_life_response
+      - compare_time_to_threshold
+      - plot_compare_response
 
-  - title: Diagnostics and Joint Inference
+  - title: Historical-Decomposition Events and Shock Ranking
     contents:
-      - acceptance_diagnostics
-      - simultaneous_irf
-      - simultaneous_cdm
-      - joint_hypothesis_irf
-      - joint_hypothesis_cdm
+      - tidy_hd_event
+      - compare_hd_event
+      - shock_ranking
+      - plot_shock_ranking
+      - plot_hd_event
+      - plot_hd_event_share
+      - plot_hd_event_cumulative
+      - plot_hd_event_distribution
+      - plot_hd_lines
+      - plot_hd_overlay
+      - plot_hd_stacked
+      - plot_hd_total
 
-  - title: Plotting and Reporting
+  - title: Sign-Restricted Audits and Diagnostics
+    contents:
+      - most_likely_admissible_irf
+      - most_likely_admissible_cdm
+      - irf_restriction
+      - structural_restriction
+      - narrative_restriction
+      - restriction_audit
+      - acceptance_diagnostics
+      - compare_restrictions
+      - compare_acceptance_diagnostics
+      - plot_restriction_audit
+      - plot_compare_restrictions
+      - plot_acceptance_diagnostics
+
+  - title: Publication and Reporting
     contents:
       - autoplot.bsvar_post_tbl
-      - starts_with("plot_")
       - theme_bsvarpost
       - style_bsvar_plot
       - template_bsvar_plot
@@ -108,9 +144,17 @@ reference:
       - write_bsvar_csv
       - print.bsvar_report_bundle
 
-  - title: Bridges
+  - title: Optional Integrations
     contents:
       - as_tsibble_post
       - as_apr_cond_forc
       - tidy_apr_forecast
       - apr_gen_mats
+
+  - title: API Utilities
+    contents:
+      - resolve_horizon
+      - validate_horizon
+      - validate_probability
+      - validate_posterior_object
+      - deprecate_arg
