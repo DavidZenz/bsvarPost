@@ -52,6 +52,18 @@ Each row identifies a model, variable, shock, observation, and posterior draw.
 Retaining the draws ensures that posterior uncertainty is summarised *after*
 the contributions have been aggregated over the selected period.
 
+The full-sample decomposition provides context for selecting an event period.
+The first figure displays the principal shock contributions separately; the
+second displays their composition.
+
+```{r hd-overlay-figure, echo = FALSE, out.width = "100%", fig.alt = "Structural-shock contributions to GDP over the full sample"}
+knitr::include_graphics("figures/hd-overlay-showcase.png")
+```
+
+```{r hd-composition-figure, echo = FALSE, out.width = "100%", fig.alt = "Stacked structural-shock contributions to GDP over the full sample"}
+knitr::include_graphics("figures/hd-full-showcase.png")
+```
+
 ## Define the event period before ranking shocks
 
 The event period is determined by the empirical question rather than by the

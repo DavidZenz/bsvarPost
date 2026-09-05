@@ -54,6 +54,10 @@ criterion. Corresponding comparisons are available for
 [forecasts](../reference/compare_forecast.html), and
 [historical-decomposition events](../reference/compare_hd_event.html).
 
+```{r comparison-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior impulse responses under two model specifications"}
+knitr::include_graphics("figures/compare-irf-showcase.png")
+```
+
 ## How much posterior support does a statement have?
 
 ### Pointwise support
@@ -82,6 +86,10 @@ summarise the posterior distribution of the response minus the threshold and
 therefore retain information about the magnitude of the response. Use
 [`hypothesis_cdm()`](../reference/hypothesis_cdm.html) for the same question
 about cumulative responses.
+
+```{r hypothesis-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior probability that an impulse response is positive at each horizon"}
+knitr::include_graphics("figures/hypothesis-showcase.png")
+```
 
 ### Joint support across a path
 
@@ -196,6 +204,10 @@ intervals should also be reported. The same selection is available for
 [CDMs](../reference/median_target_cdm.html). For sign-restricted models, a
 distinct [most-likely admissible draw](../reference/most_likely_admissible_irf.html)
 can be selected.
+
+```{r representative-figure, echo = FALSE, out.width = "100%", fig.alt = "Representative posterior draw and pointwise posterior summary"}
+knitr::include_graphics("figures/representative-showcase.png")
+```
 
 ## When does the response arrive and fade?
 

@@ -95,6 +95,10 @@ These quantities are cumulative dynamic responses. Their interpretation as
 economic multipliers depends on the transformations and scaling used in the
 model; see `?cdm` for the `scale_by` and `scale_var` arguments.
 
+```{r cdm-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior cumulative dynamic responses with pointwise credible bands"}
+knitr::include_graphics("figures/cdm-showcase.png")
+```
+
 ## Compare model specifications
 
 The second posterior distribution is estimated for the same three-variable
@@ -118,6 +122,10 @@ The functions `compare_irf()`, `compare_fevd()`, and the remaining
 `compare_*()` methods provide analogous comparisons for other posterior
 quantities. These comparisons are descriptive: they report corresponding
 posterior summaries across specifications but do not select a preferred model.
+
+```{r comparison-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior impulse responses under two model specifications"}
+knitr::include_graphics("figures/compare-irf-showcase.png")
+```
 
 ## Evaluate a posterior hypothesis
 
@@ -169,6 +177,10 @@ subset(representative_path, horizon %in% c(0, 4, 8, 12),
 `peak_response()` computes the magnitude and horizon of the peak response for
 every posterior draw, then reports posterior summaries of both quantities.
 
+```{r representative-figure, echo = FALSE, out.width = "100%", fig.alt = "Representative posterior draw and pointwise posterior summary"}
+knitr::include_graphics("figures/representative-showcase.png")
+```
+
 ```{r timing}
 peak <- peak_response(
   post,
@@ -212,6 +224,10 @@ These functions extend the historical decompositions computed by the parent
 package with posterior summaries for selected periods. The choice of period
 and the interpretation of shock contributions are discussed in
 [Historical-Decomposition Analysis](historical-decomposition-events.html).
+
+```{r hd-overview-figure, echo = FALSE, out.width = "100%", fig.alt = "Structural-shock contributions to GDP over the full sample"}
+knitr::include_graphics("figures/hd-overlay-showcase.png")
+```
 
 ## Present figures and tables
 

@@ -152,7 +152,7 @@ default_publication_subtitle <- function(object, family) {
 
   object_type <- attr(object, "object_type") %||% ""
   if (identical(object_type, "acceptance_diagnostics")) {
-    return("Stored-draw admissibility and sample-health diagnostics")
+    return("Stored-draw admissibility and posterior-sample diagnostics")
   }
   if (identical(object_type, "hd")) {
     return("Full-sample contribution paths")

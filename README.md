@@ -89,6 +89,9 @@ gdp_multiplier <- subset(multiplier_tbl, variable == "gdp" & shock == "gs")
 ggplot2::autoplot(gdp_multiplier)
 ```
 
+![Posterior cumulative dynamic responses with pointwise credible
+bands](vignettes/figures/cdm-showcase.png)
+
 For cumulative responses normalised by the sample standard deviation of the
 corresponding observed variable, use `scale_by = "shock_sd"`. The default
 retains the shock scale of the estimated model.
@@ -112,6 +115,9 @@ restrictions. The
 [Inference and Comparison article](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html)
 describes how to select a comparison that corresponds to the research
 hypothesis.
+
+![Posterior impulse responses under two model
+specifications](vignettes/figures/compare-irf-showcase.png)
 
 ### How strong is the posterior evidence?
 
@@ -142,6 +148,9 @@ a representative draw whose response path is coherent across horizons.
 `time_to_threshold()` summarise the magnitude and timing of the resulting
 responses.
 
+![A representative posterior draw compared with the pointwise posterior
+summary](vignettes/figures/representative-showcase.png)
+
 ### What drove a historical episode?
 
 `tidy_hd_event()` summarises structural-shock contributions over a selected
@@ -151,6 +160,9 @@ period. `shock_ranking()` ranks shocks by their contributions, and
 develops these analyses without repeating the construction of a historical
 decomposition.
 
+![Structural-shock contributions to GDP over the full
+sample](vignettes/figures/hd-overlay-showcase.png)
+
 ### What changes for sign-restricted models?
 
 For a `PosteriorBSVARSIGN`, `most_likely_admissible_irf()` and
@@ -159,6 +171,9 @@ satisfy the identifying restrictions. `restriction_audit()` evaluates those
 restrictions, while `acceptance_diagnostics()` reports the retained posterior
 sample and the support for admissible draws. See
 [Analysis of Sign-Restricted Models](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.html).
+
+![Posterior-sample and admissibility diagnostics for a sign-restricted
+model](vignettes/figures/diagnostics-showcase.png)
 
 ## From results to a figure or table
 

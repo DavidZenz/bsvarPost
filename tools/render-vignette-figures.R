@@ -11,12 +11,14 @@ dir.create("vignettes/fixtures", recursive = TRUE, showWarnings = FALSE)
     plot = plot,
     width = width,
     height = height,
-    dpi = dpi
+    dpi = dpi,
+    bg = "white"
   )
 }
 
 .save_base <- function(path, expr, width = 1600, height = 1200, res = 150) {
-  grDevices::png(path, width = width, height = height, res = res)
+  grDevices::png(path, width = width, height = height, res = res,
+                 bg = "white")
   on.exit(grDevices::dev.off(), add = TRUE)
   force(expr)
 }
@@ -71,8 +73,7 @@ cdm_bsvar <- cdm(post_bsvar, horizon = 20)
 # compare-irf-showcase.png: baseline / alternative naming, horizon = 20
 cmp_irf <- compare_irf(baseline = post_bsvar, alternative = post_bsvar_alt, horizon = 20)
 cmp_irf_focus <- cmp_irf[
-  cmp_irf$variable == unique(cmp_irf$variable)[1] &
-    cmp_irf$shock == unique(cmp_irf$shock)[1],
+  cmp_irf$variable == "gdp" & cmp_irf$shock == "gs",
   ,
   drop = FALSE
 ]
@@ -166,8 +167,8 @@ hd_event_share <- template_bsvar_plot(
     plot_hypothesis(
       post_bsvar,
       type      = "irf",
-      variables = 1,
-      shocks    = 1,
+      variables = "gdp",
+      shocks    = "gs",
       horizon   = 0:20,
       relation  = ">",
       value     = 0
