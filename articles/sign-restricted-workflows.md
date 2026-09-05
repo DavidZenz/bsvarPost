@@ -161,12 +161,32 @@ or sparse admissibility support; they are not universal decision rules.
 These diagnostics cannot recover the sampler’s complete proposal and
 rejection history from the stored posterior distribution.
 
+The following figure illustrates the diagnostic measures for a posterior
+from the sign-restricted specification above with 200 retained draws.
+
+![Posterior-sample and admissibility diagnostics for a sign-restricted
+model](figures/diagnostics-showcase.png)
+
 ``` r
 
 plot_acceptance_diagnostics(diag,
   metrics = c("effective_sample_size", "kernel_zero_share", "kernel_cv"),
   title = "Stored-sample diagnostics")
 ```
+
+## Examine shock contributions over a selected period
+
+Historical decompositions from a sign-restricted posterior can be
+summarised over a prespecified period in the same way as other supported
+posterior objects. The figures below show posterior contributions and
+their proportional composition over observations 1 to 4 for the
+illustrative specification.
+
+![Posterior structural-shock contributions over observations one to
+four](figures/hd-event-showcase.png)
+
+![Proportional structural-shock contributions over observations one to
+four](figures/hd-event-share-showcase.png)
 
 ## Compare sign-restricted specifications
 

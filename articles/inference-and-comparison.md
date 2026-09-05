@@ -55,6 +55,9 @@ model-selection criterion. Corresponding comparisons are available for
 and [historical-decomposition
 events](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md).
 
+![Posterior impulse responses under two model
+specifications](figures/compare-irf-showcase.png)
+
 ## How much posterior support does a statement have?
 
 ### Pointwise support
@@ -93,6 +96,9 @@ threshold and therefore retain information about the magnitude of the
 response. Use
 [`hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.md)
 for the same question about cumulative responses.
+
+![Posterior probability that an impulse response is positive at each
+horizon](figures/hypothesis-showcase.png)
 
 ### Joint support across a path
 
@@ -244,6 +250,9 @@ available for
 For sign-restricted models, a distinct [most-likely admissible
 draw](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.md)
 can be selected.
+
+![Representative posterior draw and pointwise posterior
+summary](figures/representative-showcase.png)
 
 ## When does the response arrive and fade?
 

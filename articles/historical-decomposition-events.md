@@ -37,6 +37,16 @@ draw. Retaining the draws ensures that posterior uncertainty is
 summarised *after* the contributions have been aggregated over the
 selected period.
 
+The full-sample decomposition provides context for selecting an event
+period. The first figure displays the principal shock contributions
+separately; the second displays their composition.
+
+![Structural-shock contributions to GDP over the full
+sample](figures/hd-overlay-showcase.png)
+
+![Stacked structural-shock contributions to GDP over the full
+sample](figures/hd-full-showcase.png)
+
 ## Define the event period before ranking shocks
 
 The event period is determined by the empirical question rather than by

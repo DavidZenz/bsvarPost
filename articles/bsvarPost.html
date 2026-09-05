@@ -158,6 +158,7 @@ summaries and credible intervals.</p>
 interpretation as economic multipliers depends on the transformations
 and scaling used in the model; see <code><a href="../reference/cdm.html">?cdm</a></code> for the
 <code>scale_by</code> and <code>scale_var</code> arguments.</p>
+<p><img src="figures/cdm-showcase.png" class="r-plt" alt="Posterior cumulative dynamic responses with pointwise credible bands" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="compare-model-specifications">Compare model specifications<a class="anchor" aria-label="anchor" href="#compare-model-specifications"></a>
@@ -191,6 +192,7 @@ the specifications in the <code>model</code> column.</p>
 methods provide analogous comparisons for other posterior quantities.
 These comparisons are descriptive: they report corresponding posterior
 summaries across specifications but do not select a preferred model.</p>
+<p><img src="figures/compare-irf-showcase.png" class="r-plt" alt="Posterior impulse responses under two model specifications" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="evaluate-a-posterior-hypothesis">Evaluate a posterior hypothesis<a class="anchor" aria-label="anchor" href="#evaluate-a-posterior-hypothesis"></a>
@@ -254,6 +256,7 @@ preserves the joint dependence within a single draw.</p>
 <p><code><a href="../reference/peak_response.html">peak_response()</a></code> computes the magnitude and horizon of
 the peak response for every posterior draw, then reports posterior
 summaries of both quantities.</p>
+<p><img src="figures/representative-showcase.png" class="r-plt" alt="Representative posterior draw and pointwise posterior summary" width="100%"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peak_response.html">peak_response</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -312,6 +315,7 @@ parent package with posterior summaries for selected periods. The choice
 of period and the interpretation of shock contributions are discussed in
 <a href="historical-decomposition-events.html">Historical-Decomposition
 Analysis</a>.</p>
+<p><img src="figures/hd-overlay-showcase.png" class="r-plt" alt="Structural-shock contributions to GDP over the full sample" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="present-figures-and-tables">Present figures and tables<a class="anchor" aria-label="anchor" href="#present-figures-and-tables"></a>

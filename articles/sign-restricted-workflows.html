@@ -234,10 +234,25 @@ information or sparse admissibility support; they are not universal
 decision rules. These diagnostics cannot recover the sampler’s complete
 proposal and rejection history from the stored posterior
 distribution.</p>
+<p>The following figure illustrates the diagnostic measures for a
+posterior from the sign-restricted specification above with 200 retained
+draws.</p>
+<p><img src="figures/diagnostics-showcase.png" class="r-plt" alt="Posterior-sample and admissibility diagnostics for a sign-restricted model" width="100%"></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span><span class="va">diag</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span>, <span class="st">"kernel_cv"</span><span class="op">)</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Stored-sample diagnostics"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="examine-shock-contributions-over-a-selected-period">Examine shock contributions over a selected period<a class="anchor" aria-label="anchor" href="#examine-shock-contributions-over-a-selected-period"></a>
+</h2>
+<p>Historical decompositions from a sign-restricted posterior can be
+summarised over a prespecified period in the same way as other supported
+posterior objects. The figures below show posterior contributions and
+their proportional composition over observations 1 to 4 for the
+illustrative specification.</p>
+<p><img src="figures/hd-event-showcase.png" class="r-plt" alt="Posterior structural-shock contributions over observations one to four" width="100%"></p>
+<p><img src="figures/hd-event-share-showcase.png" class="r-plt" alt="Proportional structural-shock contributions over observations one to four" width="100%"></p>
 </div>
 <div class="section level2">
 <h2 id="compare-sign-restricted-specifications">Compare sign-restricted specifications<a class="anchor" aria-label="anchor" href="#compare-sign-restricted-specifications"></a>

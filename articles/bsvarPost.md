@@ -106,6 +106,9 @@ in the model; see
 [`?cdm`](https://davidzenz.github.io/bsvarPost/reference/cdm.md) for the
 `scale_by` and `scale_var` arguments.
 
+![Posterior cumulative dynamic responses with pointwise credible
+bands](figures/cdm-showcase.png)
+
 ## Compare model specifications
 
 The second posterior distribution is estimated for the same
@@ -144,6 +147,9 @@ and the remaining `compare_*()` methods provide analogous comparisons
 for other posterior quantities. These comparisons are descriptive: they
 report corresponding posterior summaries across specifications but do
 not select a preferred model.
+
+![Posterior impulse responses under two model
+specifications](figures/compare-irf-showcase.png)
 
 ## Evaluate a posterior hypothesis
 
@@ -219,6 +225,9 @@ subset(representative_path, horizon %in% c(0, 4, 8, 12),
 computes the magnitude and horizon of the peak response for every
 posterior draw, then reports posterior summaries of both quantities.
 
+![Representative posterior draw and pointwise posterior
+summary](figures/representative-showcase.png)
+
 ``` r
 
 peak <- peak_response(
@@ -288,6 +297,9 @@ parent package with posterior summaries for selected periods. The choice
 of period and the interpretation of shock contributions are discussed in
 [Historical-Decomposition
 Analysis](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md).
+
+![Structural-shock contributions to GDP over the full
+sample](figures/hd-overlay-showcase.png)
 
 ## Present figures and tables
 
