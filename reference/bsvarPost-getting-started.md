@@ -1,8 +1,8 @@
-# Getting Started with bsvarPost
+# Post-estimation Analysis with bsvarPost
 
-This article gives the shortest path from an existing `bsvars` or
-`bsvarSIGNs` posterior to tidy summaries, CDMs, comparison and
-inference, and publication-ready output.
+This article introduces posterior summaries, cumulative dynamic
+responses, model comparison, posterior inference, and the presentation
+of results for models estimated with `bsvars` or `bsvarSIGNs`.
 
 ## Details
 

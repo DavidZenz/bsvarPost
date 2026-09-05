@@ -1,7 +1,8 @@
-# Tidy event-window historical decompositions
+# Summarise historical-decomposition contributions over selected periods
 
-Aggregate historical decomposition draws or summaries over a selected
-event window.
+Aggregate posterior draws of structural-shock contributions over a
+selected historical period and report posterior summaries of the
+cumulative contributions.
 
 ## Usage
 
@@ -120,7 +121,7 @@ tidy_hd_event(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - draws:
 
@@ -128,7 +129,7 @@ tidy_hd_event(
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 ## Value
 

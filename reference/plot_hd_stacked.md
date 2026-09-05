@@ -34,20 +34,20 @@ plot_hd_stacked(
 
 - probability:
 
-  Equal-tailed interval probability used when `object` is not already a
-  tidy table.
+  Probability mass of the equal-tailed credible interval computed when
+  `object` is not already a summary table.
 
 - variables:
 
-  Optional variable filter.
+  Variables whose historical decompositions are included.
 
 - shocks:
 
-  Optional shock filter applied before grouping.
+  Structural shocks whose contributions are included.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - facet_scales:
 

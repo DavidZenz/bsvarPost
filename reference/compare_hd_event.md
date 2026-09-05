@@ -1,6 +1,7 @@
-# Compare event-window historical decompositions across models
+# Compare historical-period shock contributions across model specifications
 
-Compare event-window historical decompositions across models
+Compare historical-period shock contributions across model
+specifications
 
 ## Usage
 
@@ -24,16 +25,19 @@ compare_hd_event(..., start, end = start, probability = 0.9, draws = FALSE)
 
 - probability:
 
-  Equal-tailed interval probability used in summaries.
+  Probability mass of the equal-tailed credible intervals reported in
+  posterior summaries.
 
 - draws:
 
-  If `TRUE`, return draw-level rows.
+  If `TRUE`, report individual posterior draws rather than posterior
+  summaries.
 
 ## Value
 
 A `bsvar_post_tbl` combining event-window historical decomposition
-results across models, with a `model` column identifying each input.
+results across models, with a `model` column identifying each model
+specification.
 
 ## Examples
 

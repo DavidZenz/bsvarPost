@@ -1,6 +1,6 @@
-# Convert tidy forecasts to APRScenario format
+# Express posterior forecasts in APRScenario format
 
-Convert tidy forecasts to APRScenario format
+Express posterior forecasts in APRScenario format
 
 ## Usage
 
@@ -55,7 +55,8 @@ as_apr_cond_forc(
 
 - center:
 
-  Which summary column to map to APRScenario's `center` column.
+  Posterior location summary represented by APRScenario's `center`
+  column.
 
 - origin:
 
@@ -69,11 +70,11 @@ as_apr_cond_forc(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 - horizon:
 
@@ -82,7 +83,8 @@ as_apr_cond_forc(
 ## Value
 
 A data frame with columns `hor`, `variable`, `lower`, `center`, and
-`upper`, suitable for use with APRScenario conditioning workflows.
+`upper`, suitable for use with conditional forecast analysis with
+APRScenario.
 
 ## Examples
 

@@ -176,11 +176,11 @@ duration_response(
 
 - variables:
 
-  Optional response-variable subset (character or integer vector).
+  Response variables to include (character or integer vector).
 
 - shocks:
 
-  Optional shock subset (character or integer vector).
+  Structural shocks to include (character or integer vector).
 
 - variable:
 
@@ -209,11 +209,11 @@ duration_response(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 - horizon:
 

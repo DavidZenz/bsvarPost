@@ -1,6 +1,6 @@
-# Optional wrapper around APRScenario::gen_mats
+# Compute conditional-forecast matrices with APRScenario
 
-Optional wrapper around APRScenario::gen_mats
+Compute conditional-forecast matrices with APRScenario
 
 ## Usage
 
@@ -20,7 +20,7 @@ apr_gen_mats(posterior = NULL, specification = NULL, max_cores = 1)
 
 - max_cores:
 
-  Passed to
+  Maximum number of processor cores used by
   [`APRScenario::gen_mats()`](https://rdrr.io/pkg/APRScenario/man/gen_mats.html).
 
 ## Value

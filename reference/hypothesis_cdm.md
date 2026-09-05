@@ -53,7 +53,7 @@ hypothesis_cdm(
 
 - object:
 
-  A posterior model object or a `PosteriorIR` object.
+  A posterior model object or a `PosteriorCDM` array.
 
 - ...:
 
@@ -99,7 +99,8 @@ hypothesis_cdm(
 
 - probability:
 
-  Equal-tailed interval probability used for gap summaries.
+  Probability mass of the equal-tailed credible interval for the
+  posterior difference.
 
 - draws:
 
@@ -107,7 +108,7 @@ hypothesis_cdm(
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 - scale_by:
 

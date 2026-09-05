@@ -1,6 +1,6 @@
-# Tidy cumulative dynamic multipliers
+# Summarise posterior cumulative dynamic responses
 
-Tidy cumulative dynamic multipliers
+Summarise posterior cumulative dynamic responses
 
 ## Usage
 
@@ -27,7 +27,7 @@ tidy_cdm(
 
 - object:
 
-  A posterior model object or posterior IRF array.
+  A posterior model object or a `PosteriorCDM` array.
 
 - ...:
 
@@ -39,15 +39,16 @@ tidy_cdm(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - draws:
 
-  If `TRUE`, return draw-level rows.
+  If `TRUE`, report individual posterior draws rather than posterior
+  summaries.
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 - scale_by:
 

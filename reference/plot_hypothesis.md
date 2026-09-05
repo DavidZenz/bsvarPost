@@ -67,11 +67,12 @@ plot_hypothesis(
 
 - probability:
 
-  Equal-tailed interval probability used for gap summaries.
+  Probability mass of the equal-tailed credible interval for the
+  posterior difference.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - scale_by:
 

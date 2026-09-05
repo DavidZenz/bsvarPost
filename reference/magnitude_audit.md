@@ -1,6 +1,6 @@
-# Audit magnitude statements for IRFs or CDMs
+# Evaluate magnitude hypotheses for IRFs or CDMs
 
-Audit magnitude statements for IRFs or CDMs
+Evaluate magnitude hypotheses for IRFs or CDMs
 
 ## Usage
 
@@ -32,7 +32,7 @@ magnitude_audit(
 
 - type:
 
-  Response object type to audit.
+  Posterior response quantity to evaluate.
 
 - variable:
 
@@ -65,7 +65,8 @@ magnitude_audit(
 
 - probability:
 
-  Equal-tailed interval probability used for gap summaries.
+  Probability mass of the equal-tailed credible interval for the
+  posterior difference.
 
 - draws:
 
@@ -73,7 +74,7 @@ magnitude_audit(
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 - scale_by:
 
@@ -89,7 +90,7 @@ magnitude_audit(
 
 ## Value
 
-A `bsvar_post_tbl` with hypothesis test results including
+A `bsvar_post_tbl` with posterior hypothesis summaries including
 `posterior_prob`, `mean`, `median`, `lower`, and `upper` columns.
 
 ## Examples

@@ -52,7 +52,7 @@ representative_irf(
 
 - method:
 
-  Representative-model selection method.
+  Criterion used to select the representative posterior draw.
 
 - center:
 
@@ -80,7 +80,8 @@ representative_irf(
 
 - probability:
 
-  Equal-tailed interval probability used for summaries.
+  Probability mass of the equal-tailed credible intervals reported in
+  posterior summaries.
 
 - horizon:
 

@@ -1,6 +1,7 @@
 # Most-likely-admissible representative cumulative dynamic multipliers
 
-Convenience wrapper for
+Select the admissible cumulative-response draw with the highest
+posterior admissibility weight using
 [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
 with `method = "most_likely_admissible"`.
 
@@ -14,7 +15,7 @@ most_likely_admissible_cdm(object, ...)
 
 - object:
 
-  A posterior model object or a `PosteriorIR`.
+  A `PosteriorBSVARSIGN` model object.
 
 - ...:
 

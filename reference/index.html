@@ -15,14 +15,14 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Get Started</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Introduction</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
-    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Inference and Comparison</a></li>
-    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Events</a></li>
-    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Sign-Restricted Workflows</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
+    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -40,7 +40,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="tidy-and-cumulative-extraction">Tidy and Cumulative Extraction<a class="anchor" aria-label="anchor" href="#tidy-and-cumulative-extraction"></a></h2>
+      <h2 id="posterior-summaries-and-cumulative-responses">Posterior Summaries and Cumulative Responses<a class="anchor" aria-label="anchor" href="#posterior-summaries-and-cumulative-responses"></a></h2>
 
 
 
@@ -61,44 +61,44 @@
           <code><a href="tidy_irf.html">tidy_irf()</a></code>
 
         </dt>
-        <dd>Tidy posterior impulse responses</dd>
+        <dd>Summarise posterior impulse responses</dd>
 
         <dt>
 
           <code><a href="tidy_cdm.html">tidy_cdm()</a></code>
 
         </dt>
-        <dd>Tidy cumulative dynamic multipliers</dd>
+        <dd>Summarise posterior cumulative dynamic responses</dd>
 
         <dt>
 
           <code><a href="tidy_fevd.html">tidy_fevd()</a></code>
 
         </dt>
-        <dd>Tidy forecast error variance decompositions</dd>
+        <dd>Summarise posterior forecast error variance decompositions</dd>
 
         <dt>
 
           <code><a href="tidy_hd.html">tidy_hd()</a></code>
 
         </dt>
-        <dd>Tidy historical decompositions</dd>
+        <dd>Summarise posterior historical decompositions</dd>
 
         <dt>
 
           <code><a href="tidy_forecast.html">tidy_forecast()</a></code>
 
         </dt>
-        <dd>Tidy forecasts</dd>
+        <dd>Summarise posterior forecasts</dd>
 
         <dt>
 
           <code><a href="tidy_shocks.html">tidy_shocks()</a></code>
 
         </dt>
-        <dd>Tidy structural shocks</dd>
+        <dd>Summarise posterior structural shocks</dd>
       </dl></div><div class="section level2">
-      <h2 id="compare-models-and-specifications">Compare Models and Specifications<a class="anchor" aria-label="anchor" href="#compare-models-and-specifications"></a></h2>
+      <h2 id="comparison-of-model-specifications">Comparison of Model Specifications<a class="anchor" aria-label="anchor" href="#comparison-of-model-specifications"></a></h2>
 
 
 
@@ -112,30 +112,30 @@
           <code><a href="compare_irf.html">compare_irf()</a></code>
 
         </dt>
-        <dd>Compare posterior impulse responses across models</dd>
+        <dd>Compare posterior impulse responses across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_cdm.html">compare_cdm()</a></code>
 
         </dt>
-        <dd>Compare cumulative dynamic multipliers across models</dd>
+        <dd>Compare cumulative dynamic responses across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_fevd.html">compare_fevd()</a></code>
 
         </dt>
-        <dd>Compare FEVDs across models</dd>
+        <dd>Compare forecast error variance decompositions across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_forecast.html">compare_forecast()</a></code>
 
         </dt>
-        <dd>Compare forecasts across models</dd>
+        <dd>Compare posterior forecasts across model specifications</dd>
       </dl></div><div class="section level2">
-      <h2 id="posterior-statements-and-joint-inference">Posterior Statements and Joint Inference<a class="anchor" aria-label="anchor" href="#posterior-statements-and-joint-inference"></a></h2>
+      <h2 id="posterior-probabilities-and-joint-inference">Posterior Probabilities and Joint Inference<a class="anchor" aria-label="anchor" href="#posterior-probabilities-and-joint-inference"></a></h2>
 
 
 
@@ -177,7 +177,7 @@
           <code><a href="magnitude_audit.html">magnitude_audit()</a></code>
 
         </dt>
-        <dd>Audit magnitude statements for IRFs or CDMs</dd>
+        <dd>Evaluate magnitude hypotheses for IRFs or CDMs</dd>
 
         <dt>
 
@@ -284,37 +284,37 @@
           <code><a href="compare_peak_response.html">compare_peak_response()</a></code>
 
         </dt>
-        <dd>Compare peak response summaries across models</dd>
+        <dd>Compare peak responses across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_duration_response.html">compare_duration_response()</a></code>
 
         </dt>
-        <dd>Compare duration summaries across models</dd>
+        <dd>Compare response durations across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_half_life_response.html">compare_half_life_response()</a></code>
 
         </dt>
-        <dd>Compare half-life summaries across models</dd>
+        <dd>Compare response half-lives across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_time_to_threshold.html">compare_time_to_threshold()</a></code>
 
         </dt>
-        <dd>Compare time-to-threshold summaries across models</dd>
+        <dd>Compare response thresholds across model specifications</dd>
 
         <dt>
 
           <code><a href="plot_compare_response.html">plot_compare_response()</a></code>
 
         </dt>
-        <dd>Plot comparison summaries for response-shape tables</dd>
+        <dd>Visualise response timing and persistence across model specifications</dd>
       </dl></div><div class="section level2">
-      <h2 id="historical-decomposition-events-and-shock-ranking">Historical-Decomposition Events and Shock Ranking<a class="anchor" aria-label="anchor" href="#historical-decomposition-events-and-shock-ranking"></a></h2>
+      <h2 id="historical-decompositions-and-shock-contributions">Historical Decompositions and Shock Contributions<a class="anchor" aria-label="anchor" href="#historical-decompositions-and-shock-contributions"></a></h2>
 
 
 
@@ -328,35 +328,35 @@
           <code><a href="tidy_hd_event.html">tidy_hd_event()</a></code>
 
         </dt>
-        <dd>Tidy event-window historical decompositions</dd>
+        <dd>Summarise historical-decomposition contributions over selected periods</dd>
 
         <dt>
 
           <code><a href="compare_hd_event.html">compare_hd_event()</a></code>
 
         </dt>
-        <dd>Compare event-window historical decompositions across models</dd>
+        <dd>Compare historical-period shock contributions across model specifications</dd>
 
         <dt>
 
           <code><a href="shock_ranking.html">shock_ranking()</a></code>
 
         </dt>
-        <dd>Rank shocks by event-window historical decomposition contributions</dd>
+        <dd>Rank structural shocks by contributions over selected periods</dd>
 
         <dt>
 
           <code><a href="plot_shock_ranking.html">plot_shock_ranking()</a></code>
 
         </dt>
-        <dd>Plot ranked event-window shock contributions</dd>
+        <dd>Visualise ranked shock contributions over selected historical periods</dd>
 
         <dt>
 
           <code><a href="plot_hd_event.html">plot_hd_event()</a></code>
 
         </dt>
-        <dd>Plot event-window historical decomposition summaries</dd>
+        <dd>Visualise shock contributions over selected historical periods</dd>
 
         <dt>
 
@@ -407,7 +407,7 @@
         </dt>
         <dd>Plot observed and reconstructed decomposition totals</dd>
       </dl></div><div class="section level2">
-      <h2 id="sign-restricted-audits-and-diagnostics">Sign-Restricted Audits and Diagnostics<a class="anchor" aria-label="anchor" href="#sign-restricted-audits-and-diagnostics"></a></h2>
+      <h2 id="sign-restrictions-and-identification-diagnostics">Sign Restrictions and Identification Diagnostics<a class="anchor" aria-label="anchor" href="#sign-restrictions-and-identification-diagnostics"></a></h2>
 
 
 
@@ -456,7 +456,7 @@
           <code><a href="restriction_audit.html">restriction_audit()</a></code>
 
         </dt>
-        <dd>Audit sign, zero, structural, and narrative restrictions</dd>
+        <dd>Evaluate sign, zero, structural, and narrative restrictions</dd>
 
         <dt>
 
@@ -470,37 +470,37 @@
           <code><a href="compare_restrictions.html">compare_restrictions()</a></code>
 
         </dt>
-        <dd>Compare restriction audits across models</dd>
+        <dd>Compare posterior restriction probabilities across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_acceptance_diagnostics.html">compare_acceptance_diagnostics()</a></code>
 
         </dt>
-        <dd>Compare acceptance diagnostics across models</dd>
+        <dd>Compare acceptance diagnostics across model specifications</dd>
 
         <dt>
 
           <code><a href="plot_restriction_audit.html">plot_restriction_audit()</a></code>
 
         </dt>
-        <dd>Plot restriction-audit summaries</dd>
+        <dd>Visualise posterior restriction probabilities</dd>
 
         <dt>
 
           <code><a href="plot_compare_restrictions.html">plot_compare_restrictions()</a></code>
 
         </dt>
-        <dd>Plot comparison summaries for restriction-audit tables</dd>
+        <dd>Visualise posterior restriction probabilities across model specifications</dd>
 
         <dt>
 
           <code><a href="plot_acceptance_diagnostics.html">plot_acceptance_diagnostics()</a></code>
 
         </dt>
-        <dd>Plot acceptance diagnostics across metrics and models</dd>
+        <dd>Visualise acceptance diagnostics across model specifications</dd>
       </dl></div><div class="section level2">
-      <h2 id="publication-and-reporting">Publication and Reporting<a class="anchor" aria-label="anchor" href="#publication-and-reporting"></a></h2>
+      <h2 id="figures-and-tables">Figures and Tables<a class="anchor" aria-label="anchor" href="#figures-and-tables"></a></h2>
 
 
 
@@ -514,56 +514,56 @@
           <code><a href="autoplot.bsvar_post_tbl.html">autoplot(<i>&lt;bsvar_post_tbl&gt;</i>)</a></code>
 
         </dt>
-        <dd>Autoplot tidy posterior outputs</dd>
+        <dd>Visualise posterior summaries</dd>
 
         <dt>
 
           <code><a href="theme_bsvarpost.html">theme_bsvarpost()</a></code>
 
         </dt>
-        <dd>Plot theme for bsvarPost outputs</dd>
+        <dd>Plot theme for posterior summaries</dd>
 
         <dt>
 
           <code><a href="style_bsvar_plot.html">style_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Apply a publication-oriented style to a bsvarPost plot</dd>
+        <dd>Apply a consistent graphical style to posterior summaries</dd>
 
         <dt>
 
           <code><a href="template_bsvar_plot.html">template_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Apply an output-family template to a bsvarPost plot</dd>
+        <dd>Apply graphical conventions for a posterior quantity</dd>
 
         <dt>
 
           <code><a href="annotate_bsvar_plot.html">annotate_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Add publication-oriented annotations to a bsvarPost plot</dd>
+        <dd>Add titles and captions to posterior-summary plots</dd>
 
         <dt>
 
           <code><a href="publish_bsvar_plot.html">publish_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Build a publication-ready bsvarPost plot</dd>
+        <dd>Visualise posterior results with consistent graphical conventions</dd>
 
         <dt>
 
           <code><a href="report_bundle.html">report_bundle()</a></code>
 
         </dt>
-        <dd>Create reporting bundles from bsvarPost outputs</dd>
+        <dd>Combine posterior summaries, figures, and captions</dd>
 
         <dt>
 
           <code><a href="report_table.html">report_table()</a></code>
 
         </dt>
-        <dd>Prepare reporting-ready tables</dd>
+        <dd>Prepare tables of posterior results</dd>
 
         <dt>
 
@@ -600,7 +600,7 @@
         </dt>
         <dd>Print bsvar_report_bundle objects</dd>
       </dl></div><div class="section level2">
-      <h2 id="optional-integrations">Optional Integrations<a class="anchor" aria-label="anchor" href="#optional-integrations"></a></h2>
+      <h2 id="interfaces-with-other-r-packages">Interfaces with Other R Packages<a class="anchor" aria-label="anchor" href="#interfaces-with-other-r-packages"></a></h2>
 
 
 
@@ -614,30 +614,30 @@
           <code><a href="as_tsibble_post.html">as_tsibble_post()</a></code>
 
         </dt>
-        <dd>Convert bsvarPost tidy outputs to tsibble</dd>
+        <dd>Express posterior summaries as a tsibble</dd>
 
         <dt>
 
           <code><a href="as_apr_cond_forc.html">as_apr_cond_forc()</a></code>
 
         </dt>
-        <dd>Convert tidy forecasts to APRScenario format</dd>
+        <dd>Express posterior forecasts in APRScenario format</dd>
 
         <dt>
 
           <code><a href="tidy_apr_forecast.html">tidy_apr_forecast()</a></code>
 
         </dt>
-        <dd>Convert APRScenario-style forecast tables to bsvarPost tidy format</dd>
+        <dd>Express APRScenario forecasts as posterior summary tables</dd>
 
         <dt>
 
           <code><a href="apr_gen_mats.html">apr_gen_mats()</a></code>
 
         </dt>
-        <dd>Optional wrapper around APRScenario::gen_mats</dd>
+        <dd>Compute conditional-forecast matrices with APRScenario</dd>
       </dl></div><div class="section level2">
-      <h2 id="api-utilities">API Utilities<a class="anchor" aria-label="anchor" href="#api-utilities"></a></h2>
+      <h2 id="input-validation-and-compatibility">Input Validation and Compatibility<a class="anchor" aria-label="anchor" href="#input-validation-and-compatibility"></a></h2>
 
 
 

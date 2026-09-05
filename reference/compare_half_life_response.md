@@ -1,6 +1,6 @@
-# Compare half-life summaries across models
+# Compare response half-lives across model specifications
 
-Compare half-life summaries across models
+Compare response half-lives across model specifications
 
 ## Usage
 
@@ -39,11 +39,11 @@ compare_half_life_response(
 
 - variables:
 
-  Optional response-variable subset.
+  Response variables to include.
 
 - shocks:
 
-  Optional shock subset.
+  Structural shocks to include.
 
 - variable:
 
@@ -67,7 +67,7 @@ compare_half_life_response(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - scale_by:
 
@@ -80,7 +80,7 @@ compare_half_life_response(
 ## Value
 
 A `bsvar_post_tbl` combining half-life summary results across models,
-with a `model` column identifying each input.
+with a `model` column identifying each model specification.
 
 ## Examples
 

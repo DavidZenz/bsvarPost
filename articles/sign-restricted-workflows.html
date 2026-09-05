@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Sign-Restricted Workflows • bsvarPost</title>
+<title>Analysis of Sign-Restricted Models • bsvarPost</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Sign-Restricted Workflows">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Analysis of Sign-Restricted Models">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -29,15 +29,15 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Get Started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
-    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Inference and Comparison</a></li>
-    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Events</a></li>
-    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Sign-Restricted Workflows</a></li>
+<li><a class="dropdown-item" href="../articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
+    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -60,7 +60,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Sign-Restricted Workflows</h1>
+      <h1>Analysis of Sign-Restricted Models</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DavidZenz/bsvarPost/blob/main/vignettes/sign-restricted-workflows.Rmd" class="external-link"><code>vignettes/sign-restricted-workflows.Rmd</code></a></small>
@@ -70,12 +70,13 @@
     
     
 <!-- generated-by: gsd-doc-writer -->
-<p>This article starts with an estimated
-<code>PosteriorBSVARSIGN</code>. It assumes you already know how to
-encode sign, zero, structural, or narrative restrictions with <a href="https://bsvars.org/bsvarSIGNs/" class="external-link"><code>bsvarSIGNs</code></a>. The
-focus here is what to do next: select a coherent admissible draw, audit
-the fitted restrictions, and check whether the stored posterior sample
-provides healthy support.</p>
+<p>This article considers a <code>PosteriorBSVARSIGN</code> object
+estimated with <a href="https://bsvars.org/bsvarSIGNs/" class="external-link"><code>bsvarSIGNs</code></a>. It
+assumes familiarity with the specification of sign, zero, structural,
+and narrative restrictions. The analysis addresses three distinct
+questions: the selection of a representative admissible draw, the
+posterior probability that each restriction is satisfied, and the
+adequacy of the stored posterior sample.</p>
 <p>These are three different questions:</p>
 <table class="table">
 <colgroup>
@@ -90,37 +91,43 @@ provides healthy support.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td>Which admissible draw should represent the posterior?</td>
+<td>Which admissible draw is representative of the posterior
+distribution?</td>
 <td>
 <code><a href="../reference/most_likely_admissible_irf.html">most_likely_admissible_irf()</a></code> or
 <code><a href="../reference/most_likely_admissible_cdm.html">most_likely_admissible_cdm()</a></code>
 </td>
-<td>One stored draw, selected using its admissibility weight</td>
+<td>One posterior draw selected according to its admissibility
+weight</td>
 </tr>
 <tr class="even">
-<td>How often does each restriction hold?</td>
+<td>What is the posterior probability that each restriction is
+satisfied?</td>
 <td><code><a href="../reference/restriction_audit.html">restriction_audit()</a></code></td>
 <td>Posterior satisfaction probability for each fitted restriction</td>
 </tr>
 <tr class="odd">
-<td>Is the stored sample well supported?</td>
+<td>Does the stored sample contain sufficient effective information and
+admissibility support?</td>
 <td><code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code></td>
-<td>ESS, search settings, restriction counts, and admissibility-weight
-diagnostics</td>
+<td>Effective sample size (ESS), search settings, restriction counts,
+and the distribution of admissibility weights</td>
 </tr>
 </tbody>
 </table>
-<p>None substitutes for the others. A representative draw is not
-evidence that every restriction is strongly supported, while a high
-satisfaction probability does not show that the effective sample size or
-admissibility support is healthy.</p>
+<p>These quantities have different interpretations. A representative
+draw does not establish that every restriction has high posterior
+support. Conversely, a high satisfaction probability does not establish
+that the effective sample size is large or that the admissibility
+weights are sufficiently dispersed.</p>
 <div class="section level2">
-<h2 id="start-from-a-sign-restricted-posterior">Start from a sign-restricted posterior<a class="anchor" aria-label="anchor" href="#start-from-a-sign-restricted-posterior"></a>
+<h2 id="posterior-input">Posterior input<a class="anchor" aria-label="anchor" href="#posterior-input"></a>
 </h2>
-<p>The smallest reproducible handoff uses the <code>optimism</code>
-example from <code>bsvarSIGNs</code>. The restriction construction and
-estimation are shown only to make the object provenance explicit;
-replace <code>post_sign</code> with your own fitted posterior.</p>
+<p>The following example uses the <code>optimism</code> data from
+<code>bsvarSIGNs</code>. The code specifies the identifying restrictions
+and estimates the posterior distribution. In an empirical application,
+<code>post_sign</code> can be replaced by any fitted
+<code>PosteriorBSVARSIGN</code> object.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"optimism"</span>, package <span class="op">=</span> <span class="st">"bsvarSIGNs"</span><span class="op">)</span></span>
 <span></span>
@@ -131,18 +138,19 @@ replace <code>post_sign</code> with your own fitted posterior.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span><span class="va">post_sign</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_sign</span>, S <span class="op">=</span> <span class="fl">2000</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>All remaining chunks are non-evaluated because the package does not
-bundle a sign-posterior fixture. They are complete calls that can be run
-after the fit above.</p>
+<p>The remaining examples are not evaluated because the package does not
+include a precomputed sign-restricted posterior. They can be evaluated
+after fitting the model above.</p>
 </div>
 <div class="section level2">
-<h2 id="choose-one-representative-admissible-draw">Choose one representative admissible draw<a class="anchor" aria-label="anchor" href="#choose-one-representative-admissible-draw"></a>
+<h2 id="select-a-representative-admissible-draw">Select a representative admissible draw<a class="anchor" aria-label="anchor" href="#select-a-representative-admissible-draw"></a>
 </h2>
-<p><code><a href="../reference/most_likely_admissible_irf.html">most_likely_admissible_irf()</a></code> ranks the stored draws by
-the admissibility kernel used for the fitted sign model. If several
-draws share the highest weight, closeness to the posterior median target
-breaks the tie. The result is one internally coherent draw, not a path
-assembled from marginal quantiles.</p>
+<p><code><a href="../reference/most_likely_admissible_irf.html">most_likely_admissible_irf()</a></code> ranks the posterior draws
+according to the admissibility kernel of the fitted sign-restricted
+model. If several draws have the highest weight, the function selects
+the draw closest to the posterior median response path. The result is
+one internally coherent posterior draw, rather than a path assembled
+from marginal quantiles.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rep_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/most_likely_admissible_irf.html">most_likely_admissible_irf</a></span><span class="op">(</span><span class="va">post_sign</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span></span>
@@ -154,55 +162,58 @@ assembled from marginal quantiles.</p>
 <span>    <span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
 <span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">shock</span>, <span class="va">horizon</span>, <span class="va">median</span>, <span class="va">draw_index</span>, <span class="va">method</span>, <span class="va">score</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">rep_path</span></span></code></pre></div>
-<p>Use <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> to compare the selected path with the
-posterior pointwise summary. The red path is the selected stored draw;
-it should not be read as an additional credible interval or as a
-model-selection result.</p>
+<p><code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> compares the selected path with the pointwise
+posterior summary. The red path represents the selected posterior draw;
+it is neither an additional credible interval nor a model-selection
+result.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rep_irf</span><span class="op">)</span></span></code></pre></div>
-<p>The cumulative counterpart applies the same selection rule after
-accumulating responses draw by draw:</p>
+<p><code><a href="../reference/most_likely_admissible_cdm.html">most_likely_admissible_cdm()</a></code> applies the same selection
+rule to cumulative dynamic responses computed separately for each
+posterior draw:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rep_cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/most_likely_admissible_cdm.html">most_likely_admissible_cdm</a></span><span class="op">(</span><span class="va">post_sign</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_cdm</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rep_cdm</span><span class="op">)</span></span></code></pre></div>
-<p>Use the IRF or CDM version according to the research quantity being
-reported; do not treat the two selected draws as necessarily
-interchangeable.</p>
+<p>The choice between the IRF and CDM functions depends on whether
+impulse or cumulative responses are of substantive interest. The
+posterior draws selected by the two criteria need not be identical.</p>
 </div>
 <div class="section level2">
-<h2 id="audit-restriction-satisfaction">Audit restriction satisfaction<a class="anchor" aria-label="anchor" href="#audit-restriction-satisfaction"></a>
+<h2 id="evaluate-restriction-satisfaction">Evaluate restriction satisfaction<a class="anchor" aria-label="anchor" href="#evaluate-restriction-satisfaction"></a>
 </h2>
-<p>For a <code>PosteriorBSVARSIGN</code>,
-<code><a href="../reference/restriction_audit.html">restriction_audit()</a></code> extracts the fitted IRF, zero,
+<p>For a <code>PosteriorBSVARSIGN</code> object,
+<code><a href="../reference/restriction_audit.html">restriction_audit()</a></code> extracts the impulse- response, zero,
 structural, and narrative restrictions from the identification scheme.
-It then reports the share of stored posterior draws satisfying each
+It reports the posterior probability that each restriction is satisfied,
+estimated by the proportion of stored posterior draws that satisfy the
 restriction.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">audit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/restriction_audit.html">restriction_audit</a></span><span class="op">(</span><span class="va">post_sign</span>, zero_tol <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span></span>
 <span><span class="va">audit_focus</span> <span class="op">&lt;-</span> <span class="va">audit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"restriction_type"</span>, <span class="st">"restriction"</span>, <span class="st">"relation"</span>,</span>
 <span>                         <span class="st">"posterior_prob"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">audit_focus</span></span></code></pre></div>
-<p><code>zero_tol</code> defines how close an audited response must be
-to zero. Set it to a scale-appropriate numerical tolerance and report
-that choice when zero restrictions matter.</p>
-<p>The most direct display is a probability bar chart. Pretty labels
-improve legibility without changing the underlying restriction
-definitions.</p>
+<p><code>zero_tol</code> defines the numerical tolerance used to
+evaluate a zero restriction. Its value should reflect the scale of the
+response and should be reported when zero restrictions are included.</p>
+<p><code><a href="../reference/plot_restriction_audit.html">plot_restriction_audit()</a></code> visualises the posterior
+satisfaction probabilities. Formatted labels improve legibility without
+changing the underlying restriction definitions.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_restriction_audit.html">plot_restriction_audit</a></span><span class="op">(</span><span class="va">audit</span>, label_style <span class="op">=</span> <span class="st">"pretty"</span>,</span>
 <span>  restriction_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf_sign"</span>, <span class="st">"irf_zero"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The audit describes satisfaction under the fitted posterior and the
-chosen tolerance. It is not a sampler acceptance rate and does not
-diagnose whether admissible draws are concentrated in a thin region.</p>
+<p>The reported probabilities are conditional on the fitted posterior
+distribution and the chosen tolerance. They are not sampler acceptance
+rates and do not measure whether admissible draws are concentrated in a
+small region of the parameter space.</p>
 </div>
 <div class="section level2">
-<h2 id="diagnose-the-stored-sample">Diagnose the stored sample<a class="anchor" aria-label="anchor" href="#diagnose-the-stored-sample"></a>
+<h2 id="assess-the-stored-posterior-sample">Assess the stored posterior sample<a class="anchor" aria-label="anchor" href="#assess-the-stored-posterior-sample"></a>
 </h2>
-<p><code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> summarizes information
-recoverable from the saved posterior: draw count, effective sample size,
-<code>max_tries</code>, restriction counts, and the distribution of
-admissibility weights.</p>
+<p><code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> reports properties available
+from the stored posterior distribution: the number of draws, effective
+sample size, <code>max_tries</code>, restriction counts, and the
+distribution of admissibility weights.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diag</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics</a></span><span class="op">(</span><span class="va">post_sign</span>, ess_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  sparse_threshold <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span>
@@ -212,15 +223,17 @@ admissibility weights.</p>
 <span>    <span class="st">"posterior_draws"</span>, <span class="st">"effective_sample_size"</span>, <span class="st">"max_tries"</span>,</span>
 <span>    <span class="st">"kernel_zero_share"</span>, <span class="st">"kernel_cv"</span><span class="op">)</span>,</span>
 <span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">metric</span>, <span class="va">value</span>, <span class="va">flag</span>, <span class="va">message</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Start with <code>effective_sample_size</code> and
-<code>kernel_zero_share</code>. The first flags a small effective stored
-sample; the second records the share of near-zero admissibility weights.
-<code>kernel_cv</code> describes weight dispersion, while the
-restriction counts and <code>max_tries</code> provide context for how
-demanding the identification search was.</p>
-<p>The thresholds are review aids, not universal pass/fail rules. Most
-importantly, these diagnostics cannot reconstruct the sampler’s complete
-proposal and rejection history from the saved posterior.</p>
+<p><code>effective_sample_size</code> measures the effective amount of
+posterior information, while <code>kernel_zero_share</code> reports the
+proportion of near-zero admissibility weights. <code>kernel_cv</code>
+measures the dispersion of these weights. The restriction counts and
+<code>max_tries</code> indicate the computational demands of the
+identification search.</p>
+<p>The specified thresholds identify potentially weak effective
+information or sparse admissibility support; they are not universal
+decision rules. These diagnostics cannot recover the sampler’s complete
+proposal and rejection history from the stored posterior
+distribution.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span><span class="va">diag</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span>, <span class="st">"kernel_cv"</span><span class="op">)</span>,</span>
@@ -229,9 +242,9 @@ proposal and rejection history from the saved posterior.</p>
 <div class="section level2">
 <h2 id="compare-sign-restricted-specifications">Compare sign-restricted specifications<a class="anchor" aria-label="anchor" href="#compare-sign-restricted-specifications"></a>
 </h2>
-<p>Fit alternatives with the same variables and comparable identifying
-restrictions. Named arguments become stable model labels in both
-comparison tables.</p>
+<p>Alternative specifications should contain the same variables and
+comparable identifying restrictions. Names assigned to the posterior
+arguments identify the specifications in the comparison tables.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spec_sign_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvarSIGNs</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimism</span> <span class="op">*</span> <span class="fl">100</span>, p <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  sign_irf <span class="op">=</span> <span class="va">sign_irf</span><span class="op">)</span></span>
@@ -239,7 +252,8 @@ comparison tables.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">456</span><span class="op">)</span></span>
 <span><span class="va">post_sign_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_sign_alt</span>, S <span class="op">=</span> <span class="fl">2000</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>Compare restriction satisfaction separately from sample health:</p>
+<p>Posterior restriction probabilities and sample diagnostics are
+compared separately:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">restriction_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_restrictions.html">compare_restrictions</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post_sign</span>,</span>
 <span>  shorter_lag <span class="op">=</span> <span class="va">post_sign_alt</span>, zero_tol <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span></span>
@@ -249,11 +263,12 @@ comparison tables.</p>
 <span>  shorter_lag <span class="op">=</span> <span class="va">post_sign_alt</span>,</span>
 <span>  ess_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  sparse_threshold <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/compare_restrictions.html">compare_restrictions()</a></code> aligns posterior satisfaction
-probabilities by model; <code><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics()</a></code>
-aligns diagnostic metrics. Differences in either table describe fitted
-posteriors and stored samples—they do not by themselves rank the
-economic plausibility of the specifications.</p>
+<p><code><a href="../reference/compare_restrictions.html">compare_restrictions()</a></code> reports posterior satisfaction
+probabilities by model, whereas
+<code><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics()</a></code> reports the corresponding
+diagnostic measures. Differences in either table describe fitted
+posterior distributions and stored samples; they do not, by themselves,
+rank the economic plausibility of the specifications.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_compare_restrictions.html">plot_compare_restrictions</a></span><span class="op">(</span><span class="va">restriction_comparison</span>,</span>
 <span>  restriction_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf_sign"</span>, <span class="st">"irf_zero"</span><span class="op">)</span><span class="op">)</span></span>
@@ -263,23 +278,25 @@ economic plausibility of the specifications.</p>
 <span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span>, <span class="st">"kernel_cv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="a-compact-review-sequence">A compact review sequence<a class="anchor" aria-label="anchor" href="#a-compact-review-sequence"></a>
+<h2 id="recommended-sequence-of-analysis">Recommended sequence of analysis<a class="anchor" aria-label="anchor" href="#recommended-sequence-of-analysis"></a>
 </h2>
 <p>For each reported sign-restricted result:</p>
 <ol style="list-style-type: decimal">
-<li>Inspect <code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> before interpreting
-posterior summaries.</li>
-<li>Use <code><a href="../reference/restriction_audit.html">restriction_audit()</a></code> to report satisfaction of the
-fitted restrictions.</li>
+<li>Evaluate the effective sample size and admissibility-weight
+distribution with <code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> before
+interpreting posterior summaries.</li>
+<li>Use <code><a href="../reference/restriction_audit.html">restriction_audit()</a></code> to report the posterior
+satisfaction probabilities of the fitted restrictions.</li>
 <li>Select a most-likely-admissible IRF or CDM only when one coherent
-draw is useful for presentation or downstream calculation.</li>
-<li>Repeat the diagnostics and audit across substantive alternative
-specifications rather than comparing representative paths alone.</li>
+draw is required for presentation or subsequent calculations.</li>
+<li>Compare diagnostics and restriction probabilities across
+substantively relevant alternative specifications rather than comparing
+representative paths alone.</li>
 </ol>
-<p>For general tidy extraction, probability statements, response timing,
-and publication output, return to <a href="bsvarPost.html">Getting
-Started</a>. The <a href="https://davidzenz.github.io/bsvarPost/reference/index.html">function
-reference</a> documents filters, tolerances, and plotting variants.</p>
+<p>For posterior summaries, probability statements, response timing,
+figures, and tables, see <a href="bsvarPost.html">Post-estimation
+Analysis with bsvarPost</a>. The <a href="https://davidzenz.github.io/bsvarPost/reference/index.html">function
+reference</a> documents filters, tolerances, and plotting arguments.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

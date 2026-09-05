@@ -1,6 +1,6 @@
-# Compare time-to-threshold summaries across models
+# Compare response thresholds across model specifications
 
-Compare time-to-threshold summaries across models
+Compare response thresholds across model specifications
 
 ## Usage
 
@@ -39,11 +39,11 @@ compare_time_to_threshold(
 
 - variables:
 
-  Optional response-variable subset.
+  Response variables to include.
 
 - shocks:
 
-  Optional shock subset.
+  Structural shocks to include.
 
 - variable:
 
@@ -67,7 +67,7 @@ compare_time_to_threshold(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - scale_by:
 
@@ -80,7 +80,7 @@ compare_time_to_threshold(
 ## Value
 
 A `bsvar_post_tbl` combining time-to-threshold summary results across
-models, with a `model` column identifying each input.
+models, with a `model` column identifying each model specification.
 
 ## Examples
 

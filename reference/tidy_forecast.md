@@ -1,6 +1,6 @@
-# Tidy forecasts
+# Summarise posterior forecasts
 
-Tidy forecasts
+Summarise posterior forecasts
 
 ## Usage
 
@@ -15,7 +15,7 @@ tidy_forecast(object, ...)
 
 - object:
 
-  A posterior model object or posterior IRF array.
+  A posterior model object or a `Forecasts` object.
 
 - ...:
 
@@ -24,9 +24,9 @@ tidy_forecast(object, ...)
 ## Value
 
 A `bsvar_post_tbl` (tibble subclass) with columns `model`,
-`object_type`, `variable`, `shock`, `horizon`, `mean`, `median`, `sd`,
-`lower`, and `upper`. When `draws = TRUE`, columns `draw` and `value`
-replace the summary statistics.
+`object_type`, `variable`, `horizon`, `mean`, `median`, `sd`, `lower`,
+and `upper`. When `draws = TRUE`, columns `draw` and `value` replace the
+summary statistics.
 
 ## Examples
 

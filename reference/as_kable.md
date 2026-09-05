@@ -1,7 +1,9 @@
 # Render bsvarPost tables with knitr::kable
 
-Convert `bsvarPost` tables or report bundles to a
-[`knitr::kable`](https://rdrr.io/pkg/knitr/man/kable.html) object.
+Convert posterior summary tables or
+[`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
+results to a [`knitr::kable`](https://rdrr.io/pkg/knitr/man/kable.html)
+object.
 
 ## Usage
 
@@ -61,8 +63,8 @@ as_kable(x, ...)
 
 - preset:
 
-  Reporting preset. Use `"compact"` for a narrower, publication-oriented
-  column selection.
+  Table specification. Use `"compact"` for a narrower selection of
+  columns.
 
 ## Value
 

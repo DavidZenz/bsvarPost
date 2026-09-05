@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Getting Started with bsvarPost • bsvarPost</title>
+<title>Post-estimation Analysis with bsvarPost • bsvarPost</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started with bsvarPost">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Post-estimation Analysis with bsvarPost">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -29,15 +29,15 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
-    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Inference and Comparison</a></li>
-    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Events</a></li>
-    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Sign-Restricted Workflows</a></li>
+<li><a class="dropdown-item" href="../articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
+    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -60,7 +60,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Getting Started with bsvarPost</h1>
+      <h1>Post-estimation Analysis with bsvarPost</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DavidZenz/bsvarPost/blob/main/vignettes/bsvarPost.Rmd" class="external-link"><code>vignettes/bsvarPost.Rmd</code></a></small>
@@ -70,38 +70,42 @@
     
     
 <!-- generated-by: gsd-doc-writer -->
-<p><code>bsvarPost</code> starts where <code>bsvars</code> and
-<code>bsvarSIGNs</code> stop: with an estimated posterior. It turns
-posterior results into tidy tables, cumulative responses, comparisons,
-probability statements, coherent representative draws, event summaries,
-and publication-ready output.</p>
+<p><code>bsvarPost</code> analyses posterior distributions estimated
+with <code>bsvars</code> and <code>bsvarSIGNs</code>. It summarises
+posterior quantities in tidy tables and provides methods for cumulative
+responses, model comparison, posterior hypothesis evaluation,
+representative draws, response timing, and historical-event
+analysis.</p>
 <p>This guide assumes that you already know how to specify and estimate
-a model with one of the parent packages. In one short workflow, we
-examine the response of US GDP (<code>gdp</code>) to the
-government-spending shock (<code>gs</code>) in the
-<code><a href="https://bsvars.org/bsvars/reference/us_fiscal_lsuw.html" class="external-link">bsvars::us_fiscal_lsuw</a></code> data. The included fixtures keep the
-article fast; use the same calls with your own posterior object.</p>
+a model with one of the parent packages. The examples examine the
+response of US GDP (<code>gdp</code>) to the government-spending shock
+(<code>gs</code>) using the <code><a href="https://bsvars.org/bsvars/reference/us_fiscal_lsuw.html" class="external-link">bsvars::us_fiscal_lsuw</a></code> data.
+Precomputed posterior draws reduce computation time; the same functions
+can be applied to posterior objects from an empirical analysis.</p>
 <div class="section level2">
-<h2 id="start-from-a-posterior">Start from a posterior<a class="anchor" aria-label="anchor" href="#start-from-a-posterior"></a>
+<h2 id="posterior-input">Posterior input<a class="anchor" aria-label="anchor" href="#posterior-input"></a>
 </h2>
-<p>Only the estimation handoff matters here. For example, a minimal
-<code>bsvars</code> workflow is:</p>
+<p>The analysis begins with a posterior distribution estimated by a
+parent package. For example, the following code specifies and estimates
+a Bayesian structural vector autoregression with
+<code>bsvars</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"us_fiscal_lsuw"</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span>
 <span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">2000</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                         show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>The rest of the guide uses the precomputed <code>post</code> loaded
-above. It is a regular <code>PosteriorBSVAR</code> object, so there is
-no import or conversion step.</p>
+<p>The remaining examples use the precomputed <code>post</code> object
+loaded above. It is a <code>PosteriorBSVAR</code> object and can be
+passed directly to <code>bsvarPost</code> functions.</p>
 </div>
 <div class="section level2">
-<h2 id="use-one-tidy-extraction-pattern">Use one tidy extraction pattern<a class="anchor" aria-label="anchor" href="#use-one-tidy-extraction-pattern"></a>
+<h2 id="summarise-posterior-quantities">Summarise posterior quantities<a class="anchor" aria-label="anchor" href="#summarise-posterior-quantities"></a>
 </h2>
-<p>The canonical pattern is: pass the posterior to a
-<code>tidy_*()</code> function, then filter the resulting tibble to the
-research question. Here we request 90% pointwise intervals and keep four
-horizons from the GDP response to a spending shock.</p>
+<p>The <code>tidy_*()</code> functions compute posterior summaries in
+long-format tibbles. Here, <code><a href="../reference/tidy_irf.html">tidy_irf()</a></code> reports posterior
+medians and 90% pointwise credible intervals for impulse responses. The
+resulting table is restricted to four horizons of the GDP response to a
+government-spending shock.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">irf_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_irf.html">tidy_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
 <span><span class="va">irf_focus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">irf_tbl</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span> <span class="op">&amp;</span></span>
@@ -115,26 +119,27 @@ horizons from the GDP response to a spending shock.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs          4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">91</span> 0.000<span style="text-decoration: underline;">522</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">01</span> 0.000<span style="text-decoration: underline;">284</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">94</span> 0.000<span style="text-decoration: underline;">289</span></span></span></code></pre></div>
-<p>The same shape extends to other posterior quantities. Summary tables
-contain posterior location and interval columns; set
-<code>draws = TRUE</code> when downstream work needs individual
-draws.</p>
+<p>The same tabular structure applies to other posterior quantities.
+Summary tables contain posterior location and credible-interval columns.
+Set <code>draws = TRUE</code> when an analysis requires the individual
+posterior draws.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>       <span class="co"># cumulative responses</span></span>
 <span><span class="fu"><a href="../reference/tidy_fevd.html">tidy_fevd</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>      <span class="co"># variance shares</span></span>
 <span><span class="fu"><a href="../reference/tidy_hd.html">tidy_hd</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span>                      <span class="co"># historical contributions</span></span>
 <span><span class="fu"><a href="../reference/tidy_forecast.html">tidy_forecast</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>   <span class="co"># predictive paths</span></span>
 <span><span class="fu"><a href="../reference/tidy_shocks.html">tidy_shocks</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span>                  <span class="co"># structural shocks</span></span></code></pre></div>
-<p>This is usually enough to join results to annotations, filter panels,
-or use a different graphics system without unpacking posterior arrays by
-hand.</p>
+<p>The resulting tables can be filtered, combined with additional
+variables, or visualised with a graphics system of the researcher’s
+choice without directly manipulating posterior arrays.</p>
 </div>
 <div class="section level2">
-<h2 id="accumulate-responses-with-cdm">Accumulate responses with <code>cdm()</code><a class="anchor" aria-label="anchor" href="#accumulate-responses-with-cdm"></a>
+<h2 id="cumulative-dynamic-responses">Cumulative dynamic responses<a class="anchor" aria-label="anchor" href="#cumulative-dynamic-responses"></a>
 </h2>
-<p><code><a href="../reference/cdm.html">cdm()</a></code> retains the posterior draws while accumulating the
-response at each horizon. <code><a href="../reference/tidy_cdm.html">tidy_cdm()</a></code> then applies the same
-extraction pattern used above.</p>
+<p><code><a href="../reference/cdm.html">cdm()</a></code> computes cumulative dynamic responses for every
+posterior draw by accumulating the impulse response through each
+horizon. <code><a href="../reference/tidy_cdm.html">tidy_cdm()</a></code> reports the corresponding posterior
+summaries and credible intervals.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cdm_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cdm.html">cdm</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="va">cdm_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">cdm_draws</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
@@ -149,17 +154,19 @@ extraction pattern used above.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs          4 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">11</span>   -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">17</span> 0.003<span style="text-decoration: underline;">44</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8 -<span style="color: #BB0000;">0.006</span><span style="color: #BB0000; text-decoration: underline;">18</span>   -<span style="color: #BB0000;">0.016</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.004<span style="text-decoration: underline;">87</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12 -<span style="color: #BB0000;">0.012</span><span style="color: #BB0000; text-decoration: underline;">1</span>    -<span style="color: #BB0000;">0.031</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.005<span style="text-decoration: underline;">47</span></span></span></code></pre></div>
-<p>These are cumulative dynamic responses. Whether they have an economic
-multiplier interpretation depends on the model’s transformations and
-scaling; see <code><a href="../reference/cdm.html">?cdm</a></code> for the <code>scale_by</code> and
-<code>scale_var</code> options.</p>
+<p>These quantities are cumulative dynamic responses. Their
+interpretation as economic multipliers depends on the transformations
+and scaling used in the model; see <code><a href="../reference/cdm.html">?cdm</a></code> for the
+<code>scale_by</code> and <code>scale_var</code> arguments.</p>
 </div>
 <div class="section level2">
-<h2 id="compare-specifications-in-the-same-table">Compare specifications in the same table<a class="anchor" aria-label="anchor" href="#compare-specifications-in-the-same-table"></a>
+<h2 id="compare-model-specifications">Compare model specifications<a class="anchor" aria-label="anchor" href="#compare-model-specifications"></a>
 </h2>
-<p>The second fixture is the same three-variable system with a longer
-lag order. Named posterior arguments become stable labels in the
-<code>model</code> column.</p>
+<p>The second posterior distribution is estimated for the same
+three-variable system with a longer lag order.
+<code><a href="../reference/compare_cdm.html">compare_cdm()</a></code> computes comparable posterior summaries for
+both specifications. Names assigned to the posterior arguments identify
+the specifications in the <code>model</code> column.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cdm_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_cdm.html">compare_cdm</a></span><span class="op">(</span></span>
 <span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
@@ -179,17 +186,19 @@ lag order. Named posterior arguments become stable labels in the
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> longer_lag       4 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">77</span> -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">34</span> 0.006<span style="text-decoration: underline;">35</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> longer_lag       8 -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">66</span> -<span style="color: #BB0000;">0.026</span><span style="color: #BB0000; text-decoration: underline;">2</span>  0.013<span style="text-decoration: underline;">4</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> longer_lag      12 -<span style="color: #BB0000;">0.015</span><span style="color: #BB0000; text-decoration: underline;">0</span>  -<span style="color: #BB0000;">0.047</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.020<span style="text-decoration: underline;">9</span></span></span></code></pre></div>
-<p>Use the same pattern with <code><a href="../reference/compare_irf.html">compare_irf()</a></code>,
-<code><a href="../reference/compare_fevd.html">compare_fevd()</a></code>, and the other <code>compare_*()</code>
-helpers. The comparison is descriptive: it puts like-for-like posterior
-summaries together but does not choose a preferred specification.</p>
+<p>The functions <code><a href="../reference/compare_irf.html">compare_irf()</a></code>,
+<code><a href="../reference/compare_fevd.html">compare_fevd()</a></code>, and the remaining <code>compare_*()</code>
+methods provide analogous comparisons for other posterior quantities.
+These comparisons are descriptive: they report corresponding posterior
+summaries across specifications but do not select a preferred model.</p>
 </div>
 <div class="section level2">
-<h2 id="ask-a-posterior-probability-question">Ask a posterior probability question<a class="anchor" aria-label="anchor" href="#ask-a-posterior-probability-question"></a>
+<h2 id="evaluate-a-posterior-hypothesis">Evaluate a posterior hypothesis<a class="anchor" aria-label="anchor" href="#evaluate-a-posterior-hypothesis"></a>
 </h2>
-<p>Suppose the question is: <em>what is the posterior probability that
-the GDP response to the spending shock is positive at each selected
-horizon?</em></p>
+<p>Consider the posterior probability that the GDP response to the
+spending shock is positive at each selected horizon.
+<code><a href="../reference/hypothesis_irf.html">hypothesis_irf()</a></code> evaluates this inequality using the
+posterior draws.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">prob_positive</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -208,19 +217,22 @@ horizon?</em></p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8          0.11 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12          0.09</span></span></code></pre></div>
 <p><code>posterior_prob</code> is a model-conditional posterior
-probability, not a frequentist p-value. For questions that must hold
-across several horizons use <code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code>; for
-economically meaningful thresholds use <code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code>;
-and for a band covering an entire selected path use
-<code><a href="../reference/simultaneous_irf.html">simultaneous_irf()</a></code>. The <a href="inference-and-comparison.html">Inference and Comparison</a>
+probability, not a frequentist p-value.
+<code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code> computes the probability that a
+condition holds jointly across several horizons,
+<code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> evaluates economically meaningful
+thresholds, and <code><a href="../reference/simultaneous_irf.html">simultaneous_irf()</a></code> constructs a credible
+band for an entire selected response path. The <a href="inference-and-comparison.html">Inference and Comparison</a>
 article develops these distinctions.</p>
 </div>
 <div class="section level2">
-<h2 id="keep-one-coherent-draw-and-summarize-timing">Keep one coherent draw and summarize timing<a class="anchor" aria-label="anchor" href="#keep-one-coherent-draw-and-summarize-timing"></a>
+<h2 id="select-a-representative-draw-and-summarise-response-timing">Select a representative draw and summarise response timing<a class="anchor" aria-label="anchor" href="#select-a-representative-draw-and-summarise-response-timing"></a>
 </h2>
 <p>Pointwise medians need not correspond to any single posterior draw.
-<code><a href="../reference/median_target_irf.html">median_target_irf()</a></code> instead selects one internally coherent
-draw closest to the median response path over the requested subset.</p>
+<code><a href="../reference/median_target_irf.html">median_target_irf()</a></code> selects the posterior draw whose
+response path is closest to the pointwise posterior median over the
+requested variables, shocks, and horizons. The selected path therefore
+preserves the joint dependence within a single draw.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">representative</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/median_target_irf.html">median_target_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -239,9 +251,9 @@ draw closest to the median response path over the requested subset.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs          4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">712</span>        144 median_target</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>         144 median_target</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">60</span>         144 median_target</span></span></code></pre></div>
-<p>For a compact timing statement, <code><a href="../reference/peak_response.html">peak_response()</a></code> reports
-both the response level and the horizon of the peak for every posterior
-draw, then summarizes those quantities.</p>
+<p><code><a href="../reference/peak_response.html">peak_response()</a></code> computes the magnitude and horizon of
+the peak response for every posterior draw, then reports posterior
+summaries of both quantities.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peak_response.html">peak_response</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -255,18 +267,20 @@ draw, then summarizes those quantities.</p>
 <span><span class="co">#&gt;   variable shock median_value median_horizon</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gs        -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>             12</span></span></code></pre></div>
-<p>For persistence questions, <code><a href="../reference/duration_response.html">duration_response()</a></code>,
-<code><a href="../reference/half_life_response.html">half_life_response()</a></code>, and <code><a href="../reference/time_to_threshold.html">time_to_threshold()</a></code>
-provide related summaries without reducing the posterior to a single
-curve.</p>
+<p>For questions concerning response persistence,
+<code><a href="../reference/duration_response.html">duration_response()</a></code>, <code><a href="../reference/half_life_response.html">half_life_response()</a></code>, and
+<code><a href="../reference/time_to_threshold.html">time_to_threshold()</a></code> report related posterior summaries
+without reducing the posterior distribution to a single curve.</p>
 </div>
 <div class="section level2">
-<h2 id="move-from-an-hd-path-to-an-event-question">Move from an HD path to an event question<a class="anchor" aria-label="anchor" href="#move-from-an-hd-path-to-an-event-question"></a>
+<h2 id="summarise-historical-decompositions-over-selected-periods">Summarise historical decompositions over selected periods<a class="anchor" aria-label="anchor" href="#summarise-historical-decompositions-over-selected-periods"></a>
 </h2>
-<p>Start with draw-level <code><a href="../reference/tidy_hd.html">tidy_hd()</a></code> data, then choose a
-window that is substantively meaningful for the application. This
-illustrative four-quarter window shows the handoff from event
-aggregation to shock ranking.</p>
+<p><code>tidy_hd(draws = TRUE)</code> returns draw-level contributions
+of structural shocks to each observed variable.
+<code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> aggregates these contributions over a
+substantively selected period, while <code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> orders
+shocks by their contributions. The following example uses an
+illustrative four-quarter period.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hd_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd.html">tidy_hd</a></span><span class="op">(</span><span class="va">post</span>, draws <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">event_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd_event.html">tidy_hd_event</a></span><span class="op">(</span></span>
@@ -293,24 +307,26 @@ aggregation to shock ranking.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gdp   -<span style="color: #BB0000;">14.9</span>      1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs     -<span style="color: #BB0000;">3.15</span>     2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      ttr    -<span style="color: #BB0000;">1.23</span>     3</span></span></code></pre></div>
-<p>This adds event-level questions to the parent package’s historical
-decomposition rather than replacing its standard HD workflow. Window
-choice and contribution interpretation are covered in <a href="historical-decomposition-events.html">Historical-Decomposition
-Events</a>.</p>
+<p>These functions extend the historical decompositions computed by the
+parent package with posterior summaries for selected periods. The choice
+of period and the interpretation of shock contributions are discussed in
+<a href="historical-decomposition-events.html">Historical-Decomposition
+Analysis</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="finish-with-publication-ready-output">Finish with publication-ready output<a class="anchor" aria-label="anchor" href="#finish-with-publication-ready-output"></a>
+<h2 id="present-figures-and-tables">Present figures and tables<a class="anchor" aria-label="anchor" href="#present-figures-and-tables"></a>
 </h2>
-<p>One call turns the representative draw into a consistently styled
-<code>ggplot2</code> figure. The returned object remains a normal
-<code>ggplot</code>, so annotations can still be added before
-saving.</p>
+<p><code><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code> visualises the representative
+posterior draw using a consistent <code>ggplot2</code> style. It returns
+a <code>ggplot</code> object that can be annotated or otherwise modified
+before saving.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">representative_path</span>, family <span class="op">=</span> <span class="st">"irf"</span>, preset <span class="op">=</span> <span class="st">"paper"</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"GDP response to a government-spending shock"</span>,</span>
 <span>  caption <span class="op">=</span> <span class="st">"Median-target posterior draw"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="bsvarPost_files/figure-html/publication-plot-1.png" class="r-plt" alt="" width="672"></p>
-<p>For a table, keep one backend and the same focused result:</p>
+<p><code><a href="../reference/as_kable.html">as_kable()</a></code> reports the selected posterior summary as a
+formatted table:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span><span class="va">peak</span>, caption <span class="op">=</span> <span class="st">"Peak absolute GDP response"</span>,</span>
 <span>         digits <span class="op">=</span> <span class="fl">3</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
@@ -358,26 +374,25 @@ saving.</p>
 </table>
 </div>
 <div class="section level2">
-<h2 id="where-next">Where next?<a class="anchor" aria-label="anchor" href="#where-next"></a>
+<h2 id="further-analyses">Further analyses<a class="anchor" aria-label="anchor" href="#further-analyses"></a>
 </h2>
 <ul>
 <li>
 <a href="inference-and-comparison.html">Inference and Comparison</a>
-covers joint and magnitude questions, simultaneous bands, and richer
+covers joint and magnitude hypotheses, simultaneous credible bands, and
 model comparisons.</li>
 <li>
 <a href="historical-decomposition-events.html">Historical-Decomposition
-Events</a> covers event windows, contribution views, and shock
-ranking.</li>
+Analysis</a> covers selected historical periods, structural-shock
+contributions, and shock rankings.</li>
 <li>
-<a href="sign-restricted-workflows.html">Sign-Restricted
-Workflows</a> covers <code>most_likely_admissible_*()</code>,
+<a href="sign-restricted-workflows.html">Analysis of Sign-Restricted
+Models</a> covers <code>most_likely_admissible_*()</code>,
 <code><a href="../reference/restriction_audit.html">restriction_audit()</a></code>, <code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code>,
 and sign-model comparisons.</li>
 </ul>
 <p>The <a href="https://davidzenz.github.io/bsvarPost/reference/index.html">reference
-index</a> lists variants and lower-level helpers when a workflow needs
-more control.</p>
+index</a> documents all functions and their arguments.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

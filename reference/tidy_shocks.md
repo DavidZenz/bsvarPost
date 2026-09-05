@@ -1,6 +1,6 @@
-# Tidy structural shocks
+# Summarise posterior structural shocks
 
-Tidy structural shocks
+Summarise posterior structural shocks
 
 ## Usage
 
@@ -15,7 +15,8 @@ tidy_shocks(object, ...)
 
 - object:
 
-  A posterior model object or posterior IRF array.
+  A posterior model object, a `PosteriorShocks` object, or a
+  structural-shock array.
 
 - ...:
 
@@ -24,9 +25,9 @@ tidy_shocks(object, ...)
 ## Value
 
 A `bsvar_post_tbl` (tibble subclass) with columns `model`,
-`object_type`, `variable`, `shock`, `time`, `mean`, `median`, `sd`,
-`lower`, and `upper`. When `draws = TRUE`, columns `draw` and `value`
-replace the summary statistics.
+`object_type`, `variable`, `time`, `mean`, `median`, `sd`, `lower`, and
+`upper`. When `draws = TRUE`, columns `draw` and `value` replace the
+summary statistics.
 
 ## Examples
 

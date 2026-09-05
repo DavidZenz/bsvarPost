@@ -1,6 +1,6 @@
-# Audit sign, zero, structural, and narrative restrictions
+# Evaluate sign, zero, structural, and narrative restrictions
 
-Audit sign, zero, structural, and narrative restrictions
+Evaluate sign, zero, structural, and narrative restrictions
 
 ## Usage
 
@@ -23,7 +23,7 @@ restriction_audit(
 
 - restrictions:
 
-  Optional list of restriction helper objects. If omitted for
+  Optional list of restriction specifications. If omitted for
   `PosteriorBSVARSIGN`, restrictions are extracted from the fitted
   identification scheme.
 
@@ -33,11 +33,12 @@ restriction_audit(
 
 - probability:
 
-  Equal-tailed interval probability used in summaries.
+  Probability mass of the equal-tailed credible intervals reported in
+  posterior summaries.
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 - ...:
 

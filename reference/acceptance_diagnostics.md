@@ -1,10 +1,10 @@
 # Acceptance and admissibility diagnostics for bsvarSIGNs
 
-Summarise stored-draw diagnostics for sign-restricted posterior objects.
-These diagnostics do not reconstruct the full proposal/rejection history
-of the sampler. Instead, they report what can be recovered from the
-saved posterior state, identification pattern, and admissibility
-weights.
+Summarise the effective sample size and admissibility weights for
+sign-restricted posterior distributions. These diagnostics do not
+reconstruct the full proposal/rejection history of the sampler. They
+report quantities available from the stored posterior distribution,
+identification restrictions, and admissibility weights.
 
 ## Usage
 
@@ -50,7 +50,7 @@ acceptance_diagnostics(object, ...)
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 ## Value
 

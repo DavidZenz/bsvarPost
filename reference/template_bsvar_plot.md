@@ -1,6 +1,6 @@
-# Apply an output-family template to a bsvarPost plot
+# Apply graphical conventions for a posterior quantity
 
-Apply an output-family template to a bsvarPost plot
+Apply graphical conventions for a posterior quantity
 
 ## Usage
 
@@ -24,10 +24,10 @@ template_bsvar_plot(
 
 - family:
 
-  One of `"irf"`, `"cdm"`, `"forecast"`, `"hd"`, `"hd_event"`,
-  `"shock_ranking"`, `"hypothesis"`, `"restriction_audit"`,
-  `"simultaneous"`, `"joint_hypothesis"`, `"acceptance_diagnostics"`,
-  `"representative"`, or `"comparison"`.
+  Posterior quantity represented by the plot. One of `"irf"`, `"cdm"`,
+  `"forecast"`, `"hd"`, `"hd_event"`, `"shock_ranking"`, `"hypothesis"`,
+  `"restriction_audit"`, `"simultaneous"`, `"joint_hypothesis"`,
+  `"acceptance_diagnostics"`, `"representative"`, or `"comparison"`.
 
 - preset:
 
@@ -43,7 +43,8 @@ template_bsvar_plot(
 
 ## Value
 
-A `ggplot` object with template styling applied.
+A `ggplot` object with graphical conventions appropriate to the selected
+posterior quantity.
 
 ## Examples
 

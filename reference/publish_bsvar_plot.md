@@ -1,8 +1,8 @@
-# Build a publication-ready bsvarPost plot
+# Visualise posterior results with consistent graphical conventions
 
-This helper detects a supported `bsvarPost` output family, constructs
-the corresponding plot when needed, and applies the matching plot
-template plus optional annotations.
+Identifies the posterior quantity represented by a `bsvarPost` result,
+constructs the corresponding visualisation, and applies consistent
+graphical conventions and optional annotations.
 
 ## Usage
 
@@ -25,11 +25,14 @@ publish_bsvar_plot(
 - object:
 
   A `ggplot` object, `bsvar_post_tbl`, representative-response object,
-  or report bundle.
+  or
+  [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
+  result.
 
 - family:
 
-  Optional output family override.
+  Optional specification of the posterior quantity represented by
+  `object`.
 
 - preset:
 

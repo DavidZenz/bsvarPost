@@ -1,6 +1,6 @@
-# Convert APRScenario-style forecast tables to bsvarPost tidy format
+# Express APRScenario forecasts as posterior summary tables
 
-Convert APRScenario-style forecast tables to bsvarPost tidy format
+Express APRScenario forecasts as posterior summary tables
 
 ## Usage
 
@@ -17,7 +17,7 @@ tidy_apr_forecast(data, model = "apr")
 
 - model:
 
-  Model identifier.
+  Label identifying the model specification.
 
 ## Value
 

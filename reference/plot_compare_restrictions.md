@@ -1,6 +1,7 @@
-# Plot comparison summaries for restriction-audit tables
+# Visualise posterior restriction probabilities across model specifications
 
-Plot comparison summaries for restriction-audit tables
+Visualise posterior restriction probabilities across model
+specifications
 
 ## Usage
 
@@ -22,11 +23,11 @@ plot_compare_restrictions(
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - restriction_types:
 
-  Optional restriction-type filter.
+  Types of identifying restrictions to include.
 
 - top_n:
 

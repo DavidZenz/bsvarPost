@@ -40,19 +40,19 @@ plot_simultaneous(
 
 - probability:
 
-  Coverage probability for the simultaneous band.
+  Posterior coverage probability of the simultaneous credible band.
 
 - variable:
 
-  Optional response-variable subset.
+  Response variables to include.
 
 - shock:
 
-  Optional shock subset.
+  Structural shocks to include.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - facet_scales:
 

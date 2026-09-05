@@ -1,6 +1,6 @@
-# Autoplot tidy posterior outputs
+# Visualise posterior summaries
 
-Autoplot tidy posterior outputs
+Visualise posterior summaries
 
 ## Usage
 
@@ -20,19 +20,20 @@ autoplot(
 
 - object:
 
-  A `bsvar_post_tbl` returned by the tidy or comparison helpers.
+  A `bsvar_post_tbl` containing posterior summaries or model
+  comparisons.
 
 - variables:
 
-  Optional variable filter.
+  Response variables to include.
 
 - shocks:
 
-  Optional shock filter.
+  Structural shocks to include.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - facet_scales:
 

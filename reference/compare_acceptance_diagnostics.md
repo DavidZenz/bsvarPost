@@ -1,6 +1,6 @@
-# Compare acceptance diagnostics across models
+# Compare acceptance diagnostics across model specifications
 
-Compare acceptance diagnostics across models
+Compare acceptance diagnostics across model specifications
 
 ## Usage
 
@@ -35,7 +35,7 @@ compare_acceptance_diagnostics(
 ## Value
 
 A `bsvar_post_tbl` combining acceptance diagnostic results across
-models, with a `model` column identifying each input.
+models, with a `model` column identifying each model specification.
 
 ## Examples
 

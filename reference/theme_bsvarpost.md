@@ -1,6 +1,6 @@
-# Plot theme for bsvarPost outputs
+# Plot theme for posterior summaries
 
-Plot theme for bsvarPost outputs
+Plot theme for posterior summaries
 
 ## Usage
 

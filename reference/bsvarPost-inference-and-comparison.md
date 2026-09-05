@@ -1,8 +1,8 @@
 # Inference and Comparison
 
-This article develops model-comparison, posterior-probability, joint-
-hypothesis, simultaneous-band, representative-draw, and response-timing
-workflows.
+This article considers model comparison, posterior probabilities, joint
+hypotheses, simultaneous credible bands, representative posterior draws,
+and response timing.
 
 ## Details
 

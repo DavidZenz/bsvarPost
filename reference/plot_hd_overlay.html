@@ -19,14 +19,14 @@ shock-only component panel."></head><body>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Get Started</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Introduction</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
-    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Inference and Comparison</a></li>
-    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Events</a></li>
-    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Sign-Restricted Workflows</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
+    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -82,20 +82,20 @@ historical-decomposition table.</p></dd>
 
 
 <dt id="arg-probability">probability<a class="anchor" aria-label="anchor" href="#arg-probability"></a></dt>
-<dd><p>Equal-tailed interval probability used when <code>object</code>
-is not already a tidy table.</p></dd>
+<dd><p>Probability mass of the equal-tailed credible interval
+computed when <code>object</code> is not already a summary table.</p></dd>
 
 
 <dt id="arg-variables">variables<a class="anchor" aria-label="anchor" href="#arg-variables"></a></dt>
-<dd><p>Optional variable filter.</p></dd>
+<dd><p>Variables whose historical decompositions are included.</p></dd>
 
 
 <dt id="arg-shocks">shocks<a class="anchor" aria-label="anchor" href="#arg-shocks"></a></dt>
-<dd><p>Optional shock filter applied before grouping.</p></dd>
+<dd><p>Structural shocks whose contributions are included.</p></dd>
 
 
 <dt id="arg-models">models<a class="anchor" aria-label="anchor" href="#arg-models"></a></dt>
-<dd><p>Optional model filter.</p></dd>
+<dd><p>Model specifications to include.</p></dd>
 
 
 <dt id="arg-facet-scales">facet_scales<a class="anchor" aria-label="anchor" href="#arg-facet-scales"></a></dt>

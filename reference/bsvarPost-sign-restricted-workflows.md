@@ -1,4 +1,4 @@
-# Sign-Restricted Workflows
+# Analysis of Sign-Restricted Models
 
 This article covers coherent admissible-draw selection, restriction
 audits, acceptance diagnostics, and comparisons for `bsvarSIGNs`

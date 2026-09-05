@@ -1,6 +1,7 @@
 # Most-likely-admissible representative impulse responses
 
-Convenience wrapper for
+Select the admissible impulse-response draw with the highest posterior
+admissibility weight using
 [`representative_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
 with `method = "most_likely_admissible"`.
 
@@ -14,7 +15,7 @@ most_likely_admissible_irf(object, ...)
 
 - object:
 
-  A posterior model object or a `PosteriorIR`.
+  A `PosteriorBSVARSIGN` model object.
 
 - ...:
 

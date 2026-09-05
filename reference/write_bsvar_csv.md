@@ -1,6 +1,6 @@
 # Export bsvarPost tables to CSV
 
-Write a reporting-ready table to disk as a CSV file.
+Write a table of posterior summaries to disk as a CSV file.
 
 ## Usage
 
@@ -22,17 +22,17 @@ write_bsvar_csv(
 
 - file:
 
-  Output CSV path.
+  Path of the CSV file.
 
 - row.names:
 
-  Passed to
+  Whether row names are written; passed to
   [`utils::write.csv()`](https://rdrr.io/r/utils/write.table.html).
 
 - preset:
 
-  Reporting preset. Use `"compact"` for a narrower, publication-oriented
-  column selection.
+  Table specification. Use `"compact"` for a narrower selection of
+  columns.
 
 - ...:
 

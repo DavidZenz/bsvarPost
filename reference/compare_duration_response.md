@@ -1,6 +1,6 @@
-# Compare duration summaries across models
+# Compare response durations across model specifications
 
-Compare duration summaries across models
+Compare response durations across model specifications
 
 ## Usage
 
@@ -40,11 +40,11 @@ compare_duration_response(
 
 - variables:
 
-  Optional response-variable subset.
+  Response variables to include.
 
 - shocks:
 
-  Optional shock subset.
+  Structural shocks to include.
 
 - variable:
 
@@ -72,7 +72,7 @@ compare_duration_response(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - scale_by:
 
@@ -85,7 +85,7 @@ compare_duration_response(
 ## Value
 
 A `bsvar_post_tbl` combining duration summary results across models,
-with a `model` column identifying each input.
+with a `model` column identifying each model specification.
 
 ## Examples
 

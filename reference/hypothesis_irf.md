@@ -98,7 +98,8 @@ hypothesis_irf(
 
 - probability:
 
-  Equal-tailed interval probability used for gap summaries.
+  Probability mass of the equal-tailed credible interval for the
+  posterior difference.
 
 - draws:
 
@@ -106,7 +107,7 @@ hypothesis_irf(
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 ## Value
 

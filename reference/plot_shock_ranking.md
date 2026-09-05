@@ -1,6 +1,6 @@
-# Plot ranked event-window shock contributions
+# Visualise ranked shock contributions over selected historical periods
 
-Plot ranked event-window shock contributions
+Visualise ranked shock contributions over selected historical periods
 
 ## Usage
 
@@ -35,11 +35,11 @@ plot_shock_ranking(
 
 - variables:
 
-  Optional variable filter.
+  Variables whose historical decompositions are included.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - ranking:
 
@@ -51,7 +51,7 @@ plot_shock_ranking(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - ...:
 

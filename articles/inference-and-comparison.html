@@ -29,15 +29,15 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Get Started</a></li>
+<li class="nav-item"><a class="nav-link" href="../articles/bsvarPost.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/bsvarPost.html">Getting Started</a></li>
-    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Inference and Comparison</a></li>
-    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Events</a></li>
-    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Sign-Restricted Workflows</a></li>
+<li><a class="dropdown-item" href="../articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
+    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -70,22 +70,22 @@
     
     
 <!-- generated-by: gsd-doc-writer -->
-<p>This article starts with estimated posteriors and asks questions that
-cannot be answered by plotting a pointwise median alone. The running
-example compares two lag specifications for the
-<code><a href="https://bsvars.org/bsvars/reference/us_fiscal_lsuw.html" class="external-link">bsvars::us_fiscal_lsuw</a></code> system. We focus on the GDP response
-to a government-spending shock, without presuming that its sign or
-magnitude is known in advance.</p>
-<p>The fixtures contain 200 stored draws and keep the article quick to
-build. Replace them with your own compatible <code>bsvars</code> or
-<code>bsvarSIGNs</code> posterior objects.</p>
+<p>This article considers inferential questions that cannot be answered
+from a pointwise posterior median alone. The running example compares
+two lag orders for a Bayesian structural VAR estimated with
+<code><a href="https://bsvars.org/bsvars/reference/us_fiscal_lsuw.html" class="external-link">bsvars::us_fiscal_lsuw</a></code>. The quantity of interest is the
+response of GDP to a government-spending shock; no sign or magnitude is
+imposed in advance.</p>
+<p>The precomputed posterior objects contain 200 retained draws. They
+can be replaced with any compatible posterior object estimated with
+<code>bsvars</code> or <code>bsvarSIGNs</code>.</p>
 <div class="section level2">
 <h2 id="is-the-conclusion-sensitive-to-specification">Is the conclusion sensitive to specification?<a class="anchor" aria-label="anchor" href="#is-the-conclusion-sensitive-to-specification"></a>
 </h2>
-<p>Start with the comparison rather than two separate tables. Named
-arguments to <code><a href="../reference/compare_irf.html">compare_irf()</a></code> become stable model labels, and
-every other column has the same meaning as in
-<code><a href="../reference/tidy_irf.html">tidy_irf()</a></code>.</p>
+<p>To evaluate sensitivity to the lag order, <code><a href="../reference/compare_irf.html">compare_irf()</a></code>
+computes posterior summaries for both model specifications in a single
+table. Named arguments identify the specifications, while the remaining
+columns have the same meaning as in <code><a href="../reference/tidy_irf.html">tidy_irf()</a></code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_irf.html">compare_irf</a></span><span class="op">(</span></span>
 <span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
@@ -109,9 +109,10 @@ every other column has the same meaning as in
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> longer_lag       4 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">00</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">16</span> 0.001<span style="text-decoration: underline;">85</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> longer_lag       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">63</span>   -<span style="color: #BB0000;">0.004</span><span style="color: #BB0000; text-decoration: underline;">53</span> 0.002<span style="text-decoration: underline;">06</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> longer_lag      12 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">20</span>   -<span style="color: #BB0000;">0.005</span><span style="color: #BB0000; text-decoration: underline;">44</span> 0.002<span style="text-decoration: underline;">27</span></span></span></code></pre></div>
-<p>Read this descriptively: shifts in the center or interval show
-specification sensitivity; they do not constitute a model-selection
-rule. The same named- posterior pattern is available for <a href="../reference/compare_cdm.html">CDMs</a>, <a href="../reference/compare_fevd.html">FEVDs</a>, <a href="../reference/compare_forecast.html">forecasts</a>, and <a href="../reference/compare_hd_event.html">historical-decomposition
+<p>Differences in posterior medians or credible intervals indicate
+sensitivity to the model specification; they do not constitute a formal
+model-selection criterion. Corresponding comparisons are available for
+<a href="../reference/compare_cdm.html">CDMs</a>, <a href="../reference/compare_fevd.html">FEVDs</a>, <a href="../reference/compare_forecast.html">forecasts</a>, and <a href="../reference/compare_hd_event.html">historical-decomposition
 events</a>.</p>
 </div>
 <div class="section level2">
@@ -120,8 +121,9 @@ events</a>.</p>
 <div class="section level3">
 <h3 id="pointwise-support">Pointwise support<a class="anchor" aria-label="anchor" href="#pointwise-support"></a>
 </h3>
-<p>For a claim at particular horizons, ask directly what share of
-posterior draws satisfies it. Here the claim is that the GDP response is
+<p>For a hypothesis at selected horizons, <code><a href="../reference/hypothesis_irf.html">hypothesis_irf()</a></code>
+reports the proportion of posterior draws that satisfy the stated
+inequality. Here the hypothesis is that the response of GDP is
 positive.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">positive_gdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span></span>
@@ -142,19 +144,21 @@ positive.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4          0.185 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>   -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">91</span>  0.000<span style="text-decoration: underline;">522</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8          0.11  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>    -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">01</span>  0.000<span style="text-decoration: underline;">284</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12          0.09  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>    -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">94</span>  0.000<span style="text-decoration: underline;">289</span></span></span></code></pre></div>
-<p><code>posterior_prob</code> is the model-conditional probability of
-the stated inequality, not a p-value. The gap columns summarize the
-response minus the threshold, so they retain information about effect
-size. Use <a href="../reference/hypothesis_cdm.html"><code>hypothesis_cdm()</code></a>
+<p><code>posterior_prob</code> is the posterior probability of the
+stated inequality, conditional on the model specification; it is not a
+p-value. The gap columns summarise the posterior distribution of the
+response minus the threshold and therefore retain information about the
+magnitude of the response. Use <a href="../reference/hypothesis_cdm.html"><code>hypothesis_cdm()</code></a>
 for the same question about cumulative responses.</p>
 </div>
 <div class="section level3">
 <h3 id="joint-support-across-a-path">Joint support across a path<a class="anchor" aria-label="anchor" href="#joint-support-across-a-path"></a>
 </h3>
-<p>Pointwise probabilities do not answer whether one draw satisfies
-every condition. For the stronger claim that the response is positive
-from impact through horizon 8, intersect the conditions draw by
-draw.</p>
+<p>Pointwise probabilities do not give the probability that all
+conditions are satisfied simultaneously. For the stronger hypothesis
+that the response is positive from impact through horizon 8,
+<code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code> evaluates the intersection of the
+nine inequalities within each posterior draw.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">positive_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -170,18 +174,19 @@ draw.</p>
 <span><span class="co">#&gt;   posterior_prob n_constraints</span></span>
 <span><span class="co">#&gt;            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          0.095             9</span></span></code></pre></div>
-<p>The joint probability can be much smaller than the probability at any
-one horizon because all nine inequalities must hold in the same draw.
-See <a href="../reference/joint_hypothesis_cdm.html"><code>joint_hypothesis_cdm()</code></a>
+<p>The joint posterior probability can be considerably smaller than its
+pointwise counterparts because all nine inequalities must hold in the
+same posterior draw. See <a href="../reference/joint_hypothesis_cdm.html"><code>joint_hypothesis_cdm()</code></a>
 for cumulative paths.</p>
 </div>
 <div class="section level3">
 <h3 id="a-magnitude-question">A magnitude question<a class="anchor" aria-label="anchor" href="#a-magnitude-question"></a>
 </h3>
-<p>A sign may be too weak for the research question. Suppose
-<code>0.001</code> is a pre-specified, substantively meaningful response
-size on the scale used to fit the model. We can ask for the probability
-that the absolute response exceeds that threshold at horizon 8.</p>
+<p>A hypothesis about the sign alone may not address the economically
+relevant magnitude. Suppose <code>0.001</code> is a prespecified,
+substantively meaningful response on the scale used to estimate the
+model. <code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> reports the posterior probability
+that the absolute response exceeds this threshold at horizon 8.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">material_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/magnitude_audit.html">magnitude_audit</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -200,19 +205,20 @@ that the absolute response exceeds that threshold at horizon 8.</p>
 <span><span class="co">#&gt;   posterior_prob median_gap lower_gap upper_gap</span></span>
 <span><span class="co">#&gt;            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          0.595   0.000<span style="text-decoration: underline;">229</span> -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">818</span>   0.002<span style="text-decoration: underline;">01</span></span></span></code></pre></div>
-<p>Choose the threshold from the variable transformation and
-application, not from the posterior output. For cumulative multiplier
-questions, set <code>type = "cdm"</code> and review the scaling options
+<p>The threshold should follow from the variable transformation and the
+empirical application, and should not be selected from the posterior
+results. To evaluate cumulative dynamic multipliers, set
+<code>type = "cdm"</code>; the available scaling options are documented
 in <a href="../reference/magnitude_audit.html"><code>magnitude_audit()</code></a>.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="does-an-interval-cover-the-whole-path">Does an interval cover the whole path?<a class="anchor" aria-label="anchor" href="#does-an-interval-cover-the-whole-path"></a>
 </h2>
-<p>Ordinary credible intervals are pointwise. A 90% simultaneous band
-uses one sup-norm critical value for the selected response path, giving
-the stronger statement that 90% of draws lie inside the band over the
-selection as a whole.</p>
+<p>Ordinary credible intervals have pointwise coverage. A 90%
+simultaneous credible band uses a single sup-norm critical value for the
+selected response path, so that 90% of posterior draws lie within the
+band over the complete selection.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gdp_band</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simultaneous_irf.html">simultaneous_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -231,19 +237,22 @@ selection as a whole.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>  -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">80</span> 0.001<span style="text-decoration: underline;">40</span>                0.9</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">29</span> 0.000<span style="text-decoration: underline;">914</span>               0.9</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">68</span> 0.000<span style="text-decoration: underline;">523</span>               0.9</span></span></code></pre></div>
-<p>The band applies only to the variables, shocks, and horizons used to
-construct it. Expanding that family generally widens the band. Use <a href="../reference/simultaneous_cdm.html"><code>simultaneous_cdm()</code></a>
+<p>The band applies only to the response variables, structural shocks,
+and horizons used in its construction. Expanding this set generally
+widens the band. Use <a href="../reference/simultaneous_cdm.html"><code>simultaneous_cdm()</code></a>
 for cumulative responses and <a href="../reference/plot_simultaneous.html"><code>plot_simultaneous()</code></a>
-when the path is easier to assess graphically.</p>
+when a graphical representation facilitates interpretation of the
+response path.</p>
 </div>
 <div class="section level2">
 <h2 id="which-single-draw-represents-the-posterior-center">Which single draw represents the posterior center?<a class="anchor" aria-label="anchor" href="#which-single-draw-represents-the-posterior-center"></a>
 </h2>
-<p>A grid of pointwise medians need not be generated by any stored
-parameter draw. <code><a href="../reference/median_target_irf.html">median_target_irf()</a></code> instead selects the one
-draw closest to the median target over the requested responses and
-horizons. Including both GDP and government spending in the target keeps
-their displayed paths coherent with each other.</p>
+<p>A response path formed from pointwise posterior medians need not
+correspond to any retained parameter draw.
+<code><a href="../reference/median_target_irf.html">median_target_irf()</a></code> instead selects the draw closest to the
+median target over the specified responses and horizons. Including both
+GDP and government spending in the target ensures that the two reported
+paths correspond to the same structural model draw.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">representative</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/median_target_irf.html">median_target_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>,</span>
@@ -266,20 +275,22 @@ their displayed paths coherent with each other.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">827</span>         70 median_target</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">31</span>          70 median_target</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">72</span>          70 median_target</span></span></code></pre></div>
-<p>Use this draw when a downstream calculation requires one internally
-consistent structural model. Do not describe it as posterior
-uncertainty: retain the full posterior and its intervals alongside it.
-The same selection is available for <a href="../reference/median_target_cdm.html">CDMs</a>; sign-restricted
-models also have a distinct <a href="../reference/most_likely_admissible_irf.html">most-likely
-admissible draw</a>.</p>
+<p>This draw is appropriate when a subsequent calculation requires one
+internally consistent structural model. It is a representative draw, not
+a measure of posterior uncertainty; the full posterior distribution and
+its credible intervals should also be reported. The same selection is
+available for <a href="../reference/median_target_cdm.html">CDMs</a>.
+For sign-restricted models, a distinct <a href="../reference/most_likely_admissible_irf.html">most-likely
+admissible draw</a> can be selected.</p>
 </div>
 <div class="section level2">
 <h2 id="when-does-the-response-arrive-and-fade">When does the response arrive and fade?<a class="anchor" aria-label="anchor" href="#when-does-the-response-arrive-and-fade"></a>
 </h2>
-<p>Response-shape summaries operate draw by draw before summarizing, so
-uncertainty in timing is not inferred from one median curve. For an
-interpretable persistence example, examine the government-spending
-shock’s own response over 20 quarters.</p>
+<p>The response-timing functions compute the relevant quantity for each
+posterior draw before summarising its distribution. Consequently,
+uncertainty about timing is not inferred from a single posterior median
+response. As an example of persistence, consider the response of
+government spending to its own shock over 20 quarters.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peak_response.html">peak_response</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">20</span>, variables <span class="op">=</span> <span class="st">"gs"</span>, shocks <span class="op">=</span> <span class="st">"gs"</span>,</span>
 <span>                      absolute <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -308,12 +319,12 @@ shock’s own response over 20 quarters.</p>
 <span><span class="co">#&gt; 2 positive spell               21            periods           NA</span></span>
 <span><span class="co">#&gt; 3      half-life               14 periods after peak        0.900</span></span>
 <span><span class="co">#&gt; 4    below 0.015               11            horizon        0.975</span></span></code></pre></div>
-<p><code>reached_prob</code> matters for half-life and threshold
-summaries: a conditional median can look precise even when few draws
-reach the event within the requested horizon.
-<code><a href="../reference/peak_response.html">peak_response()</a></code> additionally reports the posterior
-distribution of the peak value. Use the dedicated reference pages for
-alternative definitions: <a href="../reference/duration_response.html"><code>duration_response()</code></a>,
+<p>For half-life and threshold summaries, <code>reached_prob</code> is
+the posterior probability that the event occurs within the selected
+horizon. A conditional median may appear precise even when this
+probability is small. <code><a href="../reference/peak_response.html">peak_response()</a></code> also reports the
+posterior distribution of the peak value. Alternative definitions are
+documented for <a href="../reference/duration_response.html"><code>duration_response()</code></a>,
 <a href="../reference/half_life_response.html"><code>half_life_response()</code></a>,
 and <a href="../reference/time_to_threshold.html"><code>time_to_threshold()</code></a>.</p>
 </div>
@@ -321,27 +332,26 @@ and <a href="../reference/time_to_threshold.html"><code>time_to_threshold()</cod
 <h2 id="choose-the-statement-that-matches-the-question">Choose the statement that matches the question<a class="anchor" aria-label="anchor" href="#choose-the-statement-that-matches-the-question"></a>
 </h2>
 <ul>
-<li>Use a <code>compare_*()</code> table to expose specification
-sensitivity.</li>
-<li>Use <code>hypothesis_*()</code> for one or more pointwise posterior
+<li>Use <code>compare_*()</code> to evaluate sensitivity across model
+specifications.</li>
+<li>Use <code>hypothesis_*()</code> to compute pointwise posterior
 probabilities.</li>
 <li>Use <code>joint_hypothesis_*()</code> when all selected inequalities
-must hold together.</li>
-<li>Use <code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> for a pre-specified economically
-relevant threshold.</li>
-<li>Use <code>simultaneous_*()</code> when coverage of an entire
-selected path is the claim.</li>
-<li>Use a median-target draw only when one coherent stored model is
-required.</li>
-<li>Use timing summaries for when, how long, and whether a response
-reaches an event—not as substitutes for the response distribution
-itself.</li>
+must hold simultaneously.</li>
+<li>Use <code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> to evaluate a prespecified,
+economically relevant threshold.</li>
+<li>Use <code>simultaneous_*()</code> when the inferential statement
+concerns coverage of an entire selected response path.</li>
+<li>Use a median-target draw only when one coherent retained model draw
+is required.</li>
+<li>Use response-timing summaries to report when, for how long, and with
+what probability a response reaches a specified event; these summaries
+do not replace the posterior distribution of the response.</li>
 </ul>
-<p>For sign-restricted posterior diagnostics and admissibility-based
-representative draws, continue to <a href="sign-restricted-workflows.html">Sign-Restricted Workflows</a>. The
-<a href="https://davidzenz.github.io/bsvarPost/reference/index.html">reference
-index</a> lists lower-level variants and plotting methods without
-repeating them here.</p>
+<p>For posterior diagnostics and representative draws in sign-restricted
+models, see <a href="sign-restricted-workflows.html">Analysis of
+Sign-Restricted Models</a>. The <a href="https://davidzenz.github.io/bsvarPost/reference/index.html">reference
+index</a> documents related variants and plotting methods.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

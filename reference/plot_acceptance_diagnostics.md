@@ -1,6 +1,6 @@
-# Plot acceptance diagnostics across metrics and models
+# Visualise acceptance diagnostics across model specifications
 
-Plot acceptance diagnostics across metrics and models
+Visualise acceptance diagnostics across model specifications
 
 ## Usage
 
@@ -30,11 +30,11 @@ plot_acceptance_diagnostics(
 
 - metrics:
 
-  Optional metric filter.
+  Diagnostic measures to include.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - show_flags:
 

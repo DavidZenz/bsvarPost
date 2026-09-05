@@ -1,21 +1,20 @@
-**Ask more of your structural VAR posterior.**
+**Posterior analysis for Bayesian structural VARs.**
 
-`bsvarPost` begins where
+`bsvarPost` extends posterior analysis for models estimated with
 [`bsvars`](https://cran.r-project.org/package=bsvars) and
-[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs) leave off.
-Bring an estimated posterior and use it to answer research questions,
-compare specifications, diagnose identifying restrictions, and prepare
-results for communication.
+[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs). Given an
+estimated posterior, it computes quantities used to address empirical
+questions, compare model specifications, evaluate identifying
+restrictions, and report results.
 
-The package does not provide another estimation workflow. It adds a
-consistent post-estimation layer for the questions that arise after a
-model has been fit.
+The package does not estimate Bayesian VARs. It provides a consistent
+set of post-estimation methods for posterior summaries and inference.
 
-## The shortest path
+## Posterior summaries
 
-If you already have a `bsvars` or `bsvarSIGNs` posterior, you are ready
-to start. A typical first step turns a posterior result into a compact
-tidy table:
+For an existing `bsvars` or `bsvarSIGNs` posterior,
+[`tidy_irf()`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md)
+summarises impulse responses in a compact table:
 
 ``` r
 
@@ -25,10 +24,10 @@ responses <- tidy_irf(posterior, horizon = 12, probability = 0.90)
 head(responses)
 ```
 
-The same tidy shape is available for cumulative dynamic multipliers,
-forecast error variance decompositions, historical decompositions,
-forecasts, and structural shocks. Learn the pattern once, then filter,
-plot, join, or report the result with familiar tools.
+The same tabular representation is available for cumulative dynamic
+multipliers, forecast error variance decompositions, historical
+decompositions, forecasts, and structural shocks. These results can then
+be filtered, visualised, joined, or reported with standard R functions.
 
 For cumulative effects, compute the posterior object explicitly with
 [`cdm()`](https://davidzenz.github.io/bsvarPost/reference/cdm.md):
@@ -39,110 +38,115 @@ multipliers <- cdm(posterior, horizon = 12)
 tidy_cdm(multipliers)
 ```
 
-Start with [Getting
-Started](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md)
-for a short, reproducible walkthrough from an existing posterior to tidy
-results, cumulative effects, and a publication-ready figure.
+See [Post-estimation Analysis with
+bsvarPost](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md)
+for a short, reproducible introduction to posterior summaries,
+cumulative effects, and a figure suitable for publication.
 
 ## What question are you asking?
 
 ### Do conclusions survive a different specification?
 
-Use the comparison workflow to place results from named posterior
-objects in one table. You can compare responses, cumulative effects,
-decompositions, forecasts, timing summaries, and diagnostics without
-manually binding model outputs.
+The comparison functions combine results from named posterior objects in
+one table. They compare impulse responses, cumulative effects,
+decompositions, forecasts, response-timing summaries, and diagnostics
+across model specifications.
 
 [Inference and
 Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.md)
-shows how to compare specifications, state posterior probability and
-magnitude questions, evaluate joint hypotheses, construct simultaneous
-bands, and select coherent representative draws. It also covers useful
-response-shape summaries such as peaks, duration, half-life, and time to
+shows how to compare specifications, compute posterior probabilities and
+magnitudes, evaluate joint hypotheses, construct simultaneous credible
+bands, and select representative posterior draws. It also describes
+response characteristics such as peaks, duration, half-life, and time to
 a threshold.
 
 ### Which shocks mattered during a particular episode?
 
-Rather than reproducing a full historical decomposition, define an event
-window and summarize the posterior contribution of each shock. Rank
-shocks by their contribution and compare the same episode across models.
+For a selected event window, the package summarises the posterior
+contribution of each structural shock. These contributions can be ranked
+and compared for the same episode across model specifications.
 
 [Historical-Decomposition
-Events](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md)
-develops this event-centred workflow with
+Analysis](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md)
+describes event-specific analysis with
 [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md),
 [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md),
-and focused visual summaries.
+and graphical summaries of shock contributions.
 
 ### Are sign-restricted results well supported?
 
-Sign-restricted posteriors carry questions that do not arise in the same
-way for other identification schemes: which admissible draw best
-represents the posterior, whether stated restrictions hold in saved
-draws, and whether the admissibility weights indicate weak or sparse
-support.
+Sign-restricted posteriors require additional evaluation: which
+admissible draw represents the posterior distribution, whether the
+imposed restrictions hold in the retained draws, and whether the
+admissibility weights indicate weak or sparse posterior support.
 
-[Sign-Restricted
-Workflows](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.md)
-brings together `most_likely_admissible_*()`,
+[Analysis of Sign-Restricted
+Models](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.md)
+describes `most_likely_admissible_*()`,
 [`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md),
 [`acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/acceptance_diagnostics.md),
-and the corresponding comparison and plotting workflows.
+and the corresponding comparison and plotting methods.
 
 ### How do I turn results into a figure or table?
 
-Tidy outputs work directly with `ggplot2` and table tools.
+Tidy posterior summaries work directly with `ggplot2` and
+table-generation packages.
 [`ggplot2::autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
-provides a useful first view; the publication helpers add consistent
-styling, annotations, and export settings. Reporting helpers convert the
-same focused result into a labelled table, so analysis and presentation
-stay connected.
+provides a default graphical summary; functions for publication graphics
+add consistent styling, annotations, and export settings. Reporting
+functions convert the same result into a labelled table, so figures and
+tables represent the same posterior quantities.
 
-## A small package by design
+## Scope
 
 Use `bsvars` or `bsvarSIGNs` to specify, estimate, and inspect the
 underlying model. Use `bsvarPost` when you need to:
 
-- express a posterior result as a tidy, reusable data set;
-- answer a cumulative, comparative, probabilistic, or timing question;
-- investigate a historical episode or sign-restriction diagnostic; or
-- carry a focused result into a publication-ready plot or table.
+- represent posterior quantities as tidy data sets;
+- compute cumulative effects, compare specifications, evaluate posterior
+  hypotheses, or summarise response timing;
+- analyse structural-shock contributions during a historical episode or
+  assess sign restrictions; or
+- report a selected posterior result in a figure or table.
 
-Function-level details and variants remain available in the [reference
+Definitions, arguments, and return values for individual functions are
+documented in the [reference
 index](https://davidzenz.github.io/bsvarPost/reference/index.md). The
-articles above are the recommended route through the package.
+articles above provide introductions to the main forms of posterior
+analysis.
 
 # Package index
 
-## Tidy and Cumulative Extraction
+## Posterior Summaries and Cumulative Responses
 
 - [`cdm()`](https://davidzenz.github.io/bsvarPost/reference/cdm.md) :
   Cumulative Dynamic Multipliers
 - [`tidy_irf()`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md)
-  : Tidy posterior impulse responses
+  : Summarise posterior impulse responses
 - [`tidy_cdm()`](https://davidzenz.github.io/bsvarPost/reference/tidy_cdm.md)
-  : Tidy cumulative dynamic multipliers
+  : Summarise posterior cumulative dynamic responses
 - [`tidy_fevd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_fevd.md)
-  : Tidy forecast error variance decompositions
+  : Summarise posterior forecast error variance decompositions
 - [`tidy_hd()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md)
-  : Tidy historical decompositions
+  : Summarise posterior historical decompositions
 - [`tidy_forecast()`](https://davidzenz.github.io/bsvarPost/reference/tidy_forecast.md)
-  : Tidy forecasts
+  : Summarise posterior forecasts
 - [`tidy_shocks()`](https://davidzenz.github.io/bsvarPost/reference/tidy_shocks.md)
-  : Tidy structural shocks
+  : Summarise posterior structural shocks
 
-## Compare Models and Specifications
+## Comparison of Model Specifications
 
 - [`compare_irf()`](https://davidzenz.github.io/bsvarPost/reference/compare_irf.md)
-  : Compare posterior impulse responses across models
+  : Compare posterior impulse responses across model specifications
 - [`compare_cdm()`](https://davidzenz.github.io/bsvarPost/reference/compare_cdm.md)
-  : Compare cumulative dynamic multipliers across models
+  : Compare cumulative dynamic responses across model specifications
 - [`compare_fevd()`](https://davidzenz.github.io/bsvarPost/reference/compare_fevd.md)
-  : Compare FEVDs across models
+  : Compare forecast error variance decompositions across model
+  specifications
 - [`compare_forecast()`](https://davidzenz.github.io/bsvarPost/reference/compare_forecast.md)
-  : Compare forecasts across models
+  : Compare posterior forecasts across model specifications
 
-## Posterior Statements and Joint Inference
+## Posterior Probabilities and Joint Inference
 
 - [`hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_irf.md)
   : Posterior probability statements for impulse responses
@@ -154,7 +158,7 @@ articles above are the recommended route through the package.
   : Joint posterior probability statements for cumulative dynamic
   multipliers
 - [`magnitude_audit()`](https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.md)
-  : Audit magnitude statements for IRFs or CDMs
+  : Evaluate magnitude hypotheses for IRFs or CDMs
 - [`simultaneous_irf()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_irf.md)
   : Simultaneous posterior bands for impulse responses
 - [`simultaneous_cdm()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_cdm.md)
@@ -185,28 +189,32 @@ articles above are the recommended route through the package.
 - [`time_to_threshold()`](https://davidzenz.github.io/bsvarPost/reference/time_to_threshold.md)
   : Time-to-threshold summaries for posterior IRFs and CDMs
 - [`compare_peak_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_peak_response.md)
-  : Compare peak response summaries across models
+  : Compare peak responses across model specifications
 - [`compare_duration_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_duration_response.md)
-  : Compare duration summaries across models
+  : Compare response durations across model specifications
 - [`compare_half_life_response()`](https://davidzenz.github.io/bsvarPost/reference/compare_half_life_response.md)
-  : Compare half-life summaries across models
+  : Compare response half-lives across model specifications
 - [`compare_time_to_threshold()`](https://davidzenz.github.io/bsvarPost/reference/compare_time_to_threshold.md)
-  : Compare time-to-threshold summaries across models
+  : Compare response thresholds across model specifications
 - [`plot_compare_response()`](https://davidzenz.github.io/bsvarPost/reference/plot_compare_response.md)
-  : Plot comparison summaries for response-shape tables
+  : Visualise response timing and persistence across model
+  specifications
 
-## Historical-Decomposition Events and Shock Ranking
+## Historical Decompositions and Shock Contributions
 
 - [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
-  : Tidy event-window historical decompositions
+  : Summarise historical-decomposition contributions over selected
+  periods
 - [`compare_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md)
-  : Compare event-window historical decompositions across models
+  : Compare historical-period shock contributions across model
+  specifications
 - [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md)
-  : Rank shocks by event-window historical decomposition contributions
+  : Rank structural shocks by contributions over selected periods
 - [`plot_shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/plot_shock_ranking.md)
-  : Plot ranked event-window shock contributions
+  : Visualise ranked shock contributions over selected historical
+  periods
 - [`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md)
-  : Plot event-window historical decomposition summaries
+  : Visualise shock contributions over selected historical periods
 - [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md)
   : Plot event contribution shares
 - [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md)
@@ -222,7 +230,7 @@ articles above are the recommended route through the package.
 - [`plot_hd_total()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_total.md)
   : Plot observed and reconstructed decomposition totals
 
-## Sign-Restricted Audits and Diagnostics
+## Sign Restrictions and Identification Diagnostics
 
 - [`most_likely_admissible_irf()`](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.md)
   : Most-likely-admissible representative impulse responses
@@ -235,38 +243,40 @@ articles above are the recommended route through the package.
 - [`narrative_restriction()`](https://davidzenz.github.io/bsvarPost/reference/narrative_restriction.md)
   : Create a narrative restriction specification
 - [`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md)
-  : Audit sign, zero, structural, and narrative restrictions
+  : Evaluate sign, zero, structural, and narrative restrictions
 - [`acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/acceptance_diagnostics.md)
   : Acceptance and admissibility diagnostics for bsvarSIGNs
 - [`compare_restrictions()`](https://davidzenz.github.io/bsvarPost/reference/compare_restrictions.md)
-  : Compare restriction audits across models
+  : Compare posterior restriction probabilities across model
+  specifications
 - [`compare_acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/compare_acceptance_diagnostics.md)
-  : Compare acceptance diagnostics across models
+  : Compare acceptance diagnostics across model specifications
 - [`plot_restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/plot_restriction_audit.md)
-  : Plot restriction-audit summaries
+  : Visualise posterior restriction probabilities
 - [`plot_compare_restrictions()`](https://davidzenz.github.io/bsvarPost/reference/plot_compare_restrictions.md)
-  : Plot comparison summaries for restriction-audit tables
+  : Visualise posterior restriction probabilities across model
+  specifications
 - [`plot_acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/plot_acceptance_diagnostics.md)
-  : Plot acceptance diagnostics across metrics and models
+  : Visualise acceptance diagnostics across model specifications
 
-## Publication and Reporting
+## Figures and Tables
 
 - [`autoplot(`*`<bsvar_post_tbl>`*`)`](https://davidzenz.github.io/bsvarPost/reference/autoplot.bsvar_post_tbl.md)
-  : Autoplot tidy posterior outputs
+  : Visualise posterior summaries
 - [`theme_bsvarpost()`](https://davidzenz.github.io/bsvarPost/reference/theme_bsvarpost.md)
-  : Plot theme for bsvarPost outputs
+  : Plot theme for posterior summaries
 - [`style_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/style_bsvar_plot.md)
-  : Apply a publication-oriented style to a bsvarPost plot
+  : Apply a consistent graphical style to posterior summaries
 - [`template_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/template_bsvar_plot.md)
-  : Apply an output-family template to a bsvarPost plot
+  : Apply graphical conventions for a posterior quantity
 - [`annotate_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/annotate_bsvar_plot.md)
-  : Add publication-oriented annotations to a bsvarPost plot
+  : Add titles and captions to posterior-summary plots
 - [`publish_bsvar_plot()`](https://davidzenz.github.io/bsvarPost/reference/publish_bsvar_plot.md)
-  : Build a publication-ready bsvarPost plot
+  : Visualise posterior results with consistent graphical conventions
 - [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
-  : Create reporting bundles from bsvarPost outputs
+  : Combine posterior summaries, figures, and captions
 - [`report_table()`](https://davidzenz.github.io/bsvarPost/reference/report_table.md)
-  : Prepare reporting-ready tables
+  : Prepare tables of posterior results
 - [`as_kable()`](https://davidzenz.github.io/bsvarPost/reference/as_kable.md)
   : Render bsvarPost tables with knitr::kable
 - [`as_gt()`](https://davidzenz.github.io/bsvarPost/reference/as_gt.md)
@@ -278,18 +288,18 @@ articles above are the recommended route through the package.
 - [`print(`*`<bsvar_report_bundle>`*`)`](https://davidzenz.github.io/bsvarPost/reference/print.bsvar_report_bundle.md)
   : Print bsvar_report_bundle objects
 
-## Optional Integrations
+## Interfaces with Other R Packages
 
 - [`as_tsibble_post()`](https://davidzenz.github.io/bsvarPost/reference/as_tsibble_post.md)
-  : Convert bsvarPost tidy outputs to tsibble
+  : Express posterior summaries as a tsibble
 - [`as_apr_cond_forc()`](https://davidzenz.github.io/bsvarPost/reference/as_apr_cond_forc.md)
-  : Convert tidy forecasts to APRScenario format
+  : Express posterior forecasts in APRScenario format
 - [`tidy_apr_forecast()`](https://davidzenz.github.io/bsvarPost/reference/tidy_apr_forecast.md)
-  : Convert APRScenario-style forecast tables to bsvarPost tidy format
+  : Express APRScenario forecasts as posterior summary tables
 - [`apr_gen_mats()`](https://davidzenz.github.io/bsvarPost/reference/apr_gen_mats.md)
-  : Optional wrapper around APRScenario::gen_mats
+  : Compute conditional-forecast matrices with APRScenario
 
-## API Utilities
+## Input Validation and Compatibility
 
 - [`resolve_horizon()`](https://davidzenz.github.io/bsvarPost/reference/resolve_horizon.md)
   : Resolve horizon to a validated integer, defaulting to 20
@@ -306,11 +316,11 @@ articles above are the recommended route through the package.
 
 ### Articles
 
-- [Getting Started with
+- [Post-estimation Analysis with
   bsvarPost](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md):
 - [Inference and
   Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.md):
-- [Historical-Decomposition Event
-  Workflows](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md):
-- [Sign-Restricted
-  Workflows](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.md):
+- [Historical-Decomposition
+  Analysis](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md):
+- [Analysis of Sign-Restricted
+  Models](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.md):

@@ -1,6 +1,7 @@
 # Median-target representative cumulative dynamic multipliers
 
-Convenience wrapper for
+Select the cumulative-response draw closest to the posterior median
+response path using
 [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
 with `method = "median_target"`.
 
@@ -14,7 +15,7 @@ median_target_cdm(object, ...)
 
 - object:
 
-  A posterior model object or a `PosteriorIR`.
+  A posterior model object or a `PosteriorCDM` array.
 
 - ...:
 

@@ -46,7 +46,7 @@ representative_cdm(
 
 - object:
 
-  A posterior model object or a `PosteriorIR`.
+  A posterior model object or a `PosteriorCDM` array.
 
 - ...:
 
@@ -54,7 +54,7 @@ representative_cdm(
 
 - method:
 
-  Representative-model selection method.
+  Criterion used to select the representative posterior draw.
 
 - center:
 
@@ -82,7 +82,8 @@ representative_cdm(
 
 - probability:
 
-  Equal-tailed interval probability used for summaries.
+  Probability mass of the equal-tailed credible intervals reported in
+  posterior summaries.
 
 - horizon:
 

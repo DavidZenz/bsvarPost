@@ -1,6 +1,6 @@
-# Plot comparison summaries for response-shape tables
+# Visualise response timing and persistence across model specifications
 
-Plot comparison summaries for response-shape tables
+Visualise response timing and persistence across model specifications
 
 ## Usage
 
@@ -33,15 +33,15 @@ plot_compare_response(
 
 - variables:
 
-  Optional variable filter.
+  Response variables to include.
 
 - shocks:
 
-  Optional shock filter.
+  Structural shocks to include.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - facet_scales:
 

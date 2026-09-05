@@ -1,22 +1,22 @@
-# Historical-Decomposition Event Workflows
+# Historical-Decomposition Analysis
 
-Historical decompositions from `bsvars` and `bsvarSIGNs` describe how
-structural shock contributions evolve through the sample. `bsvarPost`
-adds a narrower workflow: aggregate those contributions over a
-substantively chosen window, rank the shocks within it, and compare the
-same event across specifications.
+Historical decompositions from `bsvars` and `bsvarSIGNs` describe the
+contributions of structural shocks to observed variables through time.
+`bsvarPost` summarises these contributions over a substantively chosen
+period, ranks the shocks within that period, and compares the same event
+across model specifications.
 
 This article assumes that you already have a fitted posterior and
 understand the identification behind its shock labels. See the
 parent-package documentation for estimation and the standard
-historical-decomposition workflow. The precomputed fiscal posteriors
-used here avoid re-estimation and keep the vignette reproducible.
+historical-decomposition analysis. The precomputed fiscal posteriors
+used here avoid re-estimation and make the numerical results
+reproducible.
 
-## Start from draw-level contributions
+## Posterior draws of shock contributions
 
-Event summaries need the posterior draws, not a table that has already
-collapsed them to pointwise intervals. The canonical handoff is
-therefore
+Event-specific summaries require posterior draws rather than a table of
+pointwise posterior intervals. Obtain the draw-level contributions with
 [`tidy_hd(draws = TRUE)`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.md):
 
 ``` r
@@ -32,15 +32,16 @@ data.frame(
 #> 1 1948.25 2024.25   200
 ```
 
-Each row now identifies a model, variable, shock, observation, and
-posterior draw. Keep this draw-level table when defining events so
-uncertainty is aggregated *after* contributions are summed within the
-window.
+Each row identifies a model, variable, shock, observation, and posterior
+draw. Retaining the draws ensures that posterior uncertainty is
+summarised *after* the contributions have been aggregated over the
+selected period.
 
-## Choose the window before ranking shocks
+## Define the event period before ranking shocks
 
-An event window is an analytical decision, not something the ranking
-algorithm discovers. A defensible workflow usually does three things:
+The event period is determined by the empirical question rather than by
+the estimated ranking of shocks. A defensible analysis therefore usually
+does three things:
 
 1.  Define the dates from the research question or an external
     chronology, before inspecting which shock ranks first.
@@ -50,12 +51,12 @@ algorithm discovers. A defensible workflow usually does three things:
     sensitivity check, without silently replacing the prespecified
     result.
 
-For this compact example, we use the complete four-quarter span from
-`1958` to `1958.75`. It is a convenient, bounded window inside both
-fixtures—not a claim that these documentation fixtures establish a
-particular historical narrative. They contain only 200 stored draws, and
-the shock names inherit whatever interpretation the fitted model’s
-identification supports.
+For this example, we use the complete four-quarter period from `1958` to
+`1958.75`. It is a convenient interval covered by both stored posterior
+samples; the example does not assign a particular historical
+interpretation to this period. The samples contain only 200 posterior
+draws, and the interpretation of the shock names follows from the
+identification of the fitted model.
 
 ``` r
 
@@ -84,15 +85,17 @@ subset(
 ```
 
 [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
-sums each shock’s contribution across the inclusive window separately
-for every draw, then reports posterior summaries. Set `draws = TRUE`
-when a downstream calculation needs the aggregated draws themselves.
+sums each shock’s contribution across the inclusive period separately
+for each posterior draw, then reports posterior summaries. Set
+`draws = TRUE` when a subsequent calculation requires the aggregated
+draws themselves.
 
-Do not read the largest median as certainty about a shock’s historical
-role. The interval columns retain posterior uncertainty, while the
-structural meaning of each label still comes from the original model.
+The largest posterior median should not be interpreted as certainty
+about a shock’s historical importance. The interval columns report
+posterior uncertainty, while the structural interpretation of each shock
+follows from the identification of the original model.
 
-## Rank the contributions relevant to the question
+## Rank shock contributions
 
 [`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md)
 orders shocks separately within each model-variable panel. Restricting
@@ -119,14 +122,13 @@ ranking[, c("variable", "shock", "median", "lower", "upper", "rank")]
 ```
 
 `ranking = "absolute"` answers which shock has the largest median
-contribution in magnitude. Use `ranking = "signed"` only when the
-ordering by direction is the intended estimand. In either case, `rank`
-summarizes the point estimate; it does not turn overlapping posterior
-intervals into a decisive ordering.
+contribution in absolute value. Use `ranking = "signed"` when the
+direction of the contribution is part of the estimand. In either case,
+`rank` summarises the posterior median; overlapping credible intervals
+may indicate substantial uncertainty about the ordering.
 
-One useful event figure is the ranked contribution plot. It keeps the
-sign and scale of the contribution visible while ordering the bars by
-importance.
+The ranked-contribution plot displays the sign and scale of each
+contribution while ordering the bars by the absolute posterior median.
 
 ``` r
 
@@ -142,24 +144,23 @@ ranking_plot
 
 ![](historical-decomposition-events_files/figure-html/ranking-plot-1.png)
 
-For a direct contribution plot rather than a ranking, use
+To visualise contributions without ranking them, use
 [`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.md).
 The more specialized
 [`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.md),
 [`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.md),
 and
 [`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.md)
-are documented in the reference index; use them when the question
-genuinely concerns composition, within-window accumulation, or the full
-draw distribution.
+report the composition of contributions, their accumulation within the
+selected period, and their posterior distributions, respectively.
 
-## Hold the event fixed across specifications
+## Compare the same event across specifications
 
-Changing a lag order or prior should not also change the event
-definition.
+When assessing sensitivity to the lag order or prior distribution, the
+event definition should remain fixed.
 [`compare_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md)
-applies the identical window to named posterior objects and returns a
-tidy model column.
+applies the same period to named posterior objects and returns estimates
+indexed by model specification.
 
 ``` r
 
@@ -189,19 +190,20 @@ comparison_gdp
 #> 6 alternative ttr   1958        1958.75    -1.62     -6.60  4.49
 ```
 
-This comparison is descriptive. Stability across columns can support a
-robustness discussion, but
+This comparison is descriptive. Similar estimates across specifications
+provide evidence of robustness, but
 [`compare_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md)
-neither selects a preferred model nor computes a posterior probability
-that the specifications differ. When comparing additional windows,
-preserve names such as `baseline` and `alternative` so tables and
-figures remain traceable.
+neither selects a preferred model nor computes the posterior probability
+that the specifications differ. When comparing additional periods,
+retain names such as `baseline` and `alternative` to identify each
+specification in tables and figures.
 
-## Hand results to a report
+## Report posterior summaries
 
-Finish with one focused table and save the already styled plot. Both
-objects remain ordinary R outputs, so captions, annotations, and
-journal-specific formatting can be added downstream.
+The comparison can be reported in a labelled table, and the
+ranked-contribution plot can be saved separately. Both objects remain
+standard R objects, so captions, annotations, and journal-specific
+formatting can be added as needed.
 
 ``` r
 
@@ -234,8 +236,8 @@ ggplot2::ggsave(
 )
 ```
 
-For the broader path from posterior objects to response comparisons and
-probability statements, return to [Getting
-Started](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md).
-For sign-restricted identification diagnostics, continue to the
-dedicated bsvarSIGNs workflow article.
+For an introduction to posterior summaries, response comparisons, and
+posterior probability statements, see [Post-estimation Analysis with
+bsvarPost](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md).
+For diagnostics specific to sign-restricted identification, continue to
+the dedicated bsvarSIGNs article.

@@ -1,6 +1,6 @@
-# Apply a publication-oriented style to a bsvarPost plot
+# Apply a consistent graphical style to posterior summaries
 
-Apply a publication-oriented style to a bsvarPost plot
+Apply a consistent graphical style to posterior summaries
 
 ## Usage
 

@@ -1,6 +1,6 @@
-# Tidy forecast error variance decompositions
+# Summarise posterior forecast error variance decompositions
 
-Tidy forecast error variance decompositions
+Summarise posterior forecast error variance decompositions
 
 ## Usage
 
@@ -15,7 +15,7 @@ tidy_fevd(object, ...)
 
 - object:
 
-  A posterior model object or posterior IRF array.
+  A posterior model object or a `PosteriorFEVD` array.
 
 - ...:
 

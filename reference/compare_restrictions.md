@@ -1,6 +1,6 @@
-# Compare restriction audits across models
+# Compare posterior restriction probabilities across model specifications
 
-Compare restriction audits across models
+Compare posterior restriction probabilities across model specifications
 
 ## Usage
 
@@ -21,7 +21,7 @@ compare_restrictions(
 
 - restrictions:
 
-  Optional list of restriction helper objects applied to each model.
+  Optional list of restriction specifications evaluated for each model.
 
 - zero_tol:
 
@@ -29,12 +29,13 @@ compare_restrictions(
 
 - probability:
 
-  Equal-tailed interval probability used in summaries.
+  Probability mass of the equal-tailed credible intervals reported in
+  posterior summaries.
 
 ## Value
 
-A `bsvar_post_tbl` combining restriction audit results across models,
-with a `model` column identifying each input.
+A `bsvar_post_tbl` containing posterior restriction probabilities across
+models, with a `model` column identifying each specification.
 
 ## Examples
 

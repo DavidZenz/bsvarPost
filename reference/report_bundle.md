@@ -1,7 +1,7 @@
-# Create reporting bundles from bsvarPost outputs
+# Combine posterior summaries, figures, and captions
 
-Bundle a reporting-ready table, a plot, and a caption into a compact
-object for downstream publication workflows.
+Combine a table of posterior summaries, its corresponding figure, and a
+caption in a single object.
 
 ## Usage
 
@@ -24,8 +24,9 @@ report_bundle(
 
 - plot:
 
-  Optional `ggplot` object. If omitted, `bsvarPost` will try to choose a
-  sensible default plot for the supplied table.
+  Optional `ggplot` object. If omitted, a figure is selected when the
+  posterior quantity represented by the supplied table can be inferred;
+  otherwise the `plot` element is `NULL`.
 
 - caption:
 
@@ -38,12 +39,12 @@ report_bundle(
 
 - preset:
 
-  Reporting preset. Use `"compact"` for a narrower, publication-oriented
-  column selection.
+  Table specification. Use `"compact"` for a narrower selection of
+  columns.
 
 - ...:
 
-  Additional arguments passed to the inferred plot builder.
+  Additional arguments passed to the corresponding plotting function.
 
 ## Value
 

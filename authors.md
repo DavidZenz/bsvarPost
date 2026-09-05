@@ -9,12 +9,12 @@
 Source:
 [`DESCRIPTION`](https://github.com/DavidZenz/bsvarPost/blob/main/DESCRIPTION)
 
-Zenz D (2026). *bsvarPost: Post-Estimation Tools for 'bsvars' and
+Zenz D (2026). *bsvarPost: Post-Estimation Analysis for 'bsvars' and
 'bsvarSIGNs'*. R package version 1.0.0,
 <https://davidzenz.github.io/bsvarPost/>.
 
     @Manual{,
-      title = {bsvarPost: Post-Estimation Tools for 'bsvars' and 'bsvarSIGNs'},
+      title = {bsvarPost: Post-Estimation Analysis for 'bsvars' and 'bsvarSIGNs'},
       author = {David Zenz},
       year = {2026},
       note = {R package version 1.0.0},

@@ -114,15 +114,15 @@ simultaneous_irf(
 
 - probability:
 
-  Coverage probability for the simultaneous band.
+  Posterior coverage probability of the simultaneous credible band.
 
 - variables:
 
-  Optional response-variable subset (character or integer vector).
+  Response variables to include (character or integer vector).
 
 - shocks:
 
-  Optional shock subset (character or integer vector).
+  Structural shocks to include (character or integer vector).
 
 - variable:
 
@@ -134,7 +134,7 @@ simultaneous_irf(
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 - horizon:
 

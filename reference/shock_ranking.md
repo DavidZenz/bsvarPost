@@ -1,6 +1,6 @@
-# Rank shocks by event-window historical decomposition contributions
+# Rank structural shocks by contributions over selected periods
 
-Rank shocks by event-window historical decomposition contributions
+Rank structural shocks by contributions over selected periods
 
 ## Usage
 
@@ -34,11 +34,11 @@ shock_ranking(
 
 - variables:
 
-  Optional variable filter.
+  Variables whose historical decompositions are included.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - ranking:
 
@@ -46,7 +46,7 @@ shock_ranking(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - ...:
 

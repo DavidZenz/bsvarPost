@@ -1,6 +1,6 @@
-# Compare cumulative dynamic multipliers across models
+# Compare cumulative dynamic responses across model specifications
 
-Compare cumulative dynamic multipliers across models
+Compare cumulative dynamic responses across model specifications
 
 ## Usage
 
@@ -27,11 +27,12 @@ compare_cdm(
 
 - probability:
 
-  Interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - draws:
 
-  If `TRUE`, return draw-level rows.
+  If `TRUE`, report individual posterior draws rather than posterior
+  summaries.
 
 - scale_by:
 
@@ -44,7 +45,7 @@ compare_cdm(
 ## Value
 
 A `bsvar_post_tbl` combining results across models, with a `model`
-column identifying each input.
+column identifying each model specification.
 
 ## Examples
 

@@ -1,7 +1,8 @@
-# bsvarPost: Post-Estimation Tools for bsvars and bsvarSIGNs
+# bsvarPost: Posterior Analysis for bsvars and bsvarSIGNs
 
-Companion post-estimation tools for Bayesian structural vector
-autoregressions fitted with the `bsvars` and `bsvarSIGNs` packages.
+Posterior summaries, inference, model comparison, and visualisation for
+Bayesian structural vector autoregressions estimated with the `bsvars`
+and `bsvarSIGNs` packages.
 
 ## Vignettes
 
@@ -14,16 +15,15 @@ to open the package articles:
 If no vignettes are listed there, reinstall the GitHub package with
 `build_vignettes = TRUE`.
 
-The package currently ships with:
+The package includes the following articles:
 
-- Getting Started (`bsvarPost`)
+- Post-estimation Analysis with bsvarPost (`bsvarPost`)
 
 - Inference and Comparison (`inference-and-comparison`)
 
-- Historical-Decomposition Event Workflows
-  (`historical-decomposition-events`)
+- Historical-Decomposition Analysis (`historical-decomposition-events`)
 
-- Sign-Restricted Workflows (`sign-restricted-workflows`)
+- Analysis of Sign-Restricted Models (`sign-restricted-workflows`)
 
 ## See also
 
@@ -32,7 +32,3 @@ Useful links:
 - <https://github.com/DavidZenz/bsvarPost>
 
 - Report bugs at <https://github.com/DavidZenz/bsvarPost/issues>
-
-## Author
-
-**Maintainer**: David Zenz <office@davidzenz.com> \[copyright holder\]

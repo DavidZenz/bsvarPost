@@ -88,7 +88,7 @@ cdm(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - scale_by:
 

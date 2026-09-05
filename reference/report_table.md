@@ -1,7 +1,7 @@
-# Prepare reporting-ready tables
+# Prepare tables of posterior results
 
-Format `bsvarPost` outputs into data frames with stable column order and
-presentation-oriented names.
+Arrange posterior summaries in data frames with a consistent column
+order and descriptive column names.
 
 ## Usage
 
@@ -38,12 +38,12 @@ report_table(x, ...)
 
 - preset:
 
-  Reporting preset. Use `"compact"` for a narrower, publication-oriented
-  column selection.
+  Table specification. Use `"compact"` for a narrower selection of
+  columns.
 
 ## Value
 
-A data frame with reporting-ready columns.
+A data frame containing the selected posterior summaries.
 
 ## Examples
 

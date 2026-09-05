@@ -1,8 +1,7 @@
 # Plot full-sample historical decomposition components
 
-These helpers provide dedicated historical decomposition visualisations
-for full-sample contribution paths and event-window composition
-summaries.
+Visualise structural-shock contributions over the full sample or
+aggregate them over selected historical periods.
 
 ## Usage
 
@@ -34,20 +33,20 @@ plot_hd_lines(
 
 - probability:
 
-  Equal-tailed interval probability used when `object` is not already a
-  tidy table.
+  Probability mass of the equal-tailed credible interval computed when
+  `object` is not already a summary table.
 
 - variables:
 
-  Optional variable filter.
+  Variables whose historical decompositions are included.
 
 - shocks:
 
-  Optional shock filter applied before grouping.
+  Structural shocks whose contributions are included.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - facet_scales:
 

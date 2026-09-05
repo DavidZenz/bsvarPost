@@ -1,6 +1,6 @@
-# Add publication-oriented annotations to a bsvarPost plot
+# Add titles and captions to posterior-summary plots
 
-Add publication-oriented annotations to a bsvarPost plot
+Add titles and captions to posterior-summary plots
 
 ## Usage
 

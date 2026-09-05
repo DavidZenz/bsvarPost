@@ -1,6 +1,6 @@
-# Plot restriction-audit summaries
+# Visualise posterior restriction probabilities
 
-Plot restriction-audit summaries
+Visualise posterior restriction probabilities
 
 ## Usage
 
@@ -27,9 +27,10 @@ plot_restriction_audit(
 
 - restrictions:
 
-  Optional restriction helper list passed through to
+  Optional list of restriction specifications evaluated by
   [`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md)
-  when `object` is not already an audit table.
+  when `object` does not already contain posterior restriction
+  probabilities.
 
 - zero_tol:
 
@@ -37,11 +38,12 @@ plot_restriction_audit(
 
 - probability:
 
-  Equal-tailed interval probability used in summaries.
+  Probability mass of the equal-tailed credible intervals reported in
+  posterior summaries.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - label_style:
 
@@ -54,7 +56,7 @@ plot_restriction_audit(
 
 - restriction_types:
 
-  Optional restriction-type filter.
+  Types of identifying restrictions to include.
 
 - ...:
 

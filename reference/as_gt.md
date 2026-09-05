@@ -1,6 +1,8 @@
 # Render bsvarPost tables with gt
 
-Convert `bsvarPost` tables or report bundles to a `gt::gt_tbl` object.
+Convert posterior summary tables or
+[`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
+results to a `gt::gt_tbl` object.
 
 ## Usage
 
@@ -42,8 +44,8 @@ as_gt(x, ...)
 
 - preset:
 
-  Reporting preset. Use `"compact"` for a narrower, publication-oriented
-  column selection.
+  Table specification. Use `"compact"` for a narrower selection of
+  columns.
 
 ## Value
 

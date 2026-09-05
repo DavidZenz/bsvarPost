@@ -1,6 +1,6 @@
-# Convert bsvarPost tidy outputs to tsibble
+# Express posterior summaries as a tsibble
 
-Convert bsvarPost tidy outputs to tsibble
+Express posterior summaries as a tsibble
 
 ## Usage
 

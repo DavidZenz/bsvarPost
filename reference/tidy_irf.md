@@ -1,6 +1,6 @@
-# Tidy posterior impulse responses
+# Summarise posterior impulse responses
 
-Tidy posterior impulse responses
+Summarise posterior impulse responses
 
 ## Usage
 
@@ -37,15 +37,16 @@ tidy_irf(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - draws:
 
-  If `TRUE`, return draw-level rows.
+  If `TRUE`, report individual posterior draws rather than posterior
+  summaries.
 
 - model:
 
-  Optional model identifier.
+  Label identifying the model specification.
 
 ## Value
 

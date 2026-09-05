@@ -1,6 +1,6 @@
-# Compare posterior impulse responses across models
+# Compare posterior impulse responses across model specifications
 
-Compare posterior impulse responses across models
+Compare posterior impulse responses across model specifications
 
 ## Usage
 
@@ -20,16 +20,17 @@ compare_irf(..., horizon = NULL, probability = 0.9, draws = FALSE)
 
 - probability:
 
-  Interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - draws:
 
-  If `TRUE`, return draw-level rows.
+  If `TRUE`, report individual posterior draws rather than posterior
+  summaries.
 
 ## Value
 
 A `bsvar_post_tbl` combining results across models, with a `model`
-column identifying each input.
+column identifying each model specification.
 
 ## Examples
 

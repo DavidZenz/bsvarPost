@@ -1,6 +1,6 @@
-# Compare peak response summaries across models
+# Compare peak responses across model specifications
 
-Compare peak response summaries across models
+Compare peak responses across model specifications
 
 ## Usage
 
@@ -37,11 +37,11 @@ compare_peak_response(
 
 - variables:
 
-  Optional response-variable subset.
+  Response variables to include.
 
 - shocks:
 
-  Optional shock subset.
+  Structural shocks to include.
 
 - variable:
 
@@ -57,7 +57,7 @@ compare_peak_response(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - scale_by:
 
@@ -70,7 +70,7 @@ compare_peak_response(
 ## Value
 
 A `bsvar_post_tbl` combining peak summary results across models, with a
-`model` column identifying each input.
+`model` column identifying each model specification.
 
 ## Examples
 

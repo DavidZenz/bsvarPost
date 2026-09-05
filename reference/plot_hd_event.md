@@ -1,6 +1,6 @@
-# Plot event-window historical decomposition summaries
+# Visualise shock contributions over selected historical periods
 
-Plot event-window historical decomposition summaries
+Visualise shock contributions over selected historical periods
 
 ## Usage
 
@@ -36,7 +36,7 @@ plot_hd_event(
 
 - probability:
 
-  Equal-tailed interval probability.
+  Probability mass of the equal-tailed credible interval.
 
 - draws:
 
@@ -44,15 +44,15 @@ plot_hd_event(
 
 - variables:
 
-  Optional variable filter.
+  Variables whose historical decompositions are included.
 
 - shocks:
 
-  Optional shock filter.
+  Structural shocks whose contributions are included.
 
 - models:
 
-  Optional model filter.
+  Model specifications to include.
 
 - facet_scales:
 

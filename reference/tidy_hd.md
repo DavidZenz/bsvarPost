@@ -1,6 +1,6 @@
-# Tidy historical decompositions
+# Summarise posterior historical decompositions
 
-Tidy historical decompositions
+Summarise posterior historical decompositions
 
 ## Usage
 
@@ -15,7 +15,7 @@ tidy_hd(object, ...)
 
 - object:
 
-  A posterior model object or posterior IRF array.
+  A posterior model object or a `PosteriorHD` array.
 
 - ...:
 
