@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-compare.R
 \name{plot_compare_response}
 \alias{plot_compare_response}
-\title{Plot comparison summaries for response-shape tables}
+\title{Visualise response timing and persistence across model specifications}
 \usage{
 plot_compare_response(
   object,
@@ -21,11 +21,11 @@ plot_compare_response(
 \item{measure}{Which summary measure to plot. Defaults to the main comparison
 metric implied by \code{object}.}
 
-\item{variables}{Optional variable filter.}
+\item{variables}{Response variables to include.}
 
-\item{shocks}{Optional shock filter.}
+\item{shocks}{Structural shocks to include.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 }
@@ -33,7 +33,7 @@ metric implied by \code{object}.}
 A \code{ggplot} object.
 }
 \description{
-Plot comparison summaries for response-shape tables
+Visualise response timing and persistence across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

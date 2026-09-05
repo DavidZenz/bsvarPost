@@ -2,7 +2,7 @@
 % Please edit documentation in R/audit.R
 \name{magnitude_audit}
 \alias{magnitude_audit}
-\title{Audit magnitude statements for IRFs or CDMs}
+\title{Evaluate magnitude hypotheses for IRFs or CDMs}
 \usage{
 magnitude_audit(
   object,
@@ -25,7 +25,7 @@ magnitude_audit(
 \arguments{
 \item{object}{A posterior model object or response object.}
 
-\item{type}{Response object type to audit.}
+\item{type}{Posterior response quantity to evaluate.}
 
 \item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
 
@@ -42,11 +42,12 @@ magnitude_audit(
 
 \item{absolute}{If \code{TRUE}, compare absolute responses.}
 
-\item{probability}{Equal-tailed interval probability used for gap summaries.}
+\item{probability}{Probability mass of the equal-tailed credible interval for
+the posterior difference.}
 
 \item{draws}{If \code{TRUE}, return draw-level gaps and indicators.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 
@@ -55,12 +56,12 @@ magnitude_audit(
 \item{...}{Additional arguments passed to computation methods.}
 }
 \value{
-A \code{bsvar_post_tbl} with hypothesis test results including
+A \code{bsvar_post_tbl} with posterior hypothesis summaries including
 \code{posterior_prob}, \code{mean}, \code{median}, \code{lower}, and
 \code{upper} columns.
 }
 \description{
-Audit magnitude statements for IRFs or CDMs
+Evaluate magnitude hypotheses for IRFs or CDMs
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

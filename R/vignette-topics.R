@@ -1,8 +1,8 @@
-#' Getting Started with bsvarPost
+#' Post-estimation Analysis with bsvarPost
 #'
-#' This article gives the shortest path from an existing `bsvars` or
-#' `bsvarSIGNs` posterior to tidy summaries, CDMs, comparison and inference,
-#' and publication-ready output.
+#' This article introduces posterior summaries, cumulative dynamic responses,
+#' model comparison, posterior inference, and the presentation of results for
+#' models estimated with `bsvars` or `bsvarSIGNs`.
 #'
 #' Open the installed article with:
 #'
@@ -18,9 +18,9 @@ NULL
 
 #' Inference and Comparison
 #'
-#' This article develops model-comparison, posterior-probability, joint-
-#' hypothesis, simultaneous-band, representative-draw, and response-timing
-#' workflows.
+#' This article considers model comparison, posterior probabilities, joint
+#' hypotheses, simultaneous credible bands, representative posterior draws,
+#' and response timing.
 #'
 #' Open the installed article with:
 #'
@@ -34,7 +34,7 @@ NULL
 #' @keywords internal
 NULL
 
-#' Historical-Decomposition Event Workflows
+#' Historical-Decomposition Analysis
 #'
 #' This article shows how to summarise historical-decomposition contributions
 #' over event windows, rank shocks, and compare events across specifications.
@@ -51,7 +51,7 @@ NULL
 #' @keywords internal
 NULL
 
-#' Sign-Restricted Workflows
+#' Analysis of Sign-Restricted Models
 #'
 #' This article covers coherent admissible-draw selection, restriction audits,
 #' acceptance diagnostics, and comparisons for `bsvarSIGNs` posteriors.

@@ -42,9 +42,10 @@ posterior-statement table.}
 
 \item{absolute}{If \code{TRUE}, compare absolute responses.}
 
-\item{probability}{Equal-tailed interval probability used for gap summaries.}
+\item{probability}{Probability mass of the equal-tailed credible interval for
+the posterior difference.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 

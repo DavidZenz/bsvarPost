@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_acceptance_diagnostics}
 \alias{compare_acceptance_diagnostics}
-\title{Compare acceptance diagnostics across models}
+\title{Compare acceptance diagnostics across model specifications}
 \usage{
 compare_acceptance_diagnostics(
   ...,
@@ -25,10 +25,11 @@ sparse-support warning flag is raised.}
 }
 \value{
 A \code{bsvar_post_tbl} combining acceptance diagnostic results
-across models, with a \code{model} column identifying each input.
+across models, with a \code{model} column identifying each model
+specification.
 }
 \description{
-Compare acceptance diagnostics across models
+Compare acceptance diagnostics across model specifications
 }
 \examples{
 \donttest{

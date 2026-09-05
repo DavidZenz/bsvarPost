@@ -2,7 +2,7 @@
 % Please edit documentation in R/audit.R
 \name{restriction_audit}
 \alias{restriction_audit}
-\title{Audit sign, zero, structural, and narrative restrictions}
+\title{Evaluate sign, zero, structural, and narrative restrictions}
 \usage{
 restriction_audit(
   object,
@@ -16,15 +16,16 @@ restriction_audit(
 \arguments{
 \item{object}{A posterior model object.}
 
-\item{restrictions}{Optional list of restriction helper objects. If omitted
+\item{restrictions}{Optional list of restriction specifications. If omitted
 for \code{PosteriorBSVARSIGN}, restrictions are extracted from the fitted
 identification scheme.}
 
 \item{zero_tol}{Numerical tolerance for zero restrictions.}
 
-\item{probability}{Equal-tailed interval probability used in summaries.}
+\item{probability}{Probability mass of the equal-tailed credible intervals
+reported in posterior summaries.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 
 \item{...}{Reserved for future extensions.}
 }
@@ -35,7 +36,7 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{median}, \code{lower}, and \code{upper}.
 }
 \description{
-Audit sign, zero, structural, and narrative restrictions
+Evaluate sign, zero, structural, and narrative restrictions
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

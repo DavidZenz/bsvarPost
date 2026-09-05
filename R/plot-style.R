@@ -1,4 +1,4 @@
-#' Plot theme for bsvarPost outputs
+#' Plot theme for posterior summaries
 #'
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param base_size Base font size.
@@ -41,7 +41,7 @@ theme_bsvarpost <- function(preset = c("default", "paper", "slides"),
   theme
 }
 
-#' Apply a publication-oriented style to a bsvarPost plot
+#' Apply a consistent graphical style to posterior summaries
 #'
 #' @param plot A `ggplot` object, typically returned by `ggplot2::autoplot()`,
 #'   `plot_hd_event()`, `plot_hd_stacked()`, or `plot_shock_ranking()`.
@@ -96,17 +96,19 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
   plot
 }
 
-#' Apply an output-family template to a bsvarPost plot
+#' Apply graphical conventions for a posterior quantity
 #'
 #' @param plot A `ggplot` object.
-#' @param family One of `"irf"`, `"cdm"`, `"forecast"`, `"hd"`, `"hd_event"`,
+#' @param family Posterior quantity represented by the plot. One of `"irf"`,
+#'   `"cdm"`, `"forecast"`, `"hd"`, `"hd_event"`,
 #'   `"shock_ranking"`, `"hypothesis"`, `"restriction_audit"`,
 #'   `"simultaneous"`, `"joint_hypothesis"`, `"acceptance_diagnostics"`,
 #'   `"representative"`, or `"comparison"`.
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param base_size Base font size for the applied theme.
 #' @param base_family Base font family for the applied theme.
-#' @return A \code{ggplot} object with template styling applied.
+#' @return A \code{ggplot} object with graphical conventions appropriate to the
+#'   selected posterior quantity.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -184,7 +186,7 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd",
   styled + ggplot2::labs(y = ylabel)
 }
 
-#' Add publication-oriented annotations to a bsvarPost plot
+#' Add titles and captions to posterior-summary plots
 #'
 #' @param plot A `ggplot` object.
 #' @param title Optional plot title.

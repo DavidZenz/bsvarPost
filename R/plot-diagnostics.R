@@ -1,9 +1,9 @@
-#' Plot acceptance diagnostics across metrics and models
+#' Visualise acceptance diagnostics across model specifications
 #'
 #' @param object A tidy acceptance-diagnostics table, or a `PosteriorBSVARSIGN`
 #'   object that can be converted with `acceptance_diagnostics()`.
-#' @param metrics Optional metric filter.
-#' @param models Optional model filter.
+#' @param metrics Diagnostic measures to include.
+#' @param models Model specifications to include.
 #' @param show_flags If `TRUE`, highlight flagged diagnostics in a different
 #'   marker.
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.

@@ -1,15 +1,16 @@
-#' Tidy event-window historical decompositions
+#' Summarise historical-decomposition contributions over selected periods
 #'
-#' Aggregate historical decomposition draws or summaries over a selected event
-#' window.
+#' Aggregate posterior draws of structural-shock contributions over a selected
+#' historical period and report posterior summaries of the cumulative
+#' contributions.
 #'
 #' @param object A posterior model object, `PosteriorHD`, or tidy historical
 #'   decomposition table.
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param draws If `TRUE`, return draw-level cumulative contributions.
-#' @param model Optional model identifier.
+#' @param model Label identifying the model specification.
 #' @param ... Additional arguments passed to computation methods.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{event_start},
@@ -143,16 +144,16 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, 
 #' @export
  tidy_hd_event.PosteriorBSVARSIGN <- tidy_hd_event_model
 
-#' Rank shocks by event-window historical decomposition contributions
+#' Rank structural shocks by contributions over selected periods
 #'
 #' @param object A posterior model object, `PosteriorHD`, or tidy historical
 #'   decomposition table.
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.
-#' @param variables Optional variable filter.
-#' @param models Optional model filter.
+#' @param variables Variables whose historical decompositions are included.
+#' @param models Model specifications to include.
 #' @param ranking One of `"absolute"` or `"signed"`.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param ... Additional arguments passed to `tidy_hd_event()`.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{event_start},

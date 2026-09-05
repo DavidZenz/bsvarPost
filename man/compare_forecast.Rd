@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_forecast}
 \alias{compare_forecast}
-\title{Compare forecasts across models}
+\title{Compare posterior forecasts across model specifications}
 \usage{
 compare_forecast(..., horizon = NULL, probability = 0.9, draws = FALSE)
 }
@@ -12,16 +12,17 @@ compare_forecast(..., horizon = NULL, probability = 0.9, draws = FALSE)
 \item{horizon}{Forecast horizon. If \code{NULL} (default), resolves to 20
 periods.}
 
-\item{probability}{Interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{draws}{If \code{TRUE}, return draw-level rows.}
+\item{draws}{If \code{TRUE}, report individual posterior draws rather than
+posterior summaries.}
 }
 \value{
 A \code{bsvar_post_tbl} combining results across models, with a
-\code{model} column identifying each input.
+\code{model} column identifying each model specification.
 }
 \description{
-Compare forecasts across models
+Compare posterior forecasts across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

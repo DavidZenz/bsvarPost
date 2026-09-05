@@ -6,9 +6,10 @@ template:
 home:
   title: bsvarPost
   description: >
-    A post-estimation companion package for bsvars and bsvarSIGNs, focused on
-    cumulative responses, historical decomposition workflows, tidy extraction,
-    comparison workflows, diagnostics, and publication-ready reporting.
+    Posterior analysis for Bayesian structural VARs estimated with bsvars and
+    bsvarSIGNs, including cumulative responses, historical decompositions,
+    comparison of model specifications, posterior inference, identification
+    diagnostics, and statistical reporting.
   sidebar:
     structure:
       - links
@@ -24,18 +25,18 @@ navbar:
     right: [search, github]
   components:
     intro:
-      text: Get Started
+      text: Introduction
       href: articles/bsvarPost.html
     articles:
       text: Articles
       menu:
-        - text: Getting Started
+        - text: Post-estimation Analysis with bsvarPost
           href: articles/bsvarPost.html
-        - text: Inference and Comparison
+        - text: Posterior Inference and Model Comparison
           href: articles/inference-and-comparison.html
-        - text: Historical-Decomposition Events
+        - text: Historical-Decomposition Analysis
           href: articles/historical-decomposition-events.html
-        - text: Sign-Restricted Workflows
+        - text: Analysis of Sign-Restricted Models
           href: articles/sign-restricted-workflows.html
     github:
       icon: fab fa-github
@@ -52,7 +53,7 @@ articles:
       - sign-restricted-workflows
 
 reference:
-  - title: Tidy and Cumulative Extraction
+  - title: Posterior Summaries and Cumulative Responses
     contents:
       - cdm
       - tidy_irf
@@ -62,14 +63,14 @@ reference:
       - tidy_forecast
       - tidy_shocks
 
-  - title: Compare Models and Specifications
+  - title: Comparison of Model Specifications
     contents:
       - compare_irf
       - compare_cdm
       - compare_fevd
       - compare_forecast
 
-  - title: Posterior Statements and Joint Inference
+  - title: Posterior Probabilities and Joint Inference
     contents:
       - hypothesis_irf
       - hypothesis_cdm
@@ -98,7 +99,7 @@ reference:
       - compare_time_to_threshold
       - plot_compare_response
 
-  - title: Historical-Decomposition Events and Shock Ranking
+  - title: Historical Decompositions and Shock Contributions
     contents:
       - tidy_hd_event
       - compare_hd_event
@@ -113,7 +114,7 @@ reference:
       - plot_hd_stacked
       - plot_hd_total
 
-  - title: Sign-Restricted Audits and Diagnostics
+  - title: Sign Restrictions and Identification Diagnostics
     contents:
       - most_likely_admissible_irf
       - most_likely_admissible_cdm
@@ -128,7 +129,7 @@ reference:
       - plot_compare_restrictions
       - plot_acceptance_diagnostics
 
-  - title: Publication and Reporting
+  - title: Figures and Tables
     contents:
       - autoplot.bsvar_post_tbl
       - theme_bsvarpost
@@ -144,14 +145,14 @@ reference:
       - write_bsvar_csv
       - print.bsvar_report_bundle
 
-  - title: Optional Integrations
+  - title: Interfaces with Other R Packages
     contents:
       - as_tsibble_post
       - as_apr_cond_forc
       - tidy_apr_forecast
       - apr_gen_mats
 
-  - title: API Utilities
+  - title: Input Validation and Compatibility
     contents:
       - resolve_horizon
       - validate_horizon

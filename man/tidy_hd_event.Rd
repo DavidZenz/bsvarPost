@@ -11,7 +11,7 @@
 \alias{tidy_hd_event.PosteriorBSVARSV}
 \alias{tidy_hd_event.PosteriorBSVART}
 \alias{tidy_hd_event.PosteriorBSVARSIGN}
-\title{Tidy event-window historical decompositions}
+\title{Summarise historical-decomposition contributions over selected periods}
 \usage{
 tidy_hd_event(object, ...)
 
@@ -106,11 +106,11 @@ decomposition table.}
 
 \item{end}{Last time index to include. Defaults to \code{start}.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
 \item{draws}{If \code{TRUE}, return draw-level cumulative contributions.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 }
 \value{
 A \code{bsvar_post_tbl} with columns \code{model},
@@ -120,8 +120,9 @@ and \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
 \code{value} replace the summary statistics.
 }
 \description{
-Aggregate historical decomposition draws or summaries over a selected event
-window.
+Aggregate posterior draws of structural-shock contributions over a selected
+historical period and report posterior summaries of the cumulative
+contributions.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

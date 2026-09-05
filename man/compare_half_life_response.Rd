@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_half_life_response}
 \alias{compare_half_life_response}
-\title{Compare half-life summaries across models}
+\title{Compare response half-lives across model specifications}
 \usage{
 compare_half_life_response(
   ...,
@@ -28,9 +28,9 @@ If \code{NULL} (default), resolves to 20 periods.}
 
 \item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
 
-\item{variables}{Optional response-variable subset.}
+\item{variables}{Response variables to include.}
 
-\item{shocks}{Optional shock subset.}
+\item{shocks}{Structural shocks to include.}
 
 \item{variable}{Deprecated. Use \code{variables} instead.}
 
@@ -42,7 +42,7 @@ If \code{NULL} (default), resolves to 20 periods.}
 
 \item{absolute}{If \code{TRUE}, compute half-lives using absolute responses.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 
@@ -50,10 +50,10 @@ If \code{NULL} (default), resolves to 20 periods.}
 }
 \value{
 A \code{bsvar_post_tbl} combining half-life summary results across
-models, with a \code{model} column identifying each input.
+models, with a \code{model} column identifying each model specification.
 }
 \description{
-Compare half-life summaries across models
+Compare response half-lives across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

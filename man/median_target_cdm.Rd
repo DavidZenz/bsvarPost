@@ -7,7 +7,7 @@
 median_target_cdm(object, ...)
 }
 \arguments{
-\item{object}{A posterior model object or a \code{PosteriorIR}.}
+\item{object}{A posterior model object or a \code{PosteriorCDM} array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
@@ -15,5 +15,6 @@ median_target_cdm(object, ...)
 Same as \code{\link[=representative_cdm]{representative_cdm()}}.
 }
 \description{
-Convenience wrapper for \code{\link[=representative_cdm]{representative_cdm()}} with \code{method = "median_target"}.
+Select the cumulative-response draw closest to the posterior median response
+path using \code{\link[=representative_cdm]{representative_cdm()}} with \code{method = "median_target"}.
 }

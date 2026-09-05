@@ -1,11 +1,12 @@
-#' Compare posterior impulse responses across models
+#' Compare posterior impulse responses across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Forecast horizon. If \code{NULL} (default), resolves to 20
 #'   periods.
-#' @param probability Interval probability.
-#' @param draws If `TRUE`, return draw-level rows.
+#' @param probability Probability mass of the equal-tailed credible interval.
+#' @param draws If `TRUE`, report individual posterior draws rather than
+#'   posterior summaries.
 #' @return A \code{bsvar_post_tbl} combining results across models, with a
-#'   \code{model} column identifying each input.
+#'   \code{model} column identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -22,12 +23,12 @@ compare_irf <- function(..., horizon = NULL, probability = 0.90, draws = FALSE) 
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "irf", draws = draws, compare = TRUE))
 }
 
-#' Compare cumulative dynamic multipliers across models
+#' Compare cumulative dynamic responses across model specifications
 #' @inheritParams compare_irf
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A \code{bsvar_post_tbl} combining results across models, with a
-#'   \code{model} column identifying each input.
+#'   \code{model} column identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -45,10 +46,10 @@ compare_cdm <- function(..., horizon = NULL, probability = 0.90, draws = FALSE,
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "cdm", draws = draws, compare = TRUE))
 }
 
-#' Compare FEVDs across models
+#' Compare forecast error variance decompositions across model specifications
 #' @inheritParams compare_irf
 #' @return A \code{bsvar_post_tbl} combining results across models, with a
-#'   \code{model} column identifying each input.
+#'   \code{model} column identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -65,10 +66,10 @@ compare_fevd <- function(..., horizon = NULL, probability = 0.90, draws = FALSE)
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "fevd", draws = draws, compare = TRUE))
 }
 
-#' Compare forecasts across models
+#' Compare posterior forecasts across model specifications
 #' @inheritParams compare_irf
 #' @return A \code{bsvar_post_tbl} combining results across models, with a
-#'   \code{model} column identifying each input.
+#'   \code{model} column identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -86,13 +87,16 @@ compare_forecast <- function(..., horizon = NULL, probability = 0.90, draws = FA
 }
 
 
-#' Compare restriction audits across models
+#' Compare posterior restriction probabilities across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
-#' @param restrictions Optional list of restriction helper objects applied to each model.
+#' @param restrictions Optional list of restriction specifications evaluated for
+#'   each model.
 #' @param zero_tol Numerical tolerance for zero restrictions.
-#' @param probability Equal-tailed interval probability used in summaries.
-#' @return A \code{bsvar_post_tbl} combining restriction audit results across
-#'   models, with a \code{model} column identifying each input.
+#' @param probability Probability mass of the equal-tailed credible intervals
+#'   reported in posterior summaries.
+#' @return A \code{bsvar_post_tbl} containing posterior restriction
+#'   probabilities across models, with a \code{model} column identifying each
+#'   specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -112,7 +116,7 @@ compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, prob
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "restriction_audit", draws = FALSE, compare = TRUE))
 }
 
-#' Compare acceptance diagnostics across models
+#' Compare acceptance diagnostics across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param kernel_tol Numerical tolerance used to classify near-zero admissibility
 #'   weights.
@@ -121,7 +125,8 @@ compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, prob
 #' @param sparse_threshold Share of near-zero admissibility weights above which a
 #'   sparse-support warning flag is raised.
 #' @return A \code{bsvar_post_tbl} combining acceptance diagnostic results
-#'   across models, with a \code{model} column identifying each input.
+#'   across models, with a \code{model} column identifying each model
+#'   specification.
 #' @examples
 #' \donttest{
 #' data(optimism, package = "bsvarSIGNs")
@@ -149,15 +154,17 @@ compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
 }
 
 
-#' Compare event-window historical decompositions across models
+#' Compare historical-period shock contributions across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.
-#' @param probability Equal-tailed interval probability used in summaries.
-#' @param draws If `TRUE`, return draw-level rows.
+#' @param probability Probability mass of the equal-tailed credible intervals
+#'   reported in posterior summaries.
+#' @param draws If `TRUE`, report individual posterior draws rather than
+#'   posterior summaries.
 #' @return A \code{bsvar_post_tbl} combining event-window historical
 #'   decomposition results across models, with a \code{model} column
-#'   identifying each input.
+#'   identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -177,21 +184,21 @@ compare_hd_event <- function(..., start, end = start, probability = 0.90, draws 
 }
 
 
-#' Compare peak response summaries across models
+#' Compare peak responses across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.
 #' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
-#' @param variables Optional response-variable subset.
-#' @param shocks Optional shock subset.
+#' @param variables Response variables to include.
+#' @param shocks Structural shocks to include.
 #' @param variable Deprecated. Use \code{variables} instead.
 #' @param shock Deprecated. Use \code{shocks} instead.
 #' @param absolute If `TRUE`, search for the largest absolute response.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A \code{bsvar_post_tbl} combining peak summary results across
-#'   models, with a \code{model} column identifying each input.
+#'   models, with a \code{model} column identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -220,24 +227,24 @@ compare_peak_response <- function(..., horizon = NULL, type = c("irf", "cdm"),
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("peak_", type), draws = FALSE, compare = TRUE))
 }
 
-#' Compare duration summaries across models
+#' Compare response durations across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.
 #' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
-#' @param variables Optional response-variable subset.
-#' @param shocks Optional shock subset.
+#' @param variables Response variables to include.
+#' @param shocks Structural shocks to include.
 #' @param variable Deprecated. Use \code{variables} instead.
 #' @param shock Deprecated. Use \code{shocks} instead.
 #' @param relation Comparison operator.
 #' @param value Threshold value.
 #' @param absolute If `TRUE`, compare absolute responses.
 #' @param mode Either `"consecutive"` or `"total"`.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A \code{bsvar_post_tbl} combining duration summary results across
-#'   models, with a \code{model} column identifying each input.
+#'   models, with a \code{model} column identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -271,23 +278,23 @@ compare_duration_response <- function(..., horizon = NULL, type = c("irf", "cdm"
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("duration_", type), draws = FALSE, compare = TRUE))
 }
 
-#' Compare half-life summaries across models
+#' Compare response half-lives across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.
 #' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
-#' @param variables Optional response-variable subset.
-#' @param shocks Optional shock subset.
+#' @param variables Response variables to include.
+#' @param shocks Structural shocks to include.
 #' @param variable Deprecated. Use \code{variables} instead.
 #' @param shock Deprecated. Use \code{shocks} instead.
 #' @param fraction Fraction of the reference level used to define the half-life.
 #' @param baseline Reference level: `"peak"` or `"initial"`.
 #' @param absolute If `TRUE`, compute half-lives using absolute responses.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A \code{bsvar_post_tbl} combining half-life summary results across
-#'   models, with a \code{model} column identifying each input.
+#'   models, with a \code{model} column identifying each model specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -318,23 +325,24 @@ compare_half_life_response <- function(..., horizon = NULL, type = c("irf", "cdm
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("half_life_", type), draws = FALSE, compare = TRUE))
 }
 
-#' Compare time-to-threshold summaries across models
+#' Compare response thresholds across model specifications
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.
 #' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
-#' @param variables Optional response-variable subset.
-#' @param shocks Optional shock subset.
+#' @param variables Response variables to include.
+#' @param shocks Structural shocks to include.
 #' @param variable Deprecated. Use \code{variables} instead.
 #' @param shock Deprecated. Use \code{shocks} instead.
 #' @param relation Comparison operator.
 #' @param value Threshold value.
 #' @param absolute If `TRUE`, compare absolute responses.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A \code{bsvar_post_tbl} combining time-to-threshold summary results
-#'   across models, with a \code{model} column identifying each input.
+#'   across models, with a \code{model} column identifying each model
+#'   specification.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

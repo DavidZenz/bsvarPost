@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-style.R
 \name{style_bsvar_plot}
 \alias{style_bsvar_plot}
-\title{Apply a publication-oriented style to a bsvarPost plot}
+\title{Apply a consistent graphical style to posterior summaries}
 \usage{
 style_bsvar_plot(
   plot,
@@ -34,7 +34,7 @@ style_bsvar_plot(
 A \code{ggplot} object with the applied style.
 }
 \description{
-Apply a publication-oriented style to a bsvarPost plot
+Apply a consistent graphical style to posterior summaries
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -3,14 +3,14 @@
 \name{tidy_fevd}
 \alias{tidy_fevd}
 \alias{tidy_fevd.default}
-\title{Tidy forecast error variance decompositions}
+\title{Summarise posterior forecast error variance decompositions}
 \usage{
 tidy_fevd(object, ...)
 
 \method{tidy_fevd}{default}(object, ...)
 }
 \arguments{
-\item{object}{A posterior model object or posterior IRF array.}
+\item{object}{A posterior model object or a \code{PosteriorFEVD} array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
@@ -22,7 +22,7 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Tidy forecast error variance decompositions
+Summarise posterior forecast error variance decompositions
 }
 \examples{
 # Small posterior (S = 5 draws)

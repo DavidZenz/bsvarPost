@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-event.R
 \name{plot_shock_ranking}
 \alias{plot_shock_ranking}
-\title{Plot ranked event-window shock contributions}
+\title{Visualise ranked shock contributions over selected historical periods}
 \usage{
 plot_shock_ranking(
   object,
@@ -24,15 +24,15 @@ ranking table.}
 
 \item{end}{Last time index to include. Defaults to \code{start}.}
 
-\item{variables}{Optional variable filter.}
+\item{variables}{Variables whose historical decompositions are included.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{ranking}{One of \code{"absolute"} or \code{"signed"}.}
 
 \item{top_n}{Optional number of top-ranked shocks to keep per model-variable panel.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
 \item{...}{Additional arguments passed to \code{shock_ranking()}.}
 }
@@ -40,7 +40,7 @@ ranking table.}
 A \code{ggplot} object.
 }
 \description{
-Plot ranked event-window shock contributions
+Visualise ranked shock contributions over selected historical periods
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

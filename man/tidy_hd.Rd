@@ -3,14 +3,14 @@
 \name{tidy_hd}
 \alias{tidy_hd}
 \alias{tidy_hd.default}
-\title{Tidy historical decompositions}
+\title{Summarise posterior historical decompositions}
 \usage{
 tidy_hd(object, ...)
 
 \method{tidy_hd}{default}(object, ...)
 }
 \arguments{
-\item{object}{A posterior model object or posterior IRF array.}
+\item{object}{A posterior model object or a \code{PosteriorHD} array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
@@ -22,7 +22,7 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Tidy historical decompositions
+Summarise posterior historical decompositions
 }
 \examples{
 # Small posterior (S = 5 draws)

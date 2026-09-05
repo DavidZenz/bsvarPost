@@ -15,12 +15,13 @@ write_bsvar_csv(
 \arguments{
 \item{x}{A \code{bsvar_post_tbl}, data frame, or \code{bsvar_report_bundle}.}
 
-\item{file}{Output CSV path.}
+\item{file}{Path of the CSV file.}
 
-\item{row.names}{Passed to \code{\link[utils:write.table]{utils::write.csv()}}.}
+\item{row.names}{Whether row names are written; passed to
+\code{\link[utils:write.table]{utils::write.csv()}}.}
 
-\item{preset}{Reporting preset. Use \code{"compact"} for a narrower,
-publication-oriented column selection.}
+\item{preset}{Table specification. Use \code{"compact"} for a narrower selection
+of columns.}
 
 \item{...}{Additional arguments passed to \code{\link[utils:write.table]{utils::write.csv()}}.}
 }
@@ -28,7 +29,7 @@ publication-oriented column selection.}
 The normalized file path, invisibly.
 }
 \description{
-Write a reporting-ready table to disk as a CSV file.
+Write a table of posterior summaries to disk as a CSV file.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

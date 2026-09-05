@@ -280,15 +280,16 @@ audit_narrative_restriction <- function(restriction, shocks, reduced_irf, p = 0L
   )
 }
 
-#' Audit sign, zero, structural, and narrative restrictions
+#' Evaluate sign, zero, structural, and narrative restrictions
 #'
 #' @param object A posterior model object.
-#' @param restrictions Optional list of restriction helper objects. If omitted
+#' @param restrictions Optional list of restriction specifications. If omitted
 #'   for `PosteriorBSVARSIGN`, restrictions are extracted from the fitted
 #'   identification scheme.
 #' @param zero_tol Numerical tolerance for zero restrictions.
-#' @param probability Equal-tailed interval probability used in summaries.
-#' @param model Optional model identifier.
+#' @param probability Probability mass of the equal-tailed credible intervals
+#'   reported in posterior summaries.
+#' @param model Label identifying the model specification.
 #' @param ... Reserved for future extensions.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{restriction_type}, \code{restriction}, \code{variable}, \code{shock},
@@ -327,13 +328,13 @@ restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
   new_bsvar_post_tbl(out, object_type = "restriction_audit", draws = FALSE)
 }
 
-#' Audit magnitude statements for IRFs or CDMs
+#' Evaluate magnitude hypotheses for IRFs or CDMs
 #'
 #' @param object A posterior model object or response object.
-#' @param type Response object type to audit.
+#' @param type Posterior response quantity to evaluate.
 #' @inheritParams hypothesis_irf
 #' @inheritParams hypothesis_cdm
-#' @return A \code{bsvar_post_tbl} with hypothesis test results including
+#' @return A \code{bsvar_post_tbl} with posterior hypothesis summaries including
 #'   \code{posterior_prob}, \code{mean}, \code{median}, \code{lower}, and
 #'   \code{upper} columns.
 #' @examples

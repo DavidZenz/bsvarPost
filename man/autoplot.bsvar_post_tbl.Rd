@@ -2,7 +2,7 @@
 % Please edit documentation in R/autoplot.R
 \name{autoplot.bsvar_post_tbl}
 \alias{autoplot.bsvar_post_tbl}
-\title{Autoplot tidy posterior outputs}
+\title{Visualise posterior summaries}
 \usage{
 \method{autoplot}{bsvar_post_tbl}(
   object,
@@ -14,13 +14,14 @@
 )
 }
 \arguments{
-\item{object}{A \code{bsvar_post_tbl} returned by the tidy or comparison helpers.}
+\item{object}{A \code{bsvar_post_tbl} containing posterior summaries or model
+comparisons.}
 
-\item{variables}{Optional variable filter.}
+\item{variables}{Response variables to include.}
 
-\item{shocks}{Optional shock filter.}
+\item{shocks}{Structural shocks to include.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 
@@ -30,7 +31,7 @@
 A \code{ggplot} object.
 }
 \description{
-Autoplot tidy posterior outputs
+Visualise posterior summaries
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -6,7 +6,7 @@
 \alias{report_table.data.frame}
 \alias{report_table.bsvar_report_bundle}
 \alias{report_table.default}
-\title{Prepare reporting-ready tables}
+\title{Prepare tables of posterior results}
 \usage{
 report_table(x, ...)
 
@@ -26,15 +26,15 @@ report_table(x, ...)
 \item{digits}{Optional number of digits used to round numeric columns before
 rendering.}
 
-\item{preset}{Reporting preset. Use \code{"compact"} for a narrower,
-publication-oriented column selection.}
+\item{preset}{Table specification. Use \code{"compact"} for a narrower selection
+of columns.}
 }
 \value{
-A data frame with reporting-ready columns.
+A data frame containing the selected posterior summaries.
 }
 \description{
-Format \code{bsvarPost} outputs into data frames with stable column order and
-presentation-oriented names.
+Arrange posterior summaries in data frames with a consistent column order
+and descriptive column names.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-event.R
 \name{plot_hd_event}
 \alias{plot_hd_event}
-\title{Plot event-window historical decomposition summaries}
+\title{Visualise shock contributions over selected historical periods}
 \usage{
 plot_hd_event(
   object,
@@ -25,15 +25,15 @@ event table.}
 
 \item{end}{Last time index to include. Defaults to \code{start}.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
 \item{draws}{If \code{TRUE}, plot draw-level event contributions.}
 
-\item{variables}{Optional variable filter.}
+\item{variables}{Variables whose historical decompositions are included.}
 
-\item{shocks}{Optional shock filter.}
+\item{shocks}{Structural shocks whose contributions are included.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 
@@ -43,7 +43,7 @@ event table.}
 A \code{ggplot} object.
 }
 \description{
-Plot event-window historical decomposition summaries
+Visualise shock contributions over selected historical periods
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

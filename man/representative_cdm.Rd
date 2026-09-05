@@ -41,11 +41,11 @@ representative_cdm(object, ...)
 )
 }
 \arguments{
-\item{object}{A posterior model object or a \code{PosteriorIR}.}
+\item{object}{A posterior model object or a \code{PosteriorCDM} array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{method}{Representative-model selection method.}
+\item{method}{Criterion used to select the representative posterior draw.}
 
 \item{center}{Posterior summary used as the target for median-target selection.}
 
@@ -59,7 +59,8 @@ representative_cdm(object, ...)
 
 \item{standardize}{Optional standardisation used in distance computation.}
 
-\item{probability}{Equal-tailed interval probability used for summaries.}
+\item{probability}{Probability mass of the equal-tailed credible intervals
+reported in posterior summaries.}
 
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 

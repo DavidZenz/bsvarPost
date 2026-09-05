@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_hd_event}
 \alias{compare_hd_event}
-\title{Compare event-window historical decompositions across models}
+\title{Compare historical-period shock contributions across model specifications}
 \usage{
 compare_hd_event(..., start, end = start, probability = 0.9, draws = FALSE)
 }
@@ -13,17 +13,19 @@ compare_hd_event(..., start, end = start, probability = 0.9, draws = FALSE)
 
 \item{end}{Last time index to include. Defaults to \code{start}.}
 
-\item{probability}{Equal-tailed interval probability used in summaries.}
+\item{probability}{Probability mass of the equal-tailed credible intervals
+reported in posterior summaries.}
 
-\item{draws}{If \code{TRUE}, return draw-level rows.}
+\item{draws}{If \code{TRUE}, report individual posterior draws rather than
+posterior summaries.}
 }
 \value{
 A \code{bsvar_post_tbl} combining event-window historical
 decomposition results across models, with a \code{model} column
-identifying each input.
+identifying each model specification.
 }
 \description{
-Compare event-window historical decompositions across models
+Compare historical-period shock contributions across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

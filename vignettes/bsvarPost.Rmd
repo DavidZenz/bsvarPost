@@ -1,8 +1,8 @@
 ---
-title: "Getting Started with bsvarPost"
+title: "Post-estimation Analysis with bsvarPost"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Started with bsvarPost}
+  %\VignetteIndexEntry{Post-estimation Analysis with bsvarPost}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,21 +16,24 @@ post <- readRDS("fixtures/fiscal_post_bsvar.rds")
 post_alt <- readRDS("fixtures/fiscal_post_bsvar_alt.rds")
 ```
 
-`bsvarPost` starts where `bsvars` and `bsvarSIGNs` stop: with an estimated
-posterior. It turns posterior results into tidy tables, cumulative responses,
-comparisons, probability statements, coherent representative draws, event
-summaries, and publication-ready output.
+`bsvarPost` analyses posterior distributions estimated with `bsvars` and
+`bsvarSIGNs`. It summarises posterior quantities in tidy tables and provides
+methods for cumulative responses, model comparison, posterior hypothesis
+evaluation, representative draws, response timing, and historical-event
+analysis.
 
 This guide assumes that you already know how to specify and estimate a model
-with one of the parent packages. In one short workflow, we examine the response
-of US GDP (`gdp`) to the government-spending shock (`gs`) in the
-`bsvars::us_fiscal_lsuw` data. The included fixtures keep the article fast; use
-the same calls with your own posterior object.
+with one of the parent packages. The examples examine the response of US GDP
+(`gdp`) to the government-spending shock (`gs`) using the
+`bsvars::us_fiscal_lsuw` data. Precomputed posterior draws reduce computation
+time; the same functions can be applied to posterior objects from an empirical
+analysis.
 
-## Start from a posterior
+## Posterior input
 
-Only the estimation handoff matters here. For example, a minimal `bsvars`
-workflow is:
+The analysis begins with a posterior distribution estimated by a parent
+package. For example, the following code specifies and estimates a Bayesian
+structural vector autoregression with `bsvars`:
 
 ```{r estimate, eval = FALSE}
 data("us_fiscal_lsuw", package = "bsvars")
@@ -39,15 +42,15 @@ post <- bsvars::estimate(spec, S = 2000, thin = 1,
                          show_progress = FALSE)
 ```
 
-The rest of the guide uses the precomputed `post` loaded above. It is a regular
-`PosteriorBSVAR` object, so there is no import or conversion step.
+The remaining examples use the precomputed `post` object loaded above. It is a
+`PosteriorBSVAR` object and can be passed directly to `bsvarPost` functions.
 
-## Use one tidy extraction pattern
+## Summarise posterior quantities
 
-The canonical pattern is: pass the posterior to a `tidy_*()` function, then
-filter the resulting tibble to the research question. Here we request 90%
-pointwise intervals and keep four horizons from the GDP response to a spending
-shock.
+The `tidy_*()` functions compute posterior summaries in long-format tibbles.
+Here, `tidy_irf()` reports posterior medians and 90% pointwise credible
+intervals for impulse responses. The resulting table is restricted to four
+horizons of the GDP response to a government-spending shock.
 
 ```{r tidy-irf}
 irf_tbl <- tidy_irf(post, horizon = 12, probability = 0.90)
@@ -57,9 +60,9 @@ irf_focus <- subset(irf_tbl, variable == "gdp" & shock == "gs" &
 irf_focus
 ```
 
-The same shape extends to other posterior quantities. Summary tables contain
-posterior location and interval columns; set `draws = TRUE` when downstream
-work needs individual draws.
+The same tabular structure applies to other posterior quantities. Summary
+tables contain posterior location and credible-interval columns. Set
+`draws = TRUE` when an analysis requires the individual posterior draws.
 
 ```{r tidy-family, eval = FALSE}
 tidy_cdm(post, horizon = 12)       # cumulative responses
@@ -69,13 +72,15 @@ tidy_forecast(post, horizon = 8)   # predictive paths
 tidy_shocks(post)                  # structural shocks
 ```
 
-This is usually enough to join results to annotations, filter panels, or use a
-different graphics system without unpacking posterior arrays by hand.
+The resulting tables can be filtered, combined with additional variables, or
+visualised with a graphics system of the researcher's choice without directly
+manipulating posterior arrays.
 
-## Accumulate responses with `cdm()`
+## Cumulative dynamic responses
 
-`cdm()` retains the posterior draws while accumulating the response at each
-horizon. `tidy_cdm()` then applies the same extraction pattern used above.
+`cdm()` computes cumulative dynamic responses for every posterior draw by
+accumulating the impulse response through each horizon. `tidy_cdm()` reports
+the corresponding posterior summaries and credible intervals.
 
 ```{r cdm}
 cdm_draws <- cdm(post, horizon = 12)
@@ -86,14 +91,16 @@ cdm_focus <- subset(cdm_tbl, variable == "gdp" & shock == "gs" &
 cdm_focus
 ```
 
-These are cumulative dynamic responses. Whether they have an economic
-multiplier interpretation depends on the model's transformations and scaling;
-see `?cdm` for the `scale_by` and `scale_var` options.
+These quantities are cumulative dynamic responses. Their interpretation as
+economic multipliers depends on the transformations and scaling used in the
+model; see `?cdm` for the `scale_by` and `scale_var` arguments.
 
-## Compare specifications in the same table
+## Compare model specifications
 
-The second fixture is the same three-variable system with a longer lag order.
-Named posterior arguments become stable labels in the `model` column.
+The second posterior distribution is estimated for the same three-variable
+system with a longer lag order. `compare_cdm()` computes comparable posterior
+summaries for both specifications. Names assigned to the posterior arguments
+identify the specifications in the `model` column.
 
 ```{r compare}
 cdm_comparison <- compare_cdm(
@@ -107,14 +114,16 @@ subset(cdm_comparison, variable == "gdp" & shock == "gs" &
        select = c(model, horizon, median, lower, upper))
 ```
 
-Use the same pattern with `compare_irf()`, `compare_fevd()`, and the other
-`compare_*()` helpers. The comparison is descriptive: it puts like-for-like
-posterior summaries together but does not choose a preferred specification.
+The functions `compare_irf()`, `compare_fevd()`, and the remaining
+`compare_*()` methods provide analogous comparisons for other posterior
+quantities. These comparisons are descriptive: they report corresponding
+posterior summaries across specifications but do not select a preferred model.
 
-## Ask a posterior probability question
+## Evaluate a posterior hypothesis
 
-Suppose the question is: *what is the posterior probability that the GDP
-response to the spending shock is positive at each selected horizon?*
+Consider the posterior probability that the GDP response to the spending shock
+is positive at each selected horizon. `hypothesis_irf()` evaluates this
+inequality using the posterior draws.
 
 ```{r hypothesis}
 prob_positive <- hypothesis_irf(
@@ -129,18 +138,20 @@ prob_positive[, c("variable", "shock", "horizon", "posterior_prob")]
 ```
 
 `posterior_prob` is a model-conditional posterior probability, not a
-frequentist p-value. For questions that must hold across several horizons use
-`joint_hypothesis_irf()`; for economically meaningful thresholds use
-`magnitude_audit()`; and for a band covering an entire selected path use
-`simultaneous_irf()`. The
+frequentist p-value. `joint_hypothesis_irf()` computes the probability that a
+condition holds jointly across several horizons, `magnitude_audit()` evaluates
+economically meaningful thresholds, and `simultaneous_irf()` constructs a
+credible band for an entire selected response path. The
 [Inference and Comparison](inference-and-comparison.html) article develops
 these distinctions.
 
-## Keep one coherent draw and summarize timing
+## Select a representative draw and summarise response timing
 
 Pointwise medians need not correspond to any single posterior draw.
-`median_target_irf()` instead selects one internally coherent draw closest to
-the median response path over the requested subset.
+`median_target_irf()` selects the posterior draw whose response path is closest
+to the pointwise posterior median over the requested variables, shocks, and
+horizons. The selected path therefore preserves the joint dependence within a
+single draw.
 
 ```{r representative}
 representative <- median_target_irf(
@@ -155,9 +166,8 @@ subset(representative_path, horizon %in% c(0, 4, 8, 12),
        select = c(variable, shock, horizon, median, draw_index, method))
 ```
 
-For a compact timing statement, `peak_response()` reports both the response
-level and the horizon of the peak for every posterior draw, then summarizes
-those quantities.
+`peak_response()` computes the magnitude and horizon of the peak response for
+every posterior draw, then reports posterior summaries of both quantities.
 
 ```{r timing}
 peak <- peak_response(
@@ -170,15 +180,17 @@ peak <- peak_response(
 peak[, c("variable", "shock", "median_value", "median_horizon")]
 ```
 
-For persistence questions, `duration_response()`, `half_life_response()`, and
-`time_to_threshold()` provide related summaries without reducing the posterior
-to a single curve.
+For questions concerning response persistence, `duration_response()`,
+`half_life_response()`, and `time_to_threshold()` report related posterior
+summaries without reducing the posterior distribution to a single curve.
 
-## Move from an HD path to an event question
+## Summarise historical decompositions over selected periods
 
-Start with draw-level `tidy_hd()` data, then choose a window
-that is substantively meaningful for the application. This illustrative
-four-quarter window shows the handoff from event aggregation to shock ranking.
+`tidy_hd(draws = TRUE)` returns draw-level contributions of structural shocks
+to each observed variable. `tidy_hd_event()` aggregates these contributions
+over a substantively selected period, while `shock_ranking()` orders shocks by
+their contributions. The following example uses an illustrative four-quarter
+period.
 
 ```{r hd-event}
 hd_draws <- tidy_hd(post, draws = TRUE)
@@ -196,16 +208,16 @@ ranking <- shock_ranking(hd_draws, start = "1958", end = "1958.75",
 ranking[, c("variable", "shock", "median", "rank")]
 ```
 
-This adds event-level questions to the parent package's historical
-decomposition rather than replacing its standard HD workflow. Window choice
-and contribution interpretation are covered in
-[Historical-Decomposition Events](historical-decomposition-events.html).
+These functions extend the historical decompositions computed by the parent
+package with posterior summaries for selected periods. The choice of period
+and the interpretation of shock contributions are discussed in
+[Historical-Decomposition Analysis](historical-decomposition-events.html).
 
-## Finish with publication-ready output
+## Present figures and tables
 
-One call turns the representative draw into a consistently styled `ggplot2`
-figure. The returned object remains a normal `ggplot`, so annotations can still
-be added before saving.
+`publish_bsvar_plot()` visualises the representative posterior draw using a
+consistent `ggplot2` style. It returns a `ggplot` object that can be annotated
+or otherwise modified before saving.
 
 ```{r publication-plot}
 publish_bsvar_plot(representative_path, family = "irf", preset = "paper",
@@ -213,22 +225,23 @@ publish_bsvar_plot(representative_path, family = "irf", preset = "paper",
   caption = "Median-target posterior draw")
 ```
 
-For a table, keep one backend and the same focused result:
+`as_kable()` reports the selected posterior summary as a formatted table:
 
 ```{r publication-table}
 as_kable(peak, caption = "Peak absolute GDP response",
          digits = 3, preset = "compact")
 ```
 
-## Where next?
+## Further analyses
 
 - [Inference and Comparison](inference-and-comparison.html) covers joint and
-  magnitude questions, simultaneous bands, and richer model comparisons.
-- [Historical-Decomposition Events](historical-decomposition-events.html)
-  covers event windows, contribution views, and shock ranking.
-- [Sign-Restricted Workflows](sign-restricted-workflows.html) covers
+  magnitude hypotheses, simultaneous credible bands, and model comparisons.
+- [Historical-Decomposition Analysis](historical-decomposition-events.html)
+  covers selected historical periods, structural-shock contributions, and
+  shock rankings.
+- [Analysis of Sign-Restricted Models](sign-restricted-workflows.html) covers
   `most_likely_admissible_*()`, `restriction_audit()`,
   `acceptance_diagnostics()`, and sign-model comparisons.
 
-The [reference index](https://davidzenz.github.io/bsvarPost/reference/index.html) lists variants and lower-level
-helpers when a workflow needs more control.
+The [reference index](https://davidzenz.github.io/bsvarPost/reference/index.html)
+documents all functions and their arguments.

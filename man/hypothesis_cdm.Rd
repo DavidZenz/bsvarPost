@@ -48,7 +48,7 @@ hypothesis_cdm(object, ...)
 )
 }
 \arguments{
-\item{object}{A posterior model object or a \code{PosteriorIR} object.}
+\item{object}{A posterior model object or a \code{PosteriorCDM} array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 
@@ -71,11 +71,12 @@ hypothesis_cdm(object, ...)
 
 \item{absolute}{If \code{TRUE}, compare absolute responses.}
 
-\item{probability}{Equal-tailed interval probability used for gap summaries.}
+\item{probability}{Probability mass of the equal-tailed credible interval for
+the posterior difference.}
 
 \item{draws}{If \code{TRUE}, return draw-level gaps and indicators.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 

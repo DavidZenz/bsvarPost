@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-style.R
 \name{annotate_bsvar_plot}
 \alias{annotate_bsvar_plot}
-\title{Add publication-oriented annotations to a bsvarPost plot}
+\title{Add titles and captions to posterior-summary plots}
 \usage{
 annotate_bsvar_plot(
   plot,
@@ -42,7 +42,7 @@ annotate_bsvar_plot(
 A \code{ggplot} object with annotations added.
 }
 \description{
-Add publication-oriented annotations to a bsvarPost plot
+Add titles and captions to posterior-summary plots
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

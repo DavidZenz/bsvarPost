@@ -1,13 +1,13 @@
-#' Plot comparison summaries for response-shape tables
+#' Visualise response timing and persistence across model specifications
 #'
 #' @param object A comparison table returned by `compare_peak_response()`,
 #'   `compare_duration_response()`, `compare_half_life_response()`, or
 #'   `compare_time_to_threshold()`.
 #' @param measure Which summary measure to plot. Defaults to the main comparison
 #'   metric implied by `object`.
-#' @param variables Optional variable filter.
-#' @param shocks Optional shock filter.
-#' @param models Optional model filter.
+#' @param variables Response variables to include.
+#' @param shocks Structural shocks to include.
+#' @param models Model specifications to include.
 #' @param facet_scales Facet scales passed to `ggplot2`.
 #' @return A \code{ggplot} object.
 #' @examples
@@ -89,11 +89,11 @@ plot_compare_response <- function(object, measure = NULL, variables = NULL, shoc
   template_bsvar_plot(p, family = "comparison")
 }
 
-#' Plot comparison summaries for restriction-audit tables
+#' Visualise posterior restriction probabilities across model specifications
 #'
 #' @param object A comparison table returned by `compare_restrictions()`.
-#' @param models Optional model filter.
-#' @param restriction_types Optional restriction-type filter.
+#' @param models Model specifications to include.
+#' @param restriction_types Types of identifying restrictions to include.
 #' @param top_n Optional number of highest-probability restrictions to keep
 #'   within each model.
 #' @return A \code{ggplot} object.

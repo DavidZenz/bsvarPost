@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-style.R
 \name{template_bsvar_plot}
 \alias{template_bsvar_plot}
-\title{Apply an output-family template to a bsvarPost plot}
+\title{Apply graphical conventions for a posterior quantity}
 \usage{
 template_bsvar_plot(
   plot,
@@ -17,7 +17,8 @@ template_bsvar_plot(
 \arguments{
 \item{plot}{A \code{ggplot} object.}
 
-\item{family}{One of \code{"irf"}, \code{"cdm"}, \code{"forecast"}, \code{"hd"}, \code{"hd_event"},
+\item{family}{Posterior quantity represented by the plot. One of \code{"irf"},
+\code{"cdm"}, \code{"forecast"}, \code{"hd"}, \code{"hd_event"},
 \code{"shock_ranking"}, \code{"hypothesis"}, \code{"restriction_audit"},
 \code{"simultaneous"}, \code{"joint_hypothesis"}, \code{"acceptance_diagnostics"},
 \code{"representative"}, or \code{"comparison"}.}
@@ -29,10 +30,11 @@ template_bsvar_plot(
 \item{base_family}{Base font family for the applied theme.}
 }
 \value{
-A \code{ggplot} object with template styling applied.
+A \code{ggplot} object with graphical conventions appropriate to the
+selected posterior quantity.
 }
 \description{
-Apply an output-family template to a bsvarPost plot
+Apply graphical conventions for a posterior quantity
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

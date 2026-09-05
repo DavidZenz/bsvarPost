@@ -4,7 +4,7 @@
 \alias{tidy_cdm}
 \alias{tidy_cdm.default}
 \alias{tidy_cdm.PosteriorBSVAR}
-\title{Tidy cumulative dynamic multipliers}
+\title{Summarise posterior cumulative dynamic responses}
 \usage{
 tidy_cdm(object, ...)
 
@@ -22,17 +22,18 @@ tidy_cdm(object, ...)
 )
 }
 \arguments{
-\item{object}{A posterior model object or posterior IRF array.}
+\item{object}{A posterior model object or a \code{PosteriorCDM} array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{draws}{If \code{TRUE}, return draw-level rows.}
+\item{draws}{If \code{TRUE}, report individual posterior draws rather than
+posterior summaries.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 
@@ -46,7 +47,7 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Tidy cumulative dynamic multipliers
+Summarise posterior cumulative dynamic responses
 }
 \examples{
 # Small posterior (S = 5 draws)

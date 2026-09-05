@@ -2,7 +2,7 @@
 % Please edit documentation in R/hd-event.R
 \name{shock_ranking}
 \alias{shock_ranking}
-\title{Rank shocks by event-window historical decomposition contributions}
+\title{Rank structural shocks by contributions over selected periods}
 \usage{
 shock_ranking(
   object,
@@ -23,13 +23,13 @@ decomposition table.}
 
 \item{end}{Last time index to include. Defaults to \code{start}.}
 
-\item{variables}{Optional variable filter.}
+\item{variables}{Variables whose historical decompositions are included.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{ranking}{One of \code{"absolute"} or \code{"signed"}.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
 \item{...}{Additional arguments passed to \code{tidy_hd_event()}.}
 }
@@ -40,7 +40,7 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{upper}, \code{ranking}, \code{rank_score}, and \code{rank}.
 }
 \description{
-Rank shocks by event-window historical decomposition contributions
+Rank structural shocks by contributions over selected periods
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

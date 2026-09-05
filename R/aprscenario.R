@@ -1,19 +1,20 @@
-#' Convert tidy forecasts to APRScenario format
+#' Express posterior forecasts in APRScenario format
 #'
 #' @param object A posterior model object, a `Forecasts` object, or a tidy
 #'   forecast table returned by [tidy_forecast()].
 #' @param horizon Forecast horizon when `object` is a posterior model object.
-#' @param probability Equal-tailed interval probability.
-#' @param center Which summary column to map to APRScenario's `center` column.
+#' @param probability Probability mass of the equal-tailed credible interval.
+#' @param center Posterior location summary represented by APRScenario's
+#'   `center` column.
 #' @param origin Optional `Date` origin for turning forecast horizons into APR
 #'   style `hor` dates.
 #' @param frequency Step size used with `origin`. One of `"quarter"`,
 #'   `"month"`, `"year"`, or `"day"`.
-#' @param model Optional model identifier.
+#' @param model Label identifying the model specification.
 #' @param ... Additional arguments passed to [tidy_forecast()].
 #' @return A data frame with columns \code{hor}, \code{variable},
 #'   \code{lower}, \code{center}, and \code{upper}, suitable for use with
-#'   APRScenario conditioning workflows.
+#'   conditional forecast analysis with APRScenario.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -88,11 +89,11 @@ as_apr_cond_forc.PosteriorBSVART <- as_apr_cond_forc.PosteriorBSVAR
 #' @export
 as_apr_cond_forc.PosteriorBSVARSIGN <- as_apr_cond_forc.PosteriorBSVAR
 
-#' Convert APRScenario-style forecast tables to bsvarPost tidy format
+#' Express APRScenario forecasts as posterior summary tables
 #'
 #' @param data A data frame with APRScenario columns `hor`, `variable`,
 #'   `lower`, `center`, and `upper`.
-#' @param model Model identifier.
+#' @param model Label identifying the model specification.
 #' @return A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
 #'   \code{variable}, \code{time}, \code{mean}, \code{median}, \code{sd},
 #'   \code{lower}, and \code{upper}.
@@ -130,11 +131,12 @@ tidy_apr_forecast <- function(data, model = "apr") {
   new_bsvar_post_tbl(tbl, object_type = "forecast", draws = FALSE)
 }
 
-#' Optional wrapper around APRScenario::gen_mats
+#' Compute conditional-forecast matrices with APRScenario
 #'
 #' @param posterior A posterior model object.
 #' @param specification The corresponding specification object.
-#' @param max_cores Passed to `APRScenario::gen_mats()`.
+#' @param max_cores Maximum number of processor cores used by
+#'   `APRScenario::gen_mats()`.
 #' @return The result of \code{APRScenario::gen_mats()}, typically a list
 #'   containing matrices used for conditional forecasting.
 #' @examples

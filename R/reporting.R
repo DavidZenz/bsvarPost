@@ -1,17 +1,19 @@
-#' Create reporting bundles from bsvarPost outputs
+#' Combine posterior summaries, figures, and captions
 #'
-#' Bundle a reporting-ready table, a plot, and a caption into a compact object
-#' for downstream publication workflows.
+#' Combine a table of posterior summaries, its corresponding figure, and a
+#' caption in a single object.
 #'
 #' @param object A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
-#' @param plot Optional `ggplot` object. If omitted, `bsvarPost` will try to
-#'   choose a sensible default plot for the supplied table.
+#' @param plot Optional `ggplot` object. If omitted, a figure is selected when
+#'   the posterior quantity represented by the supplied table can be inferred;
+#'   otherwise the `plot` element is `NULL`.
 #' @param caption Optional table caption.
 #' @param digits Optional number of digits used to round numeric columns before
 #'   rendering.
-#' @param preset Reporting preset. Use `"compact"` for a narrower,
-#'   publication-oriented column selection.
-#' @param ... Additional arguments passed to the inferred plot builder.
+#' @param preset Table specification. Use `"compact"` for a narrower selection
+#'   of columns.
+#' @param ... Additional arguments passed to the corresponding plotting
+#'   function.
 #' @return A list of class `bsvar_report_bundle` with elements `table`, `plot`,
 #'   `caption`, and `object_type`.
 #' @examples
@@ -39,18 +41,18 @@ report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
   )
 }
 
-#' Prepare reporting-ready tables
+#' Prepare tables of posterior results
 #'
-#' Format `bsvarPost` outputs into data frames with stable column order and
-#' presentation-oriented names.
+#' Arrange posterior summaries in data frames with a consistent column order
+#' and descriptive column names.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param digits Optional number of digits used to round numeric columns before
 #'   rendering.
-#' @param preset Reporting preset. Use `"compact"` for a narrower,
-#'   publication-oriented column selection.
+#' @param preset Table specification. Use `"compact"` for a narrower selection
+#'   of columns.
 #' @param ... Additional arguments passed to methods.
-#' @return A data frame with reporting-ready columns.
+#' @return A data frame containing the selected posterior summaries.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -89,14 +91,15 @@ report_table.default <- function(x, ...) {
 
 #' Render bsvarPost tables with knitr::kable
 #'
-#' Convert `bsvarPost` tables or report bundles to a `knitr::kable` object.
+#' Convert posterior summary tables or `report_bundle()` results to a
+#' `knitr::kable` object.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param caption Optional table caption.
 #' @param digits Optional number of digits used to round numeric columns before
 #'   rendering.
-#' @param preset Reporting preset. Use `"compact"` for a narrower,
-#'   publication-oriented column selection.
+#' @param preset Table specification. Use `"compact"` for a narrower selection
+#'   of columns.
 #' @param ... Additional arguments passed to `knitr::kable()`.
 #' @return A `knitr::kable` object.
 #' @export
@@ -136,14 +139,15 @@ as_kable.default <- function(x, ...) {
 
 #' Render bsvarPost tables with gt
 #'
-#' Convert `bsvarPost` tables or report bundles to a `gt::gt_tbl` object.
+#' Convert posterior summary tables or `report_bundle()` results to a
+#' `gt::gt_tbl` object.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param caption Optional table caption.
 #' @param digits Optional number of digits used to round numeric columns before
 #'   rendering.
-#' @param preset Reporting preset. Use `"compact"` for a narrower,
-#'   publication-oriented column selection.
+#' @param preset Table specification. Use `"compact"` for a narrower selection
+#'   of columns.
 #' @param ... Additional arguments passed to `gt::gt()`.
 #' @return A `gt::gt_tbl` object.
 #' @export
@@ -199,15 +203,15 @@ as_gt.default <- function(x, ...) {
 
 #' Render bsvarPost tables with flextable
 #'
-#' Convert `bsvarPost` tables or report bundles to a
+#' Convert posterior summary tables or `report_bundle()` results to a
 #' `flextable::flextable` object.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param caption Optional table caption.
 #' @param digits Optional number of digits used to round numeric columns before
 #'   rendering.
-#' @param preset Reporting preset. Use `"compact"` for a narrower,
-#'   publication-oriented column selection.
+#' @param preset Table specification. Use `"compact"` for a narrower selection
+#'   of columns.
 #' @param ... Additional arguments passed to `flextable::flextable()`.
 #' @return A `flextable::flextable` object.
 #' @export
@@ -263,13 +267,14 @@ as_flextable.default <- function(x, ...) {
 
 #' Export bsvarPost tables to CSV
 #'
-#' Write a reporting-ready table to disk as a CSV file.
+#' Write a table of posterior summaries to disk as a CSV file.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
-#' @param file Output CSV path.
-#' @param row.names Passed to [utils::write.csv()].
-#' @param preset Reporting preset. Use `"compact"` for a narrower,
-#'   publication-oriented column selection.
+#' @param file Path of the CSV file.
+#' @param row.names Whether row names are written; passed to
+#'   [utils::write.csv()].
+#' @param preset Table specification. Use `"compact"` for a narrower selection
+#'   of columns.
 #' @param ... Additional arguments passed to [utils::write.csv()].
 #' @return The normalized file path, invisibly.
 #' @examples

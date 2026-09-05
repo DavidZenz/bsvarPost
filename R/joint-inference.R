@@ -5,12 +5,13 @@
 #'
 #' @param object A posterior model object or a `PosteriorIR` object.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
-#' @param probability Coverage probability for the simultaneous band.
-#' @param variables Optional response-variable subset (character or integer vector).
-#' @param shocks Optional shock subset (character or integer vector).
+#' @param probability Posterior coverage probability of the simultaneous
+#'   credible band.
+#' @param variables Response variables to include (character or integer vector).
+#' @param shocks Structural shocks to include (character or integer vector).
 #' @param variable **Deprecated.** Use \code{variables} instead.
 #' @param shock **Deprecated.** Use \code{shocks} instead.
-#' @param model Optional model identifier.
+#' @param model Label identifying the model specification.
 #' @param ... Additional arguments passed to computation methods.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
@@ -107,8 +108,9 @@ simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 #' Simultaneous posterior bands for cumulative dynamic multipliers
 #'
 #' @inheritParams simultaneous_irf
-#' @param variables Optional response-variable subset (character or integer vector).
-#' @param shocks Optional shock subset (character or integer vector).
+#' @param object A posterior model object or a `PosteriorCDM` array.
+#' @param variables Response variables to include (character or integer vector).
+#' @param shocks Structural shocks to include (character or integer vector).
 #' @param variable **Deprecated.** Use \code{variables} instead.
 #' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param scale_by Optional scaling mode for CDMs.

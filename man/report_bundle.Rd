@@ -2,7 +2,7 @@
 % Please edit documentation in R/reporting.R
 \name{report_bundle}
 \alias{report_bundle}
-\title{Create reporting bundles from bsvarPost outputs}
+\title{Combine posterior summaries, figures, and captions}
 \usage{
 report_bundle(
   object,
@@ -16,26 +16,28 @@ report_bundle(
 \arguments{
 \item{object}{A \code{bsvar_post_tbl}, data frame, or \code{bsvar_report_bundle}.}
 
-\item{plot}{Optional \code{ggplot} object. If omitted, \code{bsvarPost} will try to
-choose a sensible default plot for the supplied table.}
+\item{plot}{Optional \code{ggplot} object. If omitted, a figure is selected when
+the posterior quantity represented by the supplied table can be inferred;
+otherwise the \code{plot} element is \code{NULL}.}
 
 \item{caption}{Optional table caption.}
 
 \item{digits}{Optional number of digits used to round numeric columns before
 rendering.}
 
-\item{preset}{Reporting preset. Use \code{"compact"} for a narrower,
-publication-oriented column selection.}
+\item{preset}{Table specification. Use \code{"compact"} for a narrower selection
+of columns.}
 
-\item{...}{Additional arguments passed to the inferred plot builder.}
+\item{...}{Additional arguments passed to the corresponding plotting
+function.}
 }
 \value{
 A list of class \code{bsvar_report_bundle} with elements \code{table}, \code{plot},
 \code{caption}, and \code{object_type}.
 }
 \description{
-Bundle a reporting-ready table, a plot, and a caption into a compact object
-for downstream publication workflows.
+Combine a table of posterior summaries, its corresponding figure, and a
+caption in a single object.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -76,7 +76,7 @@ cdm(object, ...)
 
 \item{horizon}{Forecast horizon.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 

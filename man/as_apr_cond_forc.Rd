@@ -5,7 +5,7 @@
 \alias{as_apr_cond_forc.bsvar_post_tbl}
 \alias{as_apr_cond_forc.Forecasts}
 \alias{as_apr_cond_forc.PosteriorBSVAR}
-\title{Convert tidy forecasts to APRScenario format}
+\title{Express posterior forecasts in APRScenario format}
 \usage{
 as_apr_cond_forc(object, ...)
 
@@ -44,7 +44,8 @@ forecast table returned by \code{\link[=tidy_forecast]{tidy_forecast()}}.}
 
 \item{...}{Additional arguments passed to \code{\link[=tidy_forecast]{tidy_forecast()}}.}
 
-\item{center}{Which summary column to map to APRScenario's \code{center} column.}
+\item{center}{Posterior location summary represented by APRScenario's
+\code{center} column.}
 
 \item{origin}{Optional \code{Date} origin for turning forecast horizons into APR
 style \code{hor} dates.}
@@ -52,19 +53,19 @@ style \code{hor} dates.}
 \item{frequency}{Step size used with \code{origin}. One of \code{"quarter"},
 \code{"month"}, \code{"year"}, or \code{"day"}.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 }
 \value{
 A data frame with columns \code{hor}, \code{variable},
 \code{lower}, \code{center}, and \code{upper}, suitable for use with
-APRScenario conditioning workflows.
+conditional forecast analysis with APRScenario.
 }
 \description{
-Convert tidy forecasts to APRScenario format
+Express posterior forecasts in APRScenario format
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

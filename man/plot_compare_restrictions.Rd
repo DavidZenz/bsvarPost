@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-compare.R
 \name{plot_compare_restrictions}
 \alias{plot_compare_restrictions}
-\title{Plot comparison summaries for restriction-audit tables}
+\title{Visualise posterior restriction probabilities across model specifications}
 \usage{
 plot_compare_restrictions(
   object,
@@ -14,9 +14,9 @@ plot_compare_restrictions(
 \arguments{
 \item{object}{A comparison table returned by \code{compare_restrictions()}.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
-\item{restriction_types}{Optional restriction-type filter.}
+\item{restriction_types}{Types of identifying restrictions to include.}
 
 \item{top_n}{Optional number of highest-probability restrictions to keep
 within each model.}
@@ -25,7 +25,7 @@ within each model.}
 A \code{ggplot} object.
 }
 \description{
-Plot comparison summaries for restriction-audit tables
+Visualise posterior restriction probabilities across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -7,7 +7,7 @@
 most_likely_admissible_irf(object, ...)
 }
 \arguments{
-\item{object}{A posterior model object or a \code{PosteriorIR}.}
+\item{object}{A \code{PosteriorBSVARSIGN} model object.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
@@ -15,6 +15,7 @@ most_likely_admissible_irf(object, ...)
 Same as \code{\link[=representative_irf]{representative_irf()}}.
 }
 \description{
-Convenience wrapper for \code{\link[=representative_irf]{representative_irf()}} with
+Select the admissible impulse-response draw with the highest posterior
+admissibility weight using \code{\link[=representative_irf]{representative_irf()}} with
 \code{method = "most_likely_admissible"}.
 }

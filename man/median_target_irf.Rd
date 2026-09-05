@@ -15,5 +15,6 @@ median_target_irf(object, ...)
 Same as \code{\link[=representative_irf]{representative_irf()}}.
 }
 \description{
-Convenience wrapper for \code{\link[=representative_irf]{representative_irf()}} with \code{method = "median_target"}.
+Select the impulse-response draw closest to the posterior median response
+path using \code{\link[=representative_irf]{representative_irf()}} with \code{method = "median_target"}.
 }

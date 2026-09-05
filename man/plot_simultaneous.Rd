@@ -28,13 +28,14 @@ simultaneous-band table.}
 \item{horizon}{Maximum horizon used when \code{object} is a posterior model
 object.}
 
-\item{probability}{Coverage probability for the simultaneous band.}
+\item{probability}{Posterior coverage probability of the simultaneous
+credible band.}
 
-\item{variable}{Optional response-variable subset.}
+\item{variable}{Response variables to include.}
 
-\item{shock}{Optional shock subset.}
+\item{shock}{Structural shocks to include.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 

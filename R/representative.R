@@ -4,14 +4,15 @@
 #'
 #' @param object A posterior model object or a `PosteriorIR`.
 #' @param horizon Forecast horizon when `object` is a posterior model object.
-#' @param method Representative-model selection method.
+#' @param method Criterion used to select the representative posterior draw.
 #' @param center Posterior summary used as the target for median-target selection.
 #' @param variables Optional subset of response variables.
 #' @param shocks Optional subset of shocks.
 #' @param horizons Optional subset of horizons.
 #' @param metric Distance metric used for median-target selection.
 #' @param standardize Optional standardisation used in distance computation.
-#' @param probability Equal-tailed interval probability used for summaries.
+#' @param probability Probability mass of the equal-tailed credible intervals
+#'   reported in posterior summaries.
 #' @param ... Additional arguments passed to computation methods.
 #' @return A list of class \code{RepresentativeIR} (inheriting from
 #'   \code{RepresentativeResponse}) with elements \code{representative_draw}
@@ -123,6 +124,7 @@ representative_irf.PosteriorBSVARSIGN <- representative_irf_model
 #' Representative cumulative dynamic multipliers
 #'
 #' @inheritParams representative_irf
+#' @param object A posterior model object or a `PosteriorCDM` array.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A list of class \code{RepresentativeCDM} (inheriting from
@@ -216,7 +218,8 @@ representative_cdm.PosteriorBSVARSIGN <- representative_cdm_model
 
 #' Median-target representative impulse responses
 #'
-#' Convenience wrapper for [representative_irf()] with `method = "median_target"`.
+#' Select the impulse-response draw closest to the posterior median response
+#' path using [representative_irf()] with `method = "median_target"`.
 #'
 #' @inheritParams representative_irf
 #' @returns Same as [representative_irf()].
@@ -227,9 +230,11 @@ median_target_irf <- function(object, ...) {
 
 #' Median-target representative cumulative dynamic multipliers
 #'
-#' Convenience wrapper for [representative_cdm()] with `method = "median_target"`.
+#' Select the cumulative-response draw closest to the posterior median response
+#' path using [representative_cdm()] with `method = "median_target"`.
 #'
 #' @inheritParams representative_cdm
+#' @param object A posterior model object or a `PosteriorCDM` array.
 #' @returns Same as [representative_cdm()].
 #' @export
 median_target_cdm <- function(object, ...) {
@@ -238,10 +243,12 @@ median_target_cdm <- function(object, ...) {
 
 #' Most-likely-admissible representative impulse responses
 #'
-#' Convenience wrapper for [representative_irf()] with
+#' Select the admissible impulse-response draw with the highest posterior
+#' admissibility weight using [representative_irf()] with
 #' `method = "most_likely_admissible"`.
 #'
 #' @inheritParams representative_irf
+#' @param object A `PosteriorBSVARSIGN` model object.
 #' @returns Same as [representative_irf()].
 #' @export
 most_likely_admissible_irf <- function(object, ...) {
@@ -250,10 +257,12 @@ most_likely_admissible_irf <- function(object, ...) {
 
 #' Most-likely-admissible representative cumulative dynamic multipliers
 #'
-#' Convenience wrapper for [representative_cdm()] with
+#' Select the admissible cumulative-response draw with the highest posterior
+#' admissibility weight using [representative_cdm()] with
 #' `method = "most_likely_admissible"`.
 #'
 #' @inheritParams representative_cdm
+#' @param object A `PosteriorBSVARSIGN` model object.
 #' @returns Same as [representative_cdm()].
 #' @export
 most_likely_admissible_cdm <- function(object, ...) {

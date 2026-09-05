@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_restrictions}
 \alias{compare_restrictions}
-\title{Compare restriction audits across models}
+\title{Compare posterior restriction probabilities across model specifications}
 \usage{
 compare_restrictions(
   ...,
@@ -14,18 +14,21 @@ compare_restrictions(
 \arguments{
 \item{...}{Posterior model objects or a named list of model objects.}
 
-\item{restrictions}{Optional list of restriction helper objects applied to each model.}
+\item{restrictions}{Optional list of restriction specifications evaluated for
+each model.}
 
 \item{zero_tol}{Numerical tolerance for zero restrictions.}
 
-\item{probability}{Equal-tailed interval probability used in summaries.}
+\item{probability}{Probability mass of the equal-tailed credible intervals
+reported in posterior summaries.}
 }
 \value{
-A \code{bsvar_post_tbl} combining restriction audit results across
-models, with a \code{model} column identifying each input.
+A \code{bsvar_post_tbl} containing posterior restriction
+probabilities across models, with a \code{model} column identifying each
+specification.
 }
 \description{
-Compare restriction audits across models
+Compare posterior restriction probabilities across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

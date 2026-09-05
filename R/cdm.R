@@ -5,7 +5,7 @@
 #'
 #' @param object A posterior model object.
 #' @param horizon Forecast horizon.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to methods.

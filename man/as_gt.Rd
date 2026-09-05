@@ -28,12 +28,13 @@ as_gt(x, ...)
 \item{digits}{Optional number of digits used to round numeric columns before
 rendering.}
 
-\item{preset}{Reporting preset. Use \code{"compact"} for a narrower,
-publication-oriented column selection.}
+\item{preset}{Table specification. Use \code{"compact"} for a narrower selection
+of columns.}
 }
 \value{
 A \code{gt::gt_tbl} object.
 }
 \description{
-Convert \code{bsvarPost} tables or report bundles to a \code{gt::gt_tbl} object.
+Convert posterior summary tables or \code{report_bundle()} results to a
+\code{gt::gt_tbl} object.
 }

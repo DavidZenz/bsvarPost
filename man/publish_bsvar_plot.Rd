@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-publication.R
 \name{publish_bsvar_plot}
 \alias{publish_bsvar_plot}
-\title{Build a publication-ready bsvarPost plot}
+\title{Visualise posterior results with consistent graphical conventions}
 \usage{
 publish_bsvar_plot(
   object,
@@ -18,9 +18,10 @@ publish_bsvar_plot(
 }
 \arguments{
 \item{object}{A \code{ggplot} object, \code{bsvar_post_tbl}, representative-response
-object, or report bundle.}
+object, or \code{report_bundle()} result.}
 
-\item{family}{Optional output family override.}
+\item{family}{Optional specification of the posterior quantity represented by
+\code{object}.}
 
 \item{preset}{One of \code{"default"}, \code{"paper"}, or \code{"slides"}.}
 
@@ -41,9 +42,9 @@ when \code{object} is not already a \code{ggplot}.}
 A \code{ggplot} object.
 }
 \description{
-This helper detects a supported \code{bsvarPost} output family, constructs the
-corresponding plot when needed, and applies the matching plot template plus
-optional annotations.
+Identifies the posterior quantity represented by a \code{bsvarPost} result,
+constructs the corresponding visualisation, and applies consistent graphical
+conventions and optional annotations.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

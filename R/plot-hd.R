@@ -1,17 +1,17 @@
 #' Plot full-sample historical decomposition components
 #'
-#' These helpers provide dedicated historical decomposition visualisations for
-#' full-sample contribution paths and event-window composition summaries.
+#' Visualise structural-shock contributions over the full sample or aggregate
+#' them over selected historical periods.
 #'
 #' @name plot_hd_lines
 #'
 #' @param object A posterior model object, `PosteriorHD`, or a tidy
 #'   historical-decomposition table.
-#' @param probability Equal-tailed interval probability used when \code{object}
-#'   is not already a tidy table.
-#' @param variables Optional variable filter.
-#' @param shocks Optional shock filter applied before grouping.
-#' @param models Optional model filter.
+#' @param probability Probability mass of the equal-tailed credible interval
+#'   computed when \code{object} is not already a summary table.
+#' @param variables Variables whose historical decompositions are included.
+#' @param shocks Structural shocks whose contributions are included.
+#' @param models Model specifications to include.
 #' @param facet_scales Facet scales passed to \code{ggplot2}.
 #' @param include_observed If \code{TRUE}, include the observed series for plot
 #'   types that compare decomposition totals against the realised path.

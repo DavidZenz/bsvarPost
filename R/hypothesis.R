@@ -14,9 +14,10 @@
 #' @param compare_to Optional right-hand-side response specification with elements
 #'   `variable`, `shock`, and `horizon`.
 #' @param absolute If `TRUE`, compare absolute responses.
-#' @param probability Equal-tailed interval probability used for gap summaries.
+#' @param probability Probability mass of the equal-tailed credible interval for
+#'   the posterior difference.
 #' @param draws If `TRUE`, return draw-level gaps and indicators.
-#' @param model Optional model identifier.
+#' @param model Label identifying the model specification.
 #' @param ... Additional arguments passed to computation methods.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
@@ -197,6 +198,7 @@ hypothesis_irf.PosteriorBSVARSIGN <- hypothesis_irf_model
 #' Posterior probability statements for cumulative dynamic multipliers
 #'
 #' @inheritParams hypothesis_irf
+#' @param object A posterior model object or a `PosteriorCDM` array.
 #' @param variables Response variable selection on the left-hand side (character or integer vector).
 #' @param shocks Shock selection on the left-hand side (character or integer vector).
 #' @param variable **Deprecated.** Use \code{variables} instead.

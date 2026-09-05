@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-statements.R
 \name{plot_restriction_audit}
 \alias{plot_restriction_audit}
-\title{Plot restriction-audit summaries}
+\title{Visualise posterior restriction probabilities}
 \usage{
 plot_restriction_audit(
   object,
@@ -20,21 +20,23 @@ plot_restriction_audit(
 \item{object}{A restriction-audit table or an object accepted by
 \code{restriction_audit()}.}
 
-\item{restrictions}{Optional restriction helper list passed through to
-\code{restriction_audit()} when \code{object} is not already an audit table.}
+\item{restrictions}{Optional list of restriction specifications evaluated by
+\code{restriction_audit()} when \code{object} does not already contain posterior
+restriction probabilities.}
 
 \item{zero_tol}{Numerical tolerance for zero restrictions.}
 
-\item{probability}{Equal-tailed interval probability used in summaries.}
+\item{probability}{Probability mass of the equal-tailed credible intervals
+reported in posterior summaries.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{label_style}{Restriction label style: \code{"raw"} or \code{"pretty"}.}
 
 \item{labels}{Optional named character vector overriding restriction labels by
 raw restriction string.}
 
-\item{restriction_types}{Optional restriction-type filter.}
+\item{restriction_types}{Types of identifying restrictions to include.}
 
 \item{...}{Additional arguments passed to \code{restriction_audit()}.}
 }
@@ -42,7 +44,7 @@ raw restriction string.}
 A \code{ggplot} object.
 }
 \description{
-Plot restriction-audit summaries
+Visualise posterior restriction probabilities
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

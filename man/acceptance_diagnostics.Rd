@@ -33,7 +33,7 @@ flag is raised.}
 \item{sparse_threshold}{Share of near-zero admissibility weights above which a
 sparse-support warning flag is raised.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 }
 \value{
 A \code{bsvar_post_tbl} with columns \code{model},
@@ -41,10 +41,11 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{message}.  Each row reports one diagnostic metric.
 }
 \description{
-Summarise stored-draw diagnostics for sign-restricted posterior objects.
+Summarise the effective sample size and admissibility weights for
+sign-restricted posterior distributions.
 These diagnostics do not reconstruct the full proposal/rejection history of
-the sampler. Instead, they report what can be recovered from the saved
-posterior state, identification pattern, and admissibility weights.
+the sampler. They report quantities available from the stored posterior
+distribution, identification restrictions, and admissibility weights.
 }
 \examples{
 \donttest{

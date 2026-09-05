@@ -6,10 +6,11 @@
 #'   simultaneous-band table.
 #' @param horizon Maximum horizon used when `object` is a posterior model
 #'   object.
-#' @param probability Coverage probability for the simultaneous band.
-#' @param variable Optional response-variable subset.
-#' @param shock Optional shock subset.
-#' @param models Optional model filter.
+#' @param probability Posterior coverage probability of the simultaneous
+#'   credible band.
+#' @param variable Response variables to include.
+#' @param shock Structural shocks to include.
+#' @param models Model specifications to include.
 #' @param facet_scales Facet scales passed to `ggplot2`.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.

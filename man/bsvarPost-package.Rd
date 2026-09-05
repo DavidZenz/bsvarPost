@@ -4,10 +4,11 @@
 \name{bsvarPost-package}
 \alias{bsvarPost}
 \alias{bsvarPost-package}
-\title{bsvarPost: Post-Estimation Tools for bsvars and bsvarSIGNs}
+\title{bsvarPost: Posterior Analysis for bsvars and bsvarSIGNs}
 \description{
-Companion post-estimation tools for Bayesian structural vector
-autoregressions fitted with the \code{bsvars} and \code{bsvarSIGNs} packages.
+Posterior summaries, inference, model comparison, and visualisation for
+Bayesian structural vector autoregressions estimated with the \code{bsvars} and
+\code{bsvarSIGNs} packages.
 }
 \section{Vignettes}{
 
@@ -19,12 +20,12 @@ Use \code{\link[utils:browseVignettes]{utils::browseVignettes()}} to open the pa
 If no vignettes are listed there, reinstall the GitHub package with
 \code{build_vignettes = TRUE}.
 
-The package currently ships with:
+The package includes the following articles:
 \itemize{
-\item Getting Started (\code{bsvarPost})
+\item Post-estimation Analysis with bsvarPost (\code{bsvarPost})
 \item Inference and Comparison (\code{inference-and-comparison})
-\item Historical-Decomposition Event Workflows (\code{historical-decomposition-events})
-\item Sign-Restricted Workflows (\code{sign-restricted-workflows})
+\item Historical-Decomposition Analysis (\code{historical-decomposition-events})
+\item Analysis of Sign-Restricted Models (\code{sign-restricted-workflows})
 }
 }
 
@@ -34,10 +35,6 @@ Useful links:
   \item \url{https://github.com/DavidZenz/bsvarPost}
   \item Report bugs at \url{https://github.com/DavidZenz/bsvarPost/issues}
 }
-
-}
-\author{
-\strong{Maintainer}: David Zenz \email{office@davidzenz.com} [copyright holder]
 
 }
 \keyword{internal}

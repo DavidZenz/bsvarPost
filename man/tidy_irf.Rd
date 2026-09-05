@@ -4,7 +4,7 @@
 \alias{tidy_irf}
 \alias{tidy_irf.default}
 \alias{tidy_irf.PosteriorBSVAR}
-\title{Tidy posterior impulse responses}
+\title{Summarise posterior impulse responses}
 \usage{
 tidy_irf(object, ...)
 
@@ -26,11 +26,12 @@ tidy_irf(object, ...)
 
 \item{horizon}{Forecast horizon when \code{object} is a posterior model object.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{draws}{If \code{TRUE}, return draw-level rows.}
+\item{draws}{If \code{TRUE}, report individual posterior draws rather than
+posterior summaries.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 }
 \value{
 A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
@@ -40,7 +41,7 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Tidy posterior impulse responses
+Summarise posterior impulse responses
 }
 \examples{
 # Small posterior (S = 5 draws)

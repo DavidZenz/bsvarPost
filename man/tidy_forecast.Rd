@@ -3,26 +3,26 @@
 \name{tidy_forecast}
 \alias{tidy_forecast}
 \alias{tidy_forecast.default}
-\title{Tidy forecasts}
+\title{Summarise posterior forecasts}
 \usage{
 tidy_forecast(object, ...)
 
 \method{tidy_forecast}{default}(object, ...)
 }
 \arguments{
-\item{object}{A posterior model object or posterior IRF array.}
+\item{object}{A posterior model object or a \code{Forecasts} object.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
 \value{
 A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
-\code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+\code{object_type}, \code{variable}, \code{horizon},
 \code{mean}, \code{median}, \code{sd}, \code{lower}, and
 \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
 \code{value} replace the summary statistics.
 }
 \description{
-Tidy forecasts
+Summarise posterior forecasts
 }
 \examples{
 # Small posterior (S = 5 draws)

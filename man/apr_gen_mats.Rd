@@ -2,7 +2,7 @@
 % Please edit documentation in R/aprscenario.R
 \name{apr_gen_mats}
 \alias{apr_gen_mats}
-\title{Optional wrapper around APRScenario::gen_mats}
+\title{Compute conditional-forecast matrices with APRScenario}
 \usage{
 apr_gen_mats(posterior = NULL, specification = NULL, max_cores = 1)
 }
@@ -11,14 +11,15 @@ apr_gen_mats(posterior = NULL, specification = NULL, max_cores = 1)
 
 \item{specification}{The corresponding specification object.}
 
-\item{max_cores}{Passed to \code{APRScenario::gen_mats()}.}
+\item{max_cores}{Maximum number of processor cores used by
+\code{APRScenario::gen_mats()}.}
 }
 \value{
 The result of \code{APRScenario::gen_mats()}, typically a list
 containing matrices used for conditional forecasting.
 }
 \description{
-Optional wrapper around APRScenario::gen_mats
+Compute conditional-forecast matrices with APRScenario
 }
 \examples{
 \dontrun{

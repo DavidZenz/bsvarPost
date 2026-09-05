@@ -1,9 +1,10 @@
-#' Autoplot tidy posterior outputs
+#' Visualise posterior summaries
 #'
-#' @param object A `bsvar_post_tbl` returned by the tidy or comparison helpers.
-#' @param variables Optional variable filter.
-#' @param shocks Optional shock filter.
-#' @param models Optional model filter.
+#' @param object A `bsvar_post_tbl` containing posterior summaries or model
+#'   comparisons.
+#' @param variables Response variables to include.
+#' @param shocks Structural shocks to include.
+#' @param models Model specifications to include.
 #' @param facet_scales Facet scales passed to `ggplot2`.
 #' @param ... Unused.
 #' @return A \code{ggplot} object.

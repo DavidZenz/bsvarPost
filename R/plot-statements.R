@@ -61,8 +61,9 @@ resolve_restriction_plot_labels <- function(df, label_style = c("raw", "pretty")
 #' @param value Scalar comparison value for threshold statements.
 #' @param compare_to Optional right-hand-side response specification.
 #' @param absolute If `TRUE`, compare absolute responses.
-#' @param probability Equal-tailed interval probability used for gap summaries.
-#' @param models Optional model filter.
+#' @param probability Probability mass of the equal-tailed credible interval for
+#'   the posterior difference.
+#' @param models Model specifications to include.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to computation methods.
@@ -152,19 +153,21 @@ plot_hypothesis <- function(object, type = c("irf", "cdm"),
   template_bsvar_plot(p, family = "hypothesis")
 }
 
-#' Plot restriction-audit summaries
+#' Visualise posterior restriction probabilities
 #'
 #' @param object A restriction-audit table or an object accepted by
 #'   `restriction_audit()`.
-#' @param restrictions Optional restriction helper list passed through to
-#'   `restriction_audit()` when `object` is not already an audit table.
+#' @param restrictions Optional list of restriction specifications evaluated by
+#'   `restriction_audit()` when `object` does not already contain posterior
+#'   restriction probabilities.
 #' @param zero_tol Numerical tolerance for zero restrictions.
-#' @param probability Equal-tailed interval probability used in summaries.
-#' @param models Optional model filter.
+#' @param probability Probability mass of the equal-tailed credible intervals
+#'   reported in posterior summaries.
+#' @param models Model specifications to include.
 #' @param label_style Restriction label style: `"raw"` or `"pretty"`.
 #' @param labels Optional named character vector overriding restriction labels by
 #'   raw restriction string.
-#' @param restriction_types Optional restriction-type filter.
+#' @param restriction_types Types of identifying restrictions to include.
 #' @param ... Additional arguments passed to `restriction_audit()`.
 #' @return A \code{ggplot} object.
 #' @examples

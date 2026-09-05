@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_cdm}
 \alias{compare_cdm}
-\title{Compare cumulative dynamic multipliers across models}
+\title{Compare cumulative dynamic responses across model specifications}
 \usage{
 compare_cdm(
   ...,
@@ -19,9 +19,10 @@ compare_cdm(
 \item{horizon}{Forecast horizon. If \code{NULL} (default), resolves to 20
 periods.}
 
-\item{probability}{Interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{draws}{If \code{TRUE}, return draw-level rows.}
+\item{draws}{If \code{TRUE}, report individual posterior draws rather than
+posterior summaries.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 
@@ -29,10 +30,10 @@ periods.}
 }
 \value{
 A \code{bsvar_post_tbl} combining results across models, with a
-\code{model} column identifying each input.
+\code{model} column identifying each model specification.
 }
 \description{
-Compare cumulative dynamic multipliers across models
+Compare cumulative dynamic responses across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

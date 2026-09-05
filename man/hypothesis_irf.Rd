@@ -69,11 +69,12 @@ hypothesis_irf(object, ...)
 
 \item{absolute}{If \code{TRUE}, compare absolute responses.}
 
-\item{probability}{Equal-tailed interval probability used for gap summaries.}
+\item{probability}{Probability mass of the equal-tailed credible interval for
+the posterior difference.}
 
 \item{draws}{If \code{TRUE}, return draw-level gaps and indicators.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 }
 \value{
 A \code{bsvar_post_tbl} with columns \code{model},

@@ -2,7 +2,7 @@
 % Please edit documentation in R/aprscenario.R
 \name{tidy_apr_forecast}
 \alias{tidy_apr_forecast}
-\title{Convert APRScenario-style forecast tables to bsvarPost tidy format}
+\title{Express APRScenario forecasts as posterior summary tables}
 \usage{
 tidy_apr_forecast(data, model = "apr")
 }
@@ -10,7 +10,7 @@ tidy_apr_forecast(data, model = "apr")
 \item{data}{A data frame with APRScenario columns \code{hor}, \code{variable},
 \code{lower}, \code{center}, and \code{upper}.}
 
-\item{model}{Model identifier.}
+\item{model}{Label identifying the model specification.}
 }
 \value{
 A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
@@ -18,7 +18,7 @@ A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
 \code{lower}, and \code{upper}.
 }
 \description{
-Convert APRScenario-style forecast tables to bsvarPost tidy format
+Express APRScenario forecasts as posterior summary tables
 }
 \examples{
 \dontrun{

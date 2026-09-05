@@ -1,14 +1,14 @@
-#' Plot event-window historical decomposition summaries
+#' Visualise shock contributions over selected historical periods
 #'
 #' @param object A posterior model object, `PosteriorHD`, or tidy HD event table.
 #' @param start First time index to include when `object` is not already an HD
 #'   event table.
 #' @param end Last time index to include. Defaults to `start`.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param draws If `TRUE`, plot draw-level event contributions.
-#' @param variables Optional variable filter.
-#' @param shocks Optional shock filter.
-#' @param models Optional model filter.
+#' @param variables Variables whose historical decompositions are included.
+#' @param shocks Structural shocks whose contributions are included.
+#' @param models Model specifications to include.
 #' @param facet_scales Facet scales passed to `ggplot2`.
 #' @param ... Additional arguments passed to `tidy_hd_event()`.
 #' @return A \code{ggplot} object.
@@ -38,17 +38,17 @@ plot_hd_event <- function(object, start = NULL, end = start, probability = 0.90,
   ggplot2::autoplot(event_tbl, variables = variables, shocks = shocks, models = models, facet_scales = facet_scales)
 }
 
-#' Plot ranked event-window shock contributions
+#' Visualise ranked shock contributions over selected historical periods
 #'
 #' @param object A posterior model object, `PosteriorHD`, or tidy shock-ranking table.
 #' @param start First time index to include when `object` is not already a shock
 #'   ranking table.
 #' @param end Last time index to include. Defaults to `start`.
-#' @param variables Optional variable filter.
-#' @param models Optional model filter.
+#' @param variables Variables whose historical decompositions are included.
+#' @param models Model specifications to include.
 #' @param ranking One of `"absolute"` or `"signed"`.
 #' @param top_n Optional number of top-ranked shocks to keep per model-variable panel.
-#' @param probability Equal-tailed interval probability.
+#' @param probability Probability mass of the equal-tailed credible interval.
 #' @param ... Additional arguments passed to `shock_ranking()`.
 #' @return A \code{ggplot} object.
 #' @examples

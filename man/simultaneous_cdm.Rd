@@ -112,21 +112,22 @@ simultaneous_cdm(object, ...)
 )
 }
 \arguments{
-\item{object}{A posterior model object or a \code{PosteriorIR} object.}
+\item{object}{A posterior model object or a \code{PosteriorCDM} array.}
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{probability}{Coverage probability for the simultaneous band.}
+\item{probability}{Posterior coverage probability of the simultaneous
+credible band.}
 
-\item{variables}{Optional response-variable subset (character or integer vector).}
+\item{variables}{Response variables to include (character or integer vector).}
 
-\item{shocks}{Optional shock subset (character or integer vector).}
+\item{shocks}{Structural shocks to include (character or integer vector).}
 
 \item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
 
 \item{shock}{\strong{Deprecated.} Use \code{shocks} instead.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 
 \item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
 

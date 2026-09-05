@@ -2,7 +2,7 @@
 % Please edit documentation in R/tsibble.R
 \name{as_tsibble_post}
 \alias{as_tsibble_post}
-\title{Convert bsvarPost tidy outputs to tsibble}
+\title{Express posterior summaries as a tsibble}
 \usage{
 as_tsibble_post(
   object,
@@ -29,7 +29,7 @@ otherwise \code{time}.}
 A \code{tsibble::tbl_ts} object.
 }
 \description{
-Convert bsvarPost tidy outputs to tsibble
+Express posterior summaries as a tsibble
 }
 \examples{
 \dontrun{

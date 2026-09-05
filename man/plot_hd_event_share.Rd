@@ -27,14 +27,14 @@ historical-decomposition table.}
 
 \item{start, end}{Event-window start and end indexes for event-specific plots.}
 
-\item{probability}{Equal-tailed interval probability used when \code{object}
-is not already a tidy table.}
+\item{probability}{Probability mass of the equal-tailed credible interval
+computed when \code{object} is not already a summary table.}
 
-\item{variables}{Optional variable filter.}
+\item{variables}{Variables whose historical decompositions are included.}
 
-\item{shocks}{Optional shock filter applied before grouping.}
+\item{shocks}{Structural shocks whose contributions are included.}
 
-\item{models}{Optional model filter.}
+\item{models}{Model specifications to include.}
 
 \item{shock_groups}{Optional named character vector mapping shock names to
 display groups.}

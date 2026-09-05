@@ -5,13 +5,13 @@
 #' @param object A posterior model object, `PosteriorIR`, or `PosteriorCDM`.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #' @param type Response type for posterior model objects: `"irf"` or `"cdm"`.
-#' @param variables Optional response-variable subset (character or integer vector).
-#' @param shocks Optional shock subset (character or integer vector).
+#' @param variables Response variables to include (character or integer vector).
+#' @param shocks Structural shocks to include (character or integer vector).
 #' @param variable **Deprecated.** Use \code{variables} instead.
 #' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param absolute If `TRUE`, search for the largest absolute response.
-#' @param probability Equal-tailed interval probability.
-#' @param model Optional model identifier.
+#' @param probability Probability mass of the equal-tailed credible interval.
+#' @param model Label identifying the model specification.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @param ... Additional arguments passed to computation methods.
@@ -151,8 +151,8 @@ peak_response.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
 #' @param mode Either `"consecutive"` for the duration until first violation or
 #'   `"total"` for the total count of satisfying horizons.
 #' @inheritParams peak_response
-#' @param variables Optional response-variable subset (character or integer vector).
-#' @param shocks Optional shock subset (character or integer vector).
+#' @param variables Response variables to include (character or integer vector).
+#' @param shocks Structural shocks to include (character or integer vector).
 #' @param variable **Deprecated.** Use \code{variables} instead.
 #' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @param relation Comparison operator.
@@ -338,8 +338,8 @@ summarise_optional_timing <- function(x, probability) {
 #' @param baseline Reference level: `"peak"` uses the largest response over the
 #'   available horizons, `"initial"` uses the horizon-0 response.
 #' @inheritParams peak_response
-#' @param variables Optional response-variable subset (character or integer vector).
-#' @param shocks Optional shock subset (character or integer vector).
+#' @param variables Response variables to include (character or integer vector).
+#' @param shocks Structural shocks to include (character or integer vector).
 #' @param variable **Deprecated.** Use \code{variables} instead.
 #' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
@@ -504,8 +504,8 @@ half_life_response.PosteriorCDM <- function(object, variables = NULL, shocks = N
 #'
 #' @inheritParams duration_response
 #' @inheritParams peak_response
-#' @param variables Optional response-variable subset (character or integer vector).
-#' @param shocks Optional shock subset (character or integer vector).
+#' @param variables Response variables to include (character or integer vector).
+#' @param shocks Structural shocks to include (character or integer vector).
 #' @param variable **Deprecated.** Use \code{variables} instead.
 #' @param shock **Deprecated.** Use \code{shocks} instead.
 #' @return A \code{bsvar_post_tbl} with columns \code{model},

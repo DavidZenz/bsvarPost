@@ -1,4 +1,4 @@
-#' Convert bsvarPost tidy outputs to tsibble
+#' Express posterior summaries as a tsibble
 #'
 #' @param object A `bsvar_post_tbl`.
 #' @param key Optional key columns. By default, `bsvarPost` chooses a key from

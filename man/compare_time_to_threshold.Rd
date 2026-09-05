@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_time_to_threshold}
 \alias{compare_time_to_threshold}
-\title{Compare time-to-threshold summaries across models}
+\title{Compare response thresholds across model specifications}
 \usage{
 compare_time_to_threshold(
   ...,
@@ -28,9 +28,9 @@ If \code{NULL} (default), resolves to 20 periods.}
 
 \item{type}{Response type for posterior model objects: \code{"irf"} or \code{"cdm"}.}
 
-\item{variables}{Optional response-variable subset.}
+\item{variables}{Response variables to include.}
 
-\item{shocks}{Optional shock subset.}
+\item{shocks}{Structural shocks to include.}
 
 \item{variable}{Deprecated. Use \code{variables} instead.}
 
@@ -42,7 +42,7 @@ If \code{NULL} (default), resolves to 20 periods.}
 
 \item{absolute}{If \code{TRUE}, compare absolute responses.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
 \item{scale_by}{Optional scaling mode for CDMs.}
 
@@ -50,10 +50,11 @@ If \code{NULL} (default), resolves to 20 periods.}
 }
 \value{
 A \code{bsvar_post_tbl} combining time-to-threshold summary results
-across models, with a \code{model} column identifying each input.
+across models, with a \code{model} column identifying each model
+specification.
 }
 \description{
-Compare time-to-threshold summaries across models
+Compare response thresholds across model specifications
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

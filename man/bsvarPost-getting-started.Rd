@@ -2,11 +2,11 @@
 % Please edit documentation in R/vignette-topics.R
 \name{bsvarPost-getting-started}
 \alias{bsvarPost-getting-started}
-\title{Getting Started with bsvarPost}
+\title{Post-estimation Analysis with bsvarPost}
 \description{
-This article gives the shortest path from an existing \code{bsvars} or
-\code{bsvarSIGNs} posterior to tidy summaries, CDMs, comparison and inference,
-and publication-ready output.
+This article introduces posterior summaries, cumulative dynamic responses,
+model comparison, posterior inference, and the presentation of results for
+models estimated with \code{bsvars} or \code{bsvarSIGNs}.
 }
 \details{
 Open the installed article with:

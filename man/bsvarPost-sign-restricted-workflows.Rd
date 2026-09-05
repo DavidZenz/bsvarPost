@@ -2,7 +2,7 @@
 % Please edit documentation in R/vignette-topics.R
 \name{bsvarPost-sign-restricted-workflows}
 \alias{bsvarPost-sign-restricted-workflows}
-\title{Sign-Restricted Workflows}
+\title{Analysis of Sign-Restricted Models}
 \description{
 This article covers coherent admissible-draw selection, restriction audits,
 acceptance diagnostics, and comparisons for \code{bsvarSIGNs} posteriors.

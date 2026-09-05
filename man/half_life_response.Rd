@@ -158,9 +158,9 @@ half_life_response(object, ...)
 
 \item{...}{Additional arguments passed to computation methods.}
 
-\item{variables}{Optional response-variable subset (character or integer vector).}
+\item{variables}{Response variables to include (character or integer vector).}
 
-\item{shocks}{Optional shock subset (character or integer vector).}
+\item{shocks}{Structural shocks to include (character or integer vector).}
 
 \item{variable}{\strong{Deprecated.} Use \code{variables} instead.}
 
@@ -173,9 +173,9 @@ available horizons, \code{"initial"} uses the horizon-0 response.}
 
 \item{absolute}{If \code{TRUE}, search for the largest absolute response.}
 
-\item{probability}{Equal-tailed interval probability.}
+\item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{model}{Optional model identifier.}
+\item{model}{Label identifying the model specification.}
 
 \item{horizon}{Maximum horizon used when \code{object} is a posterior model object.}
 

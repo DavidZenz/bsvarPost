@@ -1,9 +1,10 @@
-#' Tidy posterior impulse responses
+#' Summarise posterior impulse responses
 #' @param object A posterior model object or posterior IRF array.
 #' @param horizon Forecast horizon when `object` is a posterior model object.
-#' @param probability Equal-tailed interval probability.
-#' @param draws If `TRUE`, return draw-level rows.
-#' @param model Optional model identifier.
+#' @param probability Probability mass of the equal-tailed credible interval.
+#' @param draws If `TRUE`, report individual posterior draws rather than
+#'   posterior summaries.
+#' @param model Label identifying the model specification.
 #' @param ... Additional arguments passed to computation methods.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
@@ -58,8 +59,9 @@ tidy_irf.PosteriorBSVART <- tidy_irf.PosteriorBSVAR
 #' @export
 tidy_irf.PosteriorBSVARSIGN <- tidy_irf.PosteriorBSVAR
 
-#' Tidy cumulative dynamic multipliers
+#' Summarise posterior cumulative dynamic responses
 #' @inheritParams tidy_irf
+#' @param object A posterior model object or a `PosteriorCDM` array.
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
@@ -119,8 +121,9 @@ tidy_cdm.PosteriorBSVART <- tidy_cdm.PosteriorBSVAR
 #' @export
 tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 
-#' Tidy forecast error variance decompositions
+#' Summarise posterior forecast error variance decompositions
 #' @inheritParams tidy_irf
+#' @param object A posterior model object or a `PosteriorFEVD` array.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
 #'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
@@ -169,10 +172,12 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @export
  tidy_fevd.PosteriorBSVARSIGN <- tidy_fevd_model
 
-#' Tidy structural shocks
+#' Summarise posterior structural shocks
 #' @inheritParams tidy_irf
+#' @param object A posterior model object, a `PosteriorShocks` object, or a
+#'   structural-shock array.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
-#'   \code{object_type}, \code{variable}, \code{shock}, \code{time},
+#'   \code{object_type}, \code{variable}, \code{time},
 #'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
 #'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
 #'   \code{value} replace the summary statistics.
@@ -219,8 +224,9 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @export
  tidy_shocks.PosteriorBSVARSIGN <- tidy_shocks_model
 
-#' Tidy historical decompositions
+#' Summarise posterior historical decompositions
 #' @inheritParams tidy_irf
+#' @param object A posterior model object or a `PosteriorHD` array.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{time},
 #'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
@@ -269,10 +275,11 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @export
  tidy_hd.PosteriorBSVARSIGN <- tidy_hd_model
 
-#' Tidy forecasts
+#' Summarise posterior forecasts
 #' @inheritParams tidy_irf
+#' @param object A posterior model object or a `Forecasts` object.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
-#'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
+#'   \code{object_type}, \code{variable}, \code{horizon},
 #'   \code{mean}, \code{median}, \code{sd}, \code{lower}, and
 #'   \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
 #'   \code{value} replace the summary statistics.

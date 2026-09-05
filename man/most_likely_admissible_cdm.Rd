@@ -7,7 +7,7 @@
 most_likely_admissible_cdm(object, ...)
 }
 \arguments{
-\item{object}{A posterior model object or a \code{PosteriorIR}.}
+\item{object}{A \code{PosteriorBSVARSIGN} model object.}
 
 \item{...}{Additional arguments passed to computation methods.}
 }
@@ -15,6 +15,7 @@ most_likely_admissible_cdm(object, ...)
 Same as \code{\link[=representative_cdm]{representative_cdm()}}.
 }
 \description{
-Convenience wrapper for \code{\link[=representative_cdm]{representative_cdm()}} with
+Select the admissible cumulative-response draw with the highest posterior
+admissibility weight using \code{\link[=representative_cdm]{representative_cdm()}} with
 \code{method = "most_likely_admissible"}.
 }
