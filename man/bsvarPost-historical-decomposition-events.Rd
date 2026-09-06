@@ -2,7 +2,7 @@
 % Please edit documentation in R/vignette-topics.R
 \name{bsvarPost-historical-decomposition-events}
 \alias{bsvarPost-historical-decomposition-events}
-\title{Historical-Decomposition Analysis}
+\title{Historical Decompositions}
 \description{
 This article shows how to summarise historical-decomposition contributions
 over event windows, rank shocks, and compare events across specifications.

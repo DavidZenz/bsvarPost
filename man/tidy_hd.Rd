@@ -3,7 +3,7 @@
 \name{tidy_hd}
 \alias{tidy_hd}
 \alias{tidy_hd.default}
-\title{Summarise posterior historical decompositions}
+\title{Summarises posterior draws of historical decompositions}
 \usage{
 tidy_hd(object, ...)
 
@@ -22,7 +22,10 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Summarise posterior historical decompositions
+Transforms posterior draws of historical decompositions into a table
+containing posterior means, medians, standard deviations, and equal-tailed
+credible intervals, or retains the individual shock contributions when
+requested.
 }
 \examples{
 # Small posterior (S = 5 draws)
@@ -30,7 +33,7 @@ data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy historical decompositions
+# Posterior summaries of historical decompositions
 result <- tidy_hd(post)
 head(result)
 }

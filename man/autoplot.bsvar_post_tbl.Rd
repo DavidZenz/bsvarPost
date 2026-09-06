@@ -2,7 +2,7 @@
 % Please edit documentation in R/autoplot.R
 \name{autoplot.bsvar_post_tbl}
 \alias{autoplot.bsvar_post_tbl}
-\title{Visualise posterior summaries}
+\title{Plots posterior summaries or draw-level response paths}
 \usage{
 \method{autoplot}{bsvar_post_tbl}(
   object,
@@ -14,8 +14,8 @@
 )
 }
 \arguments{
-\item{object}{A \code{bsvar_post_tbl} containing posterior summaries or model
-comparisons.}
+\item{object}{A \code{bsvar_post_tbl} containing posterior summaries, supported
+draw-level responses, or model comparisons.}
 
 \item{variables}{Response variables to include.}
 
@@ -31,7 +31,9 @@ comparisons.}
 A \code{ggplot} object.
 }
 \description{
-Visualise posterior summaries
+Plots posterior medians and credible intervals from summary tables, or
+individual paths from supported draw-level response tables. Panels are
+determined by variables, structural shocks, and model specifications.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

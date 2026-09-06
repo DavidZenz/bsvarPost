@@ -5,7 +5,7 @@
 \alias{as_apr_cond_forc.bsvar_post_tbl}
 \alias{as_apr_cond_forc.Forecasts}
 \alias{as_apr_cond_forc.PosteriorBSVAR}
-\title{Express posterior forecasts in APRScenario format}
+\title{Converts posterior forecasts to APRScenario format}
 \usage{
 as_apr_cond_forc(object, ...)
 
@@ -39,7 +39,7 @@ as_apr_cond_forc(object, ...)
 )
 }
 \arguments{
-\item{object}{A posterior model object, a \code{Forecasts} object, or a tidy
+\item{object}{A posterior model object, a \code{Forecasts} object, or a posterior
 forecast table returned by \code{\link[=tidy_forecast]{tidy_forecast()}}.}
 
 \item{...}{Additional arguments passed to \code{\link[=tidy_forecast]{tidy_forecast()}}.}
@@ -65,7 +65,9 @@ A data frame with columns \code{hor}, \code{variable},
 conditional forecast analysis with APRScenario.
 }
 \description{
-Express posterior forecasts in APRScenario format
+Transforms draws or summaries from the posterior predictive distribution into
+the lower, centre, and upper paths used for conditional forecast analysis by
+\code{APRScenario}.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

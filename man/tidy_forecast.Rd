@@ -3,7 +3,7 @@
 \name{tidy_forecast}
 \alias{tidy_forecast}
 \alias{tidy_forecast.default}
-\title{Summarise posterior forecasts}
+\title{Summarises draws from the predictive distribution}
 \usage{
 tidy_forecast(object, ...)
 
@@ -22,7 +22,9 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Summarise posterior forecasts
+Transforms draws from the joint predictive distribution into a table
+containing posterior predictive means, medians, standard deviations, and
+equal-tailed intervals, or retains the individual draws when requested.
 }
 \examples{
 # Small posterior (S = 5 draws)
@@ -30,7 +32,7 @@ data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy forecasts
+# Summaries of the predictive distribution
 result <- tidy_forecast(post, horizon = 3)
 head(result)
 }

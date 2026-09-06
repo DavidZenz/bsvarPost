@@ -11,7 +11,7 @@
 \alias{duration_response.PosteriorBSVART}
 \alias{duration_response.PosteriorBSVARSIGN}
 \alias{duration_response.PosteriorCDM}
-\title{Duration summaries for posterior IRFs and CDMs}
+\title{Summarises response durations from posterior draws}
 \usage{
 duration_response(object, ...)
 
@@ -203,8 +203,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 and \code{upper_duration}.
 }
 \description{
-Summarise how long a response satisfies a threshold condition over the
-available horizons.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of how long a response satisfies a threshold
+condition over the available horizons.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

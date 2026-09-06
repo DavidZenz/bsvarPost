@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-hd.R
 \name{plot_hd_event_cumulative}
 \alias{plot_hd_event_cumulative}
-\title{Plot cumulative event-window contribution paths}
+\title{Plots cumulative event-window contribution paths}
 \usage{
 plot_hd_event_cumulative(
   object,
@@ -21,8 +21,10 @@ plot_hd_event_cumulative(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy
-historical-decomposition table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy table of
+historical decompositions. Plots that reconstruct the observed series
+require a posterior model; when a table is supplied, cumulative event plots
+require draw-level input.}
 
 \item{start, end}{Event-window start and end indexes for event-specific plots.}
 
@@ -46,12 +48,13 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
 \item{facet_scales}{Facet scales passed to \code{ggplot2}.}
 
-\item{model}{Model label used when converting posterior objects to tidy
-plotting tables.}
+\item{model}{Model label used when converting posterior objects to
+posterior-summary tables.}
 
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-Plot cumulative event-window contribution paths
+Plots the cumulative posterior contributions of structural shocks throughout
+a selected historical period, including equal-tailed credible intervals.
 }

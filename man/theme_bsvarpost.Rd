@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-style.R
 \name{theme_bsvarpost}
 \alias{theme_bsvarpost}
-\title{Plot theme for posterior summaries}
+\title{Defines a plot theme for posterior summaries}
 \usage{
 theme_bsvarpost(
   preset = c("default", "paper", "slides"),
@@ -21,7 +21,8 @@ theme_bsvarpost(
 A \code{ggplot2} theme object.
 }
 \description{
-Plot theme for posterior summaries
+Returns a \code{ggplot2} theme with typographic and spacing conventions for plots
+of posterior quantities.
 }
 \examples{
 th <- theme_bsvarpost(preset = "paper")

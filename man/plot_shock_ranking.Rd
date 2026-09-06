@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-event.R
 \name{plot_shock_ranking}
 \alias{plot_shock_ranking}
-\title{Visualise ranked shock contributions over selected historical periods}
+\title{Plots ranked shock contributions over selected historical periods}
 \usage{
 plot_shock_ranking(
   object,
@@ -17,7 +17,8 @@ plot_shock_ranking(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or tidy shock-ranking table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a table of ranked
+structural-shock contributions.}
 
 \item{start}{First time index to include when \code{object} is not already a shock
 ranking table.}
@@ -40,7 +41,8 @@ ranking table.}
 A \code{ggplot} object.
 }
 \description{
-Visualise ranked shock contributions over selected historical periods
+Plots structural shocks ordered by the absolute or signed magnitude of their
+contributions over a selected historical period.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

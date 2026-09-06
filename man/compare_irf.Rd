@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_irf}
 \alias{compare_irf}
-\title{Compare posterior impulse responses across model specifications}
+\title{Compares posterior impulse responses across model specifications}
 \usage{
 compare_irf(..., horizon = NULL, probability = 0.9, draws = FALSE)
 }
@@ -22,7 +22,8 @@ A \code{bsvar_post_tbl} combining results across models, with a
 \code{model} column identifying each model specification.
 }
 \description{
-Compare posterior impulse responses across model specifications
+Summarises impulse-response draws from two or more posterior model objects
+in a common table identified by model specification.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

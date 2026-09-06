@@ -2,7 +2,7 @@
 % Please edit documentation in R/reporting.R
 \name{print.bsvar_report_bundle}
 \alias{print.bsvar_report_bundle}
-\title{Print bsvar_report_bundle objects}
+\title{Prints posterior report objects}
 \usage{
 \method{print}{bsvar_report_bundle}(x, ...)
 }
@@ -15,5 +15,5 @@
 \code{x}, invisibly.
 }
 \description{
-Print bsvar_report_bundle objects
+Prints posterior report objects
 }

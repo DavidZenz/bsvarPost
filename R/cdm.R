@@ -1,7 +1,8 @@
-#' Cumulative Dynamic Multipliers
+#' Computes posterior draws of cumulative dynamic multipliers
 #'
-#' Compute cumulative dynamic multipliers (CDMs) for posterior objects from
-#' `bsvars` and `bsvarSIGNs`.
+#' Each draw from the posterior distribution of the impulse responses is
+#' transformed into a draw from the posterior distribution of cumulative
+#' dynamic multipliers by summing responses from horizon zero onwards.
 #'
 #' @param object A posterior model object.
 #' @param horizon Forecast horizon.

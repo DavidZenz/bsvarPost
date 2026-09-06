@@ -5,7 +5,7 @@
 \alias{representative_cdm.default}
 \alias{representative_cdm.PosteriorCDM}
 \alias{representative_cdm.PosteriorBSVAR}
-\title{Representative cumulative dynamic multipliers}
+\title{Selects a representative draw of cumulative dynamic multipliers}
 \usage{
 representative_cdm(object, ...)
 
@@ -77,7 +77,9 @@ A list of class \code{RepresentativeCDM} (inheriting from
 \code{probability}, and \code{object_type}.
 }
 \description{
-Representative cumulative dynamic multipliers
+Selects one draw from the posterior distribution of cumulative dynamic
+multipliers using either median-target distance or posterior admissibility
+weights.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

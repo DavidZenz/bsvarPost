@@ -1,4 +1,7 @@
-#' Visualise response timing and persistence across model specifications
+#' Plots response timing and persistence across model specifications
+#'
+#' Plots posterior summaries of response peaks, durations, half-lives, or
+#' threshold horizons for comparison across model specifications.
 #'
 #' @param object A comparison table returned by `compare_peak_response()`,
 #'   `compare_duration_response()`, `compare_half_life_response()`, or
@@ -89,7 +92,10 @@ plot_compare_response <- function(object, measure = NULL, variables = NULL, shoc
   template_bsvar_plot(p, family = "comparison")
 }
 
-#' Visualise posterior restriction probabilities across model specifications
+#' Plots posterior restriction probabilities across model specifications
+#'
+#' Plots posterior probabilities of identifying restrictions for comparison
+#' across model specifications.
 #'
 #' @param object A comparison table returned by `compare_restrictions()`.
 #' @param models Model specifications to include.

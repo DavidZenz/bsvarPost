@@ -2,7 +2,7 @@
 % Please edit documentation in R/tsibble.R
 \name{as_tsibble_post}
 \alias{as_tsibble_post}
-\title{Express posterior summaries as a tsibble}
+\title{Converts posterior summaries to a tsibble}
 \usage{
 as_tsibble_post(
   object,
@@ -29,7 +29,8 @@ otherwise \code{time}.}
 A \code{tsibble::tbl_ts} object.
 }
 \description{
-Express posterior summaries as a tsibble
+Transforms a posterior-summary table into a \code{tsibble}, using the response
+horizon or observation time as its index.
 }
 \examples{
 \dontrun{

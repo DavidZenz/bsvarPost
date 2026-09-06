@@ -1,4 +1,7 @@
-#' Plot simultaneous posterior bands
+#' Plots simultaneous posterior bands
+#'
+#' Plots posterior median response paths together with simultaneous credible
+#' bands over the selected variables, structural shocks, and horizons.
 #'
 #' @param object A simultaneous-band table or an object accepted by
 #'   `simultaneous_irf()` / `simultaneous_cdm()`.
@@ -45,7 +48,10 @@ plot_simultaneous <- function(object, type = c("irf", "cdm"), horizon = NULL, pr
   ggplot2::autoplot(tbl, variables = variable, shocks = shock, models = models, facet_scales = facet_scales)
 }
 
-#' Plot joint posterior probability statements
+#' Plots joint posterior probability statements
+#'
+#' Plots posterior probabilities that selected response inequalities hold
+#' jointly over variables, structural shocks, and horizons.
 #'
 #' @param object A joint-hypothesis table or an object accepted by
 #'   `joint_hypothesis_irf()` / `joint_hypothesis_cdm()`.

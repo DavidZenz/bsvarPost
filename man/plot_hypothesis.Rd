@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-statements.R
 \name{plot_hypothesis}
 \alias{plot_hypothesis}
-\title{Plot posterior probability statements for IRFs or CDMs}
+\title{Plots posterior probability statements for impulse responses or cumulative multipliers}
 \usage{
 plot_hypothesis(
   object,
@@ -25,7 +25,7 @@ plot_hypothesis(
 \item{object}{A hypothesis table, a magnitude-audit table, or an object
 accepted by \code{hypothesis_irf()} / \code{hypothesis_cdm()}.}
 
-\item{type}{One of \code{"irf"} or \code{"cdm"} when \code{object} is not already a tidy
+\item{type}{One of \code{"irf"} or \code{"cdm"} when \code{object} is not already a
 posterior-statement table.}
 
 \item{variable}{Optional left-hand-side response variable selection.}
@@ -57,7 +57,8 @@ the posterior difference.}
 A \code{ggplot} object.
 }
 \description{
-Plot posterior probability statements for IRFs or CDMs
+Plots posterior probabilities of threshold or pairwise statements about
+impulse responses or cumulative dynamic multipliers.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

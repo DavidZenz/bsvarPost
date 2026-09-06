@@ -5,7 +5,7 @@
 \alias{hypothesis_irf.default}
 \alias{hypothesis_irf.PosteriorIR}
 \alias{hypothesis_irf.PosteriorBSVAR}
-\title{Posterior probability statements for impulse responses}
+\title{Evaluates posterior probability statements for impulse responses}
 \usage{
 hypothesis_irf(object, ...)
 
@@ -87,8 +87,8 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{rhs_value}, and \code{absolute} describe the right-hand side.
 }
 \description{
-Evaluate threshold or pairwise posterior probability statements on impulse
-response draws.
+Transforms posterior draws of impulse responses into probabilities that
+threshold or pairwise response inequalities are satisfied.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

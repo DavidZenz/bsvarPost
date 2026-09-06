@@ -2,7 +2,7 @@
 % Please edit documentation in R/hd-event.R
 \name{shock_ranking}
 \alias{shock_ranking}
-\title{Rank structural shocks by contributions over selected periods}
+\title{Ranks structural shocks by contributions over selected periods}
 \usage{
 shock_ranking(
   object,
@@ -16,8 +16,8 @@ shock_ranking(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or tidy historical
-decomposition table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a posterior-summary
+table of historical decompositions.}
 
 \item{start}{First time index to include.}
 
@@ -40,7 +40,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{upper}, \code{ranking}, \code{rank_score}, and \code{rank}.
 }
 \description{
-Rank structural shocks by contributions over selected periods
+Summarises posterior historical decompositions over a selected period and
+ranks structural shocks by the absolute or signed magnitude of their
+contributions.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

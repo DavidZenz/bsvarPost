@@ -11,7 +11,7 @@
 \alias{time_to_threshold.PosteriorBSVART}
 \alias{time_to_threshold.PosteriorBSVARSIGN}
 \alias{time_to_threshold.PosteriorCDM}
-\title{Time-to-threshold summaries for posterior IRFs and CDMs}
+\title{Summarises response threshold horizons from posterior draws}
 \usage{
 time_to_threshold(object, ...)
 
@@ -192,8 +192,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 and \code{reached_prob}.
 }
 \description{
-Summarise the first horizon at which a response satisfies a threshold
-condition.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of the first horizon at which a response satisfies
+a threshold condition.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

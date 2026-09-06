@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-style.R
 \name{annotate_bsvar_plot}
 \alias{annotate_bsvar_plot}
-\title{Add titles and captions to posterior-summary plots}
+\title{Adds titles and captions to posterior-summary plots}
 \usage{
 annotate_bsvar_plot(
   plot,
@@ -42,7 +42,8 @@ annotate_bsvar_plot(
 A \code{ggplot} object with annotations added.
 }
 \description{
-Add titles and captions to posterior-summary plots
+Adds the supplied title, subtitle, caption, and axis labels to an existing
+plot of posterior summaries.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

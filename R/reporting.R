@@ -1,6 +1,6 @@
-#' Combine posterior summaries, figures, and captions
+#' Combines posterior summaries, figures, and captions
 #'
-#' Combine a table of posterior summaries, its corresponding figure, and a
+#' Combines a table of posterior summaries, its corresponding figure, and a
 #' caption in a single object.
 #'
 #' @param object A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
@@ -41,9 +41,9 @@ report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
   )
 }
 
-#' Prepare tables of posterior results
+#' Prepares tables of posterior results
 #'
-#' Arrange posterior summaries in data frames with a consistent column order
+#' Arranges posterior summaries in data frames with a consistent column order
 #' and descriptive column names.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
@@ -89,9 +89,9 @@ report_table.default <- function(x, ...) {
   stop("`report_table()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' Render bsvarPost tables with knitr::kable
+#' Formats posterior summaries with knitr::kable
 #'
-#' Convert posterior summary tables or `report_bundle()` results to a
+#' Converts posterior summary tables or `report_bundle()` results to a
 #' `knitr::kable` object.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
@@ -137,9 +137,9 @@ as_kable.default <- function(x, ...) {
   stop("`as_kable()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' Render bsvarPost tables with gt
+#' Formats posterior summaries with gt
 #'
-#' Convert posterior summary tables or `report_bundle()` results to a
+#' Converts posterior summary tables or `report_bundle()` results to a
 #' `gt::gt_tbl` object.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
@@ -201,9 +201,9 @@ as_gt.default <- function(x, ...) {
   stop("`as_gt()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' Render bsvarPost tables with flextable
+#' Formats posterior summaries with flextable
 #'
-#' Convert posterior summary tables or `report_bundle()` results to a
+#' Converts posterior summary tables or `report_bundle()` results to a
 #' `flextable::flextable` object.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
@@ -265,9 +265,10 @@ as_flextable.default <- function(x, ...) {
   stop("`as_flextable()` supports bsvarPost tables and data frames only.", call. = FALSE)
 }
 
-#' Export bsvarPost tables to CSV
+#' Writes posterior summaries to a CSV file
 #'
-#' Write a table of posterior summaries to disk as a CSV file.
+#' Writes a table of posterior summaries to disk as a comma-separated-values
+#' file.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param file Path of the CSV file.
@@ -293,7 +294,7 @@ write_bsvar_csv <- function(x, file, row.names = FALSE,
   invisible(normalizePath(file, winslash = "/", mustWork = FALSE))
 }
 
-#' Print bsvar_report_bundle objects
+#' Prints posterior report objects
 #'
 #' @param x A `bsvar_report_bundle`.
 #' @param ... Unused.

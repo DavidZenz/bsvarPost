@@ -11,7 +11,7 @@
 \alias{tidy_hd_event.PosteriorBSVARSV}
 \alias{tidy_hd_event.PosteriorBSVART}
 \alias{tidy_hd_event.PosteriorBSVARSIGN}
-\title{Summarise historical-decomposition contributions over selected periods}
+\title{Summarises historical-decomposition contributions over selected periods}
 \usage{
 tidy_hd_event(object, ...)
 
@@ -97,8 +97,8 @@ tidy_hd_event(object, ...)
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or tidy historical
-decomposition table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a posterior-summary
+table of historical decompositions.}
 
 \item{...}{Additional arguments passed to computation methods.}
 
@@ -120,9 +120,9 @@ and \code{upper}.  When \code{draws = TRUE}, columns \code{draw} and
 \code{value} replace the summary statistics.
 }
 \description{
-Aggregate posterior draws of structural-shock contributions over a selected
-historical period and report posterior summaries of the cumulative
-contributions.
+Transforms posterior draws of historical decompositions into cumulative
+structural-shock contributions over a selected historical period and reports
+their posterior summaries.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

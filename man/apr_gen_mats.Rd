@@ -2,7 +2,7 @@
 % Please edit documentation in R/aprscenario.R
 \name{apr_gen_mats}
 \alias{apr_gen_mats}
-\title{Compute conditional-forecast matrices with APRScenario}
+\title{Computes conditional-forecast matrices with APRScenario}
 \usage{
 apr_gen_mats(posterior = NULL, specification = NULL, max_cores = 1)
 }
@@ -19,7 +19,8 @@ The result of \code{APRScenario::gen_mats()}, typically a list
 containing matrices used for conditional forecasting.
 }
 \description{
-Compute conditional-forecast matrices with APRScenario
+Applies \code{APRScenario::gen_mats()} to a posterior distribution and its model
+specification to obtain the matrices used for conditional forecasting.
 }
 \examples{
 \dontrun{

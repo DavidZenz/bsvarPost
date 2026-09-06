@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-hd.R
 \name{plot_hd_stacked}
 \alias{plot_hd_stacked}
-\title{Stacked historical decomposition contributions over time}
+\title{Plots stacked historical decomposition contributions over time}
 \usage{
 plot_hd_stacked(
   object,
@@ -22,8 +22,10 @@ plot_hd_stacked(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy
-historical-decomposition table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy table of
+historical decompositions. Plots that reconstruct the observed series
+require a posterior model; when a table is supplied, cumulative event plots
+require draw-level input.}
 
 \item{probability}{Probability mass of the equal-tailed credible interval
 computed when \code{object} is not already a summary table.}
@@ -53,14 +55,14 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
 \item{stack}{One of \code{"signed"} or \code{"absolute"} for stacked plots.}
 
-\item{model}{Model label used when converting posterior objects to tidy
-plotting tables.}
+\item{model}{Model label used when converting posterior objects to
+posterior-summary tables.}
 
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-This plot shows stacked historical shock contributions over time. Set
-\code{include_baseline = TRUE} to add the non-shock \code{"Baseline"}
-component and obtain the full displayed decomposition.
+Plots posterior median structural-shock contributions as stacked areas over
+time. Set \code{include_baseline = TRUE} to include the non-shock
+\code{"Baseline"} component in the displayed decomposition.
 }

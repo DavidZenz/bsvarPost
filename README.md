@@ -1,33 +1,37 @@
 <!-- generated-by: gsd-doc-writer -->
 # bsvarPost
 
-`bsvarPost` provides post-estimation methods for posterior objects from
+An **R** package for post-estimation analysis of Bayesian Structural Vector
+Autoregressions
+
+`bsvarPost` computes cumulative effects and tabular posterior summaries from
+posterior objects produced by
 [`bsvars`](https://cran.r-project.org/package=bsvars) and
-[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs). It computes
-cumulative effects, tabular posterior summaries, comparisons across model
-specifications, posterior probabilities, representative draws, event-specific
-historical decompositions, and diagnostics for sign-restricted models.
+[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs). It compares model
+specifications, evaluates posterior hypotheses, selects representative draws,
+analyses event-specific historical decompositions, and reports diagnostics for
+sign-restricted models.
 
-The package is intended for analyses **after model estimation**. Use the parent
-packages to specify and estimate a BSVAR, and `bsvarPost` to summarise and
-evaluate the resulting posterior distribution.
+The package analyses posterior distributions **after model estimation**.
+`bsvars` and `bsvarSIGNs` specify and estimate BSVAR models, while `bsvarPost`
+summarises, compares, and evaluates the resulting posterior distributions.
 
-## What question are you trying to answer?
+## Features
 
-| Research question | Function(s) |
+| Analysis | Function(s) |
 |---|---|
-| How can posterior impulse responses be represented in tabular form? | `tidy_irf()` |
-| What is the cumulative response through a chosen horizon? | `cdm()` |
-| Are posterior conclusions robust across model specifications? | `compare_irf()` or `compare_cdm()` |
-| What is the posterior probability of an economically meaningful hypothesis? | `hypothesis_irf()` or `hypothesis_cdm()` |
-| Does a hypothesis hold jointly, or over an entire response path? | `joint_hypothesis_irf()` or `simultaneous_irf()` |
-| Which posterior draw provides a coherent representative response? | `median_target_irf()` |
-| When does an impulse response peak, persist, or decay? | `peak_response()` and the timing summaries |
-| Which structural shocks account for a particular historical episode? | `tidy_hd_event()` and `shock_ranking()` |
-| How well do posterior draws satisfy identifying restrictions? | `restriction_audit()` and `acceptance_diagnostics()` |
+| Tabular posterior summaries of impulse responses | `tidy_irf()` |
+| Cumulative responses through a selected horizon | `cdm()` |
+| Comparison of posterior conclusions across model specifications | `compare_irf()` or `compare_cdm()` |
+| Posterior probabilities of economically meaningful hypotheses | `hypothesis_irf()` or `hypothesis_cdm()` |
+| Joint hypotheses and simultaneous inference over response paths | `joint_hypothesis_irf()` or `simultaneous_irf()` |
+| Representative posterior response draws | `median_target_irf()` |
+| Peak, persistence, and decay of impulse responses | `peak_response()` and the timing summaries |
+| Structural-shock contributions during historical episodes | `tidy_hd_event()` and `shock_ranking()` |
+| Evaluation of identifying restrictions and admissible draws | `restriction_audit()` and `acceptance_diagnostics()` |
 
-The examples use one question throughout: **how does a government-spending
-shock affect cumulative US GDP?**
+The examples analyse the cumulative response of US GDP to a
+government-spending shock.
 
 ## Installation
 
@@ -38,15 +42,14 @@ install.packages(c("bsvars", "bsvarSIGNs", "remotes"))
 remotes::install_github("DavidZenz/bsvarPost", build_vignettes = TRUE)
 ```
 
-## Basic posterior analysis
+## Posterior summaries and cumulative responses
 
-### 1. Obtain a posterior distribution
+### Obtain a posterior distribution
 
-If a posterior distribution from `bsvars` or `bsvarSIGNs` is already available,
-assign it to `post` and skip this step. The following minimal estimation only
-provides the posterior object used below; model specification and estimation
-are documented by
-[`bsvars`](https://bsvars.org/bsvars/).
+If a posterior distribution from `bsvars` or `bsvarSIGNs` is already
+available, assign it to `post`. The following minimal estimation produces the
+posterior object used below. Model specification and estimation are documented
+by [`bsvars`](https://bsvars.org/bsvars/).
 
 ```r
 library(bsvars)
@@ -58,7 +61,7 @@ spec <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- estimate(spec, S = 1e3, thin = 1, show_progress = FALSE)
 ```
 
-### 2. Summarise an impulse response
+### Summarise impulse responses
 
 `tidy_irf()` computes posterior summaries and credible intervals for each model,
 response variable, structural shock, and horizon, and returns them in tabular
@@ -75,12 +78,12 @@ for cumulative dynamic multipliers, forecast error variance decompositions,
 historical decompositions, forecasts, and structural shocks. Set `draws = TRUE`
 when posterior draw-level output is required.
 
-### 3. Compute cumulative dynamic multipliers
+### Compute cumulative dynamic multipliers
 
-`cdm()` computes cumulative dynamic multipliers from the posterior distributions
-produced by the parent packages. It returns posterior draws, so cumulative
-uncertainty is evaluated draw by draw rather than by summing marginal posterior
-quantiles.
+`cdm()` computes cumulative dynamic multipliers from posterior distributions
+produced by `bsvars` and `bsvarSIGNs`. It returns posterior draws and thereby
+evaluates cumulative uncertainty draw by draw rather than by summing marginal
+posterior quantiles.
 
 ```r
 multiplier <- cdm(post, horizon = 20)
@@ -98,10 +101,10 @@ retains the shock scale of the estimated model.
 
 ## Posterior inference and model comparison
 
-### Is the conclusion robust to specification choices?
+### Compare model specifications
 
-Given a second estimated posterior distribution, named arguments identify the
-model specifications in the combined posterior summary:
+Named arguments identify model specifications in posterior comparisons. Here,
+`post_alt` denotes posterior draws from an alternative model specification:
 
 ```r
 comparison <- compare_cdm(baseline = post, alternative = post_alt,
@@ -109,17 +112,16 @@ comparison <- compare_cdm(baseline = post, alternative = post_alt,
 ggplot2::autoplot(comparison)
 ```
 
-Related functions compare impulse responses, forecast error variance
+The comparison functions also analyse impulse responses, forecast error variance
 decompositions, forecasts, historical episodes, response timing, and identifying
 restrictions. The
 [Inference and Comparison article](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html)
-describes how to select a comparison that corresponds to the research
-hypothesis.
+describes comparisons corresponding to different research hypotheses.
 
 ![Posterior impulse responses under two model
 specifications](vignettes/figures/compare-irf-showcase.png)
 
-### How strong is the posterior evidence?
+### Evaluate posterior hypotheses
 
 Posterior probabilities evaluate hypotheses directly and should not be inferred
 from whether pointwise credible intervals overlap:
@@ -139,7 +141,7 @@ simultaneous coverage over a selected response path. See
 for pointwise and joint hypotheses, magnitude thresholds, and simultaneous
 credible bands.
 
-### Which single draw should represent the posterior?
+### Select representative posterior draws
 
 Quantiles computed separately at each horizon need not correspond to a single
 admissible posterior draw. `median_target_irf()` and `median_target_cdm()` select
@@ -151,19 +153,19 @@ responses.
 ![A representative posterior draw compared with the pointwise posterior
 summary](vignettes/figures/representative-showcase.png)
 
-### What drove a historical episode?
+### Analyse historical decompositions
 
 `tidy_hd_event()` summarises structural-shock contributions over a selected
-period. `shock_ranking()` ranks shocks by their contributions, and
-`compare_hd_event()` compares the same period across model specifications. The
-[Historical-Decomposition Analysis article](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html)
+period. `shock_ranking()` ranks these contributions, and `compare_hd_event()`
+compares the same period across model specifications. The
+[Historical Decompositions article](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html)
 develops these analyses without repeating the construction of a historical
 decomposition.
 
 ![Structural-shock contributions to GDP over the full
 sample](vignettes/figures/hd-overlay-showcase.png)
 
-### What changes for sign-restricted models?
+### Analyse sign-restricted models
 
 For a `PosteriorBSVARSIGN`, `most_likely_admissible_irf()` and
 `most_likely_admissible_cdm()` select representative draws among those that
@@ -175,11 +177,11 @@ sample and the support for admissible draws. See
 ![Posterior-sample and admissibility diagnostics for a sign-restricted
 model](vignettes/figures/diagnostics-showcase.png)
 
-## From results to a figure or table
+## Figures and tables
 
-Tabular posterior summaries can be visualised directly with
-`ggplot2::autoplot()`. `report_bundle()` returns a plot, compact table, and
-caption based on the same posterior results:
+`ggplot2::autoplot()` plots tabular posterior summaries directly.
+`report_bundle()` returns a plot, compact table, and caption based on the same
+posterior results:
 
 ```r
 result <- compare_cdm(baseline = post, alternative = post_alt, horizon = 20)
@@ -191,18 +193,18 @@ publication$plot
 publication$table
 ```
 
-Use `publish_bsvar_plot()` to apply the package's graphical style to a plot.
-Additional output formats and integrations are documented in the function
-reference.
+`publish_bsvar_plot()` applies the package's graphical style to a plot. The
+function reference documents additional output formats and interfaces with
+other **R** packages.
 
-## Where next?
+## Documentation
 
 - [Post-estimation Analysis with bsvarPost](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.html)
   develops the fiscal example from posterior estimation to an interpretable
   cumulative response.
 - [Inference and Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html)
   considers sensitivity across model specifications and posterior hypotheses.
-- [Historical-Decomposition Analysis](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html)
+- [Historical Decompositions](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html)
   examines structural-shock contributions during selected historical episodes.
 - [Analysis of Sign-Restricted Models](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.html)
   presents representative admissible draws, restriction evaluation, and

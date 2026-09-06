@@ -2,7 +2,7 @@
 % Please edit documentation in R/representative.R
 \name{median_target_cdm}
 \alias{median_target_cdm}
-\title{Median-target representative cumulative dynamic multipliers}
+\title{Selects the median-target draw of cumulative dynamic multipliers}
 \usage{
 median_target_cdm(object, ...)
 }
@@ -15,6 +15,6 @@ median_target_cdm(object, ...)
 Same as \code{\link[=representative_cdm]{representative_cdm()}}.
 }
 \description{
-Select the cumulative-response draw closest to the posterior median response
+Selects the cumulative-response draw closest to the posterior median response
 path using \code{\link[=representative_cdm]{representative_cdm()}} with \code{method = "median_target"}.
 }

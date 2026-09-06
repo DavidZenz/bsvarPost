@@ -2,7 +2,7 @@
 % Please edit documentation in R/representative.R
 \name{most_likely_admissible_cdm}
 \alias{most_likely_admissible_cdm}
-\title{Most-likely-admissible representative cumulative dynamic multipliers}
+\title{Selects the most-likely admissible draw of cumulative dynamic multipliers}
 \usage{
 most_likely_admissible_cdm(object, ...)
 }
@@ -15,7 +15,7 @@ most_likely_admissible_cdm(object, ...)
 Same as \code{\link[=representative_cdm]{representative_cdm()}}.
 }
 \description{
-Select the admissible cumulative-response draw with the highest posterior
+Selects the admissible cumulative-response draw with the highest posterior
 admissibility weight using \code{\link[=representative_cdm]{representative_cdm()}} with
 \code{method = "most_likely_admissible"}.
 }

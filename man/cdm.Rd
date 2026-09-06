@@ -9,7 +9,7 @@
 \alias{cdm.PosteriorBSVARSV}
 \alias{cdm.PosteriorBSVART}
 \alias{cdm.PosteriorBSVARSIGN}
-\title{Cumulative Dynamic Multipliers}
+\title{Computes posterior draws of cumulative dynamic multipliers}
 \usage{
 cdm(object, ...)
 
@@ -87,8 +87,9 @@ A 4-dimensional array of class \code{PosteriorCDM} with dimensions
 \code{[variables x shocks x (horizon + 1) x draws]}.
 }
 \description{
-Compute cumulative dynamic multipliers (CDMs) for posterior objects from
-\code{bsvars} and \code{bsvarSIGNs}.
+Each draw from the posterior distribution of the impulse responses is
+transformed into a draw from the posterior distribution of cumulative
+dynamic multipliers by summing responses from horizon zero onwards.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

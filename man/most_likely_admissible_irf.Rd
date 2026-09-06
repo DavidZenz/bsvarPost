@@ -2,7 +2,7 @@
 % Please edit documentation in R/representative.R
 \name{most_likely_admissible_irf}
 \alias{most_likely_admissible_irf}
-\title{Most-likely-admissible representative impulse responses}
+\title{Selects the most-likely admissible draw of impulse responses}
 \usage{
 most_likely_admissible_irf(object, ...)
 }
@@ -15,7 +15,7 @@ most_likely_admissible_irf(object, ...)
 Same as \code{\link[=representative_irf]{representative_irf()}}.
 }
 \description{
-Select the admissible impulse-response draw with the highest posterior
+Selects the admissible impulse-response draw with the highest posterior
 admissibility weight using \code{\link[=representative_irf]{representative_irf()}} with
 \code{method = "most_likely_admissible"}.
 }

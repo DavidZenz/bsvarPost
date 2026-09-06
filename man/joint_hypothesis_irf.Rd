@@ -3,7 +3,7 @@
 \name{joint_hypothesis_irf}
 \alias{joint_hypothesis_irf}
 \alias{joint_hypothesis_irf.default}
-\title{Joint posterior probability statements for impulse responses}
+\title{Evaluates joint posterior probability statements for impulse responses}
 \usage{
 joint_hypothesis_irf(object, ...)
 
@@ -22,8 +22,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{rhs_value}, and \code{absolute}.
 }
 \description{
-Evaluate whether a set of posterior IRF inequalities holds jointly across all
-selected variables, shocks, and horizons.
+Computes the posterior probability that a set of impulse-response
+inequalities holds jointly across all selected variables, structural shocks,
+and horizons.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

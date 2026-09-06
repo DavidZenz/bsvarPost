@@ -1,11 +1,16 @@
-#' Visualise shock contributions over selected historical periods
+#' Plots shock contributions over selected historical periods
 #'
-#' @param object A posterior model object, `PosteriorHD`, or tidy HD event table.
+#' Plots posterior summaries of cumulative structural-shock contributions over
+#' a selected historical period.
+#'
+#' @param object A posterior model object, `PosteriorHD`, or a posterior-summary
+#'   table of historical-period contributions.
 #' @param start First time index to include when `object` is not already an HD
 #'   event table.
 #' @param end Last time index to include. Defaults to `start`.
 #' @param probability Probability mass of the equal-tailed credible interval.
-#' @param draws If `TRUE`, plot draw-level event contributions.
+#' @param draws Must be `FALSE`; draw-level event contributions are not supported
+#'   by this plot.
 #' @param variables Variables whose historical decompositions are included.
 #' @param shocks Structural shocks whose contributions are included.
 #' @param models Model specifications to include.
@@ -38,9 +43,13 @@ plot_hd_event <- function(object, start = NULL, end = start, probability = 0.90,
   ggplot2::autoplot(event_tbl, variables = variables, shocks = shocks, models = models, facet_scales = facet_scales)
 }
 
-#' Visualise ranked shock contributions over selected historical periods
+#' Plots ranked shock contributions over selected historical periods
 #'
-#' @param object A posterior model object, `PosteriorHD`, or tidy shock-ranking table.
+#' Plots structural shocks ordered by the absolute or signed magnitude of their
+#' contributions over a selected historical period.
+#'
+#' @param object A posterior model object, `PosteriorHD`, or a table of ranked
+#'   structural-shock contributions.
 #' @param start First time index to include when `object` is not already a shock
 #'   ranking table.
 #' @param end Last time index to include. Defaults to `start`.

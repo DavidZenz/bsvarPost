@@ -3,7 +3,7 @@
 \name{joint_hypothesis_cdm}
 \alias{joint_hypothesis_cdm}
 \alias{joint_hypothesis_cdm.default}
-\title{Joint posterior probability statements for cumulative dynamic multipliers}
+\title{Evaluates joint posterior probability statements for cumulative dynamic multipliers}
 \usage{
 joint_hypothesis_cdm(object, ...)
 
@@ -22,7 +22,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{rhs_value}, and \code{absolute}.
 }
 \description{
-Joint posterior probability statements for cumulative dynamic multipliers
+Computes the posterior probability that a set of cumulative-response
+inequalities holds jointly across all selected variables, structural shocks,
+and horizons.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

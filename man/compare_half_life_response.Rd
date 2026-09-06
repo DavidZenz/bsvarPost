@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_half_life_response}
 \alias{compare_half_life_response}
-\title{Compare response half-lives across model specifications}
+\title{Compares response half-lives across model specifications}
 \usage{
 compare_half_life_response(
   ...,
@@ -53,7 +53,8 @@ A \code{bsvar_post_tbl} combining half-life summary results across
 models, with a \code{model} column identifying each model specification.
 }
 \description{
-Compare response half-lives across model specifications
+Summarises across model specifications the first horizons at which posterior
+response draws fall to a specified fraction of a reference response.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

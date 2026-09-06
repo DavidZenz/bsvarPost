@@ -1,4 +1,7 @@
-#' Create an impulse-response restriction specification
+#' Specifies an impulse-response restriction
+#'
+#' Records the variable, structural shock, horizon, and sign or zero condition
+#' used to evaluate an impulse-response restriction.
 #'
 #' @param variable Response variable.
 #' @param shock Shock.
@@ -19,7 +22,10 @@ irf_restriction <- function(variable, shock, horizon, sign = NULL, zero = FALSE)
   )
 }
 
-#' Create a structural restriction specification
+#' Specifies a structural restriction
+#'
+#' Records the variable, structural shock, and sign used to evaluate a
+#' contemporaneous structural restriction.
 #'
 #' @param variable Row index or variable label.
 #' @param shock Column index or shock label.
@@ -38,7 +44,10 @@ structural_restriction <- function(variable, shock, sign) {
   )
 }
 
-#' Create a narrative restriction specification
+#' Specifies a narrative restriction
+#'
+#' Records the period, restriction type, sign, and structural-shock indices used
+#' to evaluate a narrative restriction.
 #'
 #' @param start Start period index used by upstream `bsvarSIGNs` semantics.
 #' @param periods Number of constrained periods.
@@ -280,7 +289,10 @@ audit_narrative_restriction <- function(restriction, shocks, reduced_irf, p = 0L
   )
 }
 
-#' Evaluate sign, zero, structural, and narrative restrictions
+#' Evaluates sign, zero, structural, and narrative restrictions
+#'
+#' Transforms posterior draws into posterior probabilities and summaries for
+#' the supplied or fitted identifying restrictions.
 #'
 #' @param object A posterior model object.
 #' @param restrictions Optional list of restriction specifications. If omitted
@@ -328,7 +340,10 @@ restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
   new_bsvar_post_tbl(out, object_type = "restriction_audit", draws = FALSE)
 }
 
-#' Evaluate magnitude hypotheses for IRFs or CDMs
+#' Evaluates magnitude hypotheses for impulse responses or cumulative multipliers
+#'
+#' Computes posterior probabilities and summaries for magnitude conditions on
+#' impulse responses or cumulative dynamic multipliers.
 #'
 #' @param object A posterior model object or response object.
 #' @param type Posterior response quantity to evaluate.

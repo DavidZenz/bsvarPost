@@ -1,4 +1,7 @@
-#' Express posterior summaries as a tsibble
+#' Converts posterior summaries to a tsibble
+#'
+#' Transforms a posterior-summary table into a `tsibble`, using the response
+#' horizon or observation time as its index.
 #'
 #' @param object A `bsvar_post_tbl`.
 #' @param key Optional key columns. By default, `bsvarPost` chooses a key from

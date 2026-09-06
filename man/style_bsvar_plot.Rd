@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-style.R
 \name{style_bsvar_plot}
 \alias{style_bsvar_plot}
-\title{Apply a consistent graphical style to posterior summaries}
+\title{Applies a consistent graphical style to posterior summaries}
 \usage{
 style_bsvar_plot(
   plot,
@@ -34,7 +34,8 @@ style_bsvar_plot(
 A \code{ggplot} object with the applied style.
 }
 \description{
-Apply a consistent graphical style to posterior summaries
+Applies the selected theme, colour scale, labels, and optional annotations to
+an existing plot of posterior summaries.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

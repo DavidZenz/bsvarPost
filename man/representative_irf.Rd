@@ -5,7 +5,7 @@
 \alias{representative_irf.default}
 \alias{representative_irf.PosteriorIR}
 \alias{representative_irf.PosteriorBSVAR}
-\title{Representative impulse responses}
+\title{Selects a representative draw of impulse responses}
 \usage{
 representative_irf(object, ...)
 
@@ -71,7 +71,8 @@ A list of class \code{RepresentativeIR} (inheriting from
 \code{probability}, and \code{object_type}.
 }
 \description{
-Select a representative impulse-response draw from the posterior.
+Selects one draw from the posterior distribution of impulse responses using
+either median-target distance or posterior admissibility weights.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

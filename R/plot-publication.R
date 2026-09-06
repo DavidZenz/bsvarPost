@@ -1,7 +1,7 @@
-#' Visualise posterior results with consistent graphical conventions
+#' Plots posterior results with consistent graphical conventions
 #'
-#' Identifies the posterior quantity represented by a `bsvarPost` result,
-#' constructs the corresponding visualisation, and applies consistent graphical
+#' Identifies the posterior quantity represented by a `bsvarPost` result, plots
+#' the corresponding posterior result, and applies consistent graphical
 #' conventions and optional annotations.
 #'
 #' @param object A `ggplot` object, `bsvar_post_tbl`, representative-response

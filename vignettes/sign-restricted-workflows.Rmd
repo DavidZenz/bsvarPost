@@ -14,14 +14,13 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7,
 library(bsvarPost)
 ```
 
-This article considers a `PosteriorBSVARSIGN` object estimated with
-[`bsvarSIGNs`](https://bsvars.org/bsvarSIGNs/). It assumes familiarity with the
-specification of sign, zero, structural, and narrative restrictions. The
-analysis addresses three distinct questions: the selection of a representative
-admissible draw, the posterior probability that each restriction is satisfied,
-and the adequacy of the stored posterior sample.
+This article presents posterior analyses for a `PosteriorBSVARSIGN` object
+estimated with [`bsvarSIGNs`](https://bsvars.org/bsvarSIGNs/). The identifying
+scheme can combine sign and zero restrictions on impulse responses, sign
+restrictions on the structural matrix and structural shocks, and narrative
+restrictions on structural shocks and historical decompositions.
 
-These are three different questions:
+Three distinct posterior quantities are considered:
 
 | Question | Function | What the result means |
 |---|---|---|
@@ -29,17 +28,19 @@ These are three different questions:
 | What is the posterior probability that each restriction is satisfied? | `restriction_audit()` | Posterior satisfaction probability for each fitted restriction |
 | Does the stored sample contain sufficient effective information and admissibility support? | `acceptance_diagnostics()` | Effective sample size (ESS), search settings, restriction counts, and the distribution of admissibility weights |
 
-These quantities have different interpretations. A representative draw does
-not establish that every restriction has high posterior support. Conversely, a
-high satisfaction probability does not establish that the effective sample
-size is large or that the admissibility weights are sufficiently dispersed.
+These quantities have different interpretations. A representative draw is one
+joint draw from the posterior distribution and does not imply high posterior
+probabilities for all restrictions. Similarly, high restriction probabilities
+do not imply a large effective sample size or a dispersed distribution of
+admissibility weights.
 
-## Posterior input
+## Posterior distribution
 
-The following example uses the `optimism` data from `bsvarSIGNs`. The code
-specifies the identifying restrictions and estimates the posterior
-distribution. In an empirical application, `post_sign` can be replaced by any
-fitted `PosteriorBSVARSIGN` object.
+The example uses the `optimism` data from **bsvarSIGNs**. The zero restriction
+excludes the contemporaneous response of productivity to the optimism shock,
+whereas the sign restriction imposes a positive contemporaneous response of
+stock prices. The model is specified with `specify_bsvarSIGN$new()` and its
+posterior distribution is estimated with `estimate()`.
 
 ```{r estimate-sign-model, eval = FALSE}
 data("optimism", package = "bsvarSIGNs")
@@ -53,17 +54,17 @@ post_sign <- bsvars::estimate(spec_sign, S = 2000, thin = 1,
   show_progress = FALSE)
 ```
 
-The remaining examples are not evaluated because the package does not include
-a precomputed sign-restricted posterior. They can be evaluated after fitting
-the model above.
+The remaining examples can be evaluated after estimating `post_sign`. They are
+not evaluated when building the article because a sign-restricted posterior is
+not stored in the package.
 
-## Select a representative admissible draw
+## Representative admissible draws
 
-`most_likely_admissible_irf()` ranks the posterior draws according to the
-admissibility kernel of the fitted sign-restricted model. If several draws have
-the highest weight, the function selects the draw closest to the posterior
-median response path. The result is one internally coherent posterior draw,
-rather than a path assembled from marginal quantiles.
+`most_likely_admissible_irf()` orders posterior draws by the admissibility
+kernel of the sign-restricted model. When several draws attain the largest
+weight, it selects the draw closest to the posterior median impulse responses.
+The result contains the impulse responses associated with one joint posterior
+draw rather than pointwise marginal quantiles.
 
 ```{r representative-irf, eval = FALSE}
 rep_irf <- most_likely_admissible_irf(post_sign, horizon = 12)
@@ -78,16 +79,17 @@ rep_path <- subset(summary(rep_irf),
 rep_path
 ```
 
-`plot()` compares the selected path with the pointwise posterior summary. The
-red path represents the selected posterior draw; it is neither an additional
-credible interval nor a model-selection result.
+The `plot()` method displays the selected impulse responses together with their
+pointwise posterior summaries. The red line represents the selected posterior
+draw. It is neither a credible interval nor a comparison of model
+specifications.
 
 ```{r plot-representative, eval = FALSE}
 plot(rep_irf)
 ```
 
-`most_likely_admissible_cdm()` applies the same selection rule to cumulative
-dynamic responses computed separately for each posterior draw:
+`most_likely_admissible_cdm()` applies the same criterion to cumulative dynamic
+responses computed for each posterior draw.
 
 ```{r representative-cdm, eval = FALSE}
 rep_cdm <- most_likely_admissible_cdm(post_sign, horizon = 12)
@@ -95,17 +97,16 @@ summary(rep_cdm)
 plot(rep_cdm)
 ```
 
-The choice between the IRF and CDM functions depends on whether impulse or
-cumulative responses are of substantive interest. The posterior draws selected
-by the two criteria need not be identical.
+The two functions answer different empirical questions. The first selects a
+draw using impulse responses, whereas the second uses cumulative dynamic
+responses. Therefore, they need not select the same posterior draw.
 
-## Evaluate restriction satisfaction
+## Posterior probabilities of restrictions
 
-For a `PosteriorBSVARSIGN` object, `restriction_audit()` extracts the impulse-
-response, zero, structural, and narrative restrictions from the identification
-scheme. It reports the posterior probability that each restriction is
-satisfied, estimated by the proportion of stored posterior draws that satisfy
-the restriction.
+`restriction_audit()` evaluates the impulse-response, zero, structural, and
+narrative restrictions specified for a `PosteriorBSVARSIGN` object. For each
+restriction, the posterior probability is estimated by the proportion of
+stored posterior draws that satisfy it.
 
 ```{r restriction-audit, eval = FALSE}
 audit <- restriction_audit(post_sign, zero_tol = 1e-6)
@@ -114,29 +115,29 @@ audit_focus <- audit[, c("restriction_type", "restriction", "relation",
 audit_focus
 ```
 
-`zero_tol` defines the numerical tolerance used to evaluate a zero restriction.
-Its value should reflect the scale of the response and should be reported when
-zero restrictions are included.
+The argument `zero_tol` sets the numerical tolerance for zero restrictions.
+Its value should be chosen with respect to the scale of the responses and
+reported with the results.
 
-`plot_restriction_audit()` visualises the posterior satisfaction probabilities.
-Formatted labels improve legibility without changing the underlying
-restriction definitions.
+`plot_restriction_audit()` plots the posterior probabilities of the selected
+restrictions. Formatted labels change their presentation but not their
+definitions.
 
 ```{r plot-restrictions, eval = FALSE}
 plot_restriction_audit(audit, label_style = "pretty",
   restriction_types = c("irf_sign", "irf_zero"))
 ```
 
-The reported probabilities are conditional on the fitted posterior distribution
-and the chosen tolerance. They are not sampler acceptance rates and do not
-measure whether admissible draws are concentrated in a small region of the
-parameter space.
+These probabilities are conditional on the estimated posterior distribution
+and, for zero restrictions, on the chosen tolerance. They are not sampler
+acceptance rates and do not describe the concentration of admissible posterior
+draws.
 
-## Assess the stored posterior sample
+## Posterior sample diagnostics
 
-`acceptance_diagnostics()` reports properties available from the stored
-posterior distribution: the number of draws, effective sample size,
-`max_tries`, restriction counts, and the distribution of admissibility weights.
+`acceptance_diagnostics()` summarises the stored posterior sample. It reports
+the number of draws, effective sample size, `max_tries`, the numbers of
+restrictions, and the distribution of admissibility weights.
 
 ```{r acceptance-diagnostics, eval = FALSE}
 diag <- acceptance_diagnostics(post_sign, ess_threshold = 100,
@@ -149,19 +150,17 @@ subset(diag,
   select = c(metric, value, flag, message))
 ```
 
-`effective_sample_size` measures the effective amount of posterior information,
-while `kernel_zero_share` reports the proportion of near-zero admissibility
-weights. `kernel_cv` measures the dispersion of these weights. The restriction
-counts and `max_tries` indicate the computational demands of the identification
-search.
+`effective_sample_size` measures the effective number of posterior draws.
+`kernel_zero_share` is the proportion of approximately zero admissibility
+weights, and `kernel_cv` measures their relative dispersion. The restriction
+counts and `max_tries` describe the search for admissible rotations.
 
-The specified thresholds identify potentially weak effective information or
-sparse admissibility support; they are not universal decision rules. These
-diagnostics cannot recover the sampler's complete proposal and rejection
-history from the stored posterior distribution.
+The thresholds indicate a small effective sample or limited admissibility
+support. They are not general decision rules. Moreover, the stored posterior
+object does not contain the complete sequence of proposed and rejected draws.
 
-The following figure illustrates the diagnostic measures for a posterior from
-the sign-restricted specification above with 200 retained draws.
+The following figure presents these diagnostics for the sign-restricted model
+above using 200 retained posterior draws.
 
 ```{r diagnostics-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior-sample and admissibility diagnostics for a sign-restricted model"}
 knitr::include_graphics("figures/diagnostics-showcase.png")
@@ -173,12 +172,12 @@ plot_acceptance_diagnostics(diag,
   title = "Stored-sample diagnostics")
 ```
 
-## Examine shock contributions over a selected period
+## Historical decompositions
 
-Historical decompositions from a sign-restricted posterior can be summarised
-over a prespecified period in the same way as other supported posterior
-objects. The figures below show posterior contributions and their proportional
-composition over observations 1 to 4 for the illustrative specification.
+Historical decompositions attribute the observed series to the estimated
+structural shocks. For a selected period, the posterior contributions can be
+reported in levels or as proportions of their total magnitude. The figures
+below present both summaries over observations 1 to 4.
 
 ```{r sign-hd-event-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior structural-shock contributions over observations one to four"}
 knitr::include_graphics("figures/hd-event-showcase.png")
@@ -188,11 +187,12 @@ knitr::include_graphics("figures/hd-event-showcase.png")
 knitr::include_graphics("figures/hd-event-share-showcase.png")
 ```
 
-## Compare sign-restricted specifications
+## Comparison of model specifications
 
-Alternative specifications should contain the same variables and comparable
-identifying restrictions. Names assigned to the posterior arguments identify
-the specifications in the comparison tables.
+The posterior probabilities and sample diagnostics can be compared across
+alternative sign-restricted specifications. The specifications should contain
+the same variables and comparable identifying restrictions. The argument
+names identify the specifications in the resulting tables.
 
 ```{r fit-alternative, eval = FALSE}
 spec_sign_alt <- bsvarSIGNs::specify_bsvarSIGN$new(optimism * 100, p = 2,
@@ -203,8 +203,8 @@ post_sign_alt <- bsvars::estimate(spec_sign_alt, S = 2000, thin = 1,
   show_progress = FALSE)
 ```
 
-Posterior restriction probabilities and sample diagnostics are compared
-separately:
+The restriction probabilities and posterior sample diagnostics are computed
+separately.
 
 ```{r compare-sign-models, eval = FALSE}
 restriction_comparison <- compare_restrictions(baseline = post_sign,
@@ -217,11 +217,11 @@ diagnostic_comparison <- compare_acceptance_diagnostics(
   sparse_threshold = 0.10)
 ```
 
-`compare_restrictions()` reports posterior satisfaction probabilities by model,
-whereas `compare_acceptance_diagnostics()` reports the corresponding diagnostic
-measures. Differences in either table describe fitted posterior distributions
-and stored samples; they do not, by themselves, rank the economic plausibility
-of the specifications.
+`compare_restrictions()` reports posterior restriction probabilities for each
+specification. `compare_acceptance_diagnostics()` reports the corresponding
+posterior sample diagnostics. These comparisons describe the estimated
+posterior distributions and do not rank the economic plausibility of the
+identifying assumptions.
 
 ```{r plot-sign-comparisons, eval = FALSE}
 plot_compare_restrictions(restriction_comparison,
@@ -232,21 +232,19 @@ plot_acceptance_diagnostics(
   metrics = c("effective_sample_size", "kernel_zero_share", "kernel_cv"))
 ```
 
-## Recommended sequence of analysis
+## Summary
 
-For each reported sign-restricted result:
+For the analysis of sign-restricted models:
 
-1. Evaluate the effective sample size and admissibility-weight distribution with
-   `acceptance_diagnostics()` before interpreting posterior summaries.
-2. Use `restriction_audit()` to report the posterior satisfaction probabilities
-   of the fitted restrictions.
-3. Select a most-likely-admissible IRF or CDM only when one coherent draw is
-   required for presentation or subsequent calculations.
-4. Compare diagnostics and restriction probabilities across substantively
-   relevant alternative specifications rather than comparing representative
-   paths alone.
+1. Report the effective sample size and the distribution of admissibility
+   weights using `acceptance_diagnostics()`.
+2. Report posterior restriction probabilities using `restriction_audit()`.
+3. Use a most-likely-admissible impulse or cumulative response when one joint
+   posterior draw is required.
+4. Compare restriction probabilities and posterior sample diagnostics across
+   economically relevant model specifications.
 
-For posterior summaries, probability statements, response timing, figures, and
+For posterior summaries, probability statements, response timing, plots, and
 tables, see [Post-estimation Analysis with bsvarPost](bsvarPost.html). The
 [function reference](https://davidzenz.github.io/bsvarPost/reference/index.html)
 documents filters, tolerances, and plotting arguments.

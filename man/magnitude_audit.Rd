@@ -2,7 +2,7 @@
 % Please edit documentation in R/audit.R
 \name{magnitude_audit}
 \alias{magnitude_audit}
-\title{Evaluate magnitude hypotheses for IRFs or CDMs}
+\title{Evaluates magnitude hypotheses for impulse responses or cumulative multipliers}
 \usage{
 magnitude_audit(
   object,
@@ -61,7 +61,8 @@ A \code{bsvar_post_tbl} with posterior hypothesis summaries including
 \code{upper} columns.
 }
 \description{
-Evaluate magnitude hypotheses for IRFs or CDMs
+Computes posterior probabilities and summaries for magnitude conditions on
+impulse responses or cumulative dynamic multipliers.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

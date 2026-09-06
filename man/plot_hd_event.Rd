@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-event.R
 \name{plot_hd_event}
 \alias{plot_hd_event}
-\title{Visualise shock contributions over selected historical periods}
+\title{Plots shock contributions over selected historical periods}
 \usage{
 plot_hd_event(
   object,
@@ -18,7 +18,8 @@ plot_hd_event(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or tidy HD event table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a posterior-summary
+table of historical-period contributions.}
 
 \item{start}{First time index to include when \code{object} is not already an HD
 event table.}
@@ -27,7 +28,8 @@ event table.}
 
 \item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{draws}{If \code{TRUE}, plot draw-level event contributions.}
+\item{draws}{Must be \code{FALSE}; draw-level event contributions are not supported
+by this plot.}
 
 \item{variables}{Variables whose historical decompositions are included.}
 
@@ -43,7 +45,8 @@ event table.}
 A \code{ggplot} object.
 }
 \description{
-Visualise shock contributions over selected historical periods
+Plots posterior summaries of cumulative structural-shock contributions over
+a selected historical period.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

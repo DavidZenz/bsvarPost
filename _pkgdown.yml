@@ -32,9 +32,9 @@ navbar:
       menu:
         - text: Post-estimation Analysis with bsvarPost
           href: articles/bsvarPost.html
-        - text: Posterior Inference and Model Comparison
+        - text: Inference and Comparison
           href: articles/inference-and-comparison.html
-        - text: Historical-Decomposition Analysis
+        - text: Historical Decompositions
           href: articles/historical-decomposition-events.html
         - text: Analysis of Sign-Restricted Models
           href: articles/sign-restricted-workflows.html
@@ -53,7 +53,7 @@ articles:
       - sign-restricted-workflows
 
 reference:
-  - title: Posterior Summaries and Cumulative Responses
+  - title: Posterior Summaries and Cumulative Dynamic Responses
     contents:
       - cdm
       - tidy_irf
@@ -70,7 +70,7 @@ reference:
       - compare_fevd
       - compare_forecast
 
-  - title: Posterior Probabilities and Joint Inference
+  - title: Posterior Hypotheses and Simultaneous Inference
     contents:
       - hypothesis_irf
       - hypothesis_cdm
@@ -83,7 +83,7 @@ reference:
       - plot_joint_hypothesis
       - plot_simultaneous
 
-  - title: Representative Draws and Response Timing
+  - title: Representative Posterior Draws and Response Timing
     contents:
       - representative_irf
       - representative_cdm
@@ -99,7 +99,7 @@ reference:
       - compare_time_to_threshold
       - plot_compare_response
 
-  - title: Historical Decompositions and Shock Contributions
+  - title: Historical Decompositions and Structural-Shock Contributions
     contents:
       - tidy_hd_event
       - compare_hd_event

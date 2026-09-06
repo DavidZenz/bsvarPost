@@ -2,7 +2,7 @@
 % Please edit documentation in R/audit.R
 \name{structural_restriction}
 \alias{structural_restriction}
-\title{Create a structural restriction specification}
+\title{Specifies a structural restriction}
 \usage{
 structural_restriction(variable, shock, sign)
 }
@@ -19,7 +19,8 @@ from \code{bsvar_post_restriction}) with elements \code{variable},
 \code{shock}, and \code{sign}.
 }
 \description{
-Create a structural restriction specification
+Records the variable, structural shock, and sign used to evaluate a
+contemporaneous structural restriction.
 }
 \examples{
 r <- structural_restriction("gdp", "gdp", sign = 1)

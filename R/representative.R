@@ -1,6 +1,7 @@
-#' Representative impulse responses
+#' Selects a representative draw of impulse responses
 #'
-#' Select a representative impulse-response draw from the posterior.
+#' Selects one draw from the posterior distribution of impulse responses using
+#' either median-target distance or posterior admissibility weights.
 #'
 #' @param object A posterior model object or a `PosteriorIR`.
 #' @param horizon Forecast horizon when `object` is a posterior model object.
@@ -121,7 +122,11 @@ representative_irf.PosteriorBSVART <- representative_irf_model
 #' @export
 representative_irf.PosteriorBSVARSIGN <- representative_irf_model
 
-#' Representative cumulative dynamic multipliers
+#' Selects a representative draw of cumulative dynamic multipliers
+#'
+#' Selects one draw from the posterior distribution of cumulative dynamic
+#' multipliers using either median-target distance or posterior admissibility
+#' weights.
 #'
 #' @inheritParams representative_irf
 #' @param object A posterior model object or a `PosteriorCDM` array.
@@ -216,9 +221,9 @@ representative_cdm.PosteriorBSVART <- representative_cdm_model
 #' @export
 representative_cdm.PosteriorBSVARSIGN <- representative_cdm_model
 
-#' Median-target representative impulse responses
+#' Selects the median-target draw of impulse responses
 #'
-#' Select the impulse-response draw closest to the posterior median response
+#' Selects the impulse-response draw closest to the posterior median response
 #' path using [representative_irf()] with `method = "median_target"`.
 #'
 #' @inheritParams representative_irf
@@ -228,9 +233,9 @@ median_target_irf <- function(object, ...) {
   representative_irf(object, method = "median_target", ...)
 }
 
-#' Median-target representative cumulative dynamic multipliers
+#' Selects the median-target draw of cumulative dynamic multipliers
 #'
-#' Select the cumulative-response draw closest to the posterior median response
+#' Selects the cumulative-response draw closest to the posterior median response
 #' path using [representative_cdm()] with `method = "median_target"`.
 #'
 #' @inheritParams representative_cdm
@@ -241,9 +246,9 @@ median_target_cdm <- function(object, ...) {
   representative_cdm(object, method = "median_target", ...)
 }
 
-#' Most-likely-admissible representative impulse responses
+#' Selects the most-likely admissible draw of impulse responses
 #'
-#' Select the admissible impulse-response draw with the highest posterior
+#' Selects the admissible impulse-response draw with the highest posterior
 #' admissibility weight using [representative_irf()] with
 #' `method = "most_likely_admissible"`.
 #'
@@ -255,9 +260,9 @@ most_likely_admissible_irf <- function(object, ...) {
   representative_irf(object, method = "most_likely_admissible", ...)
 }
 
-#' Most-likely-admissible representative cumulative dynamic multipliers
+#' Selects the most-likely admissible draw of cumulative dynamic multipliers
 #'
-#' Select the admissible cumulative-response draw with the highest posterior
+#' Selects the admissible cumulative-response draw with the highest posterior
 #' admissibility weight using [representative_cdm()] with
 #' `method = "most_likely_admissible"`.
 #'

@@ -5,7 +5,7 @@
 \alias{hypothesis_cdm.default}
 \alias{hypothesis_cdm.PosteriorCDM}
 \alias{hypothesis_cdm.PosteriorBSVAR}
-\title{Posterior probability statements for cumulative dynamic multipliers}
+\title{Evaluates posterior probability statements for cumulative dynamic multipliers}
 \usage{
 hypothesis_cdm(object, ...)
 
@@ -93,7 +93,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{rhs_value}, and \code{absolute} describe the right-hand side.
 }
 \description{
-Posterior probability statements for cumulative dynamic multipliers
+Transforms posterior draws of cumulative dynamic multipliers into
+probabilities that threshold or pairwise response inequalities are
+satisfied.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

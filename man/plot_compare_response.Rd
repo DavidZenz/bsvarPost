@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-compare.R
 \name{plot_compare_response}
 \alias{plot_compare_response}
-\title{Visualise response timing and persistence across model specifications}
+\title{Plots response timing and persistence across model specifications}
 \usage{
 plot_compare_response(
   object,
@@ -33,7 +33,8 @@ metric implied by \code{object}.}
 A \code{ggplot} object.
 }
 \description{
-Visualise response timing and persistence across model specifications
+Plots posterior summaries of response peaks, durations, half-lives, or
+threshold horizons for comparison across model specifications.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/audit.R
 \name{irf_restriction}
 \alias{irf_restriction}
-\title{Create an impulse-response restriction specification}
+\title{Specifies an impulse-response restriction}
 \usage{
 irf_restriction(variable, shock, horizon, sign = NULL, zero = FALSE)
 }
@@ -23,7 +23,8 @@ A list of class \code{bsvar_post_irf_restriction} (inheriting from
 \code{shock}, \code{horizon}, \code{sign}, and \code{zero}.
 }
 \description{
-Create an impulse-response restriction specification
+Records the variable, structural shock, horizon, and sign or zero condition
+used to evaluate an impulse-response restriction.
 }
 \examples{
 r <- irf_restriction("gdp", "gdp", 0, sign = 1)

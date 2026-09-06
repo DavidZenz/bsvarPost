@@ -1,4 +1,8 @@
-#' Summarise posterior impulse responses
+#' Summarises posterior draws of impulse responses
+#'
+#' Transforms posterior draws of impulse responses into a table containing
+#' posterior means, medians, standard deviations, and equal-tailed credible
+#' intervals, or retains the individual draws when requested.
 #' @param object A posterior model object or posterior IRF array.
 #' @param horizon Forecast horizon when `object` is a posterior model object.
 #' @param probability Probability mass of the equal-tailed credible interval.
@@ -17,7 +21,7 @@
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' # Tidy impulse responses
+#' # Posterior summaries of impulse responses
 #' result <- tidy_irf(post, horizon = 3)
 #' head(result)
 #' @export
@@ -59,7 +63,11 @@ tidy_irf.PosteriorBSVART <- tidy_irf.PosteriorBSVAR
 #' @export
 tidy_irf.PosteriorBSVARSIGN <- tidy_irf.PosteriorBSVAR
 
-#' Summarise posterior cumulative dynamic responses
+#' Summarises posterior draws of cumulative dynamic multipliers
+#'
+#' Transforms posterior draws of cumulative dynamic multipliers into a table
+#' containing posterior means, medians, standard deviations, and equal-tailed
+#' credible intervals, or retains the individual draws when requested.
 #' @inheritParams tidy_irf
 #' @param object A posterior model object or a `PosteriorCDM` array.
 #' @param scale_by Optional scaling mode for CDMs.
@@ -75,7 +83,7 @@ tidy_irf.PosteriorBSVARSIGN <- tidy_irf.PosteriorBSVAR
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' # Tidy cumulative dynamic multipliers
+#' # Posterior summaries of cumulative dynamic multipliers
 #' result <- tidy_cdm(post, horizon = 3)
 #' head(result)
 #' @export
@@ -121,7 +129,12 @@ tidy_cdm.PosteriorBSVART <- tidy_cdm.PosteriorBSVAR
 #' @export
 tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 
-#' Summarise posterior forecast error variance decompositions
+#' Summarises posterior draws of forecast error variance decompositions
+#'
+#' Transforms posterior draws of forecast error variance decompositions into a
+#' table containing posterior means, medians, standard deviations, and
+#' equal-tailed credible intervals, or retains the individual draws when
+#' requested.
 #' @inheritParams tidy_irf
 #' @param object A posterior model object or a `PosteriorFEVD` array.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
@@ -135,7 +148,7 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' # Tidy forecast error variance decompositions
+#' # Posterior summaries of forecast error variance decompositions
 #' result <- tidy_fevd(post, horizon = 3)
 #' head(result)
 #' @export
@@ -172,7 +185,11 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @export
  tidy_fevd.PosteriorBSVARSIGN <- tidy_fevd_model
 
-#' Summarise posterior structural shocks
+#' Summarises posterior draws of structural shocks
+#'
+#' Transforms posterior draws of structural shocks into a table containing
+#' posterior means, medians, standard deviations, and equal-tailed credible
+#' intervals, or retains the individual draws when requested.
 #' @inheritParams tidy_irf
 #' @param object A posterior model object, a `PosteriorShocks` object, or a
 #'   structural-shock array.
@@ -187,7 +204,7 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' # Tidy structural shocks
+#' # Posterior summaries of structural shocks
 #' result <- tidy_shocks(post)
 #' head(result)
 #' @export
@@ -224,7 +241,12 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @export
  tidy_shocks.PosteriorBSVARSIGN <- tidy_shocks_model
 
-#' Summarise posterior historical decompositions
+#' Summarises posterior draws of historical decompositions
+#'
+#' Transforms posterior draws of historical decompositions into a table
+#' containing posterior means, medians, standard deviations, and equal-tailed
+#' credible intervals, or retains the individual shock contributions when
+#' requested.
 #' @inheritParams tidy_irf
 #' @param object A posterior model object or a `PosteriorHD` array.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
@@ -238,7 +260,7 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' # Tidy historical decompositions
+#' # Posterior summaries of historical decompositions
 #' result <- tidy_hd(post)
 #' head(result)
 #' @export
@@ -275,7 +297,11 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' @export
  tidy_hd.PosteriorBSVARSIGN <- tidy_hd_model
 
-#' Summarise posterior forecasts
+#' Summarises draws from the predictive distribution
+#'
+#' Transforms draws from the joint predictive distribution into a table
+#' containing posterior predictive means, medians, standard deviations, and
+#' equal-tailed intervals, or retains the individual draws when requested.
 #' @inheritParams tidy_irf
 #' @param object A posterior model object or a `Forecasts` object.
 #' @return A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
@@ -289,7 +315,7 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' # Tidy forecasts
+#' # Summaries of the predictive distribution
 #' result <- tidy_forecast(post, horizon = 3)
 #' head(result)
 #' @export

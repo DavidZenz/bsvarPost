@@ -1,4 +1,7 @@
-#' Plot theme for posterior summaries
+#' Defines a plot theme for posterior summaries
+#'
+#' Returns a `ggplot2` theme with typographic and spacing conventions for plots
+#' of posterior quantities.
 #'
 #' @param preset One of `"default"`, `"paper"`, or `"slides"`.
 #' @param base_size Base font size.
@@ -41,7 +44,10 @@ theme_bsvarpost <- function(preset = c("default", "paper", "slides"),
   theme
 }
 
-#' Apply a consistent graphical style to posterior summaries
+#' Applies a consistent graphical style to posterior summaries
+#'
+#' Applies the selected theme, colour scale, labels, and optional annotations to
+#' an existing plot of posterior summaries.
 #'
 #' @param plot A `ggplot` object, typically returned by `ggplot2::autoplot()`,
 #'   `plot_hd_event()`, `plot_hd_stacked()`, or `plot_shock_ranking()`.
@@ -96,7 +102,10 @@ style_bsvar_plot <- function(plot, preset = c("default", "paper", "slides"),
   plot
 }
 
-#' Apply graphical conventions for a posterior quantity
+#' Applies graphical conventions for a posterior quantity
+#'
+#' Applies labels, scales, and theme settings appropriate to the specified
+#' posterior quantity.
 #'
 #' @param plot A `ggplot` object.
 #' @param family Posterior quantity represented by the plot. One of `"irf"`,
@@ -186,7 +195,10 @@ template_bsvar_plot <- function(plot, family = c("irf", "cdm", "forecast", "hd",
   styled + ggplot2::labs(y = ylabel)
 }
 
-#' Add titles and captions to posterior-summary plots
+#' Adds titles and captions to posterior-summary plots
+#'
+#' Adds the supplied title, subtitle, caption, and axis labels to an existing
+#' plot of posterior summaries.
 #'
 #' @param plot A `ggplot` object.
 #' @param title Optional plot title.

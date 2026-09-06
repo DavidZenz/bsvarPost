@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_fevd}
 \alias{compare_fevd}
-\title{Compare forecast error variance decompositions across model specifications}
+\title{Compares forecast error variance decompositions across model specifications}
 \usage{
 compare_fevd(..., horizon = NULL, probability = 0.9, draws = FALSE)
 }
@@ -22,7 +22,9 @@ A \code{bsvar_post_tbl} combining results across models, with a
 \code{model} column identifying each model specification.
 }
 \description{
-Compare forecast error variance decompositions across model specifications
+Summarises posterior draws of forecast error variance decompositions from two
+or more posterior model objects in a common table identified by model
+specification.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

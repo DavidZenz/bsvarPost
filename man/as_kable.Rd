@@ -6,7 +6,7 @@
 \alias{as_kable.data.frame}
 \alias{as_kable.bsvar_report_bundle}
 \alias{as_kable.default}
-\title{Render bsvarPost tables with knitr::kable}
+\title{Formats posterior summaries with knitr::kable}
 \usage{
 as_kable(x, ...)
 
@@ -53,6 +53,6 @@ of columns.}
 A \code{knitr::kable} object.
 }
 \description{
-Convert posterior summary tables or \code{report_bundle()} results to a
+Converts posterior summary tables or \code{report_bundle()} results to a
 \code{knitr::kable} object.
 }

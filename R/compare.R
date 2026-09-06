@@ -1,4 +1,7 @@
-#' Compare posterior impulse responses across model specifications
+#' Compares posterior impulse responses across model specifications
+#'
+#' Summarises impulse-response draws from two or more posterior model objects
+#' in a common table identified by model specification.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Forecast horizon. If \code{NULL} (default), resolves to 20
 #'   periods.
@@ -23,7 +26,10 @@ compare_irf <- function(..., horizon = NULL, probability = 0.90, draws = FALSE) 
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "irf", draws = draws, compare = TRUE))
 }
 
-#' Compare cumulative dynamic responses across model specifications
+#' Compares cumulative dynamic multipliers across model specifications
+#'
+#' Summarises posterior draws of cumulative dynamic multipliers from two or more
+#' model objects in a common table identified by model specification.
 #' @inheritParams compare_irf
 #' @param scale_by Optional scaling mode for CDMs.
 #' @param scale_var Optional scaling variable specification.
@@ -46,7 +52,11 @@ compare_cdm <- function(..., horizon = NULL, probability = 0.90, draws = FALSE,
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "cdm", draws = draws, compare = TRUE))
 }
 
-#' Compare forecast error variance decompositions across model specifications
+#' Compares forecast error variance decompositions across model specifications
+#'
+#' Summarises posterior draws of forecast error variance decompositions from two
+#' or more posterior model objects in a common table identified by model
+#' specification.
 #' @inheritParams compare_irf
 #' @return A \code{bsvar_post_tbl} combining results across models, with a
 #'   \code{model} column identifying each model specification.
@@ -66,7 +76,10 @@ compare_fevd <- function(..., horizon = NULL, probability = 0.90, draws = FALSE)
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "fevd", draws = draws, compare = TRUE))
 }
 
-#' Compare posterior forecasts across model specifications
+#' Compares posterior forecasts across model specifications
+#'
+#' Summarises draws from the predictive distributions of two or more posterior
+#' model objects in a common table identified by model specification.
 #' @inheritParams compare_irf
 #' @return A \code{bsvar_post_tbl} combining results across models, with a
 #'   \code{model} column identifying each model specification.
@@ -87,7 +100,10 @@ compare_forecast <- function(..., horizon = NULL, probability = 0.90, draws = FA
 }
 
 
-#' Compare posterior restriction probabilities across model specifications
+#' Compares posterior restriction probabilities across model specifications
+#'
+#' Evaluates the same identifying restrictions for two or more posterior model
+#' objects and combines their posterior probabilities in a common table.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param restrictions Optional list of restriction specifications evaluated for
 #'   each model.
@@ -116,7 +132,10 @@ compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, prob
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "restriction_audit", draws = FALSE, compare = TRUE))
 }
 
-#' Compare acceptance diagnostics across model specifications
+#' Compares acceptance diagnostics across model specifications
+#'
+#' Computes effective sample size and admissibility-weight diagnostics for two
+#' or more sign-restricted posterior distributions.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param kernel_tol Numerical tolerance used to classify near-zero admissibility
 #'   weights.
@@ -154,7 +173,10 @@ compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
 }
 
 
-#' Compare historical-period shock contributions across model specifications
+#' Compares historical-period shock contributions across model specifications
+#'
+#' Aggregates posterior draws of structural-shock contributions over a selected
+#' historical period for two or more model specifications.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.
@@ -184,7 +206,10 @@ compare_hd_event <- function(..., start, end = start, probability = 0.90, draws 
 }
 
 
-#' Compare peak responses across model specifications
+#' Compares peak responses across model specifications
+#'
+#' Summarises posterior draws of response magnitudes and their peak horizons
+#' for two or more model specifications.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.
@@ -227,7 +252,10 @@ compare_peak_response <- function(..., horizon = NULL, type = c("irf", "cdm"),
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("peak_", type), draws = FALSE, compare = TRUE))
 }
 
-#' Compare response durations across model specifications
+#' Compares response durations across model specifications
+#'
+#' Summarises across model specifications the number of horizons over which
+#' posterior response draws satisfy a specified threshold condition.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.
@@ -278,7 +306,10 @@ compare_duration_response <- function(..., horizon = NULL, type = c("irf", "cdm"
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("duration_", type), draws = FALSE, compare = TRUE))
 }
 
-#' Compare response half-lives across model specifications
+#' Compares response half-lives across model specifications
+#'
+#' Summarises across model specifications the first horizons at which posterior
+#' response draws fall to a specified fraction of a reference response.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.
@@ -325,7 +356,10 @@ compare_half_life_response <- function(..., horizon = NULL, type = c("irf", "cdm
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("half_life_", type), draws = FALSE, compare = TRUE))
 }
 
-#' Compare response thresholds across model specifications
+#' Compares response thresholds across model specifications
+#'
+#' Summarises across model specifications the first horizons at which posterior
+#' response draws satisfy a specified threshold condition.
 #' @param ... Posterior model objects or a named list of model objects.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
 #'   If \code{NULL} (default), resolves to 20 periods.

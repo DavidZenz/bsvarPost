@@ -2,7 +2,7 @@
 % Please edit documentation in R/reporting.R
 \name{write_bsvar_csv}
 \alias{write_bsvar_csv}
-\title{Export bsvarPost tables to CSV}
+\title{Writes posterior summaries to a CSV file}
 \usage{
 write_bsvar_csv(
   x,
@@ -29,7 +29,8 @@ of columns.}
 The normalized file path, invisibly.
 }
 \description{
-Write a table of posterior summaries to disk as a CSV file.
+Writes a table of posterior summaries to disk as a comma-separated-values
+file.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

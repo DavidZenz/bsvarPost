@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_acceptance_diagnostics}
 \alias{compare_acceptance_diagnostics}
-\title{Compare acceptance diagnostics across model specifications}
+\title{Compares acceptance diagnostics across model specifications}
 \usage{
 compare_acceptance_diagnostics(
   ...,
@@ -29,7 +29,8 @@ across models, with a \code{model} column identifying each model
 specification.
 }
 \description{
-Compare acceptance diagnostics across model specifications
+Computes effective sample size and admissibility-weight diagnostics for two
+or more sign-restricted posterior distributions.
 }
 \examples{
 \donttest{

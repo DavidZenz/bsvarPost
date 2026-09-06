@@ -2,7 +2,7 @@
 % Please edit documentation in R/aprscenario.R
 \name{tidy_apr_forecast}
 \alias{tidy_apr_forecast}
-\title{Express APRScenario forecasts as posterior summary tables}
+\title{Converts APRScenario forecasts to posterior summary tables}
 \usage{
 tidy_apr_forecast(data, model = "apr")
 }
@@ -18,7 +18,8 @@ A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
 \code{lower}, and \code{upper}.
 }
 \description{
-Express APRScenario forecasts as posterior summary tables
+Transforms lower, centre, and upper APRScenario forecast paths into the
+posterior-summary table format used by \code{bsvarPost}.
 }
 \examples{
 \dontrun{

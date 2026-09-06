@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-compare.R
 \name{plot_compare_restrictions}
 \alias{plot_compare_restrictions}
-\title{Visualise posterior restriction probabilities across model specifications}
+\title{Plots posterior restriction probabilities across model specifications}
 \usage{
 plot_compare_restrictions(
   object,
@@ -25,7 +25,8 @@ within each model.}
 A \code{ggplot} object.
 }
 \description{
-Visualise posterior restriction probabilities across model specifications
+Plots posterior probabilities of identifying restrictions for comparison
+across model specifications.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

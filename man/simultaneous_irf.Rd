@@ -10,7 +10,7 @@
 \alias{simultaneous_irf.PosteriorBSVARSV}
 \alias{simultaneous_irf.PosteriorBSVART}
 \alias{simultaneous_irf.PosteriorBSVARSIGN}
-\title{Simultaneous posterior bands for impulse responses}
+\title{Computes simultaneous posterior bands for impulse responses}
 \usage{
 simultaneous_irf(object, ...)
 
@@ -126,8 +126,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 and \code{critical_value}.
 }
 \description{
-Construct simultaneous bands over a selected set of impulse responses using
-the empirical sup-norm around the posterior median path.
+Transforms posterior draws of selected impulse responses into simultaneous
+credible bands using the empirical sup-norm around the posterior median
+response path.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-joint-inference.R
 \name{plot_simultaneous}
 \alias{plot_simultaneous}
-\title{Plot simultaneous posterior bands}
+\title{Plots simultaneous posterior bands}
 \usage{
 plot_simultaneous(
   object,
@@ -49,7 +49,8 @@ credible band.}
 A \code{ggplot} object.
 }
 \description{
-Plot simultaneous posterior bands
+Plots posterior median response paths together with simultaneous credible
+bands over the selected variables, structural shocks, and horizons.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

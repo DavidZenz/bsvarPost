@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_peak_response}
 \alias{compare_peak_response}
-\title{Compare peak responses across model specifications}
+\title{Compares peak responses across model specifications}
 \usage{
 compare_peak_response(
   ...,
@@ -47,7 +47,8 @@ A \code{bsvar_post_tbl} combining peak summary results across
 models, with a \code{model} column identifying each model specification.
 }
 \description{
-Compare peak responses across model specifications
+Summarises posterior draws of response magnitudes and their peak horizons
+for two or more model specifications.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

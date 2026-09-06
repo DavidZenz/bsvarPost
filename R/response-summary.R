@@ -1,6 +1,7 @@
-#' Peak response summaries for posterior IRFs and CDMs
+#' Summarises peak responses from posterior draws
 #'
-#' Summarise the peak response level and the horizon at which that peak occurs.
+#' Transforms posterior draws of impulse responses or cumulative dynamic
+#' multipliers into summaries of peak response magnitudes and their horizons.
 #'
 #' @param object A posterior model object, `PosteriorIR`, or `PosteriorCDM`.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
@@ -143,10 +144,11 @@ peak_response.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
                        absolute = absolute, probability = probability, model = model)
 }
 
-#' Duration summaries for posterior IRFs and CDMs
+#' Summarises response durations from posterior draws
 #'
-#' Summarise how long a response satisfies a threshold condition over the
-#' available horizons.
+#' Transforms posterior draws of impulse responses or cumulative dynamic
+#' multipliers into summaries of how long a response satisfies a threshold
+#' condition over the available horizons.
 #'
 #' @param mode Either `"consecutive"` for the duration until first violation or
 #'   `"total"` for the total count of satisfying horizons.
@@ -329,10 +331,11 @@ summarise_optional_timing <- function(x, probability) {
   c(stats, reached_prob = reached_prob)
 }
 
-#' Half-life summaries for posterior IRFs and CDMs
+#' Summarises response half-lives from posterior draws
 #'
-#' Summarise the first horizon at which a response falls to a chosen fraction of
-#' its initial or peak level.
+#' Transforms posterior draws of impulse responses or cumulative dynamic
+#' multipliers into summaries of the first horizon at which a response falls to
+#' a chosen fraction of its initial or peak level.
 #'
 #' @param fraction Fraction of the reference level used to define the half-life.
 #' @param baseline Reference level: `"peak"` uses the largest response over the
@@ -497,10 +500,11 @@ half_life_response.PosteriorCDM <- function(object, variables = NULL, shocks = N
                             probability = probability, model = model)
 }
 
-#' Time-to-threshold summaries for posterior IRFs and CDMs
+#' Summarises response threshold horizons from posterior draws
 #'
-#' Summarise the first horizon at which a response satisfies a threshold
-#' condition.
+#' Transforms posterior draws of impulse responses or cumulative dynamic
+#' multipliers into summaries of the first horizon at which a response satisfies
+#' a threshold condition.
 #'
 #' @inheritParams duration_response
 #' @inheritParams peak_response

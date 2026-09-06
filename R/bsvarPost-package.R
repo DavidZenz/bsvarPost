@@ -16,7 +16,7 @@
 #'
 #' - Post-estimation Analysis with bsvarPost (`bsvarPost`)
 #' - Inference and Comparison (`inference-and-comparison`)
-#' - Historical-Decomposition Analysis (`historical-decomposition-events`)
+#' - Historical Decompositions (`historical-decomposition-events`)
 #' - Analysis of Sign-Restricted Models (`sign-restricted-workflows`)
 #'
 #' @keywords internal

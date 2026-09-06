@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_restrictions}
 \alias{compare_restrictions}
-\title{Compare posterior restriction probabilities across model specifications}
+\title{Compares posterior restriction probabilities across model specifications}
 \usage{
 compare_restrictions(
   ...,
@@ -28,7 +28,8 @@ probabilities across models, with a \code{model} column identifying each
 specification.
 }
 \description{
-Compare posterior restriction probabilities across model specifications
+Evaluates the same identifying restrictions for two or more posterior model
+objects and combines their posterior probabilities in a common table.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

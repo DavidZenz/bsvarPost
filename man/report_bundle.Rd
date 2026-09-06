@@ -2,7 +2,7 @@
 % Please edit documentation in R/reporting.R
 \name{report_bundle}
 \alias{report_bundle}
-\title{Combine posterior summaries, figures, and captions}
+\title{Combines posterior summaries, figures, and captions}
 \usage{
 report_bundle(
   object,
@@ -36,7 +36,7 @@ A list of class \code{bsvar_report_bundle} with elements \code{table}, \code{plo
 \code{caption}, and \code{object_type}.
 }
 \description{
-Combine a table of posterior summaries, its corresponding figure, and a
+Combines a table of posterior summaries, its corresponding figure, and a
 caption in a single object.
 }
 \examples{

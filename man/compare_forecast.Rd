@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_forecast}
 \alias{compare_forecast}
-\title{Compare posterior forecasts across model specifications}
+\title{Compares posterior forecasts across model specifications}
 \usage{
 compare_forecast(..., horizon = NULL, probability = 0.9, draws = FALSE)
 }
@@ -22,7 +22,8 @@ A \code{bsvar_post_tbl} combining results across models, with a
 \code{model} column identifying each model specification.
 }
 \description{
-Compare posterior forecasts across model specifications
+Summarises draws from the predictive distributions of two or more posterior
+model objects in a common table identified by model specification.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

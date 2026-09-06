@@ -11,7 +11,7 @@
 \alias{half_life_response.PosteriorBSVART}
 \alias{half_life_response.PosteriorBSVARSIGN}
 \alias{half_life_response.PosteriorCDM}
-\title{Half-life summaries for posterior IRFs and CDMs}
+\title{Summarises response half-lives from posterior draws}
 \usage{
 half_life_response(object, ...)
 
@@ -193,8 +193,9 @@ A \code{bsvar_post_tbl} with columns \code{model},
 and \code{reached_prob}.
 }
 \description{
-Summarise the first horizon at which a response falls to a chosen fraction of
-its initial or peak level.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of the first horizon at which a response falls to
+a chosen fraction of its initial or peak level.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

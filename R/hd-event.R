@@ -1,11 +1,11 @@
-#' Summarise historical-decomposition contributions over selected periods
+#' Summarises historical-decomposition contributions over selected periods
 #'
-#' Aggregate posterior draws of structural-shock contributions over a selected
-#' historical period and report posterior summaries of the cumulative
-#' contributions.
+#' Transforms posterior draws of historical decompositions into cumulative
+#' structural-shock contributions over a selected historical period and reports
+#' their posterior summaries.
 #'
-#' @param object A posterior model object, `PosteriorHD`, or tidy historical
-#'   decomposition table.
+#' @param object A posterior model object, `PosteriorHD`, or a posterior-summary
+#'   table of historical decompositions.
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.
 #' @param probability Probability mass of the equal-tailed credible interval.
@@ -144,10 +144,14 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, 
 #' @export
  tidy_hd_event.PosteriorBSVARSIGN <- tidy_hd_event_model
 
-#' Rank structural shocks by contributions over selected periods
+#' Ranks structural shocks by contributions over selected periods
 #'
-#' @param object A posterior model object, `PosteriorHD`, or tidy historical
-#'   decomposition table.
+#' Summarises posterior historical decompositions over a selected period and
+#' ranks structural shocks by the absolute or signed magnitude of their
+#' contributions.
+#'
+#' @param object A posterior model object, `PosteriorHD`, or a posterior-summary
+#'   table of historical decompositions.
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.
 #' @param variables Variables whose historical decompositions are included.

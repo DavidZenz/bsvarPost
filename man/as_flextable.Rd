@@ -6,7 +6,7 @@
 \alias{as_flextable.data.frame}
 \alias{as_flextable.bsvar_report_bundle}
 \alias{as_flextable.default}
-\title{Render bsvarPost tables with flextable}
+\title{Formats posterior summaries with flextable}
 \usage{
 as_flextable(x, ...)
 
@@ -53,6 +53,6 @@ of columns.}
 A \code{flextable::flextable} object.
 }
 \description{
-Convert posterior summary tables or \code{report_bundle()} results to a
+Converts posterior summary tables or \code{report_bundle()} results to a
 \code{flextable::flextable} object.
 }

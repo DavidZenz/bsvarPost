@@ -2,7 +2,7 @@
 % Please edit documentation in R/audit.R
 \name{narrative_restriction}
 \alias{narrative_restriction}
-\title{Create a narrative restriction specification}
+\title{Specifies a narrative restriction}
 \usage{
 narrative_restriction(
   start,
@@ -32,7 +32,8 @@ from \code{bsvar_post_restriction}) with elements \code{start},
 \code{periods}, \code{type}, \code{sign}, \code{shock}, and \code{var}.
 }
 \description{
-Create a narrative restriction specification
+Records the period, restriction type, sign, and structural-shock indices used
+to evaluate a narrative restriction.
 }
 \examples{
 r <- narrative_restriction(start = 10, periods = 1, type = "S", sign = 1, shock = 1)

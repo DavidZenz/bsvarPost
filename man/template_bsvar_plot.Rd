@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-style.R
 \name{template_bsvar_plot}
 \alias{template_bsvar_plot}
-\title{Apply graphical conventions for a posterior quantity}
+\title{Applies graphical conventions for a posterior quantity}
 \usage{
 template_bsvar_plot(
   plot,
@@ -34,7 +34,8 @@ A \code{ggplot} object with graphical conventions appropriate to the
 selected posterior quantity.
 }
 \description{
-Apply graphical conventions for a posterior quantity
+Applies labels, scales, and theme settings appropriate to the specified
+posterior quantity.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

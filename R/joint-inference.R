@@ -1,7 +1,8 @@
-#' Simultaneous posterior bands for impulse responses
+#' Computes simultaneous posterior bands for impulse responses
 #'
-#' Construct simultaneous bands over a selected set of impulse responses using
-#' the empirical sup-norm around the posterior median path.
+#' Transforms posterior draws of selected impulse responses into simultaneous
+#' credible bands using the empirical sup-norm around the posterior median
+#' response path.
 #'
 #' @param object A posterior model object or a `PosteriorIR` object.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
@@ -105,7 +106,11 @@ simultaneous_irf.PosteriorBSVART <- simultaneous_irf_model
 #' @export
 simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 
-#' Simultaneous posterior bands for cumulative dynamic multipliers
+#' Computes simultaneous posterior bands for cumulative dynamic multipliers
+#'
+#' Transforms posterior draws of selected cumulative dynamic multipliers into
+#' simultaneous credible bands using the empirical sup-norm around the
+#' posterior median response path.
 #'
 #' @inheritParams simultaneous_irf
 #' @param object A posterior model object or a `PosteriorCDM` array.
@@ -220,10 +225,11 @@ joint_hypothesis_impl <- function(draws, object_type, variable, shock, horizon,
   new_bsvar_post_tbl(out, object_type = paste0("joint_", object_type), draws = FALSE)
 }
 
-#' Joint posterior probability statements for impulse responses
+#' Evaluates joint posterior probability statements for impulse responses
 #'
-#' Evaluate whether a set of posterior IRF inequalities holds jointly across all
-#' selected variables, shocks, and horizons.
+#' Computes the posterior probability that a set of impulse-response
+#' inequalities holds jointly across all selected variables, structural shocks,
+#' and horizons.
 #'
 #' @inheritParams hypothesis_irf
 #' @param ... Additional arguments passed to computation methods.
@@ -288,7 +294,11 @@ joint_hypothesis_irf.PosteriorBSVART <- joint_hypothesis_irf_model
 #' @export
 joint_hypothesis_irf.PosteriorBSVARSIGN <- joint_hypothesis_irf_model
 
-#' Joint posterior probability statements for cumulative dynamic multipliers
+#' Evaluates joint posterior probability statements for cumulative dynamic multipliers
+#'
+#' Computes the posterior probability that a set of cumulative-response
+#' inequalities holds jointly across all selected variables, structural shocks,
+#' and horizons.
 #'
 #' @inheritParams joint_hypothesis_irf
 #' @inheritParams hypothesis_cdm

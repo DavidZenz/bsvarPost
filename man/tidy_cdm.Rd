@@ -4,7 +4,7 @@
 \alias{tidy_cdm}
 \alias{tidy_cdm.default}
 \alias{tidy_cdm.PosteriorBSVAR}
-\title{Summarise posterior cumulative dynamic responses}
+\title{Summarises posterior draws of cumulative dynamic multipliers}
 \usage{
 tidy_cdm(object, ...)
 
@@ -47,7 +47,9 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Summarise posterior cumulative dynamic responses
+Transforms posterior draws of cumulative dynamic multipliers into a table
+containing posterior means, medians, standard deviations, and equal-tailed
+credible intervals, or retains the individual draws when requested.
 }
 \examples{
 # Small posterior (S = 5 draws)
@@ -55,7 +57,7 @@ data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy cumulative dynamic multipliers
+# Posterior summaries of cumulative dynamic multipliers
 result <- tidy_cdm(post, horizon = 3)
 head(result)
 }

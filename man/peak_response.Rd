@@ -11,7 +11,7 @@
 \alias{peak_response.PosteriorBSVART}
 \alias{peak_response.PosteriorBSVARSIGN}
 \alias{peak_response.PosteriorCDM}
-\title{Peak response summaries for posterior IRFs and CDMs}
+\title{Summarises peak responses from posterior draws}
 \usage{
 peak_response(object, ...)
 
@@ -173,7 +173,8 @@ A \code{bsvar_post_tbl} with columns \code{model},
 and \code{upper_horizon}.
 }
 \description{
-Summarise the peak response level and the horizon at which that peak occurs.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of peak response magnitudes and their horizons.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

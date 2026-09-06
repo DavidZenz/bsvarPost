@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-diagnostics.R
 \name{plot_acceptance_diagnostics}
 \alias{plot_acceptance_diagnostics}
-\title{Visualise acceptance diagnostics across model specifications}
+\title{Plots acceptance diagnostics across model specifications}
 \usage{
 plot_acceptance_diagnostics(
   object,
@@ -19,7 +19,7 @@ plot_acceptance_diagnostics(
 )
 }
 \arguments{
-\item{object}{A tidy acceptance-diagnostics table, or a \code{PosteriorBSVARSIGN}
+\item{object}{An acceptance-diagnostics table, or a \code{PosteriorBSVARSIGN}
 object that can be converted with \code{acceptance_diagnostics()}.}
 
 \item{metrics}{Diagnostic measures to include.}
@@ -48,7 +48,8 @@ marker.}
 A grid plot object.
 }
 \description{
-Visualise acceptance diagnostics across model specifications
+Plots effective sample sizes, admissibility weights, and associated warning
+indicators for sign-restricted posterior distributions.
 }
 \examples{
 \donttest{

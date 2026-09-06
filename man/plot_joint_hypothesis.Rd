@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-joint-inference.R
 \name{plot_joint_hypothesis}
 \alias{plot_joint_hypothesis}
-\title{Plot joint posterior probability statements}
+\title{Plots joint posterior probability statements}
 \usage{
 plot_joint_hypothesis(
   object,
@@ -51,7 +51,8 @@ elements \code{variable}, \code{shock}, and \code{horizon}.}
 A \code{ggplot} object.
 }
 \description{
-Plot joint posterior probability statements
+Plots posterior probabilities that selected response inequalities hold
+jointly over variables, structural shocks, and horizons.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

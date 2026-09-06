@@ -6,7 +6,7 @@
 \alias{report_table.data.frame}
 \alias{report_table.bsvar_report_bundle}
 \alias{report_table.default}
-\title{Prepare tables of posterior results}
+\title{Prepares tables of posterior results}
 \usage{
 report_table(x, ...)
 
@@ -33,7 +33,7 @@ of columns.}
 A data frame containing the selected posterior summaries.
 }
 \description{
-Arrange posterior summaries in data frames with a consistent column order
+Arranges posterior summaries in data frames with a consistent column order
 and descriptive column names.
 }
 \examples{

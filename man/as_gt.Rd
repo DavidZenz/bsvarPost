@@ -6,7 +6,7 @@
 \alias{as_gt.data.frame}
 \alias{as_gt.bsvar_report_bundle}
 \alias{as_gt.default}
-\title{Render bsvarPost tables with gt}
+\title{Formats posterior summaries with gt}
 \usage{
 as_gt(x, ...)
 
@@ -35,6 +35,6 @@ of columns.}
 A \code{gt::gt_tbl} object.
 }
 \description{
-Convert posterior summary tables or \code{report_bundle()} results to a
+Converts posterior summary tables or \code{report_bundle()} results to a
 \code{gt::gt_tbl} object.
 }

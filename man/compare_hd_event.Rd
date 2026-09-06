@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_hd_event}
 \alias{compare_hd_event}
-\title{Compare historical-period shock contributions across model specifications}
+\title{Compares historical-period shock contributions across model specifications}
 \usage{
 compare_hd_event(..., start, end = start, probability = 0.9, draws = FALSE)
 }
@@ -25,7 +25,8 @@ decomposition results across models, with a \code{model} column
 identifying each model specification.
 }
 \description{
-Compare historical-period shock contributions across model specifications
+Aggregates posterior draws of structural-shock contributions over a selected
+historical period for two or more model specifications.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

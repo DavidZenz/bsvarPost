@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-hd.R
 \name{plot_hd_overlay}
 \alias{plot_hd_overlay}
-\title{Overlay historical decomposition component paths}
+\title{Plots overlaid historical decomposition component paths}
 \usage{
 plot_hd_overlay(
   object,
@@ -23,8 +23,10 @@ plot_hd_overlay(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy
-historical-decomposition table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy table of
+historical decompositions. Plots that reconstruct the observed series
+require a posterior model; when a table is supplied, cumulative event plots
+require draw-level input.}
 
 \item{probability}{Probability mass of the equal-tailed credible interval
 computed when \code{object} is not already a summary table.}
@@ -58,14 +60,14 @@ unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 Defaults to \code{FALSE} because multiple component intervals in a single
 panel are usually hard to read.}
 
-\item{model}{Model label used when converting posterior objects to tidy
-plotting tables.}
+\item{model}{Model label used when converting posterior objects to
+posterior-summary tables.}
 
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-This is a component-comparison plot. By default it does not overlay the
-observed series because the raw level path is not directly comparable to a
-shock-only component panel.
+Plots posterior median contributions of several structural shocks in the
+same panel. By default, the observed series is omitted because its level is
+not directly comparable with an individual shock contribution.
 }

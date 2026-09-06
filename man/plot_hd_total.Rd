@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-hd.R
 \name{plot_hd_total}
 \alias{plot_hd_total}
-\title{Plot observed and reconstructed decomposition totals}
+\title{Plots observed and reconstructed decomposition totals}
 \usage{
 plot_hd_total(
   object,
@@ -21,8 +21,10 @@ plot_hd_total(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy
-historical-decomposition table.}
+\item{object}{A posterior model object, \code{PosteriorHD}, or a tidy table of
+historical decompositions. Plots that reconstruct the observed series
+require a posterior model; when a table is supplied, cumulative event plots
+require draw-level input.}
 
 \item{probability}{Probability mass of the equal-tailed credible interval
 computed when \code{object} is not already a summary table.}
@@ -50,15 +52,14 @@ model-variable panel.}
 \item{collapse_other}{If \code{TRUE}, contributors outside \code{top_n} (or
 unmapped shocks under \code{shock_groups}) are collapsed into \code{"Other"}.}
 
-\item{model}{Model label used when converting posterior objects to tidy
-plotting tables.}
+\item{model}{Model label used when converting posterior objects to
+posterior-summary tables.}
 
 \item{...}{Additional arguments passed to \code{tidy_hd()} or
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-This plot compares the observed series to the reconstructed decomposition
-total and can optionally show the baseline component plus selected
-contributor lines. The decomposition total is built from the same explicit
-baseline-plus-shock summary used in \code{plot_hd_stacked()}.
+Compares the observed series with the sum of posterior median structural-shock
+contributions and the baseline component. Selected shock contributions can
+also be displayed separately.
 }

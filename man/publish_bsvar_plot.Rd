@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-publication.R
 \name{publish_bsvar_plot}
 \alias{publish_bsvar_plot}
-\title{Visualise posterior results with consistent graphical conventions}
+\title{Plots posterior results with consistent graphical conventions}
 \usage{
 publish_bsvar_plot(
   object,
@@ -42,8 +42,8 @@ when \code{object} is not already a \code{ggplot}.}
 A \code{ggplot} object.
 }
 \description{
-Identifies the posterior quantity represented by a \code{bsvarPost} result,
-constructs the corresponding visualisation, and applies consistent graphical
+Identifies the posterior quantity represented by a \code{bsvarPost} result, plots
+the corresponding posterior result, and applies consistent graphical
 conventions and optional annotations.
 }
 \examples{

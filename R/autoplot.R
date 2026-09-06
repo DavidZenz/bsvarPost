@@ -1,7 +1,11 @@
-#' Visualise posterior summaries
+#' Plots posterior summaries or draw-level response paths
 #'
-#' @param object A `bsvar_post_tbl` containing posterior summaries or model
-#'   comparisons.
+#' Plots posterior medians and credible intervals from summary tables, or
+#' individual paths from supported draw-level response tables. Panels are
+#' determined by variables, structural shocks, and model specifications.
+#'
+#' @param object A `bsvar_post_tbl` containing posterior summaries, supported
+#'   draw-level responses, or model comparisons.
 #' @param variables Response variables to include.
 #' @param shocks Structural shocks to include.
 #' @param models Model specifications to include.

@@ -1,7 +1,7 @@
-#' Posterior probability statements for impulse responses
+#' Evaluates posterior probability statements for impulse responses
 #'
-#' Evaluate threshold or pairwise posterior probability statements on impulse
-#' response draws.
+#' Transforms posterior draws of impulse responses into probabilities that
+#' threshold or pairwise response inequalities are satisfied.
 #'
 #' @param object A posterior model object or a `PosteriorIR` object.
 #' @param variables Response variable selection on the left-hand side (character or integer vector).
@@ -195,7 +195,11 @@ hypothesis_irf.PosteriorBSVART <- hypothesis_irf_model
 #' @export
 hypothesis_irf.PosteriorBSVARSIGN <- hypothesis_irf_model
 
-#' Posterior probability statements for cumulative dynamic multipliers
+#' Evaluates posterior probability statements for cumulative dynamic multipliers
+#'
+#' Transforms posterior draws of cumulative dynamic multipliers into
+#' probabilities that threshold or pairwise response inequalities are
+#' satisfied.
 #'
 #' @inheritParams hypothesis_irf
 #' @param object A posterior model object or a `PosteriorCDM` array.

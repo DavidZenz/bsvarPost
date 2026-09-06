@@ -4,7 +4,7 @@
 \alias{acceptance_diagnostics}
 \alias{acceptance_diagnostics.PosteriorBSVARSIGN}
 \alias{acceptance_diagnostics.default}
-\title{Acceptance and admissibility diagnostics for bsvarSIGNs}
+\title{Summarises acceptance and admissibility diagnostics for bsvarSIGNs}
 \usage{
 acceptance_diagnostics(object, ...)
 
@@ -41,11 +41,11 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{message}.  Each row reports one diagnostic metric.
 }
 \description{
-Summarise the effective sample size and admissibility weights for
-sign-restricted posterior distributions.
+Summarises the stored effective sample size and admissibility weights
+recomputed from posterior draws and identification restrictions.
 These diagnostics do not reconstruct the full proposal/rejection history of
-the sampler. They report quantities available from the stored posterior
-distribution, identification restrictions, and admissibility weights.
+the sampler. They report quantities obtained from the stored posterior
+distribution and its identification restrictions.
 }
 \examples{
 \donttest{

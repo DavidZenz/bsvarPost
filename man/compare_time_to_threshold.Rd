@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_time_to_threshold}
 \alias{compare_time_to_threshold}
-\title{Compare response thresholds across model specifications}
+\title{Compares response thresholds across model specifications}
 \usage{
 compare_time_to_threshold(
   ...,
@@ -54,7 +54,8 @@ across models, with a \code{model} column identifying each model
 specification.
 }
 \description{
-Compare response thresholds across model specifications
+Summarises across model specifications the first horizons at which posterior
+response draws satisfy a specified threshold condition.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

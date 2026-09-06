@@ -1,19 +1,19 @@
 Package: bsvarPost
 Type: Package
-Title: Post-Estimation Analysis for 'bsvars' and 'bsvarSIGNs'
+Title: Posterior Analysis for 'bsvars' and 'bsvarSIGNs'
 Version: 1.0.0
 Authors@R: person("David", "Zenz", role = c("aut", "cre", "cph"), email = "office@davidzenz.com")
-Description: Provides methods for the post-estimation analysis of Bayesian
-    structural vector autoregressions estimated with the 'bsvars' and
-    'bsvarSIGNs' packages. The package computes tabular posterior summaries of
-    impulse responses, cumulative dynamic multipliers, forecast error variance
-    decompositions, historical decompositions, structural shocks, and
-    forecasts. It compares posterior quantities across model specifications,
-    evaluates pointwise and joint posterior hypotheses, selects representative
-    posterior draws, summarises response magnitudes and timing, and reports
-    restriction and acceptance diagnostics for sign-restricted models.
-    Functions for visualising and reporting posterior results complement these
-    analyses.
+Description: Provides procedures for posterior analysis of Bayesian Structural
+    Vector Autoregressions estimated with the 'bsvars' and 'bsvarSIGNs'
+    packages. The package computes posterior summaries of impulse responses,
+    cumulative dynamic multipliers, forecast error variance decompositions,
+    historical decompositions, structural shocks, and forecasts. It facilitates
+    comparison of posterior quantities across model specifications, evaluates
+    pointwise and joint posterior hypotheses, selects representative posterior
+    draws, and summarises response magnitudes and timing. Further procedures
+    report restriction and acceptance diagnostics for sign-restricted models
+    and visualise posterior results. The package aligns with the posterior
+    objects returned by 'bsvars' and 'bsvarSIGNs'.
 License: GPL (>= 3)
 Depends: R (>= 4.1.0)
 Imports:

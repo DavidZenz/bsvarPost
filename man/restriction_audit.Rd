@@ -2,7 +2,7 @@
 % Please edit documentation in R/audit.R
 \name{restriction_audit}
 \alias{restriction_audit}
-\title{Evaluate sign, zero, structural, and narrative restrictions}
+\title{Evaluates sign, zero, structural, and narrative restrictions}
 \usage{
 restriction_audit(
   object,
@@ -36,7 +36,8 @@ A \code{bsvar_post_tbl} with columns \code{model},
 \code{median}, \code{lower}, and \code{upper}.
 }
 \description{
-Evaluate sign, zero, structural, and narrative restrictions
+Transforms posterior draws into posterior probabilities and summaries for
+the supplied or fitted identifying restrictions.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

@@ -24,7 +24,7 @@ The package includes the following articles:
 \itemize{
 \item Post-estimation Analysis with bsvarPost (\code{bsvarPost})
 \item Inference and Comparison (\code{inference-and-comparison})
-\item Historical-Decomposition Analysis (\code{historical-decomposition-events})
+\item Historical Decompositions (\code{historical-decomposition-events})
 \item Analysis of Sign-Restricted Models (\code{sign-restricted-workflows})
 }
 }

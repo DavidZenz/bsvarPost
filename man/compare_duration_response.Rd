@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_duration_response}
 \alias{compare_duration_response}
-\title{Compare response durations across model specifications}
+\title{Compares response durations across model specifications}
 \usage{
 compare_duration_response(
   ...,
@@ -56,7 +56,8 @@ A \code{bsvar_post_tbl} combining duration summary results across
 models, with a \code{model} column identifying each model specification.
 }
 \description{
-Compare response durations across model specifications
+Summarises across model specifications the number of horizons over which
+posterior response draws satisfy a specified threshold condition.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

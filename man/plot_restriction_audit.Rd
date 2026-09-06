@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot-statements.R
 \name{plot_restriction_audit}
 \alias{plot_restriction_audit}
-\title{Visualise posterior restriction probabilities}
+\title{Plots posterior restriction probabilities}
 \usage{
 plot_restriction_audit(
   object,
@@ -44,7 +44,8 @@ raw restriction string.}
 A \code{ggplot} object.
 }
 \description{
-Visualise posterior restriction probabilities
+Plots posterior probabilities and posterior summaries for sign, zero,
+structural, or narrative restrictions.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

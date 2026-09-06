@@ -4,7 +4,7 @@
 \alias{tidy_irf}
 \alias{tidy_irf.default}
 \alias{tidy_irf.PosteriorBSVAR}
-\title{Summarise posterior impulse responses}
+\title{Summarises posterior draws of impulse responses}
 \usage{
 tidy_irf(object, ...)
 
@@ -41,7 +41,9 @@ A \code{bsvar_post_tbl} (tibble subclass) with columns \code{model},
 \code{value} replace the summary statistics.
 }
 \description{
-Summarise posterior impulse responses
+Transforms posterior draws of impulse responses into a table containing
+posterior means, medians, standard deviations, and equal-tailed credible
+intervals, or retains the individual draws when requested.
 }
 \examples{
 # Small posterior (S = 5 draws)
@@ -49,7 +51,7 @@ data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy impulse responses
+# Posterior summaries of impulse responses
 result <- tidy_irf(post, horizon = 3)
 head(result)
 }

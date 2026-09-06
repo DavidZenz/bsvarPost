@@ -48,11 +48,14 @@ resolve_restriction_plot_labels <- function(df, label_style = c("raw", "pretty")
   display
 }
 
-#' Plot posterior probability statements for IRFs or CDMs
+#' Plots posterior probability statements for impulse responses or cumulative multipliers
+#'
+#' Plots posterior probabilities of threshold or pairwise statements about
+#' impulse responses or cumulative dynamic multipliers.
 #'
 #' @param object A hypothesis table, a magnitude-audit table, or an object
 #'   accepted by `hypothesis_irf()` / `hypothesis_cdm()`.
-#' @param type One of `"irf"` or `"cdm"` when `object` is not already a tidy
+#' @param type One of `"irf"` or `"cdm"` when `object` is not already a
 #'   posterior-statement table.
 #' @param variable Optional left-hand-side response variable selection.
 #' @param shock Optional left-hand-side shock selection.
@@ -153,7 +156,10 @@ plot_hypothesis <- function(object, type = c("irf", "cdm"),
   template_bsvar_plot(p, family = "hypothesis")
 }
 
-#' Visualise posterior restriction probabilities
+#' Plots posterior restriction probabilities
+#'
+#' Plots posterior probabilities and posterior summaries for sign, zero,
+#' structural, or narrative restrictions.
 #'
 #' @param object A restriction-audit table or an object accepted by
 #'   `restriction_audit()`.

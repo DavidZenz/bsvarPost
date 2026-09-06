@@ -1,12 +1,14 @@
-#' Plot full-sample historical decomposition components
+#' Plots full-sample historical decomposition components
 #'
-#' Visualise structural-shock contributions over the full sample or aggregate
-#' them over selected historical periods.
+#' Plots posterior structural-shock contributions over the full sample or after
+#' aggregation over selected historical periods.
 #'
 #' @name plot_hd_lines
 #'
-#' @param object A posterior model object, `PosteriorHD`, or a tidy
-#'   historical-decomposition table.
+#' @param object A posterior model object, `PosteriorHD`, or a tidy table of
+#'   historical decompositions. Plots that reconstruct the observed series
+#'   require a posterior model; when a table is supplied, cumulative event plots
+#'   require draw-level input.
 #' @param probability Probability mass of the equal-tailed credible interval
 #'   computed when \code{object} is not already a summary table.
 #' @param variables Variables whose historical decompositions are included.
@@ -23,8 +25,8 @@
 #'   model-variable panel.
 #' @param collapse_other If \code{TRUE}, contributors outside \code{top_n} (or
 #'   unmapped shocks under \code{shock_groups}) are collapsed into `"Other"`.
-#' @param model Model label used when converting posterior objects to tidy
-#'   plotting tables.
+#' @param model Model label used when converting posterior objects to
+#'   posterior-summary tables.
 #' @param by One of `"variable"` or `"shock"` for line-based displays.
 #' @param ... Additional arguments passed to \code{tidy_hd()} or
 #'   \code{tidy_hd_event()} when conversion is required.
@@ -767,11 +769,11 @@ plot_hd_lines <- function(object, probability = 0.90, variables = NULL, shocks =
   apply_hd_time_scale(p, df$axis, df$numeric)
 }
 
-#' Overlay historical decomposition component paths
+#' Plots overlaid historical decomposition component paths
 #'
-#' This is a component-comparison plot. By default it does not overlay the
-#' observed series because the raw level path is not directly comparable to a
-#' shock-only component panel.
+#' Plots posterior median contributions of several structural shocks in the
+#' same panel. By default, the observed series is omitted because its level is
+#' not directly comparable with an individual shock contribution.
 #'
 #' @inheritParams plot_hd_lines
 #' @param intervals If \code{TRUE}, show uncertainty ribbons for overlay plots.
@@ -853,11 +855,11 @@ plot_hd_overlay <- function(object, probability = 0.90, variables = NULL, shocks
   apply_hd_time_scale(p, df$axis, df$numeric)
 }
 
-#' Stacked historical decomposition contributions over time
+#' Plots stacked historical decomposition contributions over time
 #'
-#' This plot shows stacked historical shock contributions over time. Set
-#' \code{include_baseline = TRUE} to add the non-shock \code{"Baseline"}
-#' component and obtain the full displayed decomposition.
+#' Plots posterior median structural-shock contributions as stacked areas over
+#' time. Set \code{include_baseline = TRUE} to include the non-shock
+#' \code{"Baseline"} component in the displayed decomposition.
 #'
 #' @inheritParams plot_hd_lines
 #' @param stack One of `"signed"` or `"absolute"` for stacked plots.
@@ -911,12 +913,11 @@ plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks
   apply_hd_time_scale(p, df$axis, df$numeric)
 }
 
-#' Plot observed and reconstructed decomposition totals
+#' Plots observed and reconstructed decomposition totals
 #'
-#' This plot compares the observed series to the reconstructed decomposition
-#' total and can optionally show the baseline component plus selected
-#' contributor lines. The decomposition total is built from the same explicit
-#' baseline-plus-shock summary used in \code{plot_hd_stacked()}.
+#' Compares the observed series with the sum of posterior median structural-shock
+#' contributions and the baseline component. Selected shock contributions can
+#' also be displayed separately.
 #'
 #' @inheritParams plot_hd_lines
 #' @export
@@ -1028,7 +1029,10 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
   apply_hd_time_scale(p, time_info$axis, time_info$numeric)
 }
 
-#' Plot event contribution shares
+#' Plots event contribution shares
+#'
+#' Plots the absolute or signed shares of structural-shock contributions over a
+#' selected historical period.
 #'
 #' @inheritParams plot_hd_lines
 #' @param start,end Event-window start and end indexes for event-specific plots.
@@ -1079,7 +1083,10 @@ plot_hd_event_share <- function(object, start = NULL, end = start, probability =
   p
 }
 
-#' Plot cumulative event-window contribution paths
+#' Plots cumulative event-window contribution paths
+#'
+#' Plots the cumulative posterior contributions of structural shocks throughout
+#' a selected historical period, including equal-tailed credible intervals.
 #'
 #' @inheritParams plot_hd_lines
 #' @param start,end Event-window start and end indexes for event-specific plots.
@@ -1126,7 +1133,10 @@ plot_hd_event_cumulative <- function(object, start, end = start, probability = 0
   apply_hd_time_scale(p, df$axis, df$numeric)
 }
 
-#' Plot event-window contribution uncertainty by shock
+#' Plots event-window contribution uncertainty by shock
+#'
+#' Plots posterior medians and equal-tailed credible intervals for cumulative
+#' structural-shock contributions over a selected historical period.
 #'
 #' @inheritParams plot_hd_lines
 #' @param start,end Event-window start and end indexes for event-specific plots.

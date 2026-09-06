@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_cdm}
 \alias{compare_cdm}
-\title{Compare cumulative dynamic responses across model specifications}
+\title{Compares cumulative dynamic multipliers across model specifications}
 \usage{
 compare_cdm(
   ...,
@@ -33,7 +33,8 @@ A \code{bsvar_post_tbl} combining results across models, with a
 \code{model} column identifying each model specification.
 }
 \description{
-Compare cumulative dynamic responses across model specifications
+Summarises posterior draws of cumulative dynamic multipliers from two or more
+model objects in a common table identified by model specification.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

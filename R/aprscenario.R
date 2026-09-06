@@ -1,6 +1,10 @@
-#' Express posterior forecasts in APRScenario format
+#' Converts posterior forecasts to APRScenario format
 #'
-#' @param object A posterior model object, a `Forecasts` object, or a tidy
+#' Transforms draws or summaries from the posterior predictive distribution into
+#' the lower, centre, and upper paths used for conditional forecast analysis by
+#' `APRScenario`.
+#'
+#' @param object A posterior model object, a `Forecasts` object, or a posterior
 #'   forecast table returned by [tidy_forecast()].
 #' @param horizon Forecast horizon when `object` is a posterior model object.
 #' @param probability Probability mass of the equal-tailed credible interval.
@@ -89,7 +93,10 @@ as_apr_cond_forc.PosteriorBSVART <- as_apr_cond_forc.PosteriorBSVAR
 #' @export
 as_apr_cond_forc.PosteriorBSVARSIGN <- as_apr_cond_forc.PosteriorBSVAR
 
-#' Express APRScenario forecasts as posterior summary tables
+#' Converts APRScenario forecasts to posterior summary tables
+#'
+#' Transforms lower, centre, and upper APRScenario forecast paths into the
+#' posterior-summary table format used by `bsvarPost`.
 #'
 #' @param data A data frame with APRScenario columns `hor`, `variable`,
 #'   `lower`, `center`, and `upper`.
@@ -131,7 +138,10 @@ tidy_apr_forecast <- function(data, model = "apr") {
   new_bsvar_post_tbl(tbl, object_type = "forecast", draws = FALSE)
 }
 
-#' Compute conditional-forecast matrices with APRScenario
+#' Computes conditional-forecast matrices with APRScenario
+#'
+#' Applies `APRScenario::gen_mats()` to a posterior distribution and its model
+#' specification to obtain the matrices used for conditional forecasting.
 #'
 #' @param posterior A posterior model object.
 #' @param specification The corresponding specification object.
