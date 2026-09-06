@@ -1,7 +1,8 @@
-# Joint posterior probability statements for impulse responses
+# Evaluates joint posterior probability statements for impulse responses
 
-Evaluate whether a set of posterior IRF inequalities holds jointly
-across all selected variables, shocks, and horizons.
+Computes the posterior probability that a set of impulse-response
+inequalities holds jointly across all selected variables, structural
+shocks, and horizons.
 
 ## Usage
 

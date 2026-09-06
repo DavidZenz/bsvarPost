@@ -1,7 +1,8 @@
-# Simultaneous posterior bands for impulse responses
+# Computes simultaneous posterior bands for impulse responses
 
-Construct simultaneous bands over a selected set of impulse responses
-using the empirical sup-norm around the posterior median path.
+Transforms posterior draws of selected impulse responses into
+simultaneous credible bands using the empirical sup-norm around the
+posterior median response path.
 
 ## Usage
 

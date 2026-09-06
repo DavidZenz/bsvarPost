@@ -1,7 +1,7 @@
-# Visualise posterior restriction probabilities across model specifications
+# Plots posterior restriction probabilities across model specifications
 
-Visualise posterior restriction probabilities across model
-specifications
+Plots posterior probabilities of identifying restrictions for comparison
+across model specifications.
 
 ## Usage
 

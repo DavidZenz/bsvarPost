@@ -1,6 +1,7 @@
-# Create a narrative restriction specification
+# Specifies a narrative restriction
 
-Create a narrative restriction specification
+Records the period, restriction type, sign, and structural-shock indices
+used to evaluate a narrative restriction.
 
 ## Usage
 

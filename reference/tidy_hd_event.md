@@ -1,8 +1,8 @@
-# Summarise historical-decomposition contributions over selected periods
+# Summarises historical-decomposition contributions over selected periods
 
-Aggregate posterior draws of structural-shock contributions over a
-selected historical period and report posterior summaries of the
-cumulative contributions.
+Transforms posterior draws of historical decompositions into cumulative
+structural-shock contributions over a selected historical period and
+reports their posterior summaries.
 
 ## Usage
 
@@ -104,8 +104,8 @@ tidy_hd_event(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or tidy historical
-  decomposition table.
+  A posterior model object, `PosteriorHD`, or a posterior-summary table
+  of historical decompositions.
 
 - ...:
 

@@ -1,7 +1,8 @@
-# Peak response summaries for posterior IRFs and CDMs
+# Summarises peak responses from posterior draws
 
-Summarise the peak response level and the horizon at which that peak
-occurs.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of peak response magnitudes and their
+horizons.
 
 ## Usage
 

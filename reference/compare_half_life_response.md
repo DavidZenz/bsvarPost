@@ -1,6 +1,8 @@
-# Compare response half-lives across model specifications
+# Compares response half-lives across model specifications
 
-Compare response half-lives across model specifications
+Summarises across model specifications the first horizons at which
+posterior response draws fall to a specified fraction of a reference
+response.
 
 ## Usage
 

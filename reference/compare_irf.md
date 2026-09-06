@@ -1,6 +1,7 @@
-# Compare posterior impulse responses across model specifications
+# Compares posterior impulse responses across model specifications
 
-Compare posterior impulse responses across model specifications
+Summarises impulse-response draws from two or more posterior model
+objects in a common table identified by model specification.
 
 ## Usage
 

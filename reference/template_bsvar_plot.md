@@ -1,6 +1,7 @@
-# Apply graphical conventions for a posterior quantity
+# Applies graphical conventions for a posterior quantity
 
-Apply graphical conventions for a posterior quantity
+Applies labels, scales, and theme settings appropriate to the specified
+posterior quantity.
 
 ## Usage
 

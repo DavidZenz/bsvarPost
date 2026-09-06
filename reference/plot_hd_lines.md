@@ -1,7 +1,7 @@
-# Plot full-sample historical decomposition components
+# Plots full-sample historical decomposition components
 
-Visualise structural-shock contributions over the full sample or
-aggregate them over selected historical periods.
+Plots posterior structural-shock contributions over the full sample or
+after aggregation over selected historical periods.
 
 ## Usage
 
@@ -28,8 +28,10 @@ plot_hd_lines(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or a tidy
-  historical-decomposition table.
+  A posterior model object, `PosteriorHD`, or a tidy table of historical
+  decompositions. Plots that reconstruct the observed series require a
+  posterior model; when a table is supplied, cumulative event plots
+  require draw-level input.
 
 - probability:
 
@@ -82,8 +84,8 @@ plot_hd_lines(
 
 - model:
 
-  Model label used when converting posterior objects to tidy plotting
-  tables.
+  Model label used when converting posterior objects to
+  posterior-summary tables.
 
 - ...:
 

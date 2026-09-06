@@ -1,6 +1,9 @@
-# Compute conditional-forecast matrices with APRScenario
+# Computes conditional-forecast matrices with APRScenario
 
-Compute conditional-forecast matrices with APRScenario
+Applies
+[`APRScenario::gen_mats()`](https://rdrr.io/pkg/APRScenario/man/gen_mats.html)
+to a posterior distribution and its model specification to obtain the
+matrices used for conditional forecasting.
 
 ## Usage
 

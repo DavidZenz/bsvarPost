@@ -1,8 +1,8 @@
-# Overlay historical decomposition component paths
+# Plots overlaid historical decomposition component paths
 
-This is a component-comparison plot. By default it does not overlay the
-observed series because the raw level path is not directly comparable to
-a shock-only component panel.
+Plots posterior median contributions of several structural shocks in the
+same panel. By default, the observed series is omitted because its level
+is not directly comparable with an individual shock contribution.
 
 ## Usage
 
@@ -30,8 +30,10 @@ plot_hd_overlay(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or a tidy
-  historical-decomposition table.
+  A posterior model object, `PosteriorHD`, or a tidy table of historical
+  decompositions. Plots that reconstruct the observed series require a
+  posterior model; when a table is supplied, cumulative event plots
+  require draw-level input.
 
 - probability:
 
@@ -90,8 +92,8 @@ plot_hd_overlay(
 
 - model:
 
-  Model label used when converting posterior objects to tidy plotting
-  tables.
+  Model label used when converting posterior objects to
+  posterior-summary tables.
 
 - ...:
 

@@ -1,6 +1,7 @@
-# Compare cumulative dynamic responses across model specifications
+# Compares cumulative dynamic multipliers across model specifications
 
-Compare cumulative dynamic responses across model specifications
+Summarises posterior draws of cumulative dynamic multipliers from two or
+more model objects in a common table identified by model specification.
 
 ## Usage
 

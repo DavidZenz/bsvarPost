@@ -1,23 +1,25 @@
 # Inference and Comparison
 
-This article considers inferential questions that cannot be answered
-from a pointwise posterior median alone. The running example compares
-two lag orders for a Bayesian structural VAR estimated with
+This vignette presents posterior inference and model comparison for
+quantities obtained from Bayesian structural vector autoregressions. The
+empirical example compares two lag orders for models estimated using
 [`bsvars::us_fiscal_lsuw`](https://bsvars.org/bsvars/reference/us_fiscal_lsuw.html).
-The quantity of interest is the response of GDP to a government-spending
-shock; no sign or magnitude is imposed in advance.
+The analysis focuses on the response of GDP to a government-spending
+shock, without imposing its sign or magnitude.
 
-The precomputed posterior objects contain 200 retained draws. They can
-be replaced with any compatible posterior object estimated with `bsvars`
-or `bsvarSIGNs`.
+The precomputed posterior objects contain 200 retained draws. Any
+compatible posterior object estimated with `bsvars` or `bsvarSIGNs` can
+be used instead.
 
-## Is the conclusion sensitive to specification?
+## Comparison of model specifications
 
-To evaluate sensitivity to the lag order,
+The
 [`compare_irf()`](https://davidzenz.github.io/bsvarPost/reference/compare_irf.md)
-computes posterior summaries for both model specifications in a single
-table. Named arguments identify the specifications, while the remaining
-columns have the same meaning as in
+function computes posterior summaries for several model specifications
+and returns them in a single table. In this example, the comparison
+assesses sensitivity of the impulse responses to the lag order. Named
+arguments identify the specifications, while the remaining columns have
+the same interpretation as in
 [`tidy_irf()`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md).
 
 ``` r
@@ -46,9 +48,9 @@ subset(
 #> 8 longer_lag      12 -0.00220   -0.00544 0.00227
 ```
 
-Differences in posterior medians or credible intervals indicate
-sensitivity to the model specification; they do not constitute a formal
-model-selection criterion. Corresponding comparisons are available for
+Differences in posterior medians or credible intervals describe
+sensitivity to the model specification. They do not provide a formal
+model-selection criterion. The corresponding functions compare
 [CDMs](https://davidzenz.github.io/bsvarPost/reference/compare_cdm.md),
 [FEVDs](https://davidzenz.github.io/bsvarPost/reference/compare_fevd.md),
 [forecasts](https://davidzenz.github.io/bsvarPost/reference/compare_forecast.md),
@@ -58,14 +60,15 @@ events](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.md).
 ![Posterior impulse responses under two model
 specifications](figures/compare-irf-showcase.png)
 
-## How much posterior support does a statement have?
+## Posterior probabilities of hypotheses
 
-### Pointwise support
+### Pointwise posterior probabilities
 
-For a hypothesis at selected horizons,
+The
 [`hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_irf.md)
-reports the proportion of posterior draws that satisfy the stated
-inequality. Here the hypothesis is that the response of GDP is positive.
+function reports the proportion of posterior draws that satisfy a
+specified inequality at selected horizons. The hypothesis below states
+that the response of GDP is positive.
 
 ``` r
 
@@ -89,25 +92,25 @@ positive_gdp[, c("horizon", "posterior_prob", "median_gap",
 #> 4      12          0.09  -0.00158    -0.00394  0.000289
 ```
 
-`posterior_prob` is the posterior probability of the stated inequality,
-conditional on the model specification; it is not a p-value. The gap
-columns summarise the posterior distribution of the response minus the
-threshold and therefore retain information about the magnitude of the
-response. Use
+The `posterior_prob` column gives the posterior probability of the
+inequality, conditional on the model specification; it is not a p-value.
+The gap columns summarise the posterior distribution of the response
+minus the threshold and retain information about the magnitude of the
+response. The
 [`hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.md)
-for the same question about cumulative responses.
+function provides the corresponding inference for cumulative responses.
 
 ![Posterior probability that an impulse response is positive at each
 horizon](figures/hypothesis-showcase.png)
 
-### Joint support across a path
+### Joint posterior probabilities
 
-Pointwise probabilities do not give the probability that all conditions
-are satisfied simultaneously. For the stronger hypothesis that the
-response is positive from impact through horizon 8,
+Pointwise probabilities differ from the probability that all conditions
+are satisfied simultaneously. The
 [`joint_hypothesis_irf()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_irf.md)
-evaluates the intersection of the nine inequalities within each
-posterior draw.
+function evaluates the intersection of the inequalities within each
+posterior draw. The hypothesis below requires a positive response from
+impact through horizon 8.
 
 ``` r
 
@@ -127,20 +130,21 @@ positive_path[, c("posterior_prob", "n_constraints")]
 #> 1          0.095             9
 ```
 
-The joint posterior probability can be considerably smaller than its
-pointwise counterparts because all nine inequalities must hold in the
-same posterior draw. See
+The joint posterior probability can be considerably smaller than the
+pointwise probabilities because all nine inequalities must hold in the
+same posterior draw. The
 [`joint_hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_cdm.md)
-for cumulative paths.
+function provides the corresponding inference for cumulative response
+paths.
 
-### A magnitude question
+### Posterior probabilities for response magnitudes
 
-A hypothesis about the sign alone may not address the economically
-relevant magnitude. Suppose `0.001` is a prespecified, substantively
-meaningful response on the scale used to estimate the model.
+A sign hypothesis does not describe the magnitude of the response.
+Suppose `0.001` is a prespecified, economically meaningful value on the
+scale used to estimate the model. The
 [`magnitude_audit()`](https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.md)
-reports the posterior probability that the absolute response exceeds
-this threshold at horizon 8.
+function reports the posterior probability that the absolute response
+exceeds this threshold at horizon 8.
 
 ``` r
 
@@ -163,18 +167,19 @@ material_response[, c("posterior_prob", "median_gap",
 #> 1          0.595   0.000229 -0.000818   0.00201
 ```
 
-The threshold should follow from the variable transformation and the
-empirical application, and should not be selected from the posterior
-results. To evaluate cumulative dynamic multipliers, set `type = "cdm"`;
-the available scaling options are documented in
+The threshold should be determined by the variable transformation and
+the empirical application rather than selected from the posterior
+results. Setting `type = "cdm"` gives the corresponding probability for
+cumulative dynamic multipliers. The available scaling options are
+documented in
 [`magnitude_audit()`](https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.md).
 
-## Does an interval cover the whole path?
+## Simultaneous credible bands
 
-Ordinary credible intervals have pointwise coverage. A 90% simultaneous
-credible band uses a single sup-norm critical value for the selected
-response path, so that 90% of posterior draws lie within the band over
-the complete selection.
+Ordinary credible intervals provide pointwise coverage. A 90%
+simultaneous credible band uses one sup-norm critical value for the
+selected response path, such that 90% of posterior draws lie within the
+band over the complete selection.
 
 ``` r
 
@@ -197,24 +202,23 @@ gdp_band[gdp_band$horizon %in% c(0, 4, 8, 12),
 #> 4      12 -0.00158   -0.00368 0.000523               0.9
 ```
 
-The band applies only to the response variables, structural shocks, and
-horizons used in its construction. Expanding this set generally widens
-the band. Use
+The band is conditional on the response variables, structural shocks,
+and horizons used in its construction. Expanding this set generally
+widens the band. The
 [`simultaneous_cdm()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_cdm.md)
-for cumulative responses and
+function constructs simultaneous bands for cumulative responses, and
 [`plot_simultaneous()`](https://davidzenz.github.io/bsvarPost/reference/plot_simultaneous.md)
-when a graphical representation facilitates interpretation of the
-response path.
+plots the resulting response paths.
 
-## Which single draw represents the posterior center?
+## Representative posterior draws
 
 A response path formed from pointwise posterior medians need not
-correspond to any retained parameter draw.
+correspond to a retained parameter draw. The
 [`median_target_irf()`](https://davidzenz.github.io/bsvarPost/reference/median_target_irf.md)
-instead selects the draw closest to the median target over the specified
-responses and horizons. Including both GDP and government spending in
-the target ensures that the two reported paths correspond to the same
-structural model draw.
+function selects the draw closest to the median target over the
+specified responses and horizons. Including both GDP and government
+spending in the target ensures that both reported paths correspond to
+the same structural model draw.
 
 ``` r
 
@@ -241,25 +245,25 @@ subset(
 #> 4      12 -0.00172          70 median_target
 ```
 
-This draw is appropriate when a subsequent calculation requires one
-internally consistent structural model. It is a representative draw, not
-a measure of posterior uncertainty; the full posterior distribution and
-its credible intervals should also be reported. The same selection is
-available for
+This selection provides one internally consistent structural model for
+calculations that require a single draw. It is not a measure of
+posterior uncertainty; the posterior distribution and its credible
+intervals should be reported separately. The same selection is available
+for
 [CDMs](https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.md).
-For sign-restricted models, a distinct [most-likely admissible
+For sign-restricted models, the [most-likely admissible
 draw](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.md)
-can be selected.
+provides a distinct representative selection.
 
 ![Representative posterior draw and pointwise posterior
 summary](figures/representative-showcase.png)
 
-## When does the response arrive and fade?
+## Timing and persistence of responses
 
-The response-timing functions compute the relevant quantity for each
-posterior draw before summarising its distribution. Consequently,
-uncertainty about timing is not inferred from a single posterior median
-response. As an example of persistence, consider the response of
+The response-timing functions compute each timing quantity for every
+posterior draw and then summarise its posterior distribution. Thus,
+inference about timing does not rely on a single posterior median
+response. The example below analyses persistence in the response of
 government spending to its own shock over 20 quarters.
 
 ``` r
@@ -293,34 +297,36 @@ data.frame(
 #> 4    below 0.015               11            horizon        0.975
 ```
 
-For half-life and threshold summaries, `reached_prob` is the posterior
-probability that the event occurs within the selected horizon. A
-conditional median may appear precise even when this probability is
-small.
+For the half-life and threshold summaries, `reached_prob` gives the
+posterior probability that the event occurs within the selected horizon.
+The conditional median should be interpreted together with this
+probability.
 [`peak_response()`](https://davidzenz.github.io/bsvarPost/reference/peak_response.md)
 also reports the posterior distribution of the peak value. Alternative
-definitions are documented for
+definitions are available for
 [`duration_response()`](https://davidzenz.github.io/bsvarPost/reference/duration_response.md),
 [`half_life_response()`](https://davidzenz.github.io/bsvarPost/reference/half_life_response.md),
 and
 [`time_to_threshold()`](https://davidzenz.github.io/bsvarPost/reference/time_to_threshold.md).
 
-## Choose the statement that matches the question
+## Summary of posterior inference
 
-- Use `compare_*()` to evaluate sensitivity across model specifications.
-- Use `hypothesis_*()` to compute pointwise posterior probabilities.
-- Use `joint_hypothesis_*()` when all selected inequalities must hold
-  simultaneously.
-- Use
+- The `compare_*()` functions evaluate sensitivity across model
+  specifications.
+- The `hypothesis_*()` functions compute pointwise posterior
+  probabilities.
+- The `joint_hypothesis_*()` functions evaluate whether all selected
+  inequalities hold simultaneously.
+- The
   [`magnitude_audit()`](https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.md)
-  to evaluate a prespecified, economically relevant threshold.
-- Use `simultaneous_*()` when the inferential statement concerns
-  coverage of an entire selected response path.
-- Use a median-target draw only when one coherent retained model draw is
-  required.
-- Use response-timing summaries to report when, for how long, and with
-  what probability a response reaches a specified event; these summaries
-  do not replace the posterior distribution of the response.
+  function evaluates a prespecified, economically relevant threshold.
+- The `simultaneous_*()` functions construct credible bands for an
+  entire selected response path.
+- A median-target draw provides one coherent retained model draw when it
+  is required.
+- Response-timing summaries describe when, for how long, and with what
+  probability a response reaches a specified event. They complement the
+  posterior distribution of the response.
 
 For posterior diagnostics and representative draws in sign-restricted
 models, see [Analysis of Sign-Restricted

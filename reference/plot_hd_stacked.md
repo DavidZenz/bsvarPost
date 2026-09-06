@@ -1,8 +1,8 @@
-# Stacked historical decomposition contributions over time
+# Plots stacked historical decomposition contributions over time
 
-This plot shows stacked historical shock contributions over time. Set
-`include_baseline = TRUE` to add the non-shock `"Baseline"` component
-and obtain the full displayed decomposition.
+Plots posterior median structural-shock contributions as stacked areas
+over time. Set `include_baseline = TRUE` to include the non-shock
+`"Baseline"` component in the displayed decomposition.
 
 ## Usage
 
@@ -29,8 +29,10 @@ plot_hd_stacked(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or a tidy
-  historical-decomposition table.
+  A posterior model object, `PosteriorHD`, or a tidy table of historical
+  decompositions. Plots that reconstruct the observed series require a
+  posterior model; when a table is supplied, cumulative event plots
+  require draw-level input.
 
 - probability:
 
@@ -83,8 +85,8 @@ plot_hd_stacked(
 
 - model:
 
-  Model label used when converting posterior objects to tidy plotting
-  tables.
+  Model label used when converting posterior objects to
+  posterior-summary tables.
 
 - ...:
 

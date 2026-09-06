@@ -1,6 +1,8 @@
-# Express posterior forecasts in APRScenario format
+# Converts posterior forecasts to APRScenario format
 
-Express posterior forecasts in APRScenario format
+Transforms draws or summaries from the posterior predictive distribution
+into the lower, centre, and upper paths used for conditional forecast
+analysis by `APRScenario`.
 
 ## Usage
 
@@ -44,8 +46,8 @@ as_apr_cond_forc(
 
 - object:
 
-  A posterior model object, a `Forecasts` object, or a tidy forecast
-  table returned by
+  A posterior model object, a `Forecasts` object, or a posterior
+  forecast table returned by
   [`tidy_forecast()`](https://davidzenz.github.io/bsvarPost/reference/tidy_forecast.md).
 
 - ...:

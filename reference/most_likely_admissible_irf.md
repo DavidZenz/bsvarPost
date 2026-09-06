@@ -1,6 +1,6 @@
-# Most-likely-admissible representative impulse responses
+# Selects the most-likely admissible draw of impulse responses
 
-Select the admissible impulse-response draw with the highest posterior
+Selects the admissible impulse-response draw with the highest posterior
 admissibility weight using
 [`representative_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
 with `method = "most_likely_admissible"`.

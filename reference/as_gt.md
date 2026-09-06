@@ -1,6 +1,6 @@
-# Render bsvarPost tables with gt
+# Formats posterior summaries with gt
 
-Convert posterior summary tables or
+Converts posterior summary tables or
 [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
 results to a `gt::gt_tbl` object.
 

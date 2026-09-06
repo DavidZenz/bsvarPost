@@ -1,10 +1,10 @@
-# Acceptance and admissibility diagnostics for bsvarSIGNs
+# Summarises acceptance and admissibility diagnostics for bsvarSIGNs
 
-Summarise the effective sample size and admissibility weights for
-sign-restricted posterior distributions. These diagnostics do not
-reconstruct the full proposal/rejection history of the sampler. They
-report quantities available from the stored posterior distribution,
-identification restrictions, and admissibility weights.
+Summarises the stored effective sample size and admissibility weights
+recomputed from posterior draws and identification restrictions. These
+diagnostics do not reconstruct the full proposal/rejection history of
+the sampler. They report quantities obtained from the stored posterior
+distribution and its identification restrictions.
 
 ## Usage
 

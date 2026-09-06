@@ -1,4 +1,4 @@
-# Historical-Decomposition Analysis
+# Historical Decompositions
 
 This article shows how to summarise historical-decomposition
 contributions over event windows, rank shocks, and compare events across

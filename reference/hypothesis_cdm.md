@@ -1,6 +1,8 @@
-# Posterior probability statements for cumulative dynamic multipliers
+# Evaluates posterior probability statements for cumulative dynamic multipliers
 
-Posterior probability statements for cumulative dynamic multipliers
+Transforms posterior draws of cumulative dynamic multipliers into
+probabilities that threshold or pairwise response inequalities are
+satisfied.
 
 ## Usage
 

@@ -1,6 +1,8 @@
-# Plot cumulative event-window contribution paths
+# Plots cumulative event-window contribution paths
 
-Plot cumulative event-window contribution paths
+Plots the cumulative posterior contributions of structural shocks
+throughout a selected historical period, including equal-tailed credible
+intervals.
 
 ## Usage
 
@@ -26,8 +28,10 @@ plot_hd_event_cumulative(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or a tidy
-  historical-decomposition table.
+  A posterior model object, `PosteriorHD`, or a tidy table of historical
+  decompositions. Plots that reconstruct the observed series require a
+  posterior model; when a table is supplied, cumulative event plots
+  require draw-level input.
 
 - start, end:
 
@@ -70,8 +74,8 @@ plot_hd_event_cumulative(
 
 - model:
 
-  Model label used when converting posterior objects to tidy plotting
-  tables.
+  Model label used when converting posterior objects to
+  posterior-summary tables.
 
 - ...:
 

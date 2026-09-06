@@ -1,6 +1,8 @@
-# Visualise posterior summaries
+# Plots posterior summaries or draw-level response paths
 
-Visualise posterior summaries
+Plots posterior medians and credible intervals from summary tables, or
+individual paths from supported draw-level response tables. Panels are
+determined by variables, structural shocks, and model specifications.
 
 ## Usage
 
@@ -20,8 +22,8 @@ autoplot(
 
 - object:
 
-  A `bsvar_post_tbl` containing posterior summaries or model
-  comparisons.
+  A `bsvar_post_tbl` containing posterior summaries, supported
+  draw-level responses, or model comparisons.
 
 - variables:
 

@@ -1,6 +1,7 @@
-# Evaluate magnitude hypotheses for IRFs or CDMs
+# Evaluates magnitude hypotheses for impulse responses or cumulative multipliers
 
-Evaluate magnitude hypotheses for IRFs or CDMs
+Computes posterior probabilities and summaries for magnitude conditions
+on impulse responses or cumulative dynamic multipliers.
 
 ## Usage
 

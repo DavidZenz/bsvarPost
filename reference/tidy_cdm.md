@@ -1,6 +1,9 @@
-# Summarise posterior cumulative dynamic responses
+# Summarises posterior draws of cumulative dynamic multipliers
 
-Summarise posterior cumulative dynamic responses
+Transforms posterior draws of cumulative dynamic multipliers into a
+table containing posterior means, medians, standard deviations, and
+equal-tailed credible intervals, or retains the individual draws when
+requested.
 
 ## Usage
 
@@ -74,7 +77,7 @@ spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy cumulative dynamic multipliers
+# Posterior summaries of cumulative dynamic multipliers
 result <- tidy_cdm(post, horizon = 3)
 head(result)
 #> # A tibble: 6 × 10

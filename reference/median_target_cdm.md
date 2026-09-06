@@ -1,6 +1,6 @@
-# Median-target representative cumulative dynamic multipliers
+# Selects the median-target draw of cumulative dynamic multipliers
 
-Select the cumulative-response draw closest to the posterior median
+Selects the cumulative-response draw closest to the posterior median
 response path using
 [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
 with `method = "median_target"`.

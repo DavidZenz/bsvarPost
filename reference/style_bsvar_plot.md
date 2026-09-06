@@ -1,6 +1,7 @@
-# Apply a consistent graphical style to posterior summaries
+# Applies a consistent graphical style to posterior summaries
 
-Apply a consistent graphical style to posterior summaries
+Applies the selected theme, colour scale, labels, and optional
+annotations to an existing plot of posterior summaries.
 
 ## Usage
 

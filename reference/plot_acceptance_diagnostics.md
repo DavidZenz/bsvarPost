@@ -1,6 +1,7 @@
-# Visualise acceptance diagnostics across model specifications
+# Plots acceptance diagnostics across model specifications
 
-Visualise acceptance diagnostics across model specifications
+Plots effective sample sizes, admissibility weights, and associated
+warning indicators for sign-restricted posterior distributions.
 
 ## Usage
 
@@ -24,8 +25,8 @@ plot_acceptance_diagnostics(
 
 - object:
 
-  A tidy acceptance-diagnostics table, or a `PosteriorBSVARSIGN` object
-  that can be converted with
+  An acceptance-diagnostics table, or a `PosteriorBSVARSIGN` object that
+  can be converted with
   [`acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/acceptance_diagnostics.md).
 
 - metrics:

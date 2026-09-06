@@ -1,6 +1,8 @@
-# Rank structural shocks by contributions over selected periods
+# Ranks structural shocks by contributions over selected periods
 
-Rank structural shocks by contributions over selected periods
+Summarises posterior historical decompositions over a selected period
+and ranks structural shocks by the absolute or signed magnitude of their
+contributions.
 
 ## Usage
 
@@ -21,8 +23,8 @@ shock_ranking(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or tidy historical
-  decomposition table.
+  A posterior model object, `PosteriorHD`, or a posterior-summary table
+  of historical decompositions.
 
 - start:
 

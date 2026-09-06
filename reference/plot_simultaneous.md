@@ -1,6 +1,8 @@
-# Plot simultaneous posterior bands
+# Plots simultaneous posterior bands
 
-Plot simultaneous posterior bands
+Plots posterior median response paths together with simultaneous
+credible bands over the selected variables, structural shocks, and
+horizons.
 
 ## Usage
 

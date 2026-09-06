@@ -1,6 +1,7 @@
-# Compare response durations across model specifications
+# Compares response durations across model specifications
 
-Compare response durations across model specifications
+Summarises across model specifications the number of horizons over which
+posterior response draws satisfy a specified threshold condition.
 
 ## Usage
 

@@ -1,6 +1,8 @@
-# Representative cumulative dynamic multipliers
+# Selects a representative draw of cumulative dynamic multipliers
 
-Representative cumulative dynamic multipliers
+Selects one draw from the posterior distribution of cumulative dynamic
+multipliers using either median-target distance or posterior
+admissibility weights.
 
 ## Usage
 

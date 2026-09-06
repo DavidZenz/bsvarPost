@@ -1,6 +1,7 @@
-# Create a structural restriction specification
+# Specifies a structural restriction
 
-Create a structural restriction specification
+Records the variable, structural shock, and sign used to evaluate a
+contemporaneous structural restriction.
 
 ## Usage
 

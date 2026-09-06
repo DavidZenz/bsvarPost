@@ -1,6 +1,7 @@
-# Visualise response timing and persistence across model specifications
+# Plots response timing and persistence across model specifications
 
-Visualise response timing and persistence across model specifications
+Plots posterior summaries of response peaks, durations, half-lives, or
+threshold horizons for comparison across model specifications.
 
 ## Usage
 

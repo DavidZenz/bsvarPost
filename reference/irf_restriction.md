@@ -1,6 +1,7 @@
-# Create an impulse-response restriction specification
+# Specifies an impulse-response restriction
 
-Create an impulse-response restriction specification
+Records the variable, structural shock, horizon, and sign or zero
+condition used to evaluate an impulse-response restriction.
 
 ## Usage
 

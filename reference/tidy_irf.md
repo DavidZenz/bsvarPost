@@ -1,6 +1,8 @@
-# Summarise posterior impulse responses
+# Summarises posterior draws of impulse responses
 
-Summarise posterior impulse responses
+Transforms posterior draws of impulse responses into a table containing
+posterior means, medians, standard deviations, and equal-tailed credible
+intervals, or retains the individual draws when requested.
 
 ## Usage
 
@@ -64,7 +66,7 @@ spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy impulse responses
+# Posterior summaries of impulse responses
 result <- tidy_irf(post, horizon = 3)
 head(result)
 #> # A tibble: 6 × 10

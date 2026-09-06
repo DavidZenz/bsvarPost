@@ -1,7 +1,7 @@
-# Posterior probability statements for impulse responses
+# Evaluates posterior probability statements for impulse responses
 
-Evaluate threshold or pairwise posterior probability statements on
-impulse response draws.
+Transforms posterior draws of impulse responses into probabilities that
+threshold or pairwise response inequalities are satisfied.
 
 ## Usage
 

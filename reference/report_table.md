@@ -1,6 +1,6 @@
-# Prepare tables of posterior results
+# Prepares tables of posterior results
 
-Arrange posterior summaries in data frames with a consistent column
+Arranges posterior summaries in data frames with a consistent column
 order and descriptive column names.
 
 ## Usage

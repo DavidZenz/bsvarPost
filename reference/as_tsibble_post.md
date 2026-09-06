@@ -1,6 +1,7 @@
-# Express posterior summaries as a tsibble
+# Converts posterior summaries to a tsibble
 
-Express posterior summaries as a tsibble
+Transforms a posterior-summary table into a `tsibble`, using the
+response horizon or observation time as its index.
 
 ## Usage
 

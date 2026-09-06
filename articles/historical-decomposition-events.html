@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Historical-Decomposition Analysis • bsvarPost</title>
+<title>Historical Decompositions • bsvarPost</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Historical-Decomposition Analysis">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Historical Decompositions">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -35,8 +35,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
-    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
-    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Inference and Comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical Decompositions</a></li>
     <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul>
 </li>
@@ -60,7 +60,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Historical-Decomposition Analysis</h1>
+      <h1>Historical Decompositions</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DavidZenz/bsvarPost/blob/main/vignettes/historical-decomposition-events.Rmd" class="external-link"><code>vignettes/historical-decomposition-events.Rmd</code></a></small>
@@ -70,24 +70,25 @@
     
     
 <!-- generated-by: gsd-doc-writer -->
-<p>Historical decompositions from <code>bsvars</code> and
-<code>bsvarSIGNs</code> describe the contributions of structural shocks
-to observed variables through time. <code>bsvarPost</code> summarises
-these contributions over a substantively chosen period, ranks the shocks
-within that period, and compares the same event across model
-specifications.</p>
-<p>This article assumes that you already have a fitted posterior and
-understand the identification behind its shock labels. See the
-parent-package documentation for estimation and the standard
-historical-decomposition analysis. The precomputed fiscal posteriors
-used here avoid re-estimation and make the numerical results
-reproducible.</p>
+<p>Historical decompositions from <strong>bsvars</strong> and
+<strong>bsvarSIGNs</strong> attribute the observed values of each
+variable to structural shocks at each point in time.
+<strong>bsvarPost</strong> aggregates these contributions over selected
+periods, ranks the contributions of individual shocks, and compares
+results across model specifications.</p>
+<p>The analysis accepts a posterior model, a <code>PosteriorHD</code>
+object, or a draw-level table of historical decompositions. Economically
+meaningful shock labels should reflect the identification of the model.
+The documentation of <strong>bsvars</strong> and
+<strong>bsvarSIGNs</strong> describes estimation and computation of
+historical decompositions. The examples below use stored posterior draws
+to reproduce the reported results without re-estimating the models.</p>
 <div class="section level2">
-<h2 id="posterior-draws-of-shock-contributions">Posterior draws of shock contributions<a class="anchor" aria-label="anchor" href="#posterior-draws-of-shock-contributions"></a>
+<h2 id="posterior-draws">Posterior draws<a class="anchor" aria-label="anchor" href="#posterior-draws"></a>
 </h2>
-<p>Event-specific summaries require posterior draws rather than a table
-of pointwise posterior intervals. Obtain the draw-level contributions
-with <a href="../reference/tidy_hd.html"><code>tidy_hd(draws = TRUE)</code></a>:</p>
+<p>Event-specific analysis requires posterior draws of historical
+decompositions, not only pointwise posterior summaries. Obtain these
+draws with <a href="../reference/tidy_hd.html"><code>tidy_hd(draws = TRUE)</code></a>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hd_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd.html">tidy_hd</a></span><span class="op">(</span><span class="va">post</span>, draws <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
@@ -98,37 +99,36 @@ with <a href="../reference/tidy_hd.html"><code>tidy_hd(draws = TRUE)</code></a>:
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;     first    last draws</span></span>
 <span><span class="co">#&gt; 1 1948.25 2024.25   200</span></span></code></pre></div>
-<p>Each row identifies a model, variable, shock, observation, and
-posterior draw. Retaining the draws ensures that posterior uncertainty
-is summarised <em>after</em> the contributions have been aggregated over
-the selected period.</p>
-<p>The full-sample decomposition provides context for selecting an event
-period. The first figure displays the principal shock contributions
-separately; the second displays their composition.</p>
+<p>Each row identifies the model, variable, shock, observation, and
+posterior draw. Aggregation is performed separately for every draw.
+Posterior summaries therefore account for uncertainty in the
+contribution accumulated over the entire event period.</p>
+<p>The full-sample historical decomposition provides the context for the
+event analysis. The figures show the main shock contributions as
+separate paths and as stacked contributions.</p>
 <p><img src="figures/hd-overlay-showcase.png" class="r-plt" alt="Structural-shock contributions to GDP over the full sample" width="100%"></p>
 <p><img src="figures/hd-full-showcase.png" class="r-plt" alt="Stacked structural-shock contributions to GDP over the full sample" width="100%"></p>
 </div>
 <div class="section level2">
-<h2 id="define-the-event-period-before-ranking-shocks">Define the event period before ranking shocks<a class="anchor" aria-label="anchor" href="#define-the-event-period-before-ranking-shocks"></a>
+<h2 id="event-periods">Event periods<a class="anchor" aria-label="anchor" href="#event-periods"></a>
 </h2>
-<p>The event period is determined by the empirical question rather than
-by the estimated ranking of shocks. A defensible analysis therefore
-usually does three things:</p>
+<p>The empirical question determines the event period. It should not be
+selected from the estimated ranking of shocks. The analysis should
+therefore:</p>
 <ol style="list-style-type: decimal">
-<li>Define the dates from the research question or an external
-chronology, before inspecting which shock ranks first.</li>
-<li>Match <code>start</code> and <code>end</code> to the model’s time
-labels and use a window consistent with the data frequency.</li>
-<li>Repeat the analysis over reasonable neighboring windows as a
-sensitivity check, without silently replacing the prespecified
-result.</li>
+<li>define the dates from the research question or an external
+chronology;</li>
+<li>match <code>start</code> and <code>end</code> to the time labels and
+frequency of the data; and</li>
+<li>assess sensitivity to reasonable neighbouring periods while
+retaining the prespecified result.</li>
 </ol>
-<p>For this example, we use the complete four-quarter period from
-<code>1958</code> to <code>1958.75</code>. It is a convenient interval
-covered by both stored posterior samples; the example does not assign a
-particular historical interpretation to this period. The samples contain
-only 200 posterior draws, and the interpretation of the shock names
-follows from the identification of the fitted model.</p>
+<p>The example uses the four quarters from <code>1958</code> to
+<code>1958.75</code>, which are present in both stored posterior
+samples. No particular historical interpretation is assigned to this
+period. Each sample contains 200 posterior draws. The economic
+interpretation of every shock follows from the identifying restrictions
+of the fitted model.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">event_start</span> <span class="op">&lt;-</span> <span class="st">"1958"</span></span>
 <span><span class="va">event_end</span> <span class="op">&lt;-</span> <span class="st">"1958.75"</span></span>
@@ -153,22 +153,22 @@ follows from the identification of the fitted model.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs    1958        1958.75    -<span style="color: #BB0000;">3.15</span> -<span style="color: #BB0000;">11.9</span>   0.435</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      ttr   1958        1958.75    -<span style="color: #BB0000;">1.23</span>  -<span style="color: #BB0000;">5.86</span>  4.48</span></span></code></pre></div>
 <p><a href="../reference/tidy_hd_event.html"><code>tidy_hd_event()</code></a>
-sums each shock’s contribution across the inclusive period separately
-for each posterior draw, then reports posterior summaries. Set
-<code>draws = TRUE</code> when a subsequent calculation requires the
-aggregated draws themselves.</p>
-<p>The largest posterior median should not be interpreted as certainty
-about a shock’s historical importance. The interval columns report
-posterior uncertainty, while the structural interpretation of each shock
-follows from the identification of the original model.</p>
+sums the contribution of each shock over the inclusive period for every
+posterior draw and then reports posterior summaries. Set
+<code>draws = TRUE</code> to retain the aggregated draws for subsequent
+calculations.</p>
+<p>The largest posterior median does not establish that a shock was the
+dominant historical source of variation. Credible intervals describe
+posterior uncertainty about the aggregated contribution, while the
+economic meaning of the shock remains determined by the identification
+of the model.</p>
 </div>
 <div class="section level2">
-<h2 id="rank-shock-contributions">Rank shock contributions<a class="anchor" aria-label="anchor" href="#rank-shock-contributions"></a>
+<h2 id="shock-rankings">Shock rankings<a class="anchor" aria-label="anchor" href="#shock-rankings"></a>
 </h2>
 <p><a href="../reference/shock_ranking.html"><code>shock_ranking()</code></a>
-orders shocks separately within each model-variable panel. Restricting
-to <code>gdp</code> keeps the result aligned with one research
-question.</p>
+ranks shocks within each model and variable. The example reports results
+for <code>gdp</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ranking</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shock_ranking.html">shock_ranking</a></span><span class="op">(</span></span>
 <span>  <span class="va">hd_draws</span>,</span>
@@ -186,15 +186,14 @@ question.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gdp   -<span style="color: #BB0000;">14.9</span>  -<span style="color: #BB0000;">53.5</span>  24.4       1</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs     -<span style="color: #BB0000;">3.15</span> -<span style="color: #BB0000;">11.9</span>   0.435     2</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      ttr    -<span style="color: #BB0000;">1.23</span>  -<span style="color: #BB0000;">5.86</span>  4.48      3</span></span></code></pre></div>
-<p><code>ranking = "absolute"</code> answers which shock has the largest
-median contribution in absolute value. Use
-<code>ranking = "signed"</code> when the direction of the contribution
-is part of the estimand. In either case, <code>rank</code> summarises
-the posterior median; overlapping credible intervals may indicate
-substantial uncertainty about the ordering.</p>
-<p>The ranked-contribution plot displays the sign and scale of each
-contribution while ordering the bars by the absolute posterior
-median.</p>
+<p>With <code>ranking = "absolute"</code>, shocks are ordered by the
+absolute posterior median of their contribution. Use
+<code>ranking = "signed"</code> when the sign is part of the estimand.
+In both cases, <code>rank</code> is based on posterior medians.
+Overlapping credible intervals indicate uncertainty that is not
+represented by this ordering.</p>
+<p>The plot reports the sign and magnitude of each contribution and
+orders the bars by the absolute posterior median.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ranking_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">ranking</span>,</span>
@@ -205,20 +204,20 @@ median.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">ranking_plot</span></span></code></pre></div>
 <p><img src="historical-decomposition-events_files/figure-html/ranking-plot-1.png" class="r-plt" alt="" width="672"></p>
-<p>To visualise contributions without ranking them, use <a href="../reference/plot_hd_event.html"><code>plot_hd_event()</code></a>.
+<p>To plot contributions without ranking, use <a href="../reference/plot_hd_event.html"><code>plot_hd_event()</code></a>.
 The more specialized <a href="../reference/plot_hd_event_share.html"><code>plot_hd_event_share()</code></a>,
 <a href="../reference/plot_hd_event_cumulative.html"><code>plot_hd_event_cumulative()</code></a>,
 and <a href="../reference/plot_hd_event_distribution.html"><code>plot_hd_event_distribution()</code></a>
-report the composition of contributions, their accumulation within the
+show the composition of contributions, their accumulation within the
 selected period, and their posterior distributions, respectively.</p>
 </div>
 <div class="section level2">
-<h2 id="compare-the-same-event-across-specifications">Compare the same event across specifications<a class="anchor" aria-label="anchor" href="#compare-the-same-event-across-specifications"></a>
+<h2 id="comparison-across-model-specifications">Comparison across model specifications<a class="anchor" aria-label="anchor" href="#comparison-across-model-specifications"></a>
 </h2>
-<p>When assessing sensitivity to the lag order or prior distribution,
-the event definition should remain fixed. <a href="../reference/compare_hd_event.html"><code>compare_hd_event()</code></a>
-applies the same period to named posterior objects and returns estimates
-indexed by model specification.</p>
+<p>Comparisons of lag orders or prior distributions require the same
+event period for every model. <a href="../reference/compare_hd_event.html"><code>compare_hd_event()</code></a>
+applies the selected period to named posterior objects and indexes the
+results by model specification.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">event_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_hd_event.html">compare_hd_event</a></span><span class="op">(</span></span>
 <span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
@@ -244,21 +243,19 @@ indexed by model specification.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> alternative gdp   1958        1958.75   -<span style="color: #BB0000;">19.1</span>     -<span style="color: #BB0000;">51.5</span>  17.0  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> alternative gs    1958        1958.75    -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">76</span>  -<span style="color: #BB0000;">6.11</span>  3.89 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> alternative ttr   1958        1958.75    -<span style="color: #BB0000;">1.62</span>     -<span style="color: #BB0000;">6.60</span>  4.49</span></span></code></pre></div>
-<p>This comparison is descriptive. Similar estimates across
-specifications provide evidence of robustness, but
-<code><a href="../reference/compare_hd_event.html">compare_hd_event()</a></code> neither selects a preferred model nor
-computes the posterior probability that the specifications differ. When
-comparing additional periods, retain names such as <code>baseline</code>
-and <code>alternative</code> to identify each specification in tables
-and figures.</p>
+<p>The comparison is descriptive. Similar posterior summaries across
+specifications provide evidence of robustness to the considered changes,
+but <code><a href="../reference/compare_hd_event.html">compare_hd_event()</a></code> neither selects a model nor computes
+the posterior probability of a difference between specifications. Names
+such as <code>baseline</code> and <code>alternative</code> identify the
+specifications in tables and plots.</p>
 </div>
 <div class="section level2">
-<h2 id="report-posterior-summaries">Report posterior summaries<a class="anchor" aria-label="anchor" href="#report-posterior-summaries"></a>
+<h2 id="tables-and-figures">Tables and figures<a class="anchor" aria-label="anchor" href="#tables-and-figures"></a>
 </h2>
-<p>The comparison can be reported in a labelled table, and the
-ranked-contribution plot can be saved separately. Both objects remain
-standard R objects, so captions, annotations, and journal-specific
-formatting can be added as needed.</p>
+<p>Posterior summaries can be reported in a labelled table, while the
+ranking plot can be saved separately. Both outputs are standard R
+objects and can be formatted for the intended application.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span></span>
 <span>  <span class="va">comparison_gdp</span>,</span>
@@ -341,10 +338,11 @@ formatting can be added as needed.</p>
 <span>  width <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  height <span class="op">=</span> <span class="fl">4</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>For an introduction to posterior summaries, response comparisons, and
-posterior probability statements, see <a href="bsvarPost.html">Post-estimation Analysis with bsvarPost</a>. For
-diagnostics specific to sign-restricted identification, continue to the
-dedicated bsvarSIGNs article.</p>
+<p>For posterior summaries, response comparisons, and posterior
+probability statements, see <a href="bsvarPost.html">Post-estimation
+Analysis with bsvarPost</a>. Diagnostics for sign-restricted
+identification are presented in the dedicated
+<strong>bsvarSIGNs</strong> article.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

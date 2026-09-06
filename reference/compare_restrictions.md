@@ -1,6 +1,8 @@
-# Compare posterior restriction probabilities across model specifications
+# Compares posterior restriction probabilities across model specifications
 
-Compare posterior restriction probabilities across model specifications
+Evaluates the same identifying restrictions for two or more posterior
+model objects and combines their posterior probabilities in a common
+table.
 
 ## Usage
 

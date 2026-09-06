@@ -1,6 +1,6 @@
-# Most-likely-admissible representative cumulative dynamic multipliers
+# Selects the most-likely admissible draw of cumulative dynamic multipliers
 
-Select the admissible cumulative-response draw with the highest
+Selects the admissible cumulative-response draw with the highest
 posterior admissibility weight using
 [`representative_cdm()`](https://davidzenz.github.io/bsvarPost/reference/representative_cdm.md)
 with `method = "most_likely_admissible"`.

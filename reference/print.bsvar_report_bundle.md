@@ -1,6 +1,6 @@
-# Print bsvar_report_bundle objects
+# Prints posterior report objects
 
-Print bsvar_report_bundle objects
+Prints posterior report objects
 
 ## Usage
 

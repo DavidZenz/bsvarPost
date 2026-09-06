@@ -39,8 +39,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
-    <li><a class="dropdown-item" href="articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
-    <li><a class="dropdown-item" href="articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="articles/inference-and-comparison.html">Inference and Comparison</a></li>
+    <li><a class="dropdown-item" href="articles/historical-decomposition-events.html">Historical Decompositions</a></li>
     <li><a class="dropdown-item" href="articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul>
 </li>
@@ -58,63 +58,63 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><p><strong>Posterior analysis for Bayesian structural VARs.</strong></p>
-<p><code>bsvarPost</code> extends posterior analysis for models estimated with <a href="https://cran.r-project.org/package=bsvars" class="external-link"><code>bsvars</code></a> and <a href="https://cran.r-project.org/package=bsvarSIGNs" class="external-link"><code>bsvarSIGNs</code></a>. Given an estimated posterior, it computes quantities used to address empirical questions, compare model specifications, evaluate identifying restrictions, and report results.</p>
-<p>The package does not estimate Bayesian VARs. It provides a consistent set of post-estimation methods for posterior summaries and inference.</p>
+  <main id="main" class="col-md-9"><p>An <strong>R</strong> package for posterior analysis of Bayesian Structural Vector Autoregressions estimated with <a href="https://cran.r-project.org/package=bsvars" class="external-link"><code>bsvars</code></a> and <a href="https://cran.r-project.org/package=bsvarSIGNs" class="external-link"><code>bsvarSIGNs</code></a>.</p>
+<p>Provides posterior summaries and inference for empirical analyses based on impulse responses, cumulative dynamic multipliers, forecast error variance decompositions, historical decompositions, forecasts, and structural shocks. The package also compares model specifications, evaluates identifying restrictions, and reports posterior results in figures and tables.</p>
+<p>Use <code>bsvars</code> or <code>bsvarSIGNs</code> to specify and estimate the Bayesian VAR. Use <code>bsvarPost</code> to analyse its posterior distribution.</p>
 <div class="section level2">
-<h2 id="posterior-summaries">Posterior summaries<a class="anchor" aria-label="anchor" href="#posterior-summaries"></a>
+<h2 id="posterior-summaries-of-structural-quantities">Posterior summaries of structural quantities<a class="anchor" aria-label="anchor" href="#posterior-summaries-of-structural-quantities"></a>
 </h2>
-<p>For an existing <code>bsvars</code> or <code>bsvarSIGNs</code> posterior, <code><a href="reference/tidy_irf.html">tidy_irf()</a></code> summarises impulse responses in a compact table:</p>
+<p>Summarise impulse responses from an existing <code>bsvars</code> or <code>bsvarSIGNs</code> posterior with <code><a href="reference/tidy_irf.html">tidy_irf()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidzenz.github.io/bsvarPost/">bsvarPost</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tidy_irf.html">tidy_irf</a></span><span class="op">(</span><span class="va">posterior</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">responses</span><span class="op">)</span></span></code></pre></div>
-<p>The same tabular representation is available for cumulative dynamic multipliers, forecast error variance decompositions, historical decompositions, forecasts, and structural shocks. These results can then be filtered, visualised, joined, or reported with standard R functions.</p>
-<p>For cumulative effects, compute the posterior object explicitly with <a href="reference/cdm.html"><code>cdm()</code></a>:</p>
+<p>Represent cumulative dynamic multipliers, forecast error variance decompositions, historical decompositions, forecasts, and structural shocks in the same tabular form. Filter, visualise, join, or report these posterior quantities with standard R functions.</p>
+<p>Compute posterior cumulative effects explicitly with <a href="reference/cdm.html"><code>cdm()</code></a>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">multipliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cdm.html">cdm</a></span><span class="op">(</span><span class="va">posterior</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">multipliers</span><span class="op">)</span></span></code></pre></div>
-<p>See <a href="articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a> for a short, reproducible introduction to posterior summaries, cumulative effects, and a figure suitable for publication.</p>
+<p>See <a href="articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a> for a reproducible introduction to posterior summaries, cumulative effects, and their graphical presentation.</p>
 </div>
 <div class="section level2">
-<h2 id="what-question-are-you-asking">What question are you asking?<a class="anchor" aria-label="anchor" href="#what-question-are-you-asking"></a>
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
 </h2>
 <div class="section level3">
-<h3 id="do-conclusions-survive-a-different-specification">Do conclusions survive a different specification?<a class="anchor" aria-label="anchor" href="#do-conclusions-survive-a-different-specification"></a>
+<h3 id="comparison-of-model-specifications">Comparison of model specifications<a class="anchor" aria-label="anchor" href="#comparison-of-model-specifications"></a>
 </h3>
-<p>The comparison functions combine results from named posterior objects in one table. They compare impulse responses, cumulative effects, decompositions, forecasts, response-timing summaries, and diagnostics across model specifications.</p>
+<p>Compare impulse responses, cumulative effects, decompositions, forecasts, response-timing summaries, and diagnostics across named posterior objects in one table.</p>
 <p><a href="articles/inference-and-comparison.html">Inference and Comparison</a> shows how to compare specifications, compute posterior probabilities and magnitudes, evaluate joint hypotheses, construct simultaneous credible bands, and select representative posterior draws. It also describes response characteristics such as peaks, duration, half-life, and time to a threshold.</p>
 </div>
 <div class="section level3">
-<h3 id="which-shocks-mattered-during-a-particular-episode">Which shocks mattered during a particular episode?<a class="anchor" aria-label="anchor" href="#which-shocks-mattered-during-a-particular-episode"></a>
+<h3 id="historical-decompositions-and-shock-contributions">Historical decompositions and shock contributions<a class="anchor" aria-label="anchor" href="#historical-decompositions-and-shock-contributions"></a>
 </h3>
-<p>For a selected event window, the package summarises the posterior contribution of each structural shock. These contributions can be ranked and compared for the same episode across model specifications.</p>
-<p><a href="articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a> describes event-specific analysis with <code><a href="reference/tidy_hd_event.html">tidy_hd_event()</a></code>, <code><a href="reference/shock_ranking.html">shock_ranking()</a></code>, and graphical summaries of shock contributions.</p>
+<p>Summarise the posterior contribution of each structural shock over a selected event window. Rank these contributions and compare the same historical episode across model specifications.</p>
+<p><a href="articles/historical-decomposition-events.html">Historical Decompositions</a> describes event-specific analysis with <code><a href="reference/tidy_hd_event.html">tidy_hd_event()</a></code>, <code><a href="reference/shock_ranking.html">shock_ranking()</a></code>, and graphical summaries of shock contributions.</p>
 </div>
 <div class="section level3">
-<h3 id="are-sign-restricted-results-well-supported">Are sign-restricted results well supported?<a class="anchor" aria-label="anchor" href="#are-sign-restricted-results-well-supported"></a>
+<h3 id="analysis-of-sign-restricted-models">Analysis of sign-restricted models<a class="anchor" aria-label="anchor" href="#analysis-of-sign-restricted-models"></a>
 </h3>
-<p>Sign-restricted posteriors require additional evaluation: which admissible draw represents the posterior distribution, whether the imposed restrictions hold in the retained draws, and whether the admissibility weights indicate weak or sparse posterior support.</p>
+<p>Select an admissible draw that represents the posterior distribution, verify whether retained draws satisfy the imposed restrictions, and examine whether admissibility weights indicate weak or sparse posterior support.</p>
 <p><a href="articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a> describes <code>most_likely_admissible_*()</code>, <code><a href="reference/restriction_audit.html">restriction_audit()</a></code>, <code><a href="reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code>, and the corresponding comparison and plotting methods.</p>
 </div>
 <div class="section level3">
-<h3 id="how-do-i-turn-results-into-a-figure-or-table">How do I turn results into a figure or table?<a class="anchor" aria-label="anchor" href="#how-do-i-turn-results-into-a-figure-or-table"></a>
+<h3 id="figures-and-tables">Figures and tables<a class="anchor" aria-label="anchor" href="#figures-and-tables"></a>
 </h3>
-<p>Tidy posterior summaries work directly with <code>ggplot2</code> and table-generation packages. <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">ggplot2::autoplot()</a></code> provides a default graphical summary; functions for publication graphics add consistent styling, annotations, and export settings. Reporting functions convert the same result into a labelled table, so figures and tables represent the same posterior quantities.</p>
+<p>Plot tidy posterior summaries directly with <code>ggplot2</code> or present them with table-generation packages. Use <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">ggplot2::autoplot()</a></code> for a default graphical summary and the publication-graphics functions for consistent styling and annotations. Convert the same results into labelled tables so that figures and tables report identical posterior quantities.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="scope">Scope<a class="anchor" aria-label="anchor" href="#scope"></a>
+<h2 id="integration-with-bsvars-and-bsvarsigns">Integration with bsvars and bsvarSIGNs<a class="anchor" aria-label="anchor" href="#integration-with-bsvars-and-bsvarsigns"></a>
 </h2>
-<p>Use <code>bsvars</code> or <code>bsvarSIGNs</code> to specify, estimate, and inspect the underlying model. Use <code>bsvarPost</code> when you need to:</p>
+<p>Use <code>bsvars</code> or <code>bsvarSIGNs</code> to specify, estimate, and inspect the underlying model. Use <code>bsvarPost</code> to:</p>
 <ul>
 <li>represent posterior quantities as tidy data sets;</li>
 <li>compute cumulative effects, compare specifications, evaluate posterior hypotheses, or summarise response timing;</li>
 <li>analyse structural-shock contributions during a historical episode or assess sign restrictions; or</li>
 <li>report a selected posterior result in a figure or table.</li>
 </ul>
-<p>Definitions, arguments, and return values for individual functions are documented in the <a href="reference/index.html">reference index</a>. The articles above provide introductions to the main forms of posterior analysis.</p>
+<p>Consult the <a href="reference/index.html">reference index</a> for definitions, arguments, and return values. The articles above introduce the principal forms of posterior analysis.</p>
 </div>
 
   </main><aside class="col-md-3"><div class="links">

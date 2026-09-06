@@ -1,6 +1,7 @@
-# Representative impulse responses
+# Selects a representative draw of impulse responses
 
-Select a representative impulse-response draw from the posterior.
+Selects one draw from the posterior distribution of impulse responses
+using either median-target distance or posterior admissibility weights.
 
 ## Usage
 

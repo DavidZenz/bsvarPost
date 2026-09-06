@@ -1,6 +1,7 @@
-# Visualise posterior restriction probabilities
+# Plots posterior restriction probabilities
 
-Visualise posterior restriction probabilities
+Plots posterior probabilities and posterior summaries for sign, zero,
+structural, or narrative restrictions.
 
 ## Usage
 

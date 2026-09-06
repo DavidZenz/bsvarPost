@@ -1,6 +1,7 @@
-# Compare response thresholds across model specifications
+# Compares response thresholds across model specifications
 
-Compare response thresholds across model specifications
+Summarises across model specifications the first horizons at which
+posterior response draws satisfy a specified threshold condition.
 
 ## Usage
 

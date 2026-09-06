@@ -20,8 +20,8 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/bsvarPost.html">Post-estimation Analysis with bsvarPost</a></li>
-    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Posterior Inference and Model Comparison</a></li>
-    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical-Decomposition Analysis</a></li>
+    <li><a class="dropdown-item" href="../articles/inference-and-comparison.html">Inference and Comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/historical-decomposition-events.html">Historical Decompositions</a></li>
     <li><a class="dropdown-item" href="../articles/sign-restricted-workflows.html">Analysis of Sign-Restricted Models</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -40,7 +40,7 @@
     </div>
 
     <div class="section level2">
-      <h2 id="posterior-summaries-and-cumulative-responses">Posterior Summaries and Cumulative Responses<a class="anchor" aria-label="anchor" href="#posterior-summaries-and-cumulative-responses"></a></h2>
+      <h2 id="posterior-summaries-and-cumulative-dynamic-responses">Posterior Summaries and Cumulative Dynamic Responses<a class="anchor" aria-label="anchor" href="#posterior-summaries-and-cumulative-dynamic-responses"></a></h2>
 
 
 
@@ -54,49 +54,49 @@
           <code><a href="cdm.html">cdm()</a></code>
 
         </dt>
-        <dd>Cumulative Dynamic Multipliers</dd>
+        <dd>Computes posterior draws of cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="tidy_irf.html">tidy_irf()</a></code>
 
         </dt>
-        <dd>Summarise posterior impulse responses</dd>
+        <dd>Summarises posterior draws of impulse responses</dd>
 
         <dt>
 
           <code><a href="tidy_cdm.html">tidy_cdm()</a></code>
 
         </dt>
-        <dd>Summarise posterior cumulative dynamic responses</dd>
+        <dd>Summarises posterior draws of cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="tidy_fevd.html">tidy_fevd()</a></code>
 
         </dt>
-        <dd>Summarise posterior forecast error variance decompositions</dd>
+        <dd>Summarises posterior draws of forecast error variance decompositions</dd>
 
         <dt>
 
           <code><a href="tidy_hd.html">tidy_hd()</a></code>
 
         </dt>
-        <dd>Summarise posterior historical decompositions</dd>
+        <dd>Summarises posterior draws of historical decompositions</dd>
 
         <dt>
 
           <code><a href="tidy_forecast.html">tidy_forecast()</a></code>
 
         </dt>
-        <dd>Summarise posterior forecasts</dd>
+        <dd>Summarises draws from the predictive distribution</dd>
 
         <dt>
 
           <code><a href="tidy_shocks.html">tidy_shocks()</a></code>
 
         </dt>
-        <dd>Summarise posterior structural shocks</dd>
+        <dd>Summarises posterior draws of structural shocks</dd>
       </dl></div><div class="section level2">
       <h2 id="comparison-of-model-specifications">Comparison of Model Specifications<a class="anchor" aria-label="anchor" href="#comparison-of-model-specifications"></a></h2>
 
@@ -112,30 +112,30 @@
           <code><a href="compare_irf.html">compare_irf()</a></code>
 
         </dt>
-        <dd>Compare posterior impulse responses across model specifications</dd>
+        <dd>Compares posterior impulse responses across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_cdm.html">compare_cdm()</a></code>
 
         </dt>
-        <dd>Compare cumulative dynamic responses across model specifications</dd>
+        <dd>Compares cumulative dynamic multipliers across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_fevd.html">compare_fevd()</a></code>
 
         </dt>
-        <dd>Compare forecast error variance decompositions across model specifications</dd>
+        <dd>Compares forecast error variance decompositions across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_forecast.html">compare_forecast()</a></code>
 
         </dt>
-        <dd>Compare posterior forecasts across model specifications</dd>
+        <dd>Compares posterior forecasts across model specifications</dd>
       </dl></div><div class="section level2">
-      <h2 id="posterior-probabilities-and-joint-inference">Posterior Probabilities and Joint Inference<a class="anchor" aria-label="anchor" href="#posterior-probabilities-and-joint-inference"></a></h2>
+      <h2 id="posterior-hypotheses-and-simultaneous-inference">Posterior Hypotheses and Simultaneous Inference<a class="anchor" aria-label="anchor" href="#posterior-hypotheses-and-simultaneous-inference"></a></h2>
 
 
 
@@ -149,72 +149,72 @@
           <code><a href="hypothesis_irf.html">hypothesis_irf()</a></code>
 
         </dt>
-        <dd>Posterior probability statements for impulse responses</dd>
+        <dd>Evaluates posterior probability statements for impulse responses</dd>
 
         <dt>
 
           <code><a href="hypothesis_cdm.html">hypothesis_cdm()</a></code>
 
         </dt>
-        <dd>Posterior probability statements for cumulative dynamic multipliers</dd>
+        <dd>Evaluates posterior probability statements for cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code>
 
         </dt>
-        <dd>Joint posterior probability statements for impulse responses</dd>
+        <dd>Evaluates joint posterior probability statements for impulse responses</dd>
 
         <dt>
 
           <code><a href="joint_hypothesis_cdm.html">joint_hypothesis_cdm()</a></code>
 
         </dt>
-        <dd>Joint posterior probability statements for cumulative dynamic multipliers</dd>
+        <dd>Evaluates joint posterior probability statements for cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="magnitude_audit.html">magnitude_audit()</a></code>
 
         </dt>
-        <dd>Evaluate magnitude hypotheses for IRFs or CDMs</dd>
+        <dd>Evaluates magnitude hypotheses for impulse responses or cumulative multipliers</dd>
 
         <dt>
 
           <code><a href="simultaneous_irf.html">simultaneous_irf()</a></code>
 
         </dt>
-        <dd>Simultaneous posterior bands for impulse responses</dd>
+        <dd>Computes simultaneous posterior bands for impulse responses</dd>
 
         <dt>
 
           <code><a href="simultaneous_cdm.html">simultaneous_cdm()</a></code>
 
         </dt>
-        <dd>Simultaneous posterior bands for cumulative dynamic multipliers</dd>
+        <dd>Computes simultaneous posterior bands for cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="plot_hypothesis.html">plot_hypothesis()</a></code>
 
         </dt>
-        <dd>Plot posterior probability statements for IRFs or CDMs</dd>
+        <dd>Plots posterior probability statements for impulse responses or cumulative multipliers</dd>
 
         <dt>
 
           <code><a href="plot_joint_hypothesis.html">plot_joint_hypothesis()</a></code>
 
         </dt>
-        <dd>Plot joint posterior probability statements</dd>
+        <dd>Plots joint posterior probability statements</dd>
 
         <dt>
 
           <code><a href="plot_simultaneous.html">plot_simultaneous()</a></code>
 
         </dt>
-        <dd>Plot simultaneous posterior bands</dd>
+        <dd>Plots simultaneous posterior bands</dd>
       </dl></div><div class="section level2">
-      <h2 id="representative-draws-and-response-timing">Representative Draws and Response Timing<a class="anchor" aria-label="anchor" href="#representative-draws-and-response-timing"></a></h2>
+      <h2 id="representative-posterior-draws-and-response-timing">Representative Posterior Draws and Response Timing<a class="anchor" aria-label="anchor" href="#representative-posterior-draws-and-response-timing"></a></h2>
 
 
 
@@ -228,93 +228,93 @@
           <code><a href="representative_irf.html">representative_irf()</a></code>
 
         </dt>
-        <dd>Representative impulse responses</dd>
+        <dd>Selects a representative draw of impulse responses</dd>
 
         <dt>
 
           <code><a href="representative_cdm.html">representative_cdm()</a></code>
 
         </dt>
-        <dd>Representative cumulative dynamic multipliers</dd>
+        <dd>Selects a representative draw of cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="median_target_irf.html">median_target_irf()</a></code>
 
         </dt>
-        <dd>Median-target representative impulse responses</dd>
+        <dd>Selects the median-target draw of impulse responses</dd>
 
         <dt>
 
           <code><a href="median_target_cdm.html">median_target_cdm()</a></code>
 
         </dt>
-        <dd>Median-target representative cumulative dynamic multipliers</dd>
+        <dd>Selects the median-target draw of cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="peak_response.html">peak_response()</a></code>
 
         </dt>
-        <dd>Peak response summaries for posterior IRFs and CDMs</dd>
+        <dd>Summarises peak responses from posterior draws</dd>
 
         <dt>
 
           <code><a href="duration_response.html">duration_response()</a></code>
 
         </dt>
-        <dd>Duration summaries for posterior IRFs and CDMs</dd>
+        <dd>Summarises response durations from posterior draws</dd>
 
         <dt>
 
           <code><a href="half_life_response.html">half_life_response()</a></code>
 
         </dt>
-        <dd>Half-life summaries for posterior IRFs and CDMs</dd>
+        <dd>Summarises response half-lives from posterior draws</dd>
 
         <dt>
 
           <code><a href="time_to_threshold.html">time_to_threshold()</a></code>
 
         </dt>
-        <dd>Time-to-threshold summaries for posterior IRFs and CDMs</dd>
+        <dd>Summarises response threshold horizons from posterior draws</dd>
 
         <dt>
 
           <code><a href="compare_peak_response.html">compare_peak_response()</a></code>
 
         </dt>
-        <dd>Compare peak responses across model specifications</dd>
+        <dd>Compares peak responses across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_duration_response.html">compare_duration_response()</a></code>
 
         </dt>
-        <dd>Compare response durations across model specifications</dd>
+        <dd>Compares response durations across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_half_life_response.html">compare_half_life_response()</a></code>
 
         </dt>
-        <dd>Compare response half-lives across model specifications</dd>
+        <dd>Compares response half-lives across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_time_to_threshold.html">compare_time_to_threshold()</a></code>
 
         </dt>
-        <dd>Compare response thresholds across model specifications</dd>
+        <dd>Compares response thresholds across model specifications</dd>
 
         <dt>
 
           <code><a href="plot_compare_response.html">plot_compare_response()</a></code>
 
         </dt>
-        <dd>Visualise response timing and persistence across model specifications</dd>
+        <dd>Plots response timing and persistence across model specifications</dd>
       </dl></div><div class="section level2">
-      <h2 id="historical-decompositions-and-shock-contributions">Historical Decompositions and Shock Contributions<a class="anchor" aria-label="anchor" href="#historical-decompositions-and-shock-contributions"></a></h2>
+      <h2 id="historical-decompositions-and-structural-shock-contributions">Historical Decompositions and Structural-Shock Contributions<a class="anchor" aria-label="anchor" href="#historical-decompositions-and-structural-shock-contributions"></a></h2>
 
 
 
@@ -328,84 +328,84 @@
           <code><a href="tidy_hd_event.html">tidy_hd_event()</a></code>
 
         </dt>
-        <dd>Summarise historical-decomposition contributions over selected periods</dd>
+        <dd>Summarises historical-decomposition contributions over selected periods</dd>
 
         <dt>
 
           <code><a href="compare_hd_event.html">compare_hd_event()</a></code>
 
         </dt>
-        <dd>Compare historical-period shock contributions across model specifications</dd>
+        <dd>Compares historical-period shock contributions across model specifications</dd>
 
         <dt>
 
           <code><a href="shock_ranking.html">shock_ranking()</a></code>
 
         </dt>
-        <dd>Rank structural shocks by contributions over selected periods</dd>
+        <dd>Ranks structural shocks by contributions over selected periods</dd>
 
         <dt>
 
           <code><a href="plot_shock_ranking.html">plot_shock_ranking()</a></code>
 
         </dt>
-        <dd>Visualise ranked shock contributions over selected historical periods</dd>
+        <dd>Plots ranked shock contributions over selected historical periods</dd>
 
         <dt>
 
           <code><a href="plot_hd_event.html">plot_hd_event()</a></code>
 
         </dt>
-        <dd>Visualise shock contributions over selected historical periods</dd>
+        <dd>Plots shock contributions over selected historical periods</dd>
 
         <dt>
 
           <code><a href="plot_hd_event_share.html">plot_hd_event_share()</a></code>
 
         </dt>
-        <dd>Plot event contribution shares</dd>
+        <dd>Plots event contribution shares</dd>
 
         <dt>
 
           <code><a href="plot_hd_event_cumulative.html">plot_hd_event_cumulative()</a></code>
 
         </dt>
-        <dd>Plot cumulative event-window contribution paths</dd>
+        <dd>Plots cumulative event-window contribution paths</dd>
 
         <dt>
 
           <code><a href="plot_hd_event_distribution.html">plot_hd_event_distribution()</a></code>
 
         </dt>
-        <dd>Plot event-window contribution uncertainty by shock</dd>
+        <dd>Plots event-window contribution uncertainty by shock</dd>
 
         <dt>
 
           <code><a href="plot_hd_lines.html">plot_hd_lines()</a></code>
 
         </dt>
-        <dd>Plot full-sample historical decomposition components</dd>
+        <dd>Plots full-sample historical decomposition components</dd>
 
         <dt>
 
           <code><a href="plot_hd_overlay.html">plot_hd_overlay()</a></code>
 
         </dt>
-        <dd>Overlay historical decomposition component paths</dd>
+        <dd>Plots overlaid historical decomposition component paths</dd>
 
         <dt>
 
           <code><a href="plot_hd_stacked.html">plot_hd_stacked()</a></code>
 
         </dt>
-        <dd>Stacked historical decomposition contributions over time</dd>
+        <dd>Plots stacked historical decomposition contributions over time</dd>
 
         <dt>
 
           <code><a href="plot_hd_total.html">plot_hd_total()</a></code>
 
         </dt>
-        <dd>Plot observed and reconstructed decomposition totals</dd>
+        <dd>Plots observed and reconstructed decomposition totals</dd>
       </dl></div><div class="section level2">
       <h2 id="sign-restrictions-and-identification-diagnostics">Sign Restrictions and Identification Diagnostics<a class="anchor" aria-label="anchor" href="#sign-restrictions-and-identification-diagnostics"></a></h2>
 
@@ -421,84 +421,84 @@
           <code><a href="most_likely_admissible_irf.html">most_likely_admissible_irf()</a></code>
 
         </dt>
-        <dd>Most-likely-admissible representative impulse responses</dd>
+        <dd>Selects the most-likely admissible draw of impulse responses</dd>
 
         <dt>
 
           <code><a href="most_likely_admissible_cdm.html">most_likely_admissible_cdm()</a></code>
 
         </dt>
-        <dd>Most-likely-admissible representative cumulative dynamic multipliers</dd>
+        <dd>Selects the most-likely admissible draw of cumulative dynamic multipliers</dd>
 
         <dt>
 
           <code><a href="irf_restriction.html">irf_restriction()</a></code>
 
         </dt>
-        <dd>Create an impulse-response restriction specification</dd>
+        <dd>Specifies an impulse-response restriction</dd>
 
         <dt>
 
           <code><a href="structural_restriction.html">structural_restriction()</a></code>
 
         </dt>
-        <dd>Create a structural restriction specification</dd>
+        <dd>Specifies a structural restriction</dd>
 
         <dt>
 
           <code><a href="narrative_restriction.html">narrative_restriction()</a></code>
 
         </dt>
-        <dd>Create a narrative restriction specification</dd>
+        <dd>Specifies a narrative restriction</dd>
 
         <dt>
 
           <code><a href="restriction_audit.html">restriction_audit()</a></code>
 
         </dt>
-        <dd>Evaluate sign, zero, structural, and narrative restrictions</dd>
+        <dd>Evaluates sign, zero, structural, and narrative restrictions</dd>
 
         <dt>
 
           <code><a href="acceptance_diagnostics.html">acceptance_diagnostics()</a></code>
 
         </dt>
-        <dd>Acceptance and admissibility diagnostics for bsvarSIGNs</dd>
+        <dd>Summarises acceptance and admissibility diagnostics for bsvarSIGNs</dd>
 
         <dt>
 
           <code><a href="compare_restrictions.html">compare_restrictions()</a></code>
 
         </dt>
-        <dd>Compare posterior restriction probabilities across model specifications</dd>
+        <dd>Compares posterior restriction probabilities across model specifications</dd>
 
         <dt>
 
           <code><a href="compare_acceptance_diagnostics.html">compare_acceptance_diagnostics()</a></code>
 
         </dt>
-        <dd>Compare acceptance diagnostics across model specifications</dd>
+        <dd>Compares acceptance diagnostics across model specifications</dd>
 
         <dt>
 
           <code><a href="plot_restriction_audit.html">plot_restriction_audit()</a></code>
 
         </dt>
-        <dd>Visualise posterior restriction probabilities</dd>
+        <dd>Plots posterior restriction probabilities</dd>
 
         <dt>
 
           <code><a href="plot_compare_restrictions.html">plot_compare_restrictions()</a></code>
 
         </dt>
-        <dd>Visualise posterior restriction probabilities across model specifications</dd>
+        <dd>Plots posterior restriction probabilities across model specifications</dd>
 
         <dt>
 
           <code><a href="plot_acceptance_diagnostics.html">plot_acceptance_diagnostics()</a></code>
 
         </dt>
-        <dd>Visualise acceptance diagnostics across model specifications</dd>
+        <dd>Plots acceptance diagnostics across model specifications</dd>
       </dl></div><div class="section level2">
       <h2 id="figures-and-tables">Figures and Tables<a class="anchor" aria-label="anchor" href="#figures-and-tables"></a></h2>
 
@@ -514,91 +514,91 @@
           <code><a href="autoplot.bsvar_post_tbl.html">autoplot(<i>&lt;bsvar_post_tbl&gt;</i>)</a></code>
 
         </dt>
-        <dd>Visualise posterior summaries</dd>
+        <dd>Plots posterior summaries or draw-level response paths</dd>
 
         <dt>
 
           <code><a href="theme_bsvarpost.html">theme_bsvarpost()</a></code>
 
         </dt>
-        <dd>Plot theme for posterior summaries</dd>
+        <dd>Defines a plot theme for posterior summaries</dd>
 
         <dt>
 
           <code><a href="style_bsvar_plot.html">style_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Apply a consistent graphical style to posterior summaries</dd>
+        <dd>Applies a consistent graphical style to posterior summaries</dd>
 
         <dt>
 
           <code><a href="template_bsvar_plot.html">template_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Apply graphical conventions for a posterior quantity</dd>
+        <dd>Applies graphical conventions for a posterior quantity</dd>
 
         <dt>
 
           <code><a href="annotate_bsvar_plot.html">annotate_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Add titles and captions to posterior-summary plots</dd>
+        <dd>Adds titles and captions to posterior-summary plots</dd>
 
         <dt>
 
           <code><a href="publish_bsvar_plot.html">publish_bsvar_plot()</a></code>
 
         </dt>
-        <dd>Visualise posterior results with consistent graphical conventions</dd>
+        <dd>Plots posterior results with consistent graphical conventions</dd>
 
         <dt>
 
           <code><a href="report_bundle.html">report_bundle()</a></code>
 
         </dt>
-        <dd>Combine posterior summaries, figures, and captions</dd>
+        <dd>Combines posterior summaries, figures, and captions</dd>
 
         <dt>
 
           <code><a href="report_table.html">report_table()</a></code>
 
         </dt>
-        <dd>Prepare tables of posterior results</dd>
+        <dd>Prepares tables of posterior results</dd>
 
         <dt>
 
           <code><a href="as_kable.html">as_kable()</a></code>
 
         </dt>
-        <dd>Render bsvarPost tables with knitr::kable</dd>
+        <dd>Formats posterior summaries with knitr::kable</dd>
 
         <dt>
 
           <code><a href="as_gt.html">as_gt()</a></code>
 
         </dt>
-        <dd>Render bsvarPost tables with gt</dd>
+        <dd>Formats posterior summaries with gt</dd>
 
         <dt>
 
           <code><a href="as_flextable.html">as_flextable()</a></code>
 
         </dt>
-        <dd>Render bsvarPost tables with flextable</dd>
+        <dd>Formats posterior summaries with flextable</dd>
 
         <dt>
 
           <code><a href="write_bsvar_csv.html">write_bsvar_csv()</a></code>
 
         </dt>
-        <dd>Export bsvarPost tables to CSV</dd>
+        <dd>Writes posterior summaries to a CSV file</dd>
 
         <dt>
 
           <code><a href="print.bsvar_report_bundle.html">print(<i>&lt;bsvar_report_bundle&gt;</i>)</a></code>
 
         </dt>
-        <dd>Print bsvar_report_bundle objects</dd>
+        <dd>Prints posterior report objects</dd>
       </dl></div><div class="section level2">
       <h2 id="interfaces-with-other-r-packages">Interfaces with Other R Packages<a class="anchor" aria-label="anchor" href="#interfaces-with-other-r-packages"></a></h2>
 
@@ -614,28 +614,28 @@
           <code><a href="as_tsibble_post.html">as_tsibble_post()</a></code>
 
         </dt>
-        <dd>Express posterior summaries as a tsibble</dd>
+        <dd>Converts posterior summaries to a tsibble</dd>
 
         <dt>
 
           <code><a href="as_apr_cond_forc.html">as_apr_cond_forc()</a></code>
 
         </dt>
-        <dd>Express posterior forecasts in APRScenario format</dd>
+        <dd>Converts posterior forecasts to APRScenario format</dd>
 
         <dt>
 
           <code><a href="tidy_apr_forecast.html">tidy_apr_forecast()</a></code>
 
         </dt>
-        <dd>Express APRScenario forecasts as posterior summary tables</dd>
+        <dd>Converts APRScenario forecasts to posterior summary tables</dd>
 
         <dt>
 
           <code><a href="apr_gen_mats.html">apr_gen_mats()</a></code>
 
         </dt>
-        <dd>Compute conditional-forecast matrices with APRScenario</dd>
+        <dd>Computes conditional-forecast matrices with APRScenario</dd>
       </dl></div><div class="section level2">
       <h2 id="input-validation-and-compatibility">Input Validation and Compatibility<a class="anchor" aria-label="anchor" href="#input-validation-and-compatibility"></a></h2>
 

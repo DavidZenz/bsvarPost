@@ -1,6 +1,7 @@
-# Compare acceptance diagnostics across model specifications
+# Compares acceptance diagnostics across model specifications
 
-Compare acceptance diagnostics across model specifications
+Computes effective sample size and admissibility-weight diagnostics for
+two or more sign-restricted posterior distributions.
 
 ## Usage
 

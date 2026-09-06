@@ -1,7 +1,8 @@
-# Joint posterior probability statements for cumulative dynamic multipliers
+# Evaluates joint posterior probability statements for cumulative dynamic multipliers
 
-Joint posterior probability statements for cumulative dynamic
-multipliers
+Computes the posterior probability that a set of cumulative-response
+inequalities holds jointly across all selected variables, structural
+shocks, and horizons.
 
 ## Usage
 

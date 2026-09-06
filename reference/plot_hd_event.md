@@ -1,6 +1,7 @@
-# Visualise shock contributions over selected historical periods
+# Plots shock contributions over selected historical periods
 
-Visualise shock contributions over selected historical periods
+Plots posterior summaries of cumulative structural-shock contributions
+over a selected historical period.
 
 ## Usage
 
@@ -23,7 +24,8 @@ plot_hd_event(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or tidy HD event table.
+  A posterior model object, `PosteriorHD`, or a posterior-summary table
+  of historical-period contributions.
 
 - start:
 
@@ -40,7 +42,8 @@ plot_hd_event(
 
 - draws:
 
-  If `TRUE`, plot draw-level event contributions.
+  Must be `FALSE`; draw-level event contributions are not supported by
+  this plot.
 
 - variables:
 

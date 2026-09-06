@@ -1,6 +1,6 @@
-# Render bsvarPost tables with knitr::kable
+# Formats posterior summaries with knitr::kable
 
-Convert posterior summary tables or
+Converts posterior summary tables or
 [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
 results to a [`knitr::kable`](https://rdrr.io/pkg/knitr/man/kable.html)
 object.

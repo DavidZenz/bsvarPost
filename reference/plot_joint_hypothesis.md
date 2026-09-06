@@ -1,6 +1,7 @@
-# Plot joint posterior probability statements
+# Plots joint posterior probability statements
 
-Plot joint posterior probability statements
+Plots posterior probabilities that selected response inequalities hold
+jointly over variables, structural shocks, and horizons.
 
 ## Usage
 

@@ -1,6 +1,7 @@
-# Add titles and captions to posterior-summary plots
+# Adds titles and captions to posterior-summary plots
 
-Add titles and captions to posterior-summary plots
+Adds the supplied title, subtitle, caption, and axis labels to an
+existing plot of posterior summaries.
 
 ## Usage
 

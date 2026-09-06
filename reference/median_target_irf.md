@@ -1,6 +1,6 @@
-# Median-target representative impulse responses
+# Selects the median-target draw of impulse responses
 
-Select the impulse-response draw closest to the posterior median
+Selects the impulse-response draw closest to the posterior median
 response path using
 [`representative_irf()`](https://davidzenz.github.io/bsvarPost/reference/representative_irf.md)
 with `method = "median_target"`.

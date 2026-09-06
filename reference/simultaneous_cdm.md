@@ -1,6 +1,8 @@
-# Simultaneous posterior bands for cumulative dynamic multipliers
+# Computes simultaneous posterior bands for cumulative dynamic multipliers
 
-Simultaneous posterior bands for cumulative dynamic multipliers
+Transforms posterior draws of selected cumulative dynamic multipliers
+into simultaneous credible bands using the empirical sup-norm around the
+posterior median response path.
 
 ## Usage
 

@@ -1,7 +1,8 @@
-# Time-to-threshold summaries for posterior IRFs and CDMs
+# Summarises response threshold horizons from posterior draws
 
-Summarise the first horizon at which a response satisfies a threshold
-condition.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of the first horizon at which a response
+satisfies a threshold condition.
 
 ## Usage
 

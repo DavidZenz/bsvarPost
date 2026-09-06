@@ -1,6 +1,9 @@
-# Summarise posterior historical decompositions
+# Summarises posterior draws of historical decompositions
 
-Summarise posterior historical decompositions
+Transforms posterior draws of historical decompositions into a table
+containing posterior means, medians, standard deviations, and
+equal-tailed credible intervals, or retains the individual shock
+contributions when requested.
 
 ## Usage
 
@@ -37,7 +40,7 @@ spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy historical decompositions
+# Posterior summaries of historical decompositions
 result <- tidy_hd(post)
 head(result)
 #> # A tibble: 6 × 10

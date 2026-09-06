@@ -1,10 +1,8 @@
-# Plot observed and reconstructed decomposition totals
+# Plots observed and reconstructed decomposition totals
 
-This plot compares the observed series to the reconstructed
-decomposition total and can optionally show the baseline component plus
-selected contributor lines. The decomposition total is built from the
-same explicit baseline-plus-shock summary used in
-[`plot_hd_stacked()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_stacked.md).
+Compares the observed series with the sum of posterior median
+structural-shock contributions and the baseline component. Selected
+shock contributions can also be displayed separately.
 
 ## Usage
 
@@ -30,8 +28,10 @@ plot_hd_total(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or a tidy
-  historical-decomposition table.
+  A posterior model object, `PosteriorHD`, or a tidy table of historical
+  decompositions. Plots that reconstruct the observed series require a
+  posterior model; when a table is supplied, cumulative event plots
+  require draw-level input.
 
 - probability:
 
@@ -80,8 +80,8 @@ plot_hd_total(
 
 - model:
 
-  Model label used when converting posterior objects to tidy plotting
-  tables.
+  Model label used when converting posterior objects to
+  posterior-summary tables.
 
 - ...:
 

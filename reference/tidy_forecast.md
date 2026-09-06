@@ -1,6 +1,8 @@
-# Summarise posterior forecasts
+# Summarises draws from the predictive distribution
 
-Summarise posterior forecasts
+Transforms draws from the joint predictive distribution into a table
+containing posterior predictive means, medians, standard deviations, and
+equal-tailed intervals, or retains the individual draws when requested.
 
 ## Usage
 
@@ -37,7 +39,7 @@ spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-# Tidy forecasts
+# Summaries of the predictive distribution
 result <- tidy_forecast(post, horizon = 3)
 head(result)
 #> # A tibble: 6 × 9

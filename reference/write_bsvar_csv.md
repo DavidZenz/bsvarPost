@@ -1,6 +1,7 @@
-# Export bsvarPost tables to CSV
+# Writes posterior summaries to a CSV file
 
-Write a table of posterior summaries to disk as a CSV file.
+Writes a table of posterior summaries to disk as a
+comma-separated-values file.
 
 ## Usage
 

@@ -1,7 +1,7 @@
-# Compare historical-period shock contributions across model specifications
+# Compares historical-period shock contributions across model specifications
 
-Compare historical-period shock contributions across model
-specifications
+Aggregates posterior draws of structural-shock contributions over a
+selected historical period for two or more model specifications.
 
 ## Usage
 

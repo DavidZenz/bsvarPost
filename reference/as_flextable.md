@@ -1,6 +1,6 @@
-# Render bsvarPost tables with flextable
+# Formats posterior summaries with flextable
 
-Convert posterior summary tables or
+Converts posterior summary tables or
 [`report_bundle()`](https://davidzenz.github.io/bsvarPost/reference/report_bundle.md)
 results to a
 [`flextable::flextable`](https://davidgohel.github.io/flextable/reference/flextable.html)

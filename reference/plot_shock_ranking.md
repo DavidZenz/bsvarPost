@@ -1,6 +1,7 @@
-# Visualise ranked shock contributions over selected historical periods
+# Plots ranked shock contributions over selected historical periods
 
-Visualise ranked shock contributions over selected historical periods
+Plots structural shocks ordered by the absolute or signed magnitude of
+their contributions over a selected historical period.
 
 ## Usage
 
@@ -22,7 +23,8 @@ plot_shock_ranking(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or tidy shock-ranking table.
+  A posterior model object, `PosteriorHD`, or a table of ranked
+  structural-shock contributions.
 
 - start:
 

@@ -1,6 +1,7 @@
-# Plot event contribution shares
+# Plots event contribution shares
 
-Plot event contribution shares
+Plots the absolute or signed shares of structural-shock contributions
+over a selected historical period.
 
 ## Usage
 
@@ -27,8 +28,10 @@ plot_hd_event_share(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or a tidy
-  historical-decomposition table.
+  A posterior model object, `PosteriorHD`, or a tidy table of historical
+  decompositions. Plots that reconstruct the observed series require a
+  posterior model; when a table is supplied, cumulative event plots
+  require draw-level input.
 
 - start, end:
 
@@ -75,8 +78,8 @@ plot_hd_event_share(
 
 - model:
 
-  Model label used when converting posterior objects to tidy plotting
-  tables.
+  Model label used when converting posterior objects to
+  posterior-summary tables.
 
 - ...:
 

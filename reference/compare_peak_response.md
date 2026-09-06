@@ -1,6 +1,7 @@
-# Compare peak responses across model specifications
+# Compares peak responses across model specifications
 
-Compare peak responses across model specifications
+Summarises posterior draws of response magnitudes and their peak
+horizons for two or more model specifications.
 
 ## Usage
 

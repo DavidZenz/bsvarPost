@@ -1,6 +1,7 @@
-# Evaluate sign, zero, structural, and narrative restrictions
+# Evaluates sign, zero, structural, and narrative restrictions
 
-Evaluate sign, zero, structural, and narrative restrictions
+Transforms posterior draws into posterior probabilities and summaries
+for the supplied or fitted identifying restrictions.
 
 ## Usage
 

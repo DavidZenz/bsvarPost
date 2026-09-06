@@ -1,7 +1,8 @@
-# Duration summaries for posterior IRFs and CDMs
+# Summarises response durations from posterior draws
 
-Summarise how long a response satisfies a threshold condition over the
-available horizons.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of how long a response satisfies a threshold
+condition over the available horizons.
 
 ## Usage
 

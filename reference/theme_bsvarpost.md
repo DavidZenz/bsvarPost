@@ -1,6 +1,7 @@
-# Plot theme for posterior summaries
+# Defines a plot theme for posterior summaries
 
-Plot theme for posterior summaries
+Returns a `ggplot2` theme with typographic and spacing conventions for
+plots of posterior quantities.
 
 ## Usage
 

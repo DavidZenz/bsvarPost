@@ -1,7 +1,8 @@
-# Compare forecast error variance decompositions across model specifications
+# Compares forecast error variance decompositions across model specifications
 
-Compare forecast error variance decompositions across model
-specifications
+Summarises posterior draws of forecast error variance decompositions
+from two or more posterior model objects in a common table identified by
+model specification.
 
 ## Usage
 

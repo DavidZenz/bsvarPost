@@ -1,6 +1,7 @@
-# Express APRScenario forecasts as posterior summary tables
+# Converts APRScenario forecasts to posterior summary tables
 
-Express APRScenario forecasts as posterior summary tables
+Transforms lower, centre, and upper APRScenario forecast paths into the
+posterior-summary table format used by `bsvarPost`.
 
 ## Usage
 

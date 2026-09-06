@@ -1,6 +1,8 @@
-# Plot event-window contribution uncertainty by shock
+# Plots event-window contribution uncertainty by shock
 
-Plot event-window contribution uncertainty by shock
+Plots posterior medians and equal-tailed credible intervals for
+cumulative structural-shock contributions over a selected historical
+period.
 
 ## Usage
 
@@ -26,8 +28,10 @@ plot_hd_event_distribution(
 
 - object:
 
-  A posterior model object, `PosteriorHD`, or a tidy
-  historical-decomposition table.
+  A posterior model object, `PosteriorHD`, or a tidy table of historical
+  decompositions. Plots that reconstruct the observed series require a
+  posterior model; when a table is supplied, cumulative event plots
+  require draw-level input.
 
 - start, end:
 
@@ -70,8 +74,8 @@ plot_hd_event_distribution(
 
 - model:
 
-  Model label used when converting posterior objects to tidy plotting
-  tables.
+  Model label used when converting posterior objects to
+  posterior-summary tables.
 
 - ...:
 

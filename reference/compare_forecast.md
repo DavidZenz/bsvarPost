@@ -1,6 +1,8 @@
-# Compare posterior forecasts across model specifications
+# Compares posterior forecasts across model specifications
 
-Compare posterior forecasts across model specifications
+Summarises draws from the predictive distributions of two or more
+posterior model objects in a common table identified by model
+specification.
 
 ## Usage
 

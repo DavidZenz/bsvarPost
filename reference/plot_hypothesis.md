@@ -1,6 +1,7 @@
-# Plot posterior probability statements for IRFs or CDMs
+# Plots posterior probability statements for impulse responses or cumulative multipliers
 
-Plot posterior probability statements for IRFs or CDMs
+Plots posterior probabilities of threshold or pairwise statements about
+impulse responses or cumulative dynamic multipliers.
 
 ## Usage
 
@@ -34,7 +35,7 @@ plot_hypothesis(
 
 - type:
 
-  One of `"irf"` or `"cdm"` when `object` is not already a tidy
+  One of `"irf"` or `"cdm"` when `object` is not already a
   posterior-statement table.
 
 - variable:

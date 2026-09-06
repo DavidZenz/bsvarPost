@@ -1,7 +1,8 @@
-# Half-life summaries for posterior IRFs and CDMs
+# Summarises response half-lives from posterior draws
 
-Summarise the first horizon at which a response falls to a chosen
-fraction of its initial or peak level.
+Transforms posterior draws of impulse responses or cumulative dynamic
+multipliers into summaries of the first horizon at which a response
+falls to a chosen fraction of its initial or peak level.
 
 ## Usage
 

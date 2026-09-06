@@ -1,6 +1,6 @@
-# Combine posterior summaries, figures, and captions
+# Combines posterior summaries, figures, and captions
 
-Combine a table of posterior summaries, its corresponding figure, and a
+Combines a table of posterior summaries, its corresponding figure, and a
 caption in a single object.
 
 ## Usage
