@@ -49,10 +49,16 @@ bsvarsigns_match_sign_narrative <- function(epsilon, sign_narrative, irf) {
 }
 
 bsvarsigns_weight_narrative <- function(n_obs, sign_narrative, irf) {
+  if (utils::packageVersion("bsvarSIGNs") >= "3.0") {
+    return(exp(bsvarsigns_native("_bsvarSIGNs_log_weight_narrative", as.integer(n_obs), sign_narrative, irf)))
+  }
   bsvarsigns_native("_bsvarSIGNs_weight_narrative", as.integer(n_obs), sign_narrative, irf)
 }
 
 bsvarsigns_weight_zero <- function(Z, B, h_inv, Q) {
+  if (utils::packageVersion("bsvarSIGNs") >= "3.0") {
+    return(exp(bsvarsigns_native("_bsvarSIGNs_log_weight_zero", Z, B, h_inv, Q)))
+  }
   bsvarsigns_native("_bsvarSIGNs_weight_zero", Z, B, h_inv, Q)
 }
 

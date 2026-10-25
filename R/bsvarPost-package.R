@@ -34,8 +34,8 @@
 #' @importFrom methods is
 #' @importFrom rlang .data
 #' @importFrom utils globalVariables
-#' @import bsvars
-#' @import bsvarSIGNs
+#' @importFrom bsvars compute_impulse_responses
+#' @importFrom bsvarSIGNs specify_bsvarSIGN
 "_PACKAGE"
 
 utils::globalVariables(c(

@@ -34,6 +34,10 @@ pair <- hypothesis_irf(paths, variables = c("a", "b"), shocks = "s", horizon = 0
 expect_equal(nrow(pair), 12L)
 expect_equal(pair$rhs_variable, rep("a", 12))
 expect_equal(pair$rhs_horizon, rep(0, 12))
+expect_equal(pair$gap, unname(c(paths[1, 1, 1, ] - paths[1, 1, 1, ],
+                               paths[2, 1, 1, ] - paths[1, 1, 1, ],
+                               paths[1, 1, 2, ] - paths[1, 1, 1, ],
+                               paths[2, 1, 2, ] - paths[1, 1, 1, ])))
 paired <- hypothesis_irf(paths, variables = c("a", "b"), shocks = "s", horizon = 1,
   compare_to = list(variable = c("b", "a"), shock = "s", horizon = 0), draws = TRUE)
 expect_equal(paired$rhs_variable, rep(c("b", "a"), each = 3))

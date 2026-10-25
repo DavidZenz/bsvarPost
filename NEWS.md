@@ -1,5 +1,9 @@
 # bsvarPost 1.1.0
 
+- Support bsvarSIGNs 3.0 log-weight native helpers while retaining compatibility
+  with 2.0. Narrow upstream namespace imports to avoid forecast-class name
+  collisions with bsvars 4.0.
+
 ## Correct posterior aggregation and inference
 
 * Grouped historical decompositions and event distributions now aggregate

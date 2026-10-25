@@ -18,7 +18,9 @@ pair_res <- hypothesis_irf(
   relation = ">",
   compare_to = list(variable = 1, shock = 1, horizon = 0)
 )
-manual_pair <- irf_draws[1:2, 1, 3, , drop = FALSE] - array(irf_draws[1, 1, 1, ], dim = c(2, 1, 1, dim(irf_draws)[4]))
+# Subtract each draw's impact response from both variables in that same draw.
+# Array recycling interleaves draws instead of broadcasting across variables.
+manual_pair <- sweep(irf_draws[1:2, 1, 3, , drop = FALSE], 4L, irf_draws[1, 1, 1, ], "-")
 expect_equal(pair_res$posterior_prob, c(mean(manual_pair[1, 1, 1, ] > 0), mean(manual_pair[2, 1, 1, ] > 0)))
 expect_equal(pair_res$rhs_horizon, c(0, 0))
 

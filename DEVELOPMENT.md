@@ -46,6 +46,10 @@ This affects:
 
 The bridge lives in [R/v2-utils.R](R/v2-utils.R). It resolves registered native
 symbols from the loaded `bsvarSIGNs` DLL at runtime.
+For bsvarSIGNs 3.0 and later, the bridge converts upstream log importance
+weights to the weight scale used by the existing diagnostics and representative
+selection APIs. Version 2.0 uses the original weight symbols. Symbol arity is
+checked before invocation, and unknown interfaces produce versioned errors.
 
 Why this exists:
 - `bsvarSIGNs` does not currently expose an R-level API for these internals
