@@ -184,3 +184,6 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 pk <- peak_response(post, horizon = 3)
 print(pk)
 }
+\seealso{
+\link{posterior_provenance}
+}

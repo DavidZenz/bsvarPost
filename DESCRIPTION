@@ -1,7 +1,7 @@
 Package: bsvarPost
 Type: Package
 Title: Posterior Analysis for 'bsvars' and 'bsvarSIGNs'
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: person("David", "Zenz", role = c("aut", "cre", "cph"), email = "office@davidzenz.com")
 Description: Provides procedures for posterior analysis of Bayesian Structural
     Vector Autoregressions estimated with the 'bsvars' and 'bsvarSIGNs'
@@ -17,12 +17,13 @@ Description: Provides procedures for posterior analysis of Bayesian Structural
 License: GPL (>= 3)
 Depends: R (>= 4.1.0)
 Imports:
-    bsvars,
-    bsvarSIGNs,
-    ggplot2,
+    bsvars (>= 3.2),
+    bsvarSIGNs (>= 2.0),
+    ggplot2 (>= 3.4.0),
     rlang,
     tibble,
-    methods
+    methods,
+    vctrs (>= 0.5.0)
 Suggests:
     APRScenario,
     flextable,
@@ -37,4 +38,4 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 URL: https://davidzenz.github.io/bsvarPost/, https://github.com/DavidZenz/bsvarPost
 BugReports: https://github.com/DavidZenz/bsvarPost/issues
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0

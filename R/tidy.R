@@ -24,6 +24,7 @@
 #' # Posterior summaries of impulse responses
 #' result <- tidy_irf(post, horizon = 3)
 #' head(result)
+#' @seealso [posterior_provenance]
 #' @export
 tidy_irf <- function(object, ...) UseMethod("tidy_irf")
 
@@ -43,7 +44,7 @@ tidy_irf.PosteriorIR <- function(object, probability = 0.90, draws = FALSE, mode
 }
 
 tidy_irf_model <- function(object, horizon = NULL, probability = 0.90, draws = FALSE, model = "model1", ...) {
-  irf <- bsvars::compute_impulse_responses(object, horizon = resolve_horizon(horizon), ...)
+  irf <- get_irf_draws(object, horizon = resolve_horizon(horizon), ...)
   tidy_irf(set_response_dimnames(irf, model = object), probability = probability, draws = draws, model = model)
 }
 
@@ -336,7 +337,10 @@ tidy_cdm.PosteriorBSVARSIGN <- tidy_cdm.PosteriorBSVAR
   as_tidy_time_array(object$forecasts, object_type = "forecast", model = model, probability = probability, draws = draws, time_name = "horizon")
  }
  tidy_forecast_model <- function(object, horizon = NULL, probability = 0.90, draws = FALSE, model = "model1", ...) {
-  tidy_forecast(bsvars::forecast(object, horizon = resolve_horizon(horizon), ...), probability = probability, draws = draws, model = model)
+  horizon <- validate_horizon(resolve_horizon(horizon), allow_zero = FALSE)
+  out <- bsvars::forecast(object, horizon = horizon, ...)
+  out$forecasts <- set_time_dimnames(out$forecasts, model = object)
+  tidy_forecast(out, probability = probability, draws = draws, model = model)
  }
 #' @export
  tidy_forecast.PosteriorBSVAR <- tidy_forecast_model

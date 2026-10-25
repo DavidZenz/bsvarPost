@@ -30,3 +30,6 @@ used to evaluate an impulse-response restriction.
 r <- irf_restriction("gdp", "gdp", 0, sign = 1)
 print(r)
 }
+\seealso{
+\link{posterior_provenance}
+}

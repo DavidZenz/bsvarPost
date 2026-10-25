@@ -162,10 +162,7 @@ apr_gen_mats <- function(posterior = NULL, specification = NULL, max_cores = 1) 
   if (!requireNamespace("APRScenario", quietly = TRUE)) {
     stop("Package `APRScenario` must be installed to use `apr_gen_mats()`.", call. = FALSE)
   }
-  if (!is.numeric(max_cores) || length(max_cores) != 1L || !is.finite(max_cores) ||
-      max_cores < 1 || max_cores != as.integer(max_cores)) {
-    stop("`max_cores` must be a positive integer.", call. = FALSE)
-  }
+  max_cores <- validate_positive_count(max_cores, "apr_gen_mats", arg = "max_cores")
   APRScenario::gen_mats(posterior = posterior, specification = specification, max_cores = max_cores)
 }
 
@@ -173,8 +170,16 @@ build_apr_hor <- function(horizon, origin = NULL, frequency = c("quarter", "mont
   frequency <- match.arg(frequency)
   if (inherits(horizon, "Date")) return(horizon)
   if (is.null(origin)) return(horizon)
+  if (!inherits(origin, "Date") || length(origin) != 1L || is.na(origin)) {
+    stop("`origin` must be a single non-missing Date.", call. = FALSE)
+  }
+  suppressWarnings(indices <- as.numeric(horizon))
+  if (!length(indices) || anyNA(indices) || any(!is.finite(indices)) ||
+      any(indices < 0 | indices > .Machine$integer.max | indices != floor(indices))) {
+    stop("Forecast date conversion requires non-negative integer horizons.", call. = FALSE)
+  }
   step <- switch(frequency, quarter = "quarter", month = "month", year = "year", day = "day")
-  idx <- sort(unique(as.integer(horizon)))
+  idx <- sort(unique(as.integer(indices)))
   seq_out <- seq.Date(from = origin, by = step, length.out = max(idx) + 1L)
-  seq_out[as.integer(horizon) + 1L]
+  seq_out[indices + 1]
 }

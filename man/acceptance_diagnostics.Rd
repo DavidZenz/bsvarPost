@@ -61,3 +61,6 @@ diag <- acceptance_diagnostics(post_s)
 print(diag)
 }
 }
+\seealso{
+\link{posterior_provenance}
+}

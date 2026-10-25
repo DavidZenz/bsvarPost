@@ -12,7 +12,24 @@ new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
       call. = FALSE
     )
   }
-  class(x) <- c("bsvar_post_tbl", class(x))
+  if (!is.character(object_type) || length(object_type) != 1L || is.na(object_type) || !nzchar(object_type)) {
+    stop("`object_type` must be a single nonempty label.", call. = FALSE)
+  }
+  if (anyNA(x$model) || any(!nzchar(as.character(x$model)))) {
+    stop("Posterior table model labels must be non-missing and nonempty.", call. = FALSE)
+  }
+  x$model <- as.character(x$model)
+  x$object_type <- rep(object_type, nrow(x))
+  validate_flag(draws, "draws")
+  validate_flag(compare, "compare")
+  defaults <- post_metadata_defaults(nrow(x))
+  for (field in setdiff(names(defaults), names(x))) x[[field]] <- defaults[[field]]
+  x$analysis_type <- rep(infer_analysis_type(x, object_type), nrow(x))
+  if (identical(object_type, "fevd")) x$units <- rep("percent", nrow(x))
+  if (all(x$analysis_type %in% c("duration", "half_life", "time_to_threshold"))) x$units <- rep("periods", nrow(x))
+  if (draws && "draw" %in% names(x) && !"draw_id" %in% names(x)) x$draw_id <- as.character(x$draw)
+  if (draws && "draw" %in% names(x)) x$n_draws <- as.integer(draw_counts(x))
+  class(x) <- unique(c("bsvar_post_tbl", class(x)))
   attr(x, "object_type") <- object_type
   attr(x, "draws") <- draws
   attr(x, "compare") <- compare
@@ -21,7 +38,7 @@ new_bsvar_post_tbl <- function(x, object_type, draws = FALSE, compare = FALSE) {
 
 validate_nonnegative_horizon <- function(horizon, caller) {
   if (!is.numeric(horizon) || length(horizon) != 1L || is.na(horizon) ||
-      !is.finite(horizon) || horizon < 0 || horizon != as.integer(horizon)) {
+      !is.finite(horizon) || horizon < 0 || horizon > .Machine$integer.max || horizon != floor(horizon)) {
     stop(sprintf("`%s` requires `horizon` to be a single non-negative integer.", caller), call. = FALSE)
   }
   as.integer(horizon)
@@ -29,7 +46,7 @@ validate_nonnegative_horizon <- function(horizon, caller) {
 
 validate_positive_count <- function(value, caller, arg = deparse(substitute(value))) {
   if (!is.numeric(value) || length(value) != 1L || is.na(value) ||
-      !is.finite(value) || value < 1 || value != as.integer(value)) {
+      !is.finite(value) || value < 1 || value > .Machine$integer.max || value != floor(value)) {
     stop(sprintf("`%s` requires `%s` to be a single positive integer.", caller, arg), call. = FALSE)
   }
   as.integer(value)
@@ -46,10 +63,39 @@ ensure_model_names <- function(models) {
   if (is.null(nms)) {
     nms <- rep("", length(models))
   }
+  if (anyNA(nms)) {
+    stop("Model names must not be missing.", call. = FALSE)
+  }
   missing <- nms == ""
-  nms[missing] <- paste0("model", seq_along(models))[missing]
+  if (anyDuplicated(nms[!missing])) {
+    stop("Explicit model names must be unique.", call. = FALSE)
+  }
+  used <- nms[!missing]
+  for (i in which(missing)) {
+    suffix <- i
+    candidate <- paste0("model", suffix)
+    while (candidate %in% used) {
+      suffix <- suffix + 1L
+      candidate <- paste0("model", suffix)
+    }
+    nms[i] <- candidate
+    used <- c(used, candidate)
+  }
   names(models) <- nms
   models
+}
+
+# Group tuples directly, rather than concatenating their labels. Factor levels
+# preserve first appearance, including for more than nine groups.
+tuple_group <- function(..., drop = TRUE) {
+  columns <- list(...)
+  frame <- if (length(columns) == 1L && is.data.frame(columns[[1]])) {
+    columns[[1]]
+  } else {
+    as.data.frame(columns, optional = TRUE, stringsAsFactors = FALSE)
+  }
+  ids <- vctrs::vec_group_id(frame)
+  factor(ids, levels = seq_len(attr(ids, "n")))
 }
 
 collect_models <- function(...) {
@@ -122,7 +168,7 @@ set_response_dimnames <- function(x, model = NULL) {
     as.character(seq_len(d[3]) - 1L),
     as.character(seq_len(d[4]))
   ))
-  x
+  mark_posterior_source(x, model)
 }
 
 set_time_dimnames <- function(x, model = NULL) {
@@ -144,7 +190,7 @@ set_time_dimnames <- function(x, model = NULL) {
     as.character(seq_len(d[2])),
     as.character(seq_len(d[3]))
   ))
-  x
+  mark_posterior_source(x, model)
 }
 
 set_hd_dimnames <- function(x, model = NULL) {
@@ -172,7 +218,7 @@ set_hd_dimnames <- function(x, model = NULL) {
     as.character(seq_len(d[3])),
     as.character(seq_len(d[4]))
   ))
-  x
+  mark_posterior_source(x, model)
 }
 
 summarise_vec <- function(x, probability) {
@@ -248,6 +294,9 @@ resolve_scale_factors <- function(model, n_shocks, scale_var = NULL) {
 }
 
 as_tidy_response_array <- function(x, object_type, model = "model1", probability = 0.90, draws = FALSE) {
+  validate_draw_array(x, 4L, "tidy response")
+  validate_probability(probability)
+  validate_flag(draws, "draws")
   d <- dim(x)
   dns <- resolve_array_dimnames(x, list(
     paste0("variable", seq_len(d[1])),
@@ -270,6 +319,7 @@ as_tidy_response_array <- function(x, object_type, model = "model1", probability
             shock = dns[[2]][j],
             horizon = as.numeric(dns[[3]][h]),
             draw = seq_along(values),
+            draw_id = as.character(dns[[4]]),
             value = as.numeric(values)
           )
         } else {
@@ -291,10 +341,13 @@ as_tidy_response_array <- function(x, object_type, model = "model1", probability
       }
     }
   }
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = draws)
+  with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = draws), source = x, probability = probability, n_draws = d[4])
 }
 
 as_tidy_time_array <- function(x, object_type, model = "model1", probability = 0.90, draws = FALSE, time_name = "time") {
+  validate_draw_array(x, 3L, "tidy time series")
+  validate_probability(probability)
+  validate_flag(draws, "draws")
   d <- dim(x)
   dns <- resolve_array_dimnames(x, list(
     paste0("variable", seq_len(d[1])),
@@ -312,10 +365,11 @@ as_tidy_time_array <- function(x, object_type, model = "model1", probability = 0
           object_type = object_type,
           variable = dns[[1]][i],
           draw = seq_along(values),
+            draw_id = as.character(dns[[3]]),
           value = as.numeric(values)
         )
         row[[time_name]] <- dns[[2]][t]
-        rows[[idx]] <- row[, c("model", "object_type", "variable", time_name, "draw", "value")]
+        rows[[idx]] <- row[, c("model", "object_type", "variable", time_name, "draw", "draw_id", "value")]
       } else {
         stats <- summarise_vec(as.numeric(values), probability)
         row <- tibble::tibble(
@@ -334,10 +388,24 @@ as_tidy_time_array <- function(x, object_type, model = "model1", probability = 0
       idx <- idx + 1L
     }
   }
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = draws)
+  out <- do.call(rbind, rows)
+  if (identical(time_name, "horizon")) {
+    labels <- as.character(out$horizon)
+    suppressWarnings(numeric_horizon <- as.numeric(labels))
+    if (all(is.finite(numeric_horizon))) {
+      out$horizon <- numeric_horizon
+    } else {
+      out$horizon_label <- labels
+      out$horizon <- match(labels, dns[[2]])
+    }
+  }
+  with_post_provenance(new_bsvar_post_tbl(out, object_type = object_type, draws = draws), source = x, probability = probability, n_draws = d[3])
 }
 
 as_tidy_hd_array <- function(x, model = "model1", probability = 0.90, draws = FALSE) {
+  validate_draw_array(x, 4L, "tidy historical decomposition")
+  validate_probability(probability)
+  validate_flag(draws, "draws")
   d <- dim(x)
   dns <- resolve_array_dimnames(x, list(
     paste0("variable", seq_len(d[1])),
@@ -359,6 +427,7 @@ as_tidy_hd_array <- function(x, model = "model1", probability = 0.90, draws = FA
             shock = dns[[2]][j],
             time = dns[[3]][t],
             draw = seq_along(values),
+            draw_id = as.character(dns[[4]]),
             value = as.numeric(values)
           )
         } else {
@@ -380,7 +449,7 @@ as_tidy_hd_array <- function(x, model = "model1", probability = 0.90, draws = FA
       }
     }
   }
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = "hd", draws = draws)
+  with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = "hd", draws = draws), source = x, probability = probability, n_draws = d[4])
 }
 
 set_compare_flag <- function(x) {

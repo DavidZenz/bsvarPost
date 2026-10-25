@@ -37,7 +37,9 @@ cdm.default <- function(object, ...) {
 cdm_from_model <- function(object, horizon = NULL, probability = 0.90,
                            scale_by = c("none", "shock_sd"),
                            scale_var = NULL, ...) {
-  irf <- bsvars::compute_impulse_responses(object, horizon = resolve_horizon(horizon), ...)
+  validate_probability(probability)
+  scale_by <- match.arg(scale_by)
+  irf <- get_irf_draws(object, horizon = resolve_horizon(horizon), ...)
   out <- compute_cdm_draws(irf, scale_by = scale_by, scale_var = scale_var, model = object)
   cdm_draws <- out$draws
   class(cdm_draws) <- "PosteriorCDM"

@@ -4,6 +4,13 @@
 #' Bayesian structural vector autoregressions estimated with the `bsvars` and
 #' `bsvarSIGNs` packages.
 #'
+#' @section Result tables:
+#' Posterior tables include provenance as ordinary columns, alongside the
+#' estimates and identifiers. See [posterior_provenance] for probability,
+#' scaling, units, software versions and draw-identity definitions. Default
+#' reports and CSV exports include these columns; compact reports omit most
+#' provenance columns. Select columns explicitly when a fixed schema is needed.
+#'
 #' @section Vignettes:
 #' Use [utils::browseVignettes()] to open the package articles:
 #'

@@ -29,6 +29,7 @@
 #'
 #' pk <- peak_response(post, horizon = 3)
 #' print(pk)
+#' @seealso [posterior_provenance]
 #' @export
 peak_response <- function(object, ...) {
   UseMethod("peak_response")
@@ -45,6 +46,7 @@ peak_response.default <- function(object, ...) {
 }
 
 resolve_peak <- function(path, horizons, absolute = FALSE) {
+  validate_flag(absolute, "absolute")
   eval_path <- if (absolute) abs(path) else path
   idx <- which.max(eval_path)
   c(value = path[idx], horizon = horizons[idx])
@@ -85,7 +87,7 @@ summarise_peak_draws <- function(draws, object_type, variables = NULL, shocks = 
     }
   }
 
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
+  with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE), source = draws, probability = probability)
 }
 
 #' @rdname peak_response
@@ -188,6 +190,8 @@ duration_response.default <- function(object, ...) {
 
 compute_duration <- function(path, relation = c(">", ">=", "<", "<="), value = 0,
                              absolute = FALSE, mode = c("consecutive", "total")) {
+  validate_scalar_number(value, "value")
+  validate_flag(absolute, "absolute")
   relation <- match.arg(relation)
   mode <- match.arg(mode)
   eval_path <- if (absolute) abs(path) else path
@@ -244,7 +248,7 @@ summarise_duration_draws <- function(draws, object_type, variables = NULL, shock
     }
   }
 
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
+  with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE), source = draws, probability = probability)
 }
 
 #' @rdname duration_response
@@ -315,6 +319,7 @@ duration_response.PosteriorCDM <- function(object, variables = NULL, shocks = NU
 }
 
 summarise_optional_timing <- function(x, probability) {
+  validate_probability(probability)
   valid <- x[!is.na(x)]
   reached_prob <- if (length(x)) mean(!is.na(x)) else NA_real_
   if (!length(valid)) {
@@ -350,6 +355,12 @@ summarise_optional_timing <- function(x, probability) {
 #'   \code{baseline}, \code{mean_half_life}, \code{median_half_life},
 #'   \code{sd_half_life}, \code{lower_half_life}, \code{upper_half_life},
 #'   and \code{reached_prob}.
+#' @details `reached_prob` is the fraction of stored draws with a defined
+#'   half-life within the available horizon. A draw has no defined half-life
+#'   when its reference response is nonpositive or it never reaches the target.
+#'   Timing summaries condition on draws with a defined half-life; they are
+#'   `NA` when none qualify. The standard deviation is `NA` with one qualifying
+#'   draw. Missing or nonfinite input responses are rejected.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -374,6 +385,8 @@ half_life_response.default <- function(object, ...) {
 
 compute_half_life <- function(path, horizons, fraction = 0.5,
                               baseline = c("peak", "initial"), absolute = TRUE) {
+  validate_probability(fraction, "fraction")
+  validate_flag(absolute, "absolute")
   baseline <- match.arg(baseline)
   eval_path <- if (absolute) abs(path) else path
   if (!length(eval_path) || anyNA(eval_path)) {
@@ -434,7 +447,7 @@ summarise_half_life_draws <- function(draws, object_type, variables = NULL, shoc
     }
   }
 
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
+  with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE), source = draws, probability = probability)
 }
 
 #' @rdname half_life_response
@@ -517,6 +530,11 @@ half_life_response.PosteriorCDM <- function(object, variables = NULL, shocks = N
 #'   \code{threshold}, \code{mean_horizon}, \code{median_horizon},
 #'   \code{sd_horizon}, \code{lower_horizon}, \code{upper_horizon},
 #'   and \code{reached_prob}.
+#' @details `reached_prob` is the fraction of stored draws that reach the
+#'   threshold within the available horizon. Timing summaries condition on
+#'   those draws; they are `NA` when none reach it. The standard deviation is
+#'   `NA` with one qualifying draw. Missing or nonfinite input responses are
+#'   rejected.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -541,6 +559,8 @@ time_to_threshold.default <- function(object, ...) {
 
 compute_time_to_threshold <- function(path, horizons, relation = c(">", ">=", "<", "<="), value = 0,
                                       absolute = FALSE) {
+  validate_scalar_number(value, "value")
+  validate_flag(absolute, "absolute")
   relation <- match.arg(relation)
   eval_path <- if (absolute) abs(path) else path
   satisfied <- switch(
@@ -592,7 +612,7 @@ summarise_threshold_draws <- function(draws, object_type, variables = NULL, shoc
     }
   }
 
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE)
+  with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = object_type, draws = FALSE), source = draws, probability = probability)
 }
 
 #' @rdname time_to_threshold

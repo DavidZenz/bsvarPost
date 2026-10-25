@@ -18,10 +18,11 @@
 #'
 #' comp <- compare_irf(m1 = post1, m2 = post2, horizon = 3)
 #' head(comp)
+#' @seealso [posterior_provenance]
 #' @export
 compare_irf <- function(..., horizon = NULL, probability = 0.90, draws = FALSE) {
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) tidy_irf(models[[nm]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = nm))
+  out <- lapply(seq_along(models), function(i) tidy_irf(models[[i]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = names(models)[i]))
   validate_model_compatibility(out, "compare_irf")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "irf", draws = draws, compare = TRUE))
 }
@@ -47,7 +48,7 @@ compare_irf <- function(..., horizon = NULL, probability = 0.90, draws = FALSE) 
 compare_cdm <- function(..., horizon = NULL, probability = 0.90, draws = FALSE,
                         scale_by = c("none", "shock_sd"), scale_var = NULL) {
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) tidy_cdm(models[[nm]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = nm, scale_by = scale_by, scale_var = scale_var))
+  out <- lapply(seq_along(models), function(i) tidy_cdm(models[[i]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = names(models)[i], scale_by = scale_by, scale_var = scale_var))
   validate_model_compatibility(out, "compare_cdm")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "cdm", draws = draws, compare = TRUE))
 }
@@ -71,7 +72,7 @@ compare_cdm <- function(..., horizon = NULL, probability = 0.90, draws = FALSE,
 #' @export
 compare_fevd <- function(..., horizon = NULL, probability = 0.90, draws = FALSE) {
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) tidy_fevd(models[[nm]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = nm))
+  out <- lapply(seq_along(models), function(i) tidy_fevd(models[[i]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = names(models)[i]))
   validate_model_compatibility(out, "compare_fevd")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "fevd", draws = draws, compare = TRUE))
 }
@@ -94,7 +95,7 @@ compare_fevd <- function(..., horizon = NULL, probability = 0.90, draws = FALSE)
 #' @export
 compare_forecast <- function(..., horizon = NULL, probability = 0.90, draws = FALSE) {
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) tidy_forecast(models[[nm]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = nm))
+  out <- lapply(seq_along(models), function(i) tidy_forecast(models[[i]], horizon = resolve_horizon(horizon), probability = probability, draws = draws, model = names(models)[i]))
   validate_model_compatibility(out, "compare_forecast")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "forecast", draws = draws, compare = TRUE))
 }
@@ -125,8 +126,8 @@ compare_forecast <- function(..., horizon = NULL, probability = 0.90, draws = FA
 #' @export
 compare_restrictions <- function(..., restrictions = NULL, zero_tol = 1e-8, probability = 0.90) {
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) {
-    restriction_audit(models[[nm]], restrictions = restrictions, zero_tol = zero_tol, probability = probability, model = nm)
+  out <- lapply(seq_along(models), function(i) {
+    restriction_audit(models[[i]], restrictions = restrictions, zero_tol = zero_tol, probability = probability, model = names(models)[i])
   })
   validate_model_compatibility(out, "compare_restrictions")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "restriction_audit", draws = FALSE, compare = TRUE))
@@ -165,9 +166,9 @@ compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
                                            ess_threshold = 20,
                                            sparse_threshold = 0.1) {
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) {
-    acceptance_diagnostics(models[[nm]], kernel_tol = kernel_tol, ess_threshold = ess_threshold,
-                           sparse_threshold = sparse_threshold, model = nm)
+  out <- lapply(seq_along(models), function(i) {
+    acceptance_diagnostics(models[[i]], kernel_tol = kernel_tol, ess_threshold = ess_threshold,
+                           sparse_threshold = sparse_threshold, model = names(models)[i])
   })
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "acceptance_diagnostics", draws = FALSE, compare = TRUE))
 }
@@ -198,8 +199,8 @@ compare_acceptance_diagnostics <- function(..., kernel_tol = 1e-12,
 #' @export
 compare_hd_event <- function(..., start, end = start, probability = 0.90, draws = FALSE) {
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) {
-    tidy_hd_event(models[[nm]], start = start, end = end, probability = probability, draws = draws, model = nm)
+  out <- lapply(seq_along(models), function(i) {
+    tidy_hd_event(models[[i]], start = start, end = end, probability = probability, draws = draws, model = names(models)[i])
   })
   validate_model_compatibility(out, "compare_hd_event")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = "hd_event", draws = draws, compare = TRUE))
@@ -242,10 +243,10 @@ compare_peak_response <- function(..., horizon = NULL, type = c("irf", "cdm"),
   shocks    <- deprecate_arg(shocks, shock, "shock", "shocks", "compare_peak_response")
   type <- match.arg(type)
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) {
-    peak_response(models[[nm]], horizon = resolve_horizon(horizon), type = type,
+  out <- lapply(seq_along(models), function(i) {
+    peak_response(models[[i]], horizon = resolve_horizon(horizon), type = type,
                   variables = variables, shocks = shocks,
-                  absolute = absolute, probability = probability, model = nm,
+                  absolute = absolute, probability = probability, model = names(models)[i],
                   scale_by = scale_by, scale_var = scale_var)
   })
   validate_model_compatibility(out, "compare_peak_response")
@@ -296,11 +297,11 @@ compare_duration_response <- function(..., horizon = NULL, type = c("irf", "cdm"
   relation <- match.arg(relation)
   mode <- match.arg(mode)
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) {
-    duration_response(models[[nm]], horizon = resolve_horizon(horizon), type = type,
+  out <- lapply(seq_along(models), function(i) {
+    duration_response(models[[i]], horizon = resolve_horizon(horizon), type = type,
                       variables = variables, shocks = shocks,
                       relation = relation, value = value, absolute = absolute, mode = mode,
-                      probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
+                      probability = probability, model = names(models)[i], scale_by = scale_by, scale_var = scale_var)
   })
   validate_model_compatibility(out, "compare_duration_response")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("duration_", type), draws = FALSE, compare = TRUE))
@@ -346,11 +347,11 @@ compare_half_life_response <- function(..., horizon = NULL, type = c("irf", "cdm
   type <- match.arg(type)
   baseline <- match.arg(baseline)
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) {
-    half_life_response(models[[nm]], horizon = resolve_horizon(horizon), type = type,
+  out <- lapply(seq_along(models), function(i) {
+    half_life_response(models[[i]], horizon = resolve_horizon(horizon), type = type,
                        variables = variables, shocks = shocks,
                        fraction = fraction, baseline = baseline, absolute = absolute,
-                       probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
+                       probability = probability, model = names(models)[i], scale_by = scale_by, scale_var = scale_var)
   })
   validate_model_compatibility(out, "compare_half_life_response")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("half_life_", type), draws = FALSE, compare = TRUE))
@@ -398,11 +399,11 @@ compare_time_to_threshold <- function(..., horizon = NULL, type = c("irf", "cdm"
   type <- match.arg(type)
   relation <- match.arg(relation)
   models <- collect_models(...)
-  out <- lapply(names(models), function(nm) {
-    time_to_threshold(models[[nm]], horizon = resolve_horizon(horizon), type = type,
+  out <- lapply(seq_along(models), function(i) {
+    time_to_threshold(models[[i]], horizon = resolve_horizon(horizon), type = type,
                       variables = variables, shocks = shocks,
                       relation = relation, value = value, absolute = absolute,
-                      probability = probability, model = nm, scale_by = scale_by, scale_var = scale_var)
+                      probability = probability, model = names(models)[i], scale_by = scale_by, scale_var = scale_var)
   })
   validate_model_compatibility(out, "compare_time_to_threshold")
   set_compare_flag(new_bsvar_post_tbl(do.call(rbind, out), object_type = paste0("time_to_threshold_", type), draws = FALSE, compare = TRUE))

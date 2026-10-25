@@ -62,7 +62,7 @@ normalise_tsibble_index <- function(object, index) {
   }
 
   suppressWarnings(parsed <- as.numeric(index_values))
-  if (all(!is.na(parsed))) {
+  if (all(is.finite(parsed))) {
     object[[index]] <- parsed
     return(object)
   }

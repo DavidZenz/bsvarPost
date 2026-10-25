@@ -32,7 +32,7 @@
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#' h <- hypothesis_irf(post, variables = "gdp", shocks = "gdp",
 #'                     horizon = 0:2, relation = ">", value = 0)
 #' print(h)
 #' @export
@@ -51,8 +51,14 @@ hypothesis_irf.default <- function(object, ...) {
 }
 
 response_max_horizon <- function(horizon, compare_to = NULL) {
-  rhs_horizon <- if (is.null(compare_to)) numeric(0) else as.numeric(compare_to$horizon)
-  max(c(as.numeric(horizon), rhs_horizon), na.rm = TRUE)
+  compare_to <- normalise_compare_to(compare_to)
+  values <- c(horizon, if (!is.null(compare_to)) compare_to$horizon)
+  suppressWarnings(values <- as.numeric(values))
+  if (!length(values) || anyNA(values) || any(!is.finite(values)) ||
+      any(values < 0 | values > .Machine$integer.max | values != floor(values))) {
+    stop("Response horizons must be nonempty finite non-negative integer selections.", call. = FALSE)
+  }
+  max(values)
 }
 
 response_fetch_horizon <- function(horizon, compare_to = NULL) {
@@ -82,9 +88,15 @@ append_hypothesis_rhs <- function(tbl, compare_to, value, absolute) {
       rhs_horizon <- compare_to$horizon
     }
 
-    if (length(rhs_variable) == 1L) rhs_variable <- rep(rhs_variable, nrow(tbl))
-    if (length(rhs_shock) == 1L) rhs_shock <- rep(rhs_shock, nrow(tbl))
-    if (length(rhs_horizon) == 1L) rhs_horizon <- rep(rhs_horizon, nrow(tbl))
+    repeat_rhs <- function(x) {
+      if (!length(x) || nrow(tbl) %% length(x) != 0L) {
+        stop("Right-hand-side labels do not align with hypothesis rows.", call. = FALSE)
+      }
+      rep(x, each = nrow(tbl) / length(x))
+    }
+    rhs_variable <- repeat_rhs(rhs_variable)
+    rhs_shock <- repeat_rhs(rhs_shock)
+    rhs_horizon <- repeat_rhs(rhs_horizon)
 
     tbl$rhs_variable <- rhs_variable
     tbl$rhs_shock <- rhs_shock
@@ -105,6 +117,8 @@ hypothesis_response_impl <- function(object, draws, object_type, variable, shock
                                      compare_to = NULL, absolute = FALSE, probability = 0.90,
                                      draws_out = FALSE, model = "model1") {
   relation <- match.arg(relation)
+  validate_probability(probability)
+  validate_flag(draws_out, "draws")
   compare_to <- normalise_compare_to(compare_to)
 
   predicate <- evaluate_draw_predicate(
@@ -129,7 +143,8 @@ hypothesis_response_impl <- function(object, draws, object_type, variable, shock
     probability = probability
   )
 
-  append_hypothesis_rhs(out, predicate$rhs_labels, value = value, absolute = absolute)
+  out <- append_hypothesis_rhs(out, predicate$rhs_labels, value = value, absolute = absolute)
+  with_post_provenance(out, source = draws, probability = probability)
 }
 
 #' @rdname hypothesis_irf
@@ -222,7 +237,7 @@ hypothesis_irf.PosteriorBSVARSIGN <- hypothesis_irf_model
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' h <- hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+#' h <- hypothesis_cdm(post, variables = "gdp", shocks = "gdp",
 #'                     horizon = 0:2, relation = ">", value = 0)
 #' print(h)
 #' @export

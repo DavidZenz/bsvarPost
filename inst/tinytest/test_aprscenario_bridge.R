@@ -21,6 +21,9 @@ expect_error(
 )
 
 if (requireNamespace("APRScenario", quietly = TRUE)) {
+  matrices <- apr_gen_mats(posterior = post, specification = spec, max_cores = 1)
+  expect_true(all(c("M", "M_inv", "B", "B_list", "Y", "X", "Z") %in% names(matrices)))
+  expect_equal(dim(matrices$M_inv), dim(post$posterior$B))
   expect_error(
     apr_gen_mats(max_cores = 0),
     pattern = "positive integer|positive",

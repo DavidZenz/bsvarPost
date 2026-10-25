@@ -7,8 +7,9 @@
 #'
 #' @param object A posterior model object, `PosteriorHD`, or a tidy table of
 #'   historical decompositions. Plots that reconstruct the observed series
-#'   require a posterior model; when a table is supplied, cumulative event plots
-#'   require draw-level input.
+#'   require a posterior model. Combining multiple shocks, including an
+#'   `"Other"` component, requires draw-level input: marginal medians and
+#'   interval bounds cannot be added. Ungrouped summary tables remain supported.
 #' @param probability Probability mass of the equal-tailed credible interval
 #'   computed when \code{object} is not already a summary table.
 #' @param variables Variables whose historical decompositions are included.
@@ -18,7 +19,9 @@
 #' @param include_observed If \code{TRUE}, include the observed series for plot
 #'   types that compare decomposition totals against the realised path.
 #' @param include_baseline If \code{TRUE}, include the non-shock baseline
-#'   component when building a full decomposition.
+#'   component when building a full decomposition. The baseline is computed
+#'   before filtering shocks. Displayed marginal medians need not add up to the
+#'   median of the decomposition total.
 #' @param shock_groups Optional named character vector mapping shock names to
 #'   display groups.
 #' @param top_n Optional number of largest contributors to retain within each
@@ -144,7 +147,9 @@ validate_shock_groups <- function(shock_groups, caller) {
   if (is.null(shock_groups)) {
     return(NULL)
   }
-  if (!is.character(shock_groups) || is.null(names(shock_groups)) || any(names(shock_groups) == "")) {
+  if (!is.character(shock_groups) || is.null(names(shock_groups)) || anyNA(shock_groups) ||
+      anyNA(names(shock_groups)) || any(names(shock_groups) == "") || any(shock_groups == "") ||
+      anyDuplicated(names(shock_groups)) || any(shock_groups == "Baseline")) {
     stop("`", caller, "()` requires `shock_groups` to be a named character vector.", call. = FALSE)
   }
   shock_groups
@@ -205,52 +210,38 @@ apply_hd_time_scale <- function(plot, axis, numeric_axis) {
 }
 
 aggregate_hd_summary_rows <- function(df, group_cols = c("model", "variable", "time", "component")) {
-  pieces <- split(df, interaction(df[group_cols], drop = TRUE))
-  rows <- lapply(pieces, function(part) {
-    tibble::tibble(
-      model = part$model[1],
-      object_type = attr(df, "object_type") %||% unique(part$object_type)[1],
-      variable = part$variable[1],
-      component = part$component[1],
-      time = if ("time" %in% names(part)) part$time[1] else NULL,
-      mean = sum(part$mean, na.rm = TRUE),
-      median = sum(part$median, na.rm = TRUE),
-      lower = sum(part$lower, na.rm = TRUE),
-      upper = sum(part$upper, na.rm = TRUE)
-    )
-  })
-  out <- do.call(rbind, rows)
-  if (!"time" %in% group_cols && "time" %in% names(out)) {
-    out$time <- NULL
+  ids <- vctrs::vec_group_id(as.data.frame(df[group_cols]))
+  if (anyDuplicated(ids)) {
+    stop("Combining multiple shocks requires draw-level historical decomposition input; marginal summaries cannot be aggregated.", call. = FALSE)
   }
+  columns <- c("model", "object_type", "variable", "component", intersect("time", group_cols),
+               "mean", "median", "lower", "upper")
+  out <- tibble::as_tibble(df[intersect(columns, names(df))])
+  if (!"object_type" %in% names(out)) out$object_type <- rep(attr(df, "object_type") %||% "hd", nrow(out))
   out
 }
 
 aggregate_hd_draw_rows <- function(df, group_cols = c("model", "variable", "time", "component", "draw")) {
-  pieces <- split(df, interaction(df[group_cols], drop = TRUE))
-  rows <- lapply(pieces, function(part) {
-    tibble::tibble(
-      model = part$model[1],
-      object_type = attr(df, "object_type") %||% unique(part$object_type)[1],
-      variable = part$variable[1],
-      component = part$component[1],
-      time = if ("time" %in% names(part)) part$time[1] else NULL,
-      draw = if ("draw" %in% names(part)) part$draw[1] else NULL,
-      value = sum(part$value, na.rm = TRUE)
-    )
-  })
-  out <- do.call(rbind, rows)
-  if (!"time" %in% group_cols && "time" %in% names(out)) {
-    out$time <- NULL
+  if (!nrow(df) || !is.numeric(df$value) || any(!is.finite(df$value))) {
+    stop("Historical decomposition aggregation requires nonempty finite numeric draws.", call. = FALSE)
   }
-  if (!"draw" %in% group_cols && "draw" %in% names(out)) {
-    out$draw <- NULL
-  }
+  ids <- vctrs::vec_group_id(as.data.frame(df[group_cols]))
+  first <- match(seq_len(attr(ids, "n")), ids)
+  totals <- rowsum(matrix(df$value, ncol = 1L), as.integer(ids), reorder = FALSE)[, 1]
+  out <- tibble::tibble(
+    model = df$model[first],
+    object_type = if ("object_type" %in% names(df)) df$object_type[first] else rep("hd", length(first)),
+    variable = df$variable[first],
+    component = df$component[first]
+  )
+  if ("time" %in% group_cols) out$time <- df$time[first]
+  if ("draw" %in% group_cols) out$draw <- df$draw[first]
+  out$value <- as.numeric(totals)
   out
 }
 
 summarise_hd_draw_table <- function(df, probability = 0.90, time_col = "time") {
-  pieces <- split(df, interaction(df$model, df$variable, df$component, df[[time_col]], drop = TRUE))
+  pieces <- split(df, tuple_group(df$model, df$variable, df$component, df[[time_col]], drop = TRUE))
   rows <- lapply(pieces, function(part) {
     stats <- summarise_vec(part$value, probability)
     tibble::tibble(
@@ -277,7 +268,7 @@ summarise_hd_plot_draws <- function(df, probability = 0.90, summary_stat = c("me
 }
 
 summarise_hd_contributors <- function(df, time_col = "time", value_col = "median") {
-  split_cols <- interaction(df$model, df$variable, df$component, drop = TRUE)
+  split_cols <- tuple_group(df$model, df$variable, df$component, drop = TRUE)
   pieces <- split(df, split_cols)
   rows <- lapply(pieces, function(part) {
     tibble::tibble(
@@ -295,18 +286,22 @@ apply_hd_top_n <- function(df, top_n = NULL, collapse_other = TRUE, value_col = 
     return(df)
   }
   top_n <- validate_positive_count(top_n, "HD plotting helper", arg = "top_n")
-  scores <- summarise_hd_contributors(df, value_col = value_col)
-  pieces <- split(scores, interaction(scores$model, scores$variable, drop = TRUE))
+  score_data <- df
+  if (identical(value_col, "value") && "draw" %in% names(df)) {
+    if (!"time" %in% names(score_data)) score_data$time <- "event"
+    score_data <- summarise_hd_draw_table(score_data)
+    value_col <- "median"
+  }
+  scores <- summarise_hd_contributors(score_data, value_col = value_col)
+  pieces <- split(scores, tuple_group(scores$model, scores$variable, drop = TRUE))
   keepers <- do.call(rbind, lapply(pieces, function(part) {
     part <- part[order(part$score, decreasing = TRUE), , drop = FALSE]
     part$keep <- seq_len(nrow(part)) <= top_n
     part
   }))
-  key <- paste(keepers$model, keepers$variable, keepers$component, sep = "\r")
-  keep_map <- keepers$keep
-  names(keep_map) <- key
-  df_key <- paste(df$model, df$variable, df$component, sep = "\r")
-  keep <- unname(keep_map[df_key])
+  key_columns <- c("model", "variable", "component")
+  matched <- vctrs::vec_match(as.data.frame(df[key_columns]), as.data.frame(keepers[key_columns]))
+  keep <- keepers$keep[matched]
   keep[is.na(keep)] <- FALSE
 
   if (collapse_other) {
@@ -431,7 +426,8 @@ prepare_hd_decomposition_draws <- function(object, probability = 0.90, variables
 
   shock_groups <- validate_shock_groups(shock_groups, "prepare_hd_decomposition_draws")
   draw_tbl <- tidy_hd(object, probability = probability, draws = TRUE, model = model, ...)
-  draw_tbl <- filter_hd_rows(draw_tbl, variables = variables, shocks = shocks, models = models)
+  all_draws <- filter_hd_rows(draw_tbl, variables = variables, models = models)
+  draw_tbl <- filter_hd_rows(all_draws, shocks = shocks)
   if (!nrow(draw_tbl)) {
     stop("No historical decomposition draw rows remain after filtering.", call. = FALSE)
   }
@@ -444,7 +440,8 @@ prepare_hd_decomposition_draws <- function(object, probability = 0.90, variables
   )
   observed_tbl <- extract_hd_observed_data(object, model = model)
   observed_tbl <- filter_hd_rows(observed_tbl, variables = variables, models = models)
-  baseline_parts <- compute_hd_baseline_draws(shock_draws, observed_tbl, include_baseline = include_baseline)
+  all_draws$component <- as.character(all_draws$shock)
+  baseline_parts <- compute_hd_baseline_draws(all_draws, observed_tbl, include_baseline = include_baseline)
 
   components <- shock_draws
   if (!is.null(baseline_parts$baseline)) {
@@ -460,7 +457,11 @@ prepare_hd_decomposition_draws <- function(object, probability = 0.90, variables
 
 hd_panel_labels <- function(model, variable) {
   if (length(unique(model)) > 1L) {
-    paste0(model, ": ", variable)
+    keys <- data.frame(model = as.character(model), variable = as.character(variable))
+    panels <- vctrs::vec_unique(keys)
+    panels <- panels[order(panels$model, panels$variable), , drop = FALSE]
+    labels <- make.unique(paste0(panels$model, ": ", panels$variable))
+    labels[vctrs::vec_match(keys, panels)]
   } else {
     as.character(variable)
   }
@@ -485,72 +486,35 @@ hd_stacked_palette <- function(components) {
 prepare_hd_plot_data <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
                                  include_observed = FALSE, include_baseline = FALSE, shock_groups = NULL,
                                  top_n = NULL, collapse_other = TRUE, model = "model1", ...) {
+  validate_probability(probability)
   shock_groups <- validate_shock_groups(shock_groups, "prepare_hd_plot_data")
-  summary_tbl <- resolve_hd_summary_table(object, caller = "plot_hd", probability = probability, model = model, ...)
-  summary_tbl <- filter_hd_rows(summary_tbl, variables = variables, shocks = shocks, models = models)
-  if (!nrow(summary_tbl)) {
-    stop("No historical decomposition rows remain after filtering.", call. = FALSE)
-  }
-
-  component_tbl <- prepare_hd_component_summary(
-    summary_tbl,
-    shock_groups = shock_groups,
-    top_n = top_n,
-    collapse_other = collapse_other,
-    probability = probability
-  )
-
-  observed_tbl <- NULL
-  if ((isTRUE(include_observed) || isTRUE(include_baseline)) && is_supported_posterior_model(object)) {
-    observed_tbl <- extract_hd_observed_data(object, model = model)
-    observed_tbl <- filter_hd_rows(observed_tbl, variables = variables, models = models)
-  }
-
   if (isTRUE(include_baseline)) {
-    if (is.null(observed_tbl)) {
-      stop("A baseline component requires a posterior model object with an observed series.", call. = FALSE)
-    }
-    pieces <- split(
-      component_tbl,
-      interaction(component_tbl$model, component_tbl$variable, component_tbl$time, drop = TRUE)
-    )
-    shock_totals <- do.call(rbind, lapply(pieces, function(part) {
-      tibble::tibble(
-        model = part$model[1],
-        variable = part$variable[1],
-        time = part$time[1],
-        shock_centre = sum(part$median, na.rm = TRUE)
-      )
-    }))
-    merged <- merge(
-      observed_tbl,
-      shock_totals,
-      by = c("model", "variable", "time"),
-      all.x = TRUE,
-      all.y = FALSE,
-      sort = FALSE
-    )
-    merged$shock_centre[is.na(merged$shock_centre)] <- 0
-
-    baseline_rows <- tibble::tibble(
-      model = merged$model,
-      object_type = "hd",
-      variable = merged$variable,
-      component = "Baseline",
-      time = merged$time,
-      mean = merged$observed - merged$shock_centre,
-      median = merged$observed - merged$shock_centre,
-      lower = merged$observed - merged$shock_centre,
-      upper = merged$observed - merged$shock_centre
-    )
-
-    component_tbl <- rbind(component_tbl, baseline_rows)
+    prepared <- prepare_hd_decomposition_draws(object, probability = probability,
+      variables = variables, shocks = shocks, models = models, shock_groups = shock_groups,
+      top_n = top_n, collapse_other = collapse_other, include_baseline = TRUE, model = model, ...)
+    return(list(components = summarise_hd_draw_table(prepared$components, probability),
+                component_draws = prepared$components, observed = prepared$observed))
   }
-
-  list(
-    components = component_tbl,
-    observed = observed_tbl
-  )
+  table_input <- inherits(object, "bsvar_post_tbl")
+  if (!table_input) {
+    return(prepare_hd_array_summary(object, probability, variables, shocks, models,
+      shock_groups, top_n, collapse_other, include_observed, model))
+  }
+  if (table_input) validate_hd_plot_table(object, "plot_hd", object_type = "hd")
+  draw_input <- isTRUE(attr(object, "draws")) || "draw" %in% names(object)
+  tbl <- object
+  tbl <- filter_hd_rows(tbl, variables = variables, shocks = shocks, models = models)
+  if (!nrow(tbl)) stop("No historical decomposition rows remain after filtering.", call. = FALSE)
+  component_draws <- NULL
+  if (draw_input) {
+    component_draws <- prepare_hd_component_draws(tbl, shock_groups, top_n, collapse_other)
+    components <- summarise_hd_draw_table(component_draws, probability)
+  } else {
+    components <- prepare_hd_component_summary(tbl, shock_groups, top_n, collapse_other, probability)
+  }
+  observed <- if (isTRUE(include_observed)) extract_hd_observed_data(object, model) else NULL
+  if (!is.null(observed)) observed <- filter_hd_rows(observed, variables = variables, models = models)
+  list(components = components, component_draws = component_draws, observed = observed)
 }
 
 prepare_hd_baseline_summary <- function(object, probability = 0.90, variables = NULL, shocks = NULL, models = NULL,
@@ -576,47 +540,49 @@ prepare_hd_baseline_summary <- function(object, probability = 0.90, variables = 
   prepared
 }
 
+prepare_hd_event_components <- function(object, start = NULL, end = start, probability = 0.90, variables = NULL,
+                                        shocks = NULL, models = NULL, shock_groups = NULL, top_n = NULL,
+                                        collapse_other = TRUE, model = "model1", ...) {
+  validate_probability(probability)
+  shock_groups <- validate_shock_groups(shock_groups, "prepare_hd_event_plot_data")
+  summary_input <- inherits(object, "bsvar_post_tbl") &&
+    identical(attr(object, "object_type"), "hd_event") &&
+    !isTRUE(attr(object, "draws")) && !"draw" %in% names(object)
+  tbl <- if (summary_input) object else resolve_hd_event_draw_table(object,
+    caller = "HD event plotting", start = start, end = end, probability = probability, model = model, ...)
+  tbl <- filter_hd_rows(tbl, variables = variables, shocks = shocks, models = models)
+  if (!nrow(tbl)) stop("No event-window historical decomposition rows remain after filtering.", call. = FALSE)
+  window <- unique(as.data.frame(tbl[c("event_start", "event_end")]))
+  if (nrow(window) != 1L) stop("Plot one event window at a time.", call. = FALSE)
+  tbl$time <- "event"
+  tbl$component <- map_hd_component(tbl$shock, shock_groups, collapse_other)
+  if (summary_input) {
+    tbl <- apply_hd_top_n(tbl, top_n, collapse_other)
+    summary <- aggregate_hd_summary_rows(tbl)
+    draws <- NULL
+  } else {
+    draws <- aggregate_hd_draw_rows(tbl)
+    draws <- apply_hd_top_n(draws, top_n, collapse_other, value_col = "value")
+    draws <- aggregate_hd_draw_rows(draws)
+    summary <- summarise_hd_draw_table(draws, probability)
+    draws$time <- NULL
+  }
+  summary$time <- NULL
+  summary$event_start <- window$event_start[1]
+  summary$event_end <- window$event_end[1]
+  list(summary = summary, draws = draws)
+}
+
 prepare_hd_event_plot_data <- function(object, start = NULL, end = start, probability = 0.90, variables = NULL,
                                        shocks = NULL, models = NULL, shock_groups = NULL, top_n = NULL,
                                        collapse_other = TRUE, model = "model1", ...) {
-  shock_groups <- validate_shock_groups(shock_groups, "prepare_hd_event_plot_data")
-  event_tbl <- resolve_hd_event_summary_table(
-    object,
-    caller = "plot_hd_event_share",
-    start = start,
-    end = end,
-    probability = probability,
-    model = model,
-    ...
-  )
-  event_tbl <- filter_hd_rows(event_tbl, variables = variables, shocks = shocks, models = models)
-  if (!nrow(event_tbl)) {
-    stop("No event-window historical decomposition rows remain after filtering.", call. = FALSE)
-  }
-  event_tbl$component <- map_hd_component(event_tbl$shock, shock_groups = shock_groups, collapse_other = collapse_other)
-  event_tbl <- apply_hd_top_n(event_tbl, top_n = top_n, collapse_other = collapse_other)
-
-  pieces <- split(event_tbl, interaction(event_tbl$model, event_tbl$variable, event_tbl$component, drop = TRUE))
-  rows <- lapply(pieces, function(part) {
-    tibble::tibble(
-      model = part$model[1],
-      object_type = "hd_event",
-      variable = part$variable[1],
-      component = part$component[1],
-      event_start = part$event_start[1],
-      event_end = part$event_end[1],
-      mean = sum(part$mean, na.rm = TRUE),
-      median = sum(part$median, na.rm = TRUE),
-      lower = sum(part$lower, na.rm = TRUE),
-      upper = sum(part$upper, na.rm = TRUE)
-    )
-  })
-  do.call(rbind, rows)
+  prepare_hd_event_components(object, start, end, probability, variables, shocks, models,
+                              shock_groups, top_n, collapse_other, model, ...)$summary
 }
 
 compute_hd_event_shares <- function(event_tbl, share = c("absolute", "signed")) {
   share <- match.arg(share)
-  pieces <- split(event_tbl, interaction(event_tbl$model, event_tbl$variable, drop = TRUE))
+  pieces <- split(event_tbl, tuple_group(event_tbl$model, event_tbl$variable, drop = TRUE))
   rows <- lapply(pieces, function(part) {
     if (identical(share, "absolute")) {
       denom <- sum(abs(part$median), na.rm = TRUE)
@@ -633,7 +599,15 @@ compute_hd_event_shares <- function(event_tbl, share = c("absolute", "signed")) 
 compute_hd_event_cumulative <- function(object, start, end = start, probability = 0.90, variables = NULL,
                                         shocks = NULL, models = NULL, shock_groups = NULL, top_n = NULL,
                                         collapse_other = TRUE, model = "model1", ...) {
-  draw_tbl <- resolve_hd_draw_table(object, caller = "plot_hd_event_cumulative", probability = probability, model = model, ...)
+  if (inherits(object, "bsvar_post_tbl")) {
+    draw_tbl <- resolve_hd_draw_table(object, caller = "plot_hd_event_cumulative", probability = probability, model = model, ...)
+  } else {
+    array <- get_hd_draws(object)
+    labels <- event_window_labels(dimnames(array)[[3]], start, end)
+    selected <- copy_posterior_attributes(array[, , match(labels, dimnames(array)[[3]]), , drop = FALSE], array)
+    class(selected) <- "PosteriorHD"
+    draw_tbl <- tidy_hd(selected, probability = probability, draws = TRUE, model = model)
+  }
   draw_tbl <- filter_hd_rows(draw_tbl, variables = variables, shocks = shocks, models = models)
   if (!nrow(draw_tbl)) {
     stop("No historical decomposition draw rows remain after filtering.", call. = FALSE)
@@ -644,13 +618,27 @@ compute_hd_event_cumulative <- function(object, start, end = start, probability 
   draw_tbl <- prepare_hd_component_draws(
     draw_tbl,
     shock_groups = shock_groups,
-    top_n = top_n,
+    top_n = NULL,
     collapse_other = collapse_other
   )
 
+  if (!is.null(top_n)) {
+    event_draws <- aggregate_hd_draw_rows(draw_tbl, group_cols = c("model", "variable", "component", "draw"))
+    event_draws$original_component <- event_draws$component
+    mapped <- apply_hd_top_n(event_draws, top_n, collapse_other, value_col = "value")
+    component_map <- unique(as.data.frame(mapped[c("model", "variable", "original_component", "component")]))
+    keys <- as.data.frame(draw_tbl[c("model", "variable", "component")])
+    names(keys)[3] <- "original_component"
+    matched <- vctrs::vec_match(keys, component_map[c("model", "variable", "original_component")])
+    keep <- !is.na(matched)
+    draw_tbl <- draw_tbl[keep, , drop = FALSE]
+    draw_tbl$component <- component_map$component[matched[keep]]
+    draw_tbl <- aggregate_hd_draw_rows(draw_tbl)
+  }
+
   time_order <- match(as.character(draw_tbl$time), window_labels)
   draw_tbl$time_order <- time_order
-  pieces <- split(draw_tbl, interaction(draw_tbl$model, draw_tbl$variable, draw_tbl$component, draw_tbl$draw, drop = TRUE))
+  pieces <- split(draw_tbl, tuple_group(draw_tbl$model, draw_tbl$variable, draw_tbl$component, draw_tbl$draw, drop = TRUE))
   cumulative_draws <- do.call(rbind, lapply(pieces, function(part) {
     part <- part[order(part$time_order), , drop = FALSE]
     part$value <- cumsum(part$value)
@@ -665,43 +653,8 @@ compute_hd_event_cumulative <- function(object, start, end = start, probability 
 event_distribution_data <- function(object, start = NULL, end = start, probability = 0.90, variables = NULL,
                                     shocks = NULL, models = NULL, shock_groups = NULL, top_n = NULL,
                                     collapse_other = TRUE, model = "model1", ...) {
-  summary_tbl <- prepare_hd_event_plot_data(
-    object,
-    start = start,
-    end = end,
-    probability = probability,
-    variables = variables,
-    shocks = shocks,
-    models = models,
-    shock_groups = shock_groups,
-    top_n = top_n,
-    collapse_other = collapse_other,
-    model = model,
-    ...
-  )
-
-  draws_tbl <- tryCatch(
-    resolve_hd_event_draw_table(
-      object,
-      caller = "plot_hd_event_distribution",
-      start = start,
-      end = end,
-      probability = probability,
-      model = model,
-      ...
-    ),
-    error = function(e) NULL
-  )
-
-  if (is.null(draws_tbl)) {
-    return(list(summary = summary_tbl, draws = NULL))
-  }
-
-  draws_tbl <- filter_hd_rows(draws_tbl, variables = variables, shocks = shocks, models = models)
-  draws_tbl$component <- map_hd_component(draws_tbl$shock, shock_groups = shock_groups, collapse_other = collapse_other)
-  draws_tbl <- apply_hd_top_n(draws_tbl, top_n = top_n, collapse_other = collapse_other, value_col = "value")
-  draws_tbl <- aggregate_hd_draw_rows(draws_tbl, group_cols = c("model", "variable", "component", "draw"))
-  list(summary = summary_tbl, draws = draws_tbl)
+  prepare_hd_event_components(object, start, end, probability, variables, shocks, models,
+                              shock_groups, top_n, collapse_other, model, ...)
 }
 
 #' @rdname plot_hd_lines
@@ -915,9 +868,10 @@ plot_hd_stacked <- function(object, probability = 0.90, variables = NULL, shocks
 
 #' Plots observed and reconstructed decomposition totals
 #'
-#' Compares the observed series with the sum of posterior median structural-shock
-#' contributions and the baseline component. Selected shock contributions can
-#' also be displayed separately.
+#' Compares the observed series with posterior summaries of draw-level sums of
+#' the displayed shock contributions and, when requested, the baseline. Filtering
+#' components can produce a partial total that does not reconstruct the observed
+#' series. Selected shock contributions can also be displayed separately.
 #'
 #' @inheritParams plot_hd_lines
 #' @export
@@ -938,20 +892,12 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
     ...
   )
   component_summary <- prepared$components
-  total_summary <- do.call(
-    rbind,
-    lapply(
-      split(component_summary, interaction(component_summary$model, component_summary$variable, component_summary$time, drop = TRUE)),
-      function(part) {
-        tibble::tibble(
-          model = part$model[1],
-          variable = part$variable[1],
-          time = part$time[1],
-          centre = sum(part$median, na.rm = TRUE)
-        )
-      }
-    )
-  )
+  total_draws <- prepared$component_draws
+  if (!isTRUE(include_baseline)) total_draws <- total_draws[total_draws$component != "Baseline", , drop = FALSE]
+  total_draws$component <- "Total"
+  total_draws <- aggregate_hd_draw_rows(total_draws)
+  total_summary <- summarise_hd_draw_table(total_draws, probability)
+  total_summary$centre <- total_summary$median
   baseline_summary <- NULL
   if (isTRUE(include_baseline)) {
     baseline_summary <- component_summary[component_summary$component == "Baseline", , drop = FALSE]
@@ -964,9 +910,12 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
     centre = prepared$observed$observed
   )
 
+  total_label <- if (!is.null(shocks) || !isTRUE(collapse_other) || !isTRUE(include_baseline)) {
+    "Displayed component total"
+  } else "Decomposition total"
   series_rows <- list(
     tibble::tibble(model = total_summary$model, variable = total_summary$variable, time = total_summary$time,
-                   series = "Decomposition total", value = total_summary$centre)
+                   series = total_label, value = total_summary$centre)
   )
   if (isTRUE(include_observed)) {
     series_rows[[length(series_rows) + 1L]] <- tibble::tibble(
@@ -998,7 +947,7 @@ plot_hd_total <- function(object, probability = 0.90, variables = NULL, shocks =
   plot_data <- time_info$data
   plot_data$panel_variable <- hd_panel_labels(plot_data$model, plot_data$variable)
 
-  manual_cols <- c(Observed = "black", `Decomposition total` = "#2166ac", Baseline = "#6c757d")
+  manual_cols <- c(Observed = "black", stats::setNames("#2166ac", total_label), Baseline = "#6c757d")
   extra_series <- setdiff(unique(plot_data$series), names(manual_cols))
   if (length(extra_series)) {
     manual_cols <- c(manual_cols, stats::setNames(grDevices::hcl.colors(length(extra_series), "Dark 3"), extra_series))
@@ -1168,7 +1117,7 @@ plot_hd_event_distribution <- function(object, start = NULL, end = start, probab
     ggplot2::aes(x = .data[["component"]], y = .data[["median"]], colour = .data[["model"]])
   )
 
-  if (!is.null(data_parts$draws) && any(table(interaction(data_parts$draws$model, data_parts$draws$variable, data_parts$draws$component, drop = TRUE)) >= 10L)) {
+  if (!is.null(data_parts$draws) && any(table(tuple_group(data_parts$draws$model, data_parts$draws$variable, data_parts$draws$component, drop = TRUE)) >= 10L)) {
     violin_data <- data_parts$draws
     violin_data$component <- factor(violin_data$component, levels = levels(summary_tbl$component))
     p <- p + ggplot2::geom_violin(

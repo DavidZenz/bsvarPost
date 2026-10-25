@@ -67,23 +67,11 @@ publish_bsvar_plot <- function(object, family = NULL,
 }
 
 infer_publication_family <- function(object) {
-  if (inherits(object, "ggplot")) return("comparison")
-  if (inherits(object, "bsvar_report_bundle")) return(infer_publication_family(object$plot))
-  if (inherits(object, "RepresentativeResponse")) return("representative")
-  if (!inherits(object, "bsvar_post_tbl")) return(NULL)
-
-  object_type <- attr(object, "object_type") %||% ""
-  if (identical(object_type, "hd")) return("hd")
-  if (identical(object_type, "acceptance_diagnostics")) return("acceptance_diagnostics")
-  if (identical(object_type, "hd_event")) return("hd_event")
-  if (identical(object_type, "shock_ranking")) return("shock_ranking")
-  if (identical(object_type, "restriction_audit")) return("restriction_audit")
-  if (grepl("^simultaneous_", object_type)) return("simultaneous")
-  if (grepl("^joint_", object_type)) return("joint_hypothesis")
-  if (isTRUE(attr(object, "compare"))) return("comparison")
-  if (object_type %in% c("irf", "cdm", "forecast")) return(object_type)
-  if ("posterior_prob" %in% names(object)) return("hypothesis")
-  NULL
+  family <- posterior_plot_family(object)
+  if (is.null(family)) return(NULL)
+  if (family %in% c("response_comparison", "restriction_comparison")) return("comparison")
+  if (family %in% c("fevd", "shocks")) return(NULL)
+  family
 }
 
 build_publication_plot <- function(object, family, ...) {
@@ -110,7 +98,7 @@ build_publication_plot <- function(object, family, ...) {
     comparison = if (inherits(object, "bsvar_post_tbl") &&
       identical(attr(object, "object_type"), "restriction_audit")) {
       plot_compare_restrictions(object, ...)
-    } else if (inherits(object, "bsvar_post_tbl") && isTRUE(attr(object, "compare"))) {
+    } else if (identical(posterior_plot_family(object), "response_comparison")) {
       plot_compare_response(object, ...)
     } else {
       ggplot2::autoplot(object, ...)

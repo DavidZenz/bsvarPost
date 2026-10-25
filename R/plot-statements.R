@@ -76,7 +76,7 @@ resolve_restriction_plot_labels <- function(df, label_style = c("raw", "pretty")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #' post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 #'
-#' h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+#' h <- hypothesis_irf(post, variables = "gdp", shocks = "gdp",
 #'                     horizon = 0:2, relation = ">", value = 0)
 #' p <- plot_hypothesis(h)
 #' @export
@@ -95,8 +95,8 @@ plot_hypothesis <- function(object, type = c("irf", "cdm"),
   } else if (identical(type, "irf")) {
     tbl <- hypothesis_irf(
       object,
-      variable = variable,
-      shock = shock,
+      variables = variable,
+      shocks = shock,
       horizon = horizon,
       relation = relation,
       value = value,
@@ -108,8 +108,8 @@ plot_hypothesis <- function(object, type = c("irf", "cdm"),
   } else {
     tbl <- hypothesis_cdm(
       object,
-      variable = variable,
-      shock = shock,
+      variables = variable,
+      shocks = shock,
       horizon = horizon,
       relation = relation,
       value = value,

@@ -55,3 +55,6 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 result <- tidy_irf(post, horizon = 3)
 head(result)
 }
+\seealso{
+\link{posterior_provenance}
+}

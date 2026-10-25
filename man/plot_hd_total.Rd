@@ -23,8 +23,9 @@ plot_hd_total(
 \arguments{
 \item{object}{A posterior model object, \code{PosteriorHD}, or a tidy table of
 historical decompositions. Plots that reconstruct the observed series
-require a posterior model; when a table is supplied, cumulative event plots
-require draw-level input.}
+require a posterior model. Combining multiple shocks, including an
+\code{"Other"} component, requires draw-level input: marginal medians and
+interval bounds cannot be added. Ungrouped summary tables remain supported.}
 
 \item{probability}{Probability mass of the equal-tailed credible interval
 computed when \code{object} is not already a summary table.}
@@ -41,7 +42,9 @@ computed when \code{object} is not already a summary table.}
 types that compare decomposition totals against the realised path.}
 
 \item{include_baseline}{If \code{TRUE}, include the non-shock baseline
-component when building a full decomposition.}
+component when building a full decomposition. The baseline is computed
+before filtering shocks. Displayed marginal medians need not add up to the
+median of the decomposition total.}
 
 \item{shock_groups}{Optional named character vector mapping shock names to
 display groups.}
@@ -59,7 +62,8 @@ posterior-summary tables.}
 \code{tidy_hd_event()} when conversion is required.}
 }
 \description{
-Compares the observed series with the sum of posterior median structural-shock
-contributions and the baseline component. Selected shock contributions can
-also be displayed separately.
+Compares the observed series with posterior summaries of draw-level sums of
+the displayed shock contributions and, when requested, the baseline. Filtering
+components can produce a partial total that does not reconstruct the observed
+series. Selected shock contributions can also be displayed separately.
 }

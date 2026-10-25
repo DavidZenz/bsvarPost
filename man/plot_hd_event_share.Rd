@@ -24,8 +24,9 @@ plot_hd_event_share(
 \arguments{
 \item{object}{A posterior model object, \code{PosteriorHD}, or a tidy table of
 historical decompositions. Plots that reconstruct the observed series
-require a posterior model; when a table is supplied, cumulative event plots
-require draw-level input.}
+require a posterior model. Combining multiple shocks, including an
+\code{"Other"} component, requires draw-level input: marginal medians and
+interval bounds cannot be added. Ungrouped summary tables remain supported.}
 
 \item{start, end}{Event-window start and end indexes for event-specific plots.}
 
