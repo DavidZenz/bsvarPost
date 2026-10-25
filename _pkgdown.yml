@@ -62,6 +62,7 @@ reference:
       - tidy_hd
       - tidy_forecast
       - tidy_shocks
+      - posterior_provenance
 
   - title: Comparison of Model Specifications
     contents:

@@ -2,10 +2,17 @@ if (Sys.info()[["sysname"]] == "Darwin") {
   Sys.setenv(KMP_DUPLICATE_LIB_OK = "TRUE")
 }
 
+# Optional PNG basenames restrict regeneration. --fixtures explicitly rebuilds
+# the deterministic posterior fixtures; existing fixtures are otherwise reused.
+render_args <- commandArgs(trailingOnly = TRUE)
+requested_figures <- setdiff(render_args, "--fixtures")
+.should_render <- function(path) !length(requested_figures) || basename(path) %in% requested_figures
+
 dir.create("vignettes/figures",  recursive = TRUE, showWarnings = FALSE)
 dir.create("vignettes/fixtures", recursive = TRUE, showWarnings = FALSE)
 
 .save_gg <- function(path, plot, width = 8, height = 5, dpi = 150) {
+  if (!.should_render(path)) return(invisible(NULL))
   ggplot2::ggsave(
     filename = path,
     plot = plot,
@@ -17,6 +24,7 @@ dir.create("vignettes/fixtures", recursive = TRUE, showWarnings = FALSE)
 }
 
 .save_base <- function(path, expr, width = 1600, height = 1200, res = 150) {
+  if (!.should_render(path)) return(invisible(NULL))
   grDevices::png(path, width = width, height = height, res = res,
                  bg = "white")
   on.exit(grDevices::dev.off(), add = TRUE)
@@ -30,6 +38,8 @@ library(ggplot2)
 
 # ── Fixture generation ────────────────────────────────────────────────────────
 
+fixture_paths <- c("vignettes/fixtures/fiscal_post_bsvar.rds", "vignettes/fixtures/fiscal_post_bsvar_alt.rds")
+if ("--fixtures" %in% render_args || !all(file.exists(fixture_paths))) {
 data(us_fiscal_lsuw)
 cat("Variable names in us_fiscal_lsuw:\n")
 print(colnames(us_fiscal_lsuw))
@@ -45,6 +55,8 @@ set.seed(456)
 spec_bsvar_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 3)
 post_bsvar_alt  <- estimate(spec_bsvar_alt, S = 200, thin = 1, show_progress = FALSE)
 saveRDS(post_bsvar_alt, "vignettes/fixtures/fiscal_post_bsvar_alt.rds", compress = "xz")
+
+}
 
 # Report fixture file sizes
 cat("\nFixture file sizes:\n")

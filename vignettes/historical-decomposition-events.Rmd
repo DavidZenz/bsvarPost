@@ -35,6 +35,15 @@ reported results without re-estimating the models.
 
 ## Posterior draws
 
+Whenever a plot combines multiple shocks, including a collapsed `"Other"`
+category, it also needs posterior draws. Marginal medians and interval bounds
+cannot be added to obtain a grouped posterior summary. Summary-table input
+remains supported for ungrouped displays and one-to-one shock renaming.
+
+The non-shock baseline is computed from all shock contributions before display
+filtering. A decomposition total is summarized after summing its draws; displayed
+marginal component medians need not add up to the median total.
+
 Event-specific analysis requires posterior draws of historical decompositions,
 not only pointwise posterior summaries. Obtain these draws with
 [`tidy_hd(draws = TRUE)`](../reference/tidy_hd.html):

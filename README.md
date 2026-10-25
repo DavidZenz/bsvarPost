@@ -78,6 +78,13 @@ for cumulative dynamic multipliers, forecast error variance decompositions,
 historical decompositions, forecasts, and structural shocks. Set `draws = TRUE`
 when posterior draw-level output is required.
 
+Results also include provenance columns for analysis type, interval probability
+and method, scaling, known units, current upstream package versions, and draw
+count. Draw-level tables retain positional `draw` and original `draw_id` labels.
+See `help("posterior_provenance")` for definitions. Default reports and CSV
+exports include provenance; select columns explicitly when a fixed schema is
+needed.
+
 ### Compute cumulative dynamic multipliers
 
 `cdm()` computes cumulative dynamic multipliers from posterior distributions
@@ -161,6 +168,11 @@ compares the same period across model specifications. The
 [Historical Decompositions article](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html)
 develops these analyses without repeating the construction of a historical
 decomposition.
+
+Grouped HD plots aggregate contributions within each posterior draw before
+computing medians and intervals. Combining multiple shocks, including an
+“Other” category, therefore requires posterior objects, HD arrays, or draw-level
+tables. Ungrouped summary-table plots remain supported.
 
 ![Structural-shock contributions to GDP over the full
 sample](vignettes/figures/hd-overlay-showcase.png)
