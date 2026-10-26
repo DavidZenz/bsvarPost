@@ -6,18 +6,22 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-<!-- generated-by: gsd-doc-writer -->
+```{r formatting, include=FALSE, purl=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 4
-)
+## Load the demonstration models
+
+These fits contain 200 retained draws each, for illustration rather than
+sampling-adequacy claims. Use `?posterior_provenance` for column definitions;
+use `help(package = "bsvarPost")` for offline function documentation.
+
+```{r load-fiscal}
 library(bsvarPost)
-post <- readRDS("fixtures/fiscal_post_bsvar.rds")
-post_alt <- readRDS("fixtures/fiscal_post_bsvar_alt.rds")
+post <- readRDS(system.file("extdata", "fiscal_post_bsvar.rds",
+  package = "bsvarPost", mustWork = TRUE))
+post_alt <- readRDS(system.file("extdata", "fiscal_post_bsvar_alt.rds",
+  package = "bsvarPost", mustWork = TRUE))
 ```
 
 Historical decompositions from **bsvars** and **bsvarSIGNs** attribute the
@@ -45,8 +49,10 @@ filtering. A decomposition total is summarized after summing its draws; displaye
 marginal component medians need not add up to the median total.
 
 Event-specific analysis requires posterior draws of historical decompositions,
-not only pointwise posterior summaries. Obtain these draws with
-[`tidy_hd(draws = TRUE)`](../reference/tidy_hd.html):
+not only pointwise posterior summaries. For a short event, pass the posterior directly to `tidy_hd_event()` so that
+aggregation can select the window before constructing a long table. Full-sample
+draw tables are useful when you need several custom aggregations. Obtain them with
+[`tidy_hd(draws = TRUE)`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd.html):
 
 ```{r hd-draws}
 hd_draws <- tidy_hd(post, draws = TRUE)
@@ -67,13 +73,50 @@ The full-sample historical decomposition provides the context for the event
 analysis. The figures show the main shock contributions as separate paths and
 as stacked contributions.
 
-```{r hd-overlay-figure, echo = FALSE, out.width = "100%", fig.alt = "Structural-shock contributions to GDP over the full sample"}
+```{r fig-hd-overlay}
+figure <- plot_hd_overlay(post, variables = "gdp", top_n = 3,
+  probability = 0.90)
+```
+
+```{r hd-overlay-figure, fig.cap="Full-sample GDP shock contributions in log units. Lines show marginal posterior medians; baseline, observed series and uncertainty ribbons are omitted. Component medians need not add to the median total.", echo = FALSE, purl=FALSE, out.width = "100%", fig.alt = "Structural-shock contributions to GDP over the full sample"}
 knitr::include_graphics("figures/hd-overlay-showcase.png")
 ```
 
-```{r hd-composition-figure, echo = FALSE, out.width = "100%", fig.alt = "Stacked structural-shock contributions to GDP over the full sample"}
+```{r fig-hd-full}
+figure <- plot_hd_stacked(post, variables = "gdp", top_n = 2,
+  probability = 0.90)
+```
+
+```{r hd-composition-figure, fig.cap="Full-sample GDP decomposition in log levels, retaining two contributors and combining the remainder into Other within each draw. Stacks show marginal medians, not an exact additive decomposition of posterior medians.", echo = FALSE, purl=FALSE, out.width = "100%", fig.alt = "Stacked structural-shock contributions to GDP over the full sample"}
 knitr::include_graphics("figures/hd-full-showcase.png")
 ```
+
+## Grouped and summary inputs
+
+Grouping must sum each draw before computing its interval. This recipe combines
+spending and taxes into a fiscal group, leaving the remaining shock in Other.
+A draw table contains shock contributions only, so disable the observed series
+and non-shock baseline; pass `post` instead to recover those components:
+
+```{r grouped-hd}
+grouped_plot <- plot_hd_overlay(hd_draws, variables = "gdp", intervals = TRUE,
+  shock_groups = c(gs = "Fiscal", ttr = "Fiscal"),
+  collapse_other = TRUE, probability = 0.90,
+  include_observed = FALSE, include_baseline = FALSE)
+```
+
+For ungrouped lines a summary is sufficient:
+
+```{r summary-hd}
+hd_summary <- tidy_hd(post, probability = 0.90)
+summary_plot <- plot_hd_lines(hd_summary, variables = "gdp")
+```
+
+Passing `hd_summary` to an overlay that merges shocks, including `top_n` with
+Other, raises a draw-level-input error. Use `post`, a `PosteriorHD` array, or
+`tidy_hd(post, draws = TRUE)` instead. `plot_hd_stacked()` reconstructs a full
+decomposition internally and requires a posterior model, even when the baseline
+is hidden. Plots requesting an observed series also need the posterior model.
 
 ## Event periods
 
@@ -96,7 +139,7 @@ event_start <- "1958"
 event_end <- "1958.75"
 
 event <- tidy_hd_event(
-  hd_draws,
+  post,
   start = event_start,
   end = event_end,
   probability = 0.90
@@ -110,7 +153,7 @@ subset(
 )
 ```
 
-[`tidy_hd_event()`](../reference/tidy_hd_event.html) sums the contribution of
+[`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.html) sums the contribution of
 each shock over the inclusive period for every posterior draw and then reports
 posterior summaries. Set `draws = TRUE` to retain the aggregated draws for
 subsequent calculations.
@@ -122,12 +165,12 @@ the shock remains determined by the identification of the model.
 
 ## Shock rankings
 
-[`shock_ranking()`](../reference/shock_ranking.html) ranks shocks within each
+[`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.html) ranks shocks within each
 model and variable. The example reports results for `gdp`.
 
 ```{r rank-shocks}
 ranking <- shock_ranking(
-  hd_draws,
+  post,
   start = event_start,
   end = event_end,
   variables = "gdp",
@@ -159,17 +202,17 @@ ranking_plot
 ```
 
 To plot contributions without ranking, use
-[`plot_hd_event()`](../reference/plot_hd_event.html). The more specialized
-[`plot_hd_event_share()`](../reference/plot_hd_event_share.html),
-[`plot_hd_event_cumulative()`](../reference/plot_hd_event_cumulative.html), and
-[`plot_hd_event_distribution()`](../reference/plot_hd_event_distribution.html)
+[`plot_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event.html). The more specialized
+[`plot_hd_event_share()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_share.html),
+[`plot_hd_event_cumulative()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_cumulative.html), and
+[`plot_hd_event_distribution()`](https://davidzenz.github.io/bsvarPost/reference/plot_hd_event_distribution.html)
 show the composition of contributions, their accumulation within the selected
 period, and their posterior distributions, respectively.
 
 ## Comparison across model specifications
 
 Comparisons of lag orders or prior distributions require the same event period
-for every model. [`compare_hd_event()`](../reference/compare_hd_event.html)
+for every model. [`compare_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.html)
 applies the selected period to named posterior objects and indexes the results
 by model specification.
 
@@ -212,9 +255,9 @@ as_kable(
 )
 ```
 
-```{r save-plot, eval = FALSE}
+```{r save-plot}
 ggplot2::ggsave(
-  "shock-ranking-1958.pdf",
+  tempfile(fileext = ".pdf"),
   ranking_plot,
   width = 7,
   height = 4

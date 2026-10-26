@@ -104,6 +104,14 @@ jobs:
           extra-packages: |
             any::tinytest
             any::knitr
+            any::remotes
+      - name: Install minimum upstream versions on R 4.1
+        if: matrix.r == '4.1'
+        shell: Rscript {0}
+        run: |
+          remotes::install_version("bsvars", version = "3.2", dependencies = FALSE, upgrade = "never")
+          remotes::install_version("bsvarSIGNs", version = "2.0", dependencies = FALSE, upgrade = "never")
+          stopifnot(packageVersion("bsvars") == "3.2", packageVersion("bsvarSIGNs") == "2.0")
       - name: Confirm integration packages are absent
         shell: Rscript {0}
         run: |
@@ -114,6 +122,7 @@ jobs:
         run: |
           R CMD INSTALL .
           Rscript --vanilla -e 'tinytest::test_package("bsvarPost")'
+          Rscript --vanilla tools/check-documentation.R --fixtures-only
 
   optional-integrations-and-coverage:
     runs-on: ubuntu-latest

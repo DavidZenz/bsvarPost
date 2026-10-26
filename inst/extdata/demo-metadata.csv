@@ -1,0 +1,5 @@
+"file","input","seed","p","draws","thin","transformation","restrictions","input_rows","input_variables","sample_start","sample_end","bsvars_version","bsvarSIGNs_version","R_version","input_md5","posterior_md5"
+"fiscal_post_bsvar.rds","us_fiscal_lsuw.rds",123,1,200,1,"Unchanged: log real per capita levels","bsvars default identification",313,3,"1948","2026","4.0","3.0","4.6.1","b94de8775b1c8602dc55ba789310181a","72fc2e5aceb9a04b1aeb65a6393372ed"
+"fiscal_post_bsvar_alt.rds","us_fiscal_lsuw.rds",456,3,200,1,"Unchanged: log real per capita levels","bsvars default identification",313,3,"1948","2026","4.0","3.0","4.6.1","b94de8775b1c8602dc55ba789310181a","c360f829657c9d4c64fcdbf2594b1d93"
+"sign_post.rds","optimism.rds",123,4,200,1,"Input multiplied by 100","sign_irf = matrix(c(0, 1, rep(NA_real_, 23)), 5, 5)",224,5,"1955","2010.75","4.0","3.0","4.6.1","d06884491b0106dfe062b91b925d0432","964ed2d130b108bfa6717f9d932083ed"
+"sign_post_alt.rds","optimism.rds",456,2,200,1,"Input multiplied by 100","sign_irf = matrix(c(0, 1, rep(NA_real_, 23)), 5, 5)",224,5,"1955","2010.75","4.0","3.0","4.6.1","d06884491b0106dfe062b91b925d0432","0b7ea6d57c77b04a9cf6a7a0dddc0abe"

@@ -1,191 +1,29 @@
-if (Sys.info()[["sysname"]] == "Darwin") {
-  Sys.setenv(KMP_DUPLICATE_LIB_OK = "TRUE")
+# Render the exact labeled analysis chunks displayed in the articles.
+# Optional PNG basenames restrict regeneration. Rebuild fixtures separately with
+# tools/build-demo-fixtures.R, then reinstall before rendering.
+source("tools/doc-helpers.R")
+args <- commandArgs(trailingOnly = TRUE)
+recipes <- figure_recipes()
+if (any(!args %in% recipes$figure)) stop("Unknown figure name. For fixtures use tools/build-demo-fixtures.R, then reinstall.")
+check_demo_fixtures()
+# Grob construction can open the default device even without printing.
+# Keep that device off disk so rendering never leaves a top-level Rplots.pdf.
+grDevices::pdf(file = NULL)
+selected <- if (length(args)) recipes[recipes$figure %in% args, ] else recipes
+for (article in unique(selected$article)) {
+  env <- new.env(parent = globalenv())
+  targets <- selected[selected$article == article, ]
+  for (chunk in read_doc_chunks(file.path("vignettes", paste0(article, ".Rmd")))) {
+    if (!chunk$skip) eval(parse(text = chunk$code), envir = env)
+    i <- match(chunk$label, targets$chunk)
+    if (is.na(i)) next
+    r <- targets[i, ]
+    stopifnot(inherits(env$figure, "ggplot") || inherits(env$figure, "grob"))
+    path <- file.path("vignettes/figures", r$figure)
+    ggplot2::ggsave(path, env$figure, width = r$width, height = r$height, dpi = 150, bg = "white")
+    message("Rendered ", r$figure)
+    if (i == nrow(targets)) break
+  }
 }
-
-# Optional PNG basenames restrict regeneration. --fixtures explicitly rebuilds
-# the deterministic posterior fixtures; existing fixtures are otherwise reused.
-render_args <- commandArgs(trailingOnly = TRUE)
-requested_figures <- setdiff(render_args, "--fixtures")
-.should_render <- function(path) !length(requested_figures) || basename(path) %in% requested_figures
-
-dir.create("vignettes/figures",  recursive = TRUE, showWarnings = FALSE)
-dir.create("vignettes/fixtures", recursive = TRUE, showWarnings = FALSE)
-
-.save_gg <- function(path, plot, width = 8, height = 5, dpi = 150) {
-  if (!.should_render(path)) return(invisible(NULL))
-  ggplot2::ggsave(
-    filename = path,
-    plot = plot,
-    width = width,
-    height = height,
-    dpi = dpi,
-    bg = "white"
-  )
-}
-
-.save_base <- function(path, expr, width = 1600, height = 1200, res = 150) {
-  if (!.should_render(path)) return(invisible(NULL))
-  grDevices::png(path, width = width, height = height, res = res,
-                 bg = "white")
-  on.exit(grDevices::dev.off(), add = TRUE)
-  force(expr)
-}
-
-library(bsvars)
-library(bsvarSIGNs)
-library(bsvarPost)
-library(ggplot2)
-
-# ── Fixture generation ────────────────────────────────────────────────────────
-
-fixture_paths <- c("vignettes/fixtures/fiscal_post_bsvar.rds", "vignettes/fixtures/fiscal_post_bsvar_alt.rds")
-if ("--fixtures" %in% render_args || !all(file.exists(fixture_paths))) {
-data(us_fiscal_lsuw)
-cat("Variable names in us_fiscal_lsuw:\n")
-print(colnames(us_fiscal_lsuw))
-
-# Primary posterior fixture: p = 1, S = 200
-set.seed(123)
-spec_bsvar <- specify_bsvar$new(us_fiscal_lsuw, p = 1)
-post_bsvar  <- estimate(spec_bsvar, S = 200, thin = 1, show_progress = FALSE)
-saveRDS(post_bsvar, "vignettes/fixtures/fiscal_post_bsvar.rds", compress = "xz")
-
-# Alternative specification fixture: p = 3, S = 200
-set.seed(456)
-spec_bsvar_alt <- specify_bsvar$new(us_fiscal_lsuw, p = 3)
-post_bsvar_alt  <- estimate(spec_bsvar_alt, S = 200, thin = 1, show_progress = FALSE)
-saveRDS(post_bsvar_alt, "vignettes/fixtures/fiscal_post_bsvar_alt.rds", compress = "xz")
-
-}
-
-# Report fixture file sizes
-cat("\nFixture file sizes:\n")
-cat("  fiscal_post_bsvar.rds:     ",
-    file.size("vignettes/fixtures/fiscal_post_bsvar.rds"),     "bytes\n")
-cat("  fiscal_post_bsvar_alt.rds: ",
-    file.size("vignettes/fixtures/fiscal_post_bsvar_alt.rds"), "bytes\n")
-cat("  Total (bytes):",
-    file.size("vignettes/fixtures/fiscal_post_bsvar.rds") +
-    file.size("vignettes/fixtures/fiscal_post_bsvar_alt.rds"), "\n")
-
-# ── Load fixtures for figure generation ───────────────────────────────────────
-
-post_bsvar     <- readRDS("vignettes/fixtures/fiscal_post_bsvar.rds")
-post_bsvar_alt <- readRDS("vignettes/fixtures/fiscal_post_bsvar_alt.rds")
-
-# ── Showcase figures ──────────────────────────────────────────────────────────
-
-# cdm-showcase.png: conditional distribution moments, horizon = 20
-cdm_bsvar <- cdm(post_bsvar, horizon = 20)
-.save_base(
-  "vignettes/figures/cdm-showcase.png",
-  plot(cdm_bsvar)
-)
-
-# compare-irf-showcase.png: baseline / alternative naming, horizon = 20
-cmp_irf <- compare_irf(baseline = post_bsvar, alternative = post_bsvar_alt, horizon = 20)
-cmp_irf_focus <- cmp_irf[
-  cmp_irf$variable == "gdp" & cmp_irf$shock == "gs",
-  ,
-  drop = FALSE
-]
-.save_gg(
-  "vignettes/figures/compare-irf-showcase.png",
-  template_bsvar_plot(
-    ggplot2::autoplot(cmp_irf_focus),
-    family = "comparison",
-    preset = "paper"
-  ),
-  width = 8,
-  height = 4.5
-)
-
-# representative-showcase.png: median target IRF, horizon = 20
-rep_bsvar <- median_target_irf(post_bsvar, horizon = 20)
-.save_gg(
-  "vignettes/figures/representative-showcase.png",
-  publish_bsvar_plot(rep_bsvar, preset = "paper"),
-  width = 8,
-  height = 5
-)
-
-# hd-overlay-showcase.png: full-sample HD overlay view
-.save_gg(
-  "vignettes/figures/hd-overlay-showcase.png",
-  template_bsvar_plot(
-    plot_hd_overlay(post_bsvar, variables = "gdp", top_n = 3),
-    family = "hd",
-    preset = "paper"
-  ),
-  width = 8,
-  height = 5
-)
-
-# hd-full-showcase.png: full-sample HD stacked composition view
-.save_gg(
-  "vignettes/figures/hd-full-showcase.png",
-  template_bsvar_plot(
-    plot_hd_stacked(post_bsvar, variables = "gdp", top_n = 2),
-    family = "hd",
-    preset = "paper"
-  ),
-  width = 8,
-  height = 5
-)
-
-# diagnostics-showcase.png and hd-event-showcase.png: bsvarSIGNs optimism data
-data(optimism)
-sign_irf <- matrix(c(0, 1, rep(NA, 23)), 5, 5)
-set.seed(202)
-spec_sign <- specify_bsvarSIGN$new(
-  optimism * 100,
-  p = 4,
-  sign_irf = sign_irf
-)
-post_sign <- estimate(spec_sign, S = 200, thin = 1, show_progress = FALSE)
-
-diag_sign <- acceptance_diagnostics(post_sign)
-.save_gg(
-  "vignettes/figures/diagnostics-showcase.png",
-  publish_bsvar_plot(diag_sign, preset = "paper"),
-  width = 8,
-  height = 6
-)
-
-hd_sign <- plot_hd_event(post_sign, start = 1, end = 4)
-.save_gg(
-  "vignettes/figures/hd-event-showcase.png",
-  hd_sign,
-  width = 8,
-  height = 5
-)
-
-hd_event_share <- template_bsvar_plot(
-  plot_hd_event_share(post_sign, start = 1, end = 4, top_n = 4),
-  family = "hd_event",
-  preset = "paper"
-)
-.save_gg(
-  "vignettes/figures/hd-event-share-showcase.png",
-  hd_event_share,
-  width = 8,
-  height = 5
-)
-
-# hypothesis-showcase.png: hypothesis testing on fiscal model
-.save_base(
-  "vignettes/figures/hypothesis-showcase.png",
-  plot(
-    plot_hypothesis(
-      post_bsvar,
-      type      = "irf",
-      variables = "gdp",
-      shocks    = "gs",
-      horizon   = 0:20,
-      relation  = ">",
-      value     = 0
-    )
-  )
-)
-
-cat("\nAll fixtures and figures generated successfully.\n")
+check_figure_assets()
+invisible(grDevices::dev.off())

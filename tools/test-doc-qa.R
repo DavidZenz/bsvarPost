@@ -1,0 +1,31 @@
+# Regression tests for the checker: each fault must be rejected.
+source("tools/doc-helpers.R")
+fails <- function(expr, pattern) {
+  message <- tryCatch({ force(expr); NULL }, error = function(e) conditionMessage(e))
+  if (is.null(message) || !grepl(pattern, message, fixed = TRUE))
+    stop("Expected failure containing '", pattern, "', got: ", message)
+}
+scratch <- tempfile("doc-qa-tests-")
+dir.create(scratch)
+bad_doc <- file.path(scratch, "bad.Rmd")
+writeLines(c("```{r missing-object}", "undefined_documentation_object + 1", "```"), bad_doc)
+fails(evaluate_doc(bad_doc), "undefined_documentation_object")
+writeLines(c("```{r silently-skipped, eval=FALSE}", "1 + 1", "```"), bad_doc)
+fails(read_doc_chunks(bad_doc), "Analysis chunks must be evaluated")
+writeLines(c("```{r formatting, include=FALSE, purl=FALSE}",
+  "knitr::opts_chunk$set(eval=FALSE)", "```"), bad_doc)
+fails(read_doc_chunks(bad_doc), "Formatting must not disable analysis defaults")
+writeLines(c("```{r missing-fixture}",
+  'readRDS(system.file("extdata", "absent.rds", package="bsvarPost", mustWork=TRUE))', "```"), bad_doc)
+fails(evaluate_doc(bad_doc), "missing-fixture")
+writeLines('<html><body><a href="missing.html">Broken</a></body></html>', file.path(scratch, "index.html"))
+fails(check_html_links(scratch), "Broken local link")
+writeLines('<html><body id="valid"><a href="#absent">Broken</a></body></html>', file.path(scratch, "index.html"))
+fails(check_html_links(scratch), "Broken fragment")
+writeLines(c("```{r formatting, include=FALSE, purl=FALSE}", "hidden_analysis <- 1", "```"), bad_doc)
+fails(read_doc_chunks(bad_doc), "Only formatting/image plumbing")
+dir.create(file.path(scratch, "vignettes"))
+writeLines('![](figures/unmapped.png)', file.path(scratch, "README.md"))
+fails(check_figure_assets(scratch), "Unmapped or unused figure")
+unlink(scratch, recursive = TRUE)
+message("Documentation checker fault tests passed")

@@ -6,12 +6,10 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-<!-- generated-by: gsd-doc-writer -->
 
-```{r, include = FALSE}
+```{r formatting, include=FALSE, purl=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7,
   fig.height = 4)
-library(bsvarPost)
 ```
 
 This article presents posterior analyses for a `PosteriorBSVARSIGN` object
@@ -34,6 +32,24 @@ probabilities for all restrictions. Similarly, high restriction probabilities
 do not imply a large effective sample size or a dispersed distribution of
 admissibility weights.
 
+## Load demonstration draws
+
+```{r load-sign}
+library(bsvarPost)
+post_sign <- readRDS(system.file("extdata", "sign_post.rds",
+  package = "bsvarPost", mustWork = TRUE))
+post_sign_alt <- readRDS(system.file("extdata", "sign_post_alt.rds",
+  package = "bsvarPost", mustWork = TRUE))
+metadata <- read.csv(system.file("extdata", "demo-metadata.csv",
+  package = "bsvarPost", mustWork = TRUE))
+metadata[3:4, c("file", "p", "seed", "draws", "bsvarSIGNs_version")]
+```
+
+Each model contains 200 retained draws for demonstration; this does not
+establish sampling adequacy. The baseline has four lags and the alternative
+two. All analysis chunks below execute using these installed assets.
+See `?acceptance_diagnostics` or `help(package = "bsvarPost")` for offline help.
+
 ## Posterior distribution
 
 The example uses the `optimism` data from **bsvarSIGNs**. The zero restriction
@@ -42,21 +58,10 @@ whereas the sign restriction imposes a positive contemporaneous response of
 stock prices. The model is specified with `specify_bsvarSIGN$new()` and its
 posterior distribution is estimated with `estimate()`.
 
-```{r estimate-sign-model, eval = FALSE}
-data("optimism", package = "bsvarSIGNs")
-
-sign_irf <- matrix(c(0, 1, rep(NA_real_, 23)), 5, 5)
-spec_sign <- bsvarSIGNs::specify_bsvarSIGN$new(optimism * 100, p = 4,
-  sign_irf = sign_irf)
-
-set.seed(123)
-post_sign <- bsvars::estimate(spec_sign, S = 2000, thin = 1,
-  show_progress = FALSE)
-```
-
-The remaining examples can be evaluated after estimating `post_sign`. They are
-not evaluated when building the article because a sign-restricted posterior is
-not stored in the package.
+The frozen input is multiplied by 100 before estimation. Seeds, versions,
+restrictions and sample ranges are recorded in `demo-metadata.csv`. The
+[estimation recipe](#estimate-your-own-sign-models) appears at the end; it is
+optional when using the bundled draws.
 
 ## Representative admissible draws
 
@@ -66,7 +71,7 @@ weight, it selects the draw closest to the posterior median impulse responses.
 The result contains the impulse responses associated with one joint posterior
 draw rather than pointwise marginal quantiles.
 
-```{r representative-irf, eval = FALSE}
+```{r representative-irf}
 rep_irf <- most_likely_admissible_irf(post_sign, horizon = 12)
 
 rep_irf$draw_index
@@ -84,17 +89,20 @@ pointwise posterior summaries. The red line represents the selected posterior
 draw. It is neither a credible interval nor a comparison of model
 specifications.
 
-```{r plot-representative, eval = FALSE}
-plot(rep_irf)
+```{r plot-representative}
+representative_plot <- publish_bsvar_plot(rep_irf, preset = "paper")
 ```
+
+This plot object contains all response panels retained in `rep_irf`. The
+selected table above is only the productivity-to-productivity panel.
 
 `most_likely_admissible_cdm()` applies the same criterion to cumulative dynamic
 responses computed for each posterior draw.
 
-```{r representative-cdm, eval = FALSE}
+```{r representative-cdm}
 rep_cdm <- most_likely_admissible_cdm(post_sign, horizon = 12)
-summary(rep_cdm)
-plot(rep_cdm)
+head(summary(rep_cdm))
+representative_cdm_plot <- publish_bsvar_plot(rep_cdm, preset = "paper")
 ```
 
 The two functions answer different empirical questions. The first selects a
@@ -108,7 +116,7 @@ narrative restrictions specified for a `PosteriorBSVARSIGN` object. For each
 restriction, the posterior probability is estimated by the proportion of
 stored posterior draws that satisfy it.
 
-```{r restriction-audit, eval = FALSE}
+```{r restriction-audit}
 audit <- restriction_audit(post_sign, zero_tol = 1e-6)
 audit_focus <- audit[, c("restriction_type", "restriction", "relation",
                          "posterior_prob")]
@@ -123,10 +131,17 @@ reported with the results.
 restrictions. Formatted labels change their presentation but not their
 definitions.
 
-```{r plot-restrictions, eval = FALSE}
+```{r plot-restrictions}
 plot_restriction_audit(audit, label_style = "pretty",
   restriction_types = c("irf_sign", "irf_zero"))
 ```
+
+Restrictions imposed during estimation should generally have satisfaction
+probabilities near one, allowing for numerical precision and the chosen zero
+tolerance. A low value calls for investigation of the restriction definition,
+response scale and tolerance; it is not automatically evidence against the
+identifying assumption. A fitted restricted posterior cannot independently
+validate assumptions already imposed on it.
 
 These probabilities are conditional on the estimated posterior distribution
 and, for zero restrictions, on the chosen tolerance. They are not sampler
@@ -136,10 +151,10 @@ draws.
 ## Posterior sample diagnostics
 
 `acceptance_diagnostics()` summarises the stored posterior sample. It reports
-the number of draws, effective sample size, `max_tries`, the numbers of
+the number of draws, importance-weight effective sample size, `max_tries`, the numbers of
 restrictions, and the distribution of admissibility weights.
 
-```{r acceptance-diagnostics, eval = FALSE}
+```{r acceptance-diagnostics}
 diag <- acceptance_diagnostics(post_sign, ess_threshold = 100,
   sparse_threshold = 0.10)
 
@@ -150,7 +165,10 @@ subset(diag,
   select = c(metric, value, flag, message))
 ```
 
-`effective_sample_size` measures the effective number of posterior draws.
+`effective_sample_size` reports the upstream importance-weight ESS,
+\( (\sum_s w_s)^2 / \sum_s w_s^2 \), computed before weighted resampling.
+It describes concentration of importance weights, not an autocorrelation-based
+MCMC convergence diagnostic. It cannot establish convergence or mixing.
 `kernel_zero_share` is the proportion of approximately zero admissibility
 weights, and `kernel_cv` measures their relative dispersion. The restriction
 counts and `max_tries` describe the search for admissible rotations.
@@ -159,17 +177,16 @@ The thresholds indicate a small effective sample or limited admissibility
 support. They are not general decision rules. Moreover, the stored posterior
 object does not contain the complete sequence of proposed and rejected draws.
 
-The following figure presents these diagnostics for the sign-restricted model
-above using 200 retained posterior draws.
+The following plot uses exactly the loaded 200-draw baseline.
 
-```{r diagnostics-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior-sample and admissibility diagnostics for a sign-restricted model"}
-knitr::include_graphics("figures/diagnostics-showcase.png")
-```
-
-```{r plot-diagnostics, eval = FALSE}
-plot_acceptance_diagnostics(diag,
+```{r fig-diagnostics}
+figure <- plot_acceptance_diagnostics(diag,
   metrics = c("effective_sample_size", "kernel_zero_share", "kernel_cv"),
   title = "Stored-sample diagnostics")
+```
+
+```{r diagnostics-figure, echo=FALSE, purl=FALSE, out.width="100%", fig.cap="Baseline p=4, 200 retained draws: upstream importance-weight ESS and reconstructed admissibility-weight concentration. Red markers flag the illustrative diagnostic thresholds. These metrics are neither an MCMC convergence check nor sampler acceptance rates.", fig.alt="Importance-weight ESS and stored-sample weight concentration"}
+knitr::include_graphics("figures/diagnostics-showcase.png")
 ```
 
 ## Historical decompositions
@@ -177,13 +194,27 @@ plot_acceptance_diagnostics(diag,
 Historical decompositions attribute the observed series to the estimated
 structural shocks. For a selected period, the posterior contributions can be
 reported in levels or as proportions of their total magnitude. The figures
-below present both summaries over observations 1 to 4.
+below focus on productivity and present both summaries over observations 1 to 4.
 
-```{r sign-hd-event-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior structural-shock contributions over observations one to four"}
+```{r fig-sign-hd-event}
+figure <- plot_hd_event(post_sign, start = 1, end = 4,
+  variables = "productivity", probability = 0.90) +
+  ggplot2::labs(y = "Productivity contribution (model units)",
+    x = "Event start (observations 1–4)") +
+  ggplot2::theme(legend.position = "none")
+```
+
+```{r sign-hd-event-figure, purl=FALSE, fig.cap="Structural-shock contributions summed within each draw over observations 1–4. Productivity is in the transformed model-data units (optimism multiplied by 100). Points and intervals show posterior medians and 90% equal-tailed intervals.", echo = FALSE, out.width = "100%", fig.alt = "Posterior structural-shock contributions over observations one to four"}
 knitr::include_graphics("figures/hd-event-showcase.png")
 ```
 
-```{r sign-hd-share-figure, echo = FALSE, out.width = "100%", fig.alt = "Proportional structural-shock contributions over observations one to four"}
+```{r fig-sign-hd-share}
+figure <- plot_hd_event_share(post_sign, start = 1, end = 4, top_n = 4,
+  variables = "productivity",
+  probability = 0.90, share = "absolute")
+```
+
+```{r sign-hd-share-figure, purl=FALSE, fig.cap="Absolute shares of event productivity contributions over observations 1–4: four contributors and Other. Shares are unitless and describe absolute magnitude rather than signed net contributions; the plot shows the absolute value of each median contribution divided by their sum.", echo = FALSE, out.width = "100%", fig.alt = "Proportional structural-shock contributions over observations one to four"}
 knitr::include_graphics("figures/hd-event-share-showcase.png")
 ```
 
@@ -194,19 +225,12 @@ alternative sign-restricted specifications. The specifications should contain
 the same variables and comparable identifying restrictions. The argument
 names identify the specifications in the resulting tables.
 
-```{r fit-alternative, eval = FALSE}
-spec_sign_alt <- bsvarSIGNs::specify_bsvarSIGN$new(optimism * 100, p = 2,
-  sign_irf = sign_irf)
-
-set.seed(456)
-post_sign_alt <- bsvars::estimate(spec_sign_alt, S = 2000, thin = 1,
-  show_progress = FALSE)
-```
+The loaded `post_sign_alt` uses the same restrictions and input with two lags.
 
 The restriction probabilities and posterior sample diagnostics are computed
 separately.
 
-```{r compare-sign-models, eval = FALSE}
+```{r compare-sign-models}
 restriction_comparison <- compare_restrictions(baseline = post_sign,
   shorter_lag = post_sign_alt, zero_tol = 1e-6)
 
@@ -223,13 +247,36 @@ posterior sample diagnostics. These comparisons describe the estimated
 posterior distributions and do not rank the economic plausibility of the
 identifying assumptions.
 
-```{r plot-sign-comparisons, eval = FALSE}
+```{r plot-sign-comparisons}
 plot_compare_restrictions(restriction_comparison,
   restriction_types = c("irf_sign", "irf_zero"))
 
 plot_acceptance_diagnostics(
   diagnostic_comparison,
   metrics = c("effective_sample_size", "kernel_zero_share", "kernel_cv"))
+```
+
+## Estimate your own sign models
+
+This recipe matches the bundled settings and frozen input. The demonstration
+sampling length is not a research recommendation. Numerical results can change
+with R or upstream versions even with the same seeds.
+
+<!-- documentation-skip: estimation -->
+```{r estimate-sign-models, eval=FALSE}
+optimism_data <- readRDS(system.file("extdata", "optimism.rds",
+  package = "bsvarPost", mustWork = TRUE))
+sign_irf <- matrix(c(0, 1, rep(NA_real_, 23)), 5, 5)
+set.seed(123)
+spec_sign <- bsvarSIGNs::specify_bsvarSIGN$new(optimism_data * 100, p = 4,
+  sign_irf = sign_irf)
+post_sign <- bsvars::estimate(spec_sign, S = 200, thin = 1,
+  show_progress = FALSE)
+set.seed(456)
+spec_sign_alt <- bsvarSIGNs::specify_bsvarSIGN$new(optimism_data * 100, p = 2,
+  sign_irf = sign_irf)
+post_sign_alt <- bsvars::estimate(spec_sign_alt, S = 200, thin = 1,
+  show_progress = FALSE)
 ```
 
 ## Summary
