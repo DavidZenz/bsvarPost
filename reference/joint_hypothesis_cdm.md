@@ -40,10 +40,13 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 jh <- joint_hypothesis_cdm(post, variable = "gdp", shock = "gdp",
                            horizon = 0:2, relation = ">", value = 0)
 print(jh)
-#> # A tibble: 1 × 13
+#> # A tibble: 1 × 23
 #>   model object_type relation posterior_prob n_constraints variable shock horizon
 #>   <chr> <chr>       <chr>             <dbl>         <int> <chr>    <chr> <chr>  
 #> 1 mode… joint_cdm   >                     1             3 gdp      gdp   0,1,2  
-#> # ℹ 5 more variables: rhs_variable <chr>, rhs_shock <chr>, rhs_horizon <dbl>,
-#> #   rhs_value <dbl>, absolute <lgl>
+#> # ℹ 15 more variables: rhs_variable <chr>, rhs_shock <chr>, rhs_horizon <chr>,
+#> #   rhs_value <dbl>, absolute <lgl>, analysis_type <chr>,
+#> #   interval_probability <dbl>, interval_method <chr>, scale_by <chr>,
+#> #   scale_var <chr>, scale_factor <dbl>, units <chr>, source_package <chr>,
+#> #   source_version <chr>, n_draws <int>
 ```

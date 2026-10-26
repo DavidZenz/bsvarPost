@@ -11,7 +11,7 @@ not directly comparable with an individual shock contribution."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,8 +79,9 @@ not directly comparable with an individual shock contribution.</p>
 <dl><dt id="arg-object">object<a class="anchor" aria-label="anchor" href="#arg-object"></a></dt>
 <dd><p>A posterior model object, <code>PosteriorHD</code>, or a tidy table of
 historical decompositions. Plots that reconstruct the observed series
-require a posterior model; when a table is supplied, cumulative event plots
-require draw-level input.</p></dd>
+require a posterior model. Combining multiple shocks, including an
+<code>"Other"</code> component, requires draw-level input: marginal medians and
+interval bounds cannot be added. Ungrouped summary tables remain supported.</p></dd>
 
 
 <dt id="arg-probability">probability<a class="anchor" aria-label="anchor" href="#arg-probability"></a></dt>
@@ -111,7 +112,9 @@ types that compare decomposition totals against the realised path.</p></dd>
 
 <dt id="arg-include-baseline">include_baseline<a class="anchor" aria-label="anchor" href="#arg-include-baseline"></a></dt>
 <dd><p>If <code>TRUE</code>, include the non-shock baseline
-component when building a full decomposition.</p></dd>
+component when building a full decomposition. The baseline is computed
+before filtering shocks. Displayed marginal medians need not add up to the
+median of the decomposition total.</p></dd>
 
 
 <dt id="arg-shock-groups">shock_groups<a class="anchor" aria-label="anchor" href="#arg-shock-groups"></a></dt>

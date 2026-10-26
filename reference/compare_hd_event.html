@@ -9,7 +9,7 @@ historical period for two or more model specifications."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,16 +96,19 @@ identifying each model specification.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu">compare_hd_event</span><span class="op">(</span>m1 <span class="op">=</span> <span class="va">post1</span>, m2 <span class="op">=</span> <span class="va">post2</span>, start <span class="op">=</span> <span class="st">"1948.25"</span>, end <span class="op">=</span> <span class="st">"1948.5"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   model object_type variable shock event_start event_end    mean  median    sd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m1    hd_event    gdp      gdp   1948.25     1948.5     2.59    2.18   1.14 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m1    hd_event    gs       gdp   1948.25     1948.5     2.98    3.41   1.70 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> m1    hd_event    ttr      gdp   1948.25     1948.5     0.095<span style="text-decoration: underline;">2</span>  0.076<span style="text-decoration: underline;">7</span> 0.158</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> m1    hd_event    gdp      gs    1948.25     1948.5     0.572   0.559  0.298</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> m1    hd_event    gs       gs    1948.25     1948.5    -<span style="color: #BB0000;">4.00</span>   -<span style="color: #BB0000;">3.74</span>   2.03 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> m1    hd_event    ttr      gs    1948.25     1948.5     0.096<span style="text-decoration: underline;">4</span>  0.027<span style="text-decoration: underline;">8</span> 0.164</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: lower &lt;dbl&gt;, upper &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 21</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   model object_type variable shock     mean  median      sd     lower   upper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m1    hd_event    ttr      ttr   -<span style="color: #BB0000;">12.1</span>    -<span style="color: #BB0000;">7.61</span>    11.1   -<span style="color: #BB0000;">27.2</span>      -<span style="color: #BB0000;">5.44</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> m1    hd_event    ttr      gs      0.096<span style="text-decoration: underline;">4</span>  0.027<span style="text-decoration: underline;">8</span>   0.164   0.008<span style="text-decoration: underline;">57</span>   0.319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> m1    hd_event    ttr      gdp     0.095<span style="text-decoration: underline;">2</span>  0.076<span style="text-decoration: underline;">7</span>   0.158  -<span style="color: #BB0000;">0.049</span><span style="color: #BB0000; text-decoration: underline;">8</span>    0.300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> m1    hd_event    gs       ttr   120.     29.4    210.     18.9     402.   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> m1    hd_event    gs       gs     -<span style="color: #BB0000;">4.00</span>   -<span style="color: #BB0000;">3.74</span>     2.03   -<span style="color: #BB0000;">6.71</span>     -<span style="color: #BB0000;">2.38</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> m1    hd_event    gs       gdp     2.98    3.41     1.70    0.681     4.13 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 12 more variables: analysis_type &lt;chr&gt;, interval_probability &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   interval_method &lt;chr&gt;, scale_by &lt;chr&gt;, scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   units &lt;chr&gt;, source_package &lt;chr&gt;, source_version &lt;chr&gt;, n_draws &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   event_start &lt;chr&gt;, event_end &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

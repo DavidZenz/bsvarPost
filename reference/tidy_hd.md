@@ -43,7 +43,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 # Posterior summaries of historical decompositions
 result <- tidy_hd(post)
 head(result)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 20
 #>   model  object_type variable shock time      mean median     sd  lower upper
 #>   <chr>  <chr>       <chr>    <chr> <chr>    <dbl>  <dbl>  <dbl>  <dbl> <dbl>
 #> 1 model1 hd          ttr      ttr   1948.25  -2.38  -2.85  0.764  -3.00 -1.51
@@ -52,4 +52,7 @@ head(result)
 #> 4 model1 hd          ttr      ttr   1949     -5.96  -5.70  2.40   -8.92 -3.49
 #> 5 model1 hd          ttr      ttr   1949.25  -9.25  -6.51  8.18  -20.2  -3.77
 #> 6 model1 hd          ttr      ttr   1949.5  -18.0   -7.73 25.4   -52.2  -4.30
+#> # ℹ 10 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

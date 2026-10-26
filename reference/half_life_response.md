@@ -227,6 +227,15 @@ A `bsvar_post_tbl` with columns `model`, `object_type`, `variable`,
 `sd_half_life`, `lower_half_life`, `upper_half_life`, and
 `reached_prob`.
 
+## Details
+
+`reached_prob` is the fraction of stored draws with a defined half-life
+within the available horizon. A draw has no defined half-life when its
+reference response is nonpositive or it never reaches the target. Timing
+summaries condition on draws with a defined half-life; they are `NA`
+when none qualify. The standard deviation is `NA` with one qualifying
+draw. Missing or nonfinite input responses are rejected.
+
 ## Examples
 
 ``` r
@@ -237,7 +246,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 hl <- half_life_response(post, horizon = 3)
 print(hl)
-#> # A tibble: 9 × 12
+#> # A tibble: 9 × 22
 #>   model  object_type   variable shock fraction baseline mean_half_life
 #>   <chr>  <chr>         <chr>    <chr>    <dbl> <chr>             <dbl>
 #> 1 model1 half_life_irf ttr      ttr        0.5 peak                 NA
@@ -249,6 +258,9 @@ print(hl)
 #> 7 model1 half_life_irf gdp      ttr        0.5 peak                 NA
 #> 8 model1 half_life_irf gdp      gs         0.5 peak                 NA
 #> 9 model1 half_life_irf gdp      gdp        0.5 peak                 NA
-#> # ℹ 5 more variables: median_half_life <dbl>, sd_half_life <dbl>,
-#> #   lower_half_life <dbl>, upper_half_life <dbl>, reached_prob <dbl>
+#> # ℹ 15 more variables: median_half_life <dbl>, sd_half_life <dbl>,
+#> #   lower_half_life <dbl>, upper_half_life <dbl>, reached_prob <dbl>,
+#> #   analysis_type <chr>, interval_probability <dbl>, interval_method <chr>,
+#> #   scale_by <chr>, scale_var <chr>, scale_factor <dbl>, units <chr>,
+#> #   source_package <chr>, source_version <chr>, n_draws <int>
 ```

@@ -57,6 +57,10 @@ A `bsvar_post_tbl` (tibble subclass) with columns `model`,
 `lower`, and `upper`. When `draws = TRUE`, columns `draw` and `value`
 replace the summary statistics.
 
+## See also
+
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+
 ## Examples
 
 ``` r
@@ -69,7 +73,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 # Posterior summaries of impulse responses
 result <- tidy_irf(post, horizon = 3)
 head(result)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 20
 #>   model  object_type variable shock horizon   mean median     sd  lower  upper
 #>   <chr>  <chr>       <chr>    <chr>   <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
 #> 1 model1 irf         ttr      ttr         0  0.132  0.125 0.0161  0.121  0.155
@@ -78,4 +82,7 @@ head(result)
 #> 4 model1 irf         ttr      ttr         3  0.516  0.515 0.0723  0.427  0.594
 #> 5 model1 irf         ttr      gs          0  0      0     0       0      0    
 #> 6 model1 irf         ttr      gs          1 -0.217 -0.165 0.115  -0.374 -0.157
+#> # ℹ 10 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

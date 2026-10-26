@@ -13,7 +13,7 @@ requested."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@ requested.</p>
 <span class="r-in"><span><span class="co"># Posterior summaries of historical decompositions</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">tidy_hd</span><span class="op">(</span><span class="va">post</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 20</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model  object_type variable shock time      mean median     sd  lower upper</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> model1 hd          ttr      ttr   1948.25  -<span style="color: #BB0000;">2.38</span>  -<span style="color: #BB0000;">2.85</span>  0.764  -<span style="color: #BB0000;">3.00</span> -<span style="color: #BB0000;">1.51</span></span>
@@ -103,6 +103,9 @@ requested.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> model1 hd          ttr      ttr   1949     -<span style="color: #BB0000;">5.96</span>  -<span style="color: #BB0000;">5.70</span>  2.40   -<span style="color: #BB0000;">8.92</span> -<span style="color: #BB0000;">3.49</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> model1 hd          ttr      ttr   1949.25  -<span style="color: #BB0000;">9.25</span>  -<span style="color: #BB0000;">6.51</span>  8.18  -<span style="color: #BB0000;">20.2</span>  -<span style="color: #BB0000;">3.77</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> model1 hd          ttr      ttr   1949.5  -<span style="color: #BB0000;">18.0</span>   -<span style="color: #BB0000;">7.73</span> 25.4   -<span style="color: #BB0000;">52.2</span>  -<span style="color: #BB0000;">4.30</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 10 more variables: analysis_type &lt;chr&gt;, interval_probability &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   interval_method &lt;chr&gt;, scale_by &lt;chr&gt;, scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   units &lt;chr&gt;, source_package &lt;chr&gt;, source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

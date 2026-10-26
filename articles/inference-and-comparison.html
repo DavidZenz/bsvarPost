@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -223,8 +223,12 @@ options are documented in <a href="../reference/magnitude_audit.html"><code>magn
 </h2>
 <p>Ordinary credible intervals provide pointwise coverage. A 90%
 simultaneous credible band uses one sup-norm critical value for the
-selected response path, such that 90% of posterior draws lie within the
-band over the complete selection.</p>
+selected response path, such that at least 90% of retained posterior
+draws lie within the band over the complete selection. The critical
+value is an empirical order statistic; ties can increase the coverage.
+<code>achieved_coverage</code> reports the fraction actually covered.
+This is a finite-sample statement, not an exact guarantee about the
+underlying posterior distribution.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gdp_band</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simultaneous_irf.html">simultaneous_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
@@ -235,14 +239,14 @@ band over the complete selection.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">gdp_band</span><span class="op">[</span><span class="va">gdp_band</span><span class="op">$</span><span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
-<span>         <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span>, <span class="st">"simultaneous_prob"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
-<span><span class="co">#&gt;   horizon     median    lower    upper simultaneous_prob</span></span>
-<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">093</span><span style="color: #BB0000;">5</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">19</span> 0.002<span style="text-decoration: underline;">01</span>                0.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>  -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">80</span> 0.001<span style="text-decoration: underline;">40</span>                0.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">29</span> 0.000<span style="text-decoration: underline;">914</span>               0.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">68</span> 0.000<span style="text-decoration: underline;">523</span>               0.9</span></span></code></pre></div>
+<span>         <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span>, <span class="st">"simultaneous_prob"</span>, <span class="st">"achieved_coverage"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
+<span><span class="co">#&gt;   horizon     median    lower    upper simultaneous_prob achieved_coverage</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">093</span><span style="color: #BB0000;">5</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">18</span> 0.002<span style="text-decoration: underline;">00</span>                0.9               0.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>  -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">79</span> 0.001<span style="text-decoration: underline;">39</span>                0.9               0.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">28</span> 0.000<span style="text-decoration: underline;">903</span>               0.9               0.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">67</span> 0.000<span style="text-decoration: underline;">512</span>               0.9               0.9</span></span></code></pre></div>
 <p>The band is conditional on the response variables, structural shocks,
 and horizons used in its construction. Expanding this set generally
 widens the band. The <a href="../reference/simultaneous_cdm.html"><code>simultaneous_cdm()</code></a>

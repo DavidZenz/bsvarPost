@@ -45,13 +45,16 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 comp <- compare_forecast(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
-#> # A tibble: 6 × 9
-#>   model object_type variable  horizon   mean median    sd lower upper
-#>   <chr> <chr>       <chr>     <chr>    <dbl>  <dbl> <dbl> <dbl> <dbl>
-#> 1 m1    forecast    variable1 1        -9.25  -9.09 0.607 -10.1 -8.81
-#> 2 m1    forecast    variable1 2        -9.92  -8.98 2.47  -13.3 -8.56
-#> 3 m1    forecast    variable1 3       -10.9   -9.16 4.10  -16.5 -8.92
-#> 4 m1    forecast    variable2 1        -9.76  -9.83 0.256 -10.1 -9.51
-#> 5 m1    forecast    variable2 2        -9.72  -9.68 0.449 -10.2 -9.20
-#> 6 m1    forecast    variable2 3       -10.5   -9.53 2.36  -13.7 -9.15
+#> # A tibble: 6 × 19
+#>   model object_type variable horizon   mean median    sd lower upper
+#>   <chr> <chr>       <chr>      <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl>
+#> 1 m1    forecast    ttr            1  -9.25  -9.09 0.607 -10.1 -8.81
+#> 2 m1    forecast    ttr            2  -9.92  -8.98 2.47  -13.3 -8.56
+#> 3 m1    forecast    ttr            3 -10.9   -9.16 4.10  -16.5 -8.92
+#> 4 m1    forecast    gs             1  -9.76  -9.83 0.256 -10.1 -9.51
+#> 5 m1    forecast    gs             2  -9.72  -9.68 0.449 -10.2 -9.20
+#> 6 m1    forecast    gs             3 -10.5   -9.53 2.36  -13.7 -9.15
+#> # ℹ 10 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

@@ -178,8 +178,12 @@ documented in
 
 Ordinary credible intervals provide pointwise coverage. A 90%
 simultaneous credible band uses one sup-norm critical value for the
-selected response path, such that 90% of posterior draws lie within the
-band over the complete selection.
+selected response path, such that at least 90% of retained posterior
+draws lie within the band over the complete selection. The critical
+value is an empirical order statistic; ties can increase the coverage.
+`achieved_coverage` reports the fraction actually covered. This is a
+finite-sample statement, not an exact guarantee about the underlying
+posterior distribution.
 
 ``` r
 
@@ -192,14 +196,14 @@ gdp_band <- simultaneous_irf(
 )
 
 gdp_band[gdp_band$horizon %in% c(0, 4, 8, 12),
-         c("horizon", "median", "lower", "upper", "simultaneous_prob")]
-#> # A tibble: 4 × 5
-#>   horizon     median    lower    upper simultaneous_prob
-#>     <dbl>      <dbl>    <dbl>    <dbl>             <dbl>
-#> 1       0 -0.0000935 -0.00219 0.00201                0.9
-#> 2       4 -0.000702  -0.00280 0.00140                0.9
-#> 3       8 -0.00119   -0.00329 0.000914               0.9
-#> 4      12 -0.00158   -0.00368 0.000523               0.9
+         c("horizon", "median", "lower", "upper", "simultaneous_prob", "achieved_coverage")]
+#> # A tibble: 4 × 6
+#>   horizon     median    lower    upper simultaneous_prob achieved_coverage
+#>     <dbl>      <dbl>    <dbl>    <dbl>             <dbl>             <dbl>
+#> 1       0 -0.0000935 -0.00218 0.00200                0.9               0.9
+#> 2       4 -0.000702  -0.00279 0.00139                0.9               0.9
+#> 3       8 -0.00119   -0.00328 0.000903               0.9               0.9
+#> 4      12 -0.00158   -0.00367 0.000512               0.9               0.9
 ```
 
 The band is conditional on the response variables, structural shocks,

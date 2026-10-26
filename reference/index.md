@@ -16,6 +16,8 @@
   : Summarises draws from the predictive distribution
 - [`tidy_shocks()`](https://davidzenz.github.io/bsvarPost/reference/tidy_shocks.md)
   : Summarises posterior draws of structural shocks
+- [`posterior_provenance`](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+  : Provenance columns in posterior tables
 
 ## Comparison of Model Specifications
 

@@ -63,7 +63,7 @@ irf_tbl <- tidy_irf(post, horizon = 3)
 rb <- report_bundle(irf_tbl)
 print(rb)
 #> <bsvar_report_bundle>
-#> rows: 36 cols: 10 
+#> rows: 36 cols: 20 
 #> object_type: irf 
 #> plot: available
 ```

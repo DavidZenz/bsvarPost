@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,6 +86,15 @@ to reproduce the reported results without re-estimating the models.</p>
 <div class="section level2">
 <h2 id="posterior-draws">Posterior draws<a class="anchor" aria-label="anchor" href="#posterior-draws"></a>
 </h2>
+<p>Whenever a plot combines multiple shocks, including a collapsed
+<code>"Other"</code> category, it also needs posterior draws. Marginal
+medians and interval bounds cannot be added to obtain a grouped
+posterior summary. Summary-table input remains supported for ungrouped
+displays and one-to-one shock renaming.</p>
+<p>The non-shock baseline is computed from all shock contributions
+before display filtering. A decomposition total is summarized after
+summing its draws; displayed marginal component medians need not add up
+to the median total.</p>
 <p>Event-specific analysis requires posterior draws of historical
 decompositions, not only pointwise posterior summaries. Obtain these
 draws with <a href="../reference/tidy_hd.html"><code>tidy_hd(draws = TRUE)</code></a>:</p>
@@ -149,9 +158,9 @@ of the fitted model.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
 <span><span class="co">#&gt;   variable shock event_start event_end median  lower  upper</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gdp   1958        1958.75   -<span style="color: #BB0000;">14.9</span>  -<span style="color: #BB0000;">53.5</span>  24.4  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      ttr   1958        1958.75    -<span style="color: #BB0000;">1.23</span>  -<span style="color: #BB0000;">5.86</span>  4.48 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs    1958        1958.75    -<span style="color: #BB0000;">3.15</span> -<span style="color: #BB0000;">11.9</span>   0.435</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      ttr   1958        1958.75    -<span style="color: #BB0000;">1.23</span>  -<span style="color: #BB0000;">5.86</span>  4.48</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gdp   1958        1958.75   -<span style="color: #BB0000;">14.9</span>  -<span style="color: #BB0000;">53.5</span>  24.4</span></span></code></pre></div>
 <p><a href="../reference/tidy_hd_event.html"><code>tidy_hd_event()</code></a>
 sums the contribution of each shock over the inclusive period for every
 posterior draw and then reports posterior summaries. Set
@@ -237,12 +246,12 @@ results by model specification.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
 <span><span class="co">#&gt;   model       shock event_start event_end    median  lower  upper</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> baseline    gdp   1958        1958.75   -<span style="color: #BB0000;">14.9</span>     -<span style="color: #BB0000;">53.5</span>  24.4  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> baseline    ttr   1958        1958.75    -<span style="color: #BB0000;">1.23</span>     -<span style="color: #BB0000;">5.86</span>  4.48 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> baseline    gs    1958        1958.75    -<span style="color: #BB0000;">3.15</span>    -<span style="color: #BB0000;">11.9</span>   0.435</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> baseline    ttr   1958        1958.75    -<span style="color: #BB0000;">1.23</span>     -<span style="color: #BB0000;">5.86</span>  4.48 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> alternative gdp   1958        1958.75   -<span style="color: #BB0000;">19.1</span>     -<span style="color: #BB0000;">51.5</span>  17.0  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> baseline    gdp   1958        1958.75   -<span style="color: #BB0000;">14.9</span>     -<span style="color: #BB0000;">53.5</span>  24.4  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> alternative ttr   1958        1958.75    -<span style="color: #BB0000;">1.62</span>     -<span style="color: #BB0000;">6.60</span>  4.49 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> alternative gs    1958        1958.75    -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">76</span>  -<span style="color: #BB0000;">6.11</span>  3.89 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> alternative ttr   1958        1958.75    -<span style="color: #BB0000;">1.62</span>     -<span style="color: #BB0000;">6.60</span>  4.49</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> alternative gdp   1958        1958.75   -<span style="color: #BB0000;">19.1</span>     -<span style="color: #BB0000;">51.5</span>  17.0</span></span></code></pre></div>
 <p>The comparison is descriptive. Similar posterior summaries across
 specifications provide evidence of robustness to the considered changes,
 but <code><a href="../reference/compare_hd_event.html">compare_hd_event()</a></code> neither selects a model nor computes
@@ -277,12 +286,12 @@ objects and can be formatted for the intended application.</p>
 <tbody>
 <tr class="odd">
 <td align="left">baseline</td>
-<td align="left">gdp</td>
+<td align="left">ttr</td>
 <td align="left">1958</td>
 <td align="left">1958.75</td>
-<td align="right">-14.95</td>
-<td align="right">-53.50</td>
-<td align="right">24.36</td>
+<td align="right">-1.23</td>
+<td align="right">-5.86</td>
+<td align="right">4.48</td>
 </tr>
 <tr class="even">
 <td align="left">baseline</td>
@@ -295,21 +304,21 @@ objects and can be formatted for the intended application.</p>
 </tr>
 <tr class="odd">
 <td align="left">baseline</td>
-<td align="left">ttr</td>
-<td align="left">1958</td>
-<td align="left">1958.75</td>
-<td align="right">-1.23</td>
-<td align="right">-5.86</td>
-<td align="right">4.48</td>
-</tr>
-<tr class="even">
-<td align="left">alternative</td>
 <td align="left">gdp</td>
 <td align="left">1958</td>
 <td align="left">1958.75</td>
-<td align="right">-19.05</td>
-<td align="right">-51.50</td>
-<td align="right">16.99</td>
+<td align="right">-14.95</td>
+<td align="right">-53.50</td>
+<td align="right">24.36</td>
+</tr>
+<tr class="even">
+<td align="left">alternative</td>
+<td align="left">ttr</td>
+<td align="left">1958</td>
+<td align="left">1958.75</td>
+<td align="right">-1.62</td>
+<td align="right">-6.60</td>
+<td align="right">4.49</td>
 </tr>
 <tr class="odd">
 <td align="left">alternative</td>
@@ -322,12 +331,12 @@ objects and can be formatted for the intended application.</p>
 </tr>
 <tr class="even">
 <td align="left">alternative</td>
-<td align="left">ttr</td>
+<td align="left">gdp</td>
 <td align="left">1958</td>
 <td align="left">1958.75</td>
-<td align="right">-1.62</td>
-<td align="right">-6.60</td>
-<td align="right">4.49</td>
+<td align="right">-19.05</td>
+<td align="right">-51.50</td>
+<td align="right">16.99</td>
 </tr>
 </tbody>
 </table>

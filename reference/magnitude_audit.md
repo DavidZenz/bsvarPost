@@ -104,16 +104,15 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 mag <- magnitude_audit(post, variable = "gdp", shock = "gdp",
                        horizon = 0, relation = ">")
-#> Warning: In hypothesis_irf(): 'variable' is deprecated and will be removed in a future version.
-#> Use 'variables' instead.
-#> Warning: In hypothesis_irf(): 'shock' is deprecated and will be removed in a future version.
-#> Use 'shocks' instead.
 print(mag)
-#> # A tibble: 1 × 17
+#> # A tibble: 1 × 27
 #>   model  object_type variable shock horizon relation posterior_prob mean_gap
 #>   <chr>  <chr>       <chr>    <chr>   <dbl> <chr>             <dbl>    <dbl>
 #> 1 model1 irf         gdp      gdp         0 >                     1   0.0455
-#> # ℹ 9 more variables: median_gap <dbl>, lower_gap <dbl>, upper_gap <dbl>,
+#> # ℹ 19 more variables: median_gap <dbl>, lower_gap <dbl>, upper_gap <dbl>,
+#> #   analysis_type <chr>, interval_probability <dbl>, interval_method <chr>,
+#> #   scale_by <chr>, scale_var <chr>, scale_factor <dbl>, units <chr>,
+#> #   source_package <chr>, source_version <chr>, n_draws <int>,
 #> #   rhs_variable <chr>, rhs_shock <chr>, rhs_horizon <dbl>, rhs_value <dbl>,
 #> #   absolute <lgl>, audit_type <chr>
 ```

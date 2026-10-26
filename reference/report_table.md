@@ -62,11 +62,25 @@ head(report_table(irf_tbl))
 #> 4 model1      ttr   ttr       3 -0.16450084  0.042930882 -0.82219632
 #> 5 model1      ttr    gs       0  0.00000000  0.000000000  0.00000000
 #> 6 model1      ttr    gs       1 -0.02820548 -0.002442656 -0.10786428
-#>          Upper object_type         sd
-#> 1 0.1038397138         irf 0.03428735
-#> 2 0.0641317998         irf 0.04159206
-#> 3 0.0711479138         irf 0.20044378
-#> 4 0.0779079614         irf 0.48761015
-#> 5 0.0000000000         irf 0.00000000
-#> 6 0.0001733657         irf 0.05912256
+#>          Upper object_type         sd Analysis type Interval probability
+#> 1 0.1038397138         irf 0.03428735      response                  0.9
+#> 2 0.0641317998         irf 0.04159206      response                  0.9
+#> 3 0.0711479138         irf 0.20044378      response                  0.9
+#> 4 0.0779079614         irf 0.48761015      response                  0.9
+#> 5 0.0000000000         irf 0.00000000      response                  0.9
+#> 6 0.0001733657         irf 0.05912256      response                  0.9
+#>   Interval method Scaling Scaling variable Scaling factor Units Source package
+#> 1    equal_tailed    none             <NA>              1  <NA>         bsvars
+#> 2    equal_tailed    none             <NA>              1  <NA>         bsvars
+#> 3    equal_tailed    none             <NA>              1  <NA>         bsvars
+#> 4    equal_tailed    none             <NA>              1  <NA>         bsvars
+#> 5    equal_tailed    none             <NA>              1  <NA>         bsvars
+#> 6    equal_tailed    none             <NA>              1  <NA>         bsvars
+#>   Source version Draw count
+#> 1            4.0          5
+#> 2            4.0          5
+#> 3            4.0          5
+#> 4            4.0          5
+#> 5            4.0          5
+#> 6            4.0          5
 ```

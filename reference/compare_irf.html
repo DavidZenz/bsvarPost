@@ -9,7 +9,7 @@ in a common table identified by model specification."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,6 +80,10 @@ posterior summaries.</p></dd>
     <p>A <code>bsvar_post_tbl</code> combining results across models, with a
 <code>model</code> column identifying each model specification.</p>
     </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><a href="posterior_provenance.html">posterior_provenance</a></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -91,7 +95,7 @@ posterior summaries.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu">compare_irf</span><span class="op">(</span>m1 <span class="op">=</span> <span class="va">post1</span>, m2 <span class="op">=</span> <span class="va">post2</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 20</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model object_type variable shock horizon    mean   median     sd   lower</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m1    irf         ttr      ttr         0  0.105   0.096<span style="text-decoration: underline;">6</span>  0.017<span style="text-decoration: underline;">8</span>  0.095<span style="text-decoration: underline;">6</span></span>
@@ -100,7 +104,10 @@ posterior summaries.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> m1    irf         ttr      ttr         3  0.116   0.206   0.193  -<span style="color: #BB0000;">0.145</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> m1    irf         ttr      gs          0  0       0       0       0     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> m1    irf         ttr      gs          1 -<span style="color: #BB0000;">0.042</span><span style="color: #BB0000; text-decoration: underline;">8</span> -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">09</span> 0.071<span style="text-decoration: underline;">8</span> -<span style="color: #BB0000;">0.141</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: upper &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 11 more variables: upper &lt;dbl&gt;, analysis_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   interval_probability &lt;dbl&gt;, interval_method &lt;chr&gt;, scale_by &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;, units &lt;chr&gt;, source_package &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

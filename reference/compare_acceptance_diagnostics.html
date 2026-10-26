@@ -9,7 +9,7 @@ or more sign-restricted posterior distributions."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,20 +102,23 @@ specification.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu">compare_acceptance_diagnostics</span><span class="op">(</span>m1 <span class="op">=</span> <span class="va">post_s1</span>, m2 <span class="op">=</span> <span class="va">post_s2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 26 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    model object_type            metric                       value flag  message</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> m1    acceptance_diagnostics posterior_draws                  5 FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> m1    acceptance_diagnostics effective_sample_size            5 TRUE  <span style="color: #949494;">"</span>ESS b…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> m1    acceptance_diagnostics max_tries                      <span style="color: #BB0000;">Inf</span> FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> m1    acceptance_diagnostics irf_sign_restrictions            1 FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> m1    acceptance_diagnostics zero_restrictions                0 FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> m1    acceptance_diagnostics structural_sign_restrictions     0 FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> m1    acceptance_diagnostics narrative_restrictions           0 FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> m1    acceptance_diagnostics kernel_mean                      1 FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> m1    acceptance_diagnostics kernel_median                    1 FALSE <span style="color: #949494;">""</span>     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> m1    acceptance_diagnostics kernel_min                       1 FALSE <span style="color: #949494;">""</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 26 × 16</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    model object_type            metric         value flag  message analysis_type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> m1    acceptance_diagnostics posterior_dra…     5 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> m1    acceptance_diagnostics effective_sam…     5 TRUE  <span style="color: #949494;">"</span>ESS b… acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> m1    acceptance_diagnostics max_tries        <span style="color: #BB0000;">Inf</span> FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> m1    acceptance_diagnostics irf_sign_rest…     1 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> m1    acceptance_diagnostics zero_restrict…     0 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> m1    acceptance_diagnostics structural_si…     0 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> m1    acceptance_diagnostics narrative_res…     0 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> m1    acceptance_diagnostics kernel_mean        1 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> m1    acceptance_diagnostics kernel_median      1 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> m1    acceptance_diagnostics kernel_min         1 FALSE <span style="color: #949494;">""</span>      acceptance_d…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: interval_probability &lt;dbl&gt;, interval_method &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scale_by &lt;chr&gt;, scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;, units &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_package &lt;chr&gt;, source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

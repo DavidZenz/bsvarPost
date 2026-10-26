@@ -95,7 +95,7 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 comp <- compare_half_life_response(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
-#> # A tibble: 6 × 12
+#> # A tibble: 6 × 22
 #>   model object_type   variable shock fraction baseline mean_half_life
 #>   <chr> <chr>         <chr>    <chr>    <dbl> <chr>             <dbl>
 #> 1 m1    half_life_irf ttr      ttr        0.5 peak               1   
@@ -104,6 +104,9 @@ head(comp)
 #> 4 m1    half_life_irf gs       ttr        0.5 peak               1.75
 #> 5 m1    half_life_irf gs       gs         0.5 peak               1   
 #> 6 m1    half_life_irf gs       gdp        0.5 peak              NA   
-#> # ℹ 5 more variables: median_half_life <dbl>, sd_half_life <dbl>,
-#> #   lower_half_life <dbl>, upper_half_life <dbl>, reached_prob <dbl>
+#> # ℹ 15 more variables: median_half_life <dbl>, sd_half_life <dbl>,
+#> #   lower_half_life <dbl>, upper_half_life <dbl>, reached_prob <dbl>,
+#> #   analysis_type <chr>, interval_probability <dbl>, interval_method <chr>,
+#> #   scale_by <chr>, scale_var <chr>, scale_factor <dbl>, units <chr>,
+#> #   source_package <chr>, source_version <chr>, n_draws <int>
 ```

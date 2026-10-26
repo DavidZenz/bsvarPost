@@ -99,11 +99,7 @@ spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+h <- hypothesis_irf(post, variables = "gdp", shocks = "gdp",
                     horizon = 0:2, relation = ">", value = 0)
-#> Warning: In hypothesis_irf(): 'variable' is deprecated and will be removed in a future version.
-#> Use 'variables' instead.
-#> Warning: In hypothesis_irf(): 'shock' is deprecated and will be removed in a future version.
-#> Use 'shocks' instead.
 p <- plot_hypothesis(h)
 ```

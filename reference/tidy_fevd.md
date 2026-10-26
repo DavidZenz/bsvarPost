@@ -43,7 +43,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 # Posterior summaries of forecast error variance decompositions
 result <- tidy_fevd(post, horizon = 3)
 head(result)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 20
 #>   model  object_type variable shock horizon    mean  median    sd   lower  upper
 #>   <chr>  <chr>       <chr>    <chr>   <dbl>   <dbl>   <dbl> <dbl>   <dbl>  <dbl>
 #> 1 model1 fevd        ttr      ttr         0 100     100     0     1   e+2 100   
@@ -52,4 +52,7 @@ head(result)
 #> 4 model1 fevd        ttr      ttr         3  95.0    95.1   3.28  9.12e+1  98.6 
 #> 5 model1 fevd        ttr      gs          0   0       0     0     0         0   
 #> 6 model1 fevd        ttr      gs          1   0.511   0.248 0.577 5.45e-2   1.29
+#> # ℹ 10 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

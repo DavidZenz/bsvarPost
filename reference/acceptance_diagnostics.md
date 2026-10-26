@@ -57,6 +57,10 @@ acceptance_diagnostics(object, ...)
 A `bsvar_post_tbl` with columns `model`, `object_type`, `metric`,
 `value`, `flag`, and `message`. Each row reports one diagnostic metric.
 
+## See also
+
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+
 ## Examples
 
 ``` r
@@ -71,21 +75,24 @@ post_s <- bsvars::estimate(spec_s, S = 5, show_progress = FALSE)
 
 diag <- acceptance_diagnostics(post_s)
 print(diag)
-#> # A tibble: 13 × 6
-#>    model  object_type            metric                      value flag  message
-#>    <chr>  <chr>                  <chr>                       <dbl> <lgl> <chr>  
-#>  1 model1 acceptance_diagnostics posterior_draws                 5 FALSE ""     
-#>  2 model1 acceptance_diagnostics effective_sample_size           5 TRUE  "ESS b…
-#>  3 model1 acceptance_diagnostics max_tries                     Inf FALSE ""     
-#>  4 model1 acceptance_diagnostics irf_sign_restrictions           1 FALSE ""     
-#>  5 model1 acceptance_diagnostics zero_restrictions               0 FALSE ""     
-#>  6 model1 acceptance_diagnostics structural_sign_restrictio…     0 FALSE ""     
-#>  7 model1 acceptance_diagnostics narrative_restrictions          0 FALSE ""     
-#>  8 model1 acceptance_diagnostics kernel_mean                     1 FALSE ""     
-#>  9 model1 acceptance_diagnostics kernel_median                   1 FALSE ""     
-#> 10 model1 acceptance_diagnostics kernel_min                      1 FALSE ""     
-#> 11 model1 acceptance_diagnostics kernel_max                      1 FALSE ""     
-#> 12 model1 acceptance_diagnostics kernel_zero_share               0 FALSE ""     
-#> 13 model1 acceptance_diagnostics kernel_cv                       0 FALSE ""     
+#> # A tibble: 13 × 16
+#>    model  object_type            metric        value flag  message analysis_type
+#>    <chr>  <chr>                  <chr>         <dbl> <lgl> <chr>   <chr>        
+#>  1 model1 acceptance_diagnostics posterior_dr…     5 FALSE ""      acceptance_d…
+#>  2 model1 acceptance_diagnostics effective_sa…     5 TRUE  "ESS b… acceptance_d…
+#>  3 model1 acceptance_diagnostics max_tries       Inf FALSE ""      acceptance_d…
+#>  4 model1 acceptance_diagnostics irf_sign_res…     1 FALSE ""      acceptance_d…
+#>  5 model1 acceptance_diagnostics zero_restric…     0 FALSE ""      acceptance_d…
+#>  6 model1 acceptance_diagnostics structural_s…     0 FALSE ""      acceptance_d…
+#>  7 model1 acceptance_diagnostics narrative_re…     0 FALSE ""      acceptance_d…
+#>  8 model1 acceptance_diagnostics kernel_mean       1 FALSE ""      acceptance_d…
+#>  9 model1 acceptance_diagnostics kernel_median     1 FALSE ""      acceptance_d…
+#> 10 model1 acceptance_diagnostics kernel_min        1 FALSE ""      acceptance_d…
+#> 11 model1 acceptance_diagnostics kernel_max        1 FALSE ""      acceptance_d…
+#> 12 model1 acceptance_diagnostics kernel_zero_…     0 FALSE ""      acceptance_d…
+#> 13 model1 acceptance_diagnostics kernel_cv         0 FALSE ""      acceptance_d…
+#> # ℹ 9 more variables: interval_probability <dbl>, interval_method <chr>,
+#> #   scale_by <chr>, scale_var <chr>, scale_factor <dbl>, units <chr>,
+#> #   source_package <chr>, source_version <chr>, n_draws <int>
 # }
 ```

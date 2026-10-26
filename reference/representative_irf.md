@@ -96,6 +96,10 @@ selected IRF array), `posterior_draws` (all IRF draws), `draw_index`
 (integer index of the selected draw), `method`, `score`,
 `target_summary`, `selection_spec`, `probability`, and `object_type`.
 
+## See also
+
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+
 ## Examples
 
 ``` r

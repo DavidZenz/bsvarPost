@@ -225,6 +225,13 @@ A `bsvar_post_tbl` with columns `model`, `object_type`, `variable`,
 `shock`, `relation`, `threshold`, `mean_horizon`, `median_horizon`,
 `sd_horizon`, `lower_horizon`, `upper_horizon`, and `reached_prob`.
 
+## Details
+
+`reached_prob` is the fraction of stored draws that reach the threshold
+within the available horizon. Timing summaries condition on those draws;
+they are `NA` when none reach it. The standard deviation is `NA` with
+one qualifying draw. Missing or nonfinite input responses are rejected.
+
 ## Examples
 
 ``` r
@@ -235,7 +242,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 ttt <- time_to_threshold(post, horizon = 3, relation = ">", value = 0)
 print(ttt)
-#> # A tibble: 9 × 12
+#> # A tibble: 9 × 22
 #>   model  object_type           variable shock relation threshold mean_horizon
 #>   <chr>  <chr>                 <chr>    <chr> <chr>        <dbl>        <dbl>
 #> 1 model1 time_to_threshold_irf ttr      ttr   >                0            0
@@ -247,6 +254,9 @@ print(ttt)
 #> 7 model1 time_to_threshold_irf gdp      ttr   >                0            0
 #> 8 model1 time_to_threshold_irf gdp      gs    >                0            1
 #> 9 model1 time_to_threshold_irf gdp      gdp   >                0            0
-#> # ℹ 5 more variables: median_horizon <dbl>, sd_horizon <dbl>,
-#> #   lower_horizon <dbl>, upper_horizon <dbl>, reached_prob <dbl>
+#> # ℹ 15 more variables: median_horizon <dbl>, sd_horizon <dbl>,
+#> #   lower_horizon <dbl>, upper_horizon <dbl>, reached_prob <dbl>,
+#> #   analysis_type <chr>, interval_probability <dbl>, interval_method <chr>,
+#> #   scale_by <chr>, scale_var <chr>, scale_factor <dbl>, units <chr>,
+#> #   source_package <chr>, source_version <chr>, n_draws <int>
 ```

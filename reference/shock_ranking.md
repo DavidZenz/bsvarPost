@@ -71,18 +71,21 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 sr <- shock_ranking(post, start = "1948.25", end = "1948.5")
 print(sr)
-#> # A tibble: 9 × 14
-#>   model  object_type variable shock event_start event_end    mean   median    sd
-#>   <chr>  <chr>       <chr>    <chr> <chr>       <chr>       <dbl>    <dbl> <dbl>
-#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5    -0.766  -1.48    2.24 
-#> 2 model1 hd_event    gdp      ttr   1948.25     1948.5    -3.21   -1.36    3.52 
-#> 3 model1 hd_event    gdp      gs    1948.25     1948.5     0.730   0.0448  2.82 
-#> 4 model1 hd_event    gs       gs    1948.25     1948.5    -1.21   -1.29    0.937
-#> 5 model1 hd_event    gs       gdp   1948.25     1948.5     0.474   0.0187  1.03 
-#> 6 model1 hd_event    gs       ttr   1948.25     1948.5     0.157   0.00902 0.412
-#> 7 model1 hd_event    ttr      ttr   1948.25     1948.5    -4.95   -4.52    5.32 
-#> 8 model1 hd_event    ttr      gdp   1948.25     1948.5     0.143   0.0262  0.416
-#> 9 model1 hd_event    ttr      gs    1948.25     1948.5     0.0722 -0.00858 0.243
-#> # ℹ 5 more variables: lower <dbl>, upper <dbl>, ranking <chr>,
-#> #   rank_score <dbl>, rank <int>
+#> # A tibble: 9 × 24
+#>   model  object_type   variable shock    mean   median    sd    lower  upper
+#>   <chr>  <chr>         <chr>    <chr>   <dbl>    <dbl> <dbl>    <dbl>  <dbl>
+#> 1 model1 shock_ranking ttr      ttr   -4.95   -4.52    5.32  -11.0     0.217
+#> 2 model1 shock_ranking ttr      gdp    0.143   0.0262  0.416  -0.187   0.702
+#> 3 model1 shock_ranking ttr      gs     0.0722 -0.00858 0.243  -0.0832  0.402
+#> 4 model1 shock_ranking gs       gs    -1.21   -1.29    0.937  -2.25   -0.220
+#> 5 model1 shock_ranking gs       gdp    0.474   0.0187  1.03   -0.0165  1.86 
+#> 6 model1 shock_ranking gs       ttr    0.157   0.00902 0.412  -0.255   0.662
+#> 7 model1 shock_ranking gdp      gdp   -0.766  -1.48    2.24   -3.05    2.04 
+#> 8 model1 shock_ranking gdp      ttr   -3.21   -1.36    3.52   -7.99   -0.489
+#> 9 model1 shock_ranking gdp      gs     0.730   0.0448  2.82   -1.60    4.44 
+#> # ℹ 15 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>,
+#> #   event_start <chr>, event_end <chr>, ranking <chr>, rank_score <dbl>,
+#> #   rank <int>
 ```

@@ -11,7 +11,7 @@ a chosen fraction of its initial or peak level."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -276,6 +276,15 @@ available horizons, <code>"initial"</code> uses the horizon-0 response.</p></dd>
 <code>sd_half_life</code>, <code>lower_half_life</code>, <code>upper_half_life</code>,
 and <code>reached_prob</code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><code>reached_prob</code> is the fraction of stored draws with a defined
+half-life within the available horizon. A draw has no defined half-life
+when its reference response is nonpositive or it never reaches the target.
+Timing summaries condition on draws with a defined half-life; they are
+<code>NA</code> when none qualify. The standard deviation is <code>NA</code> with one qualifying
+draw. Missing or nonfinite input responses are rejected.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -286,7 +295,7 @@ and <code>reached_prob</code>.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">hl</span> <span class="op">&lt;-</span> <span class="fu">half_life_response</span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">hl</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 22</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model  object_type   variable shock fraction baseline mean_half_life</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> model1 half_life_irf ttr      ttr        0.5 peak                 <span style="color: #BB0000;">NA</span></span>
@@ -298,8 +307,11 @@ and <code>reached_prob</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> model1 half_life_irf gdp      ttr        0.5 peak                 <span style="color: #BB0000;">NA</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> model1 half_life_irf gdp      gs         0.5 peak                 <span style="color: #BB0000;">NA</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> model1 half_life_irf gdp      gdp        0.5 peak                 <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: median_half_life &lt;dbl&gt;, sd_half_life &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   lower_half_life &lt;dbl&gt;, upper_half_life &lt;dbl&gt;, reached_prob &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: median_half_life &lt;dbl&gt;, sd_half_life &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   lower_half_life &lt;dbl&gt;, upper_half_life &lt;dbl&gt;, reached_prob &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   analysis_type &lt;chr&gt;, interval_probability &lt;dbl&gt;, interval_method &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scale_by &lt;chr&gt;, scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;, units &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_package &lt;chr&gt;, source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

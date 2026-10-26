@@ -33,6 +33,10 @@ compare_irf(..., horizon = NULL, probability = 0.9, draws = FALSE)
 A `bsvar_post_tbl` combining results across models, with a `model`
 column identifying each model specification.
 
+## See also
+
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+
 ## Examples
 
 ``` r
@@ -44,7 +48,7 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 comp <- compare_irf(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 20
 #>   model object_type variable shock horizon    mean   median     sd   lower
 #>   <chr> <chr>       <chr>    <chr>   <dbl>   <dbl>    <dbl>  <dbl>   <dbl>
 #> 1 m1    irf         ttr      ttr         0  0.105   0.0966  0.0178  0.0956
@@ -53,5 +57,8 @@ head(comp)
 #> 4 m1    irf         ttr      ttr         3  0.116   0.206   0.193  -0.145 
 #> 5 m1    irf         ttr      gs          0  0       0       0       0     
 #> 6 m1    irf         ttr      gs          1 -0.0428 -0.00909 0.0718 -0.141 
-#> # ℹ 1 more variable: upper <dbl>
+#> # ℹ 11 more variables: upper <dbl>, analysis_type <chr>,
+#> #   interval_probability <dbl>, interval_method <chr>, scale_by <chr>,
+#> #   scale_var <chr>, scale_factor <dbl>, units <chr>, source_package <chr>,
+#> #   source_version <chr>, n_draws <int>
 ```

@@ -9,7 +9,7 @@ for two or more model specifications."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,7 +130,7 @@ models, with a <code>model</code> column identifying each model specification.</
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu">compare_peak_response</span><span class="op">(</span>m1 <span class="op">=</span> <span class="va">post1</span>, m2 <span class="op">=</span> <span class="va">post2</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 14</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 24</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model object_type variable shock mean_value median_value sd_value lower_value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> m1    peak_irf    ttr      ttr     0.532         0.082<span style="text-decoration: underline;">3</span>   0.984      0.032<span style="text-decoration: underline;">7</span>  </span>
@@ -139,9 +139,11 @@ models, with a <code>model</code> column identifying each model specification.</
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> m1    peak_irf    gs       ttr     0.308         0.012<span style="text-decoration: underline;">4</span>   0.670     -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">665</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> m1    peak_irf    gs       gs      0.057<span style="text-decoration: underline;">6</span>        0.032<span style="text-decoration: underline;">8</span>   0.058<span style="text-decoration: underline;">5</span>     0.028<span style="text-decoration: underline;">1</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> m1    peak_irf    gs       gdp     0.000<span style="text-decoration: underline;">469</span>      0        0.001<span style="text-decoration: underline;">05</span>    0       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: upper_value &lt;dbl&gt;, mean_horizon &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 16 more variables: upper_value &lt;dbl&gt;, mean_horizon &lt;dbl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   median_horizon &lt;dbl&gt;, sd_horizon &lt;dbl&gt;, lower_horizon &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   upper_horizon &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   upper_horizon &lt;dbl&gt;, analysis_type &lt;chr&gt;, interval_probability &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   interval_method &lt;chr&gt;, scale_by &lt;chr&gt;, scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   units &lt;chr&gt;, source_package &lt;chr&gt;, source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

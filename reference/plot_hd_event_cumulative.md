@@ -30,8 +30,9 @@ plot_hd_event_cumulative(
 
   A posterior model object, `PosteriorHD`, or a tidy table of historical
   decompositions. Plots that reconstruct the observed series require a
-  posterior model; when a table is supplied, cumulative event plots
-  require draw-level input.
+  posterior model. Combining multiple shocks, including an `"Other"`
+  component, requires draw-level input: marginal medians and interval
+  bounds cannot be added. Ungrouped summary tables remain supported.
 
 - start, end:
 

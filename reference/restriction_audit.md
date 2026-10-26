@@ -62,10 +62,13 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 r <- list(irf_restriction("gdp", "gdp", 0, sign = 1))
 audit <- restriction_audit(post, restrictions = r)
 print(audit)
-#> # A tibble: 1 × 12
+#> # A tibble: 1 × 23
 #>   model  restriction_type restriction      variable shock horizon relation
 #>   <chr>  <chr>            <chr>            <chr>    <chr>   <dbl> <chr>   
 #> 1 model1 irf_sign         irf[gdp,gdp,0]>0 gdp      gdp         0 >0      
-#> # ℹ 5 more variables: posterior_prob <dbl>, mean <dbl>, median <dbl>,
-#> #   lower <dbl>, upper <dbl>
+#> # ℹ 16 more variables: posterior_prob <dbl>, mean <dbl>, median <dbl>,
+#> #   lower <dbl>, upper <dbl>, object_type <chr>, analysis_type <chr>,
+#> #   interval_probability <dbl>, interval_method <chr>, scale_by <chr>,
+#> #   scale_var <chr>, scale_factor <dbl>, units <chr>, source_package <chr>,
+#> #   source_version <chr>, n_draws <int>
 ```

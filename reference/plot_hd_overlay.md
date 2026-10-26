@@ -32,8 +32,9 @@ plot_hd_overlay(
 
   A posterior model object, `PosteriorHD`, or a tidy table of historical
   decompositions. Plots that reconstruct the observed series require a
-  posterior model; when a table is supplied, cumulative event plots
-  require draw-level input.
+  posterior model. Combining multiple shocks, including an `"Other"`
+  component, requires draw-level input: marginal medians and interval
+  bounds cannot be added. Ungrouped summary tables remain supported.
 
 - probability:
 
@@ -64,7 +65,9 @@ plot_hd_overlay(
 - include_baseline:
 
   If `TRUE`, include the non-shock baseline component when building a
-  full decomposition.
+  full decomposition. The baseline is computed before filtering shocks.
+  Displayed marginal medians need not add up to the median of the
+  decomposition total.
 
 - shock_groups:
 

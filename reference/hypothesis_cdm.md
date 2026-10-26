@@ -137,20 +137,19 @@ spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 #> The identification is set to the default option of lower-triangular structural matrix.
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-h <- hypothesis_cdm(post, variable = "gdp", shock = "gdp",
+h <- hypothesis_cdm(post, variables = "gdp", shocks = "gdp",
                     horizon = 0:2, relation = ">", value = 0)
-#> Warning: In hypothesis_cdm(): 'variable' is deprecated and will be removed in a future version.
-#> Use 'variables' instead.
-#> Warning: In hypothesis_cdm(): 'shock' is deprecated and will be removed in a future version.
-#> Use 'shocks' instead.
 print(h)
-#> # A tibble: 3 × 16
+#> # A tibble: 3 × 26
 #>   model  object_type variable shock horizon relation posterior_prob mean_gap
 #>   <chr>  <chr>       <chr>    <chr>   <dbl> <chr>             <dbl>    <dbl>
 #> 1 model1 cdm         gdp      gdp         0 >                     1    0.344
 #> 2 model1 cdm         gdp      gdp         1 >                     1    0.938
 #> 3 model1 cdm         gdp      gdp         2 >                     1    1.72 
-#> # ℹ 8 more variables: median_gap <dbl>, lower_gap <dbl>, upper_gap <dbl>,
+#> # ℹ 18 more variables: median_gap <dbl>, lower_gap <dbl>, upper_gap <dbl>,
+#> #   analysis_type <chr>, interval_probability <dbl>, interval_method <chr>,
+#> #   scale_by <chr>, scale_var <chr>, scale_factor <dbl>, units <chr>,
+#> #   source_package <chr>, source_version <chr>, n_draws <int>,
 #> #   rhs_variable <chr>, rhs_shock <chr>, rhs_horizon <dbl>, rhs_value <dbl>,
 #> #   absolute <lgl>
 ```

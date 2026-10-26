@@ -11,7 +11,7 @@ a threshold condition."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -275,6 +275,14 @@ a threshold condition.</p>
 <code>sd_horizon</code>, <code>lower_horizon</code>, <code>upper_horizon</code>,
 and <code>reached_prob</code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p><code>reached_prob</code> is the fraction of stored draws that reach the
+threshold within the available horizon. Timing summaries condition on
+those draws; they are <code>NA</code> when none reach it. The standard deviation is
+<code>NA</code> with one qualifying draw. Missing or nonfinite input responses are
+rejected.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -285,7 +293,7 @@ and <code>reached_prob</code>.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ttt</span> <span class="op">&lt;-</span> <span class="fu">time_to_threshold</span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">3</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ttt</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 22</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model  object_type           variable shock relation threshold mean_horizon</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> model1 time_to_threshold_irf ttr      ttr   &gt;                0            0</span>
@@ -297,8 +305,11 @@ and <code>reached_prob</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> model1 time_to_threshold_irf gdp      ttr   &gt;                0            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> model1 time_to_threshold_irf gdp      gs    &gt;                0            1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> model1 time_to_threshold_irf gdp      gdp   &gt;                0            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: median_horizon &lt;dbl&gt;, sd_horizon &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   lower_horizon &lt;dbl&gt;, upper_horizon &lt;dbl&gt;, reached_prob &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: median_horizon &lt;dbl&gt;, sd_horizon &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   lower_horizon &lt;dbl&gt;, upper_horizon &lt;dbl&gt;, reached_prob &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   analysis_type &lt;chr&gt;, interval_probability &lt;dbl&gt;, interval_method &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scale_by &lt;chr&gt;, scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;, units &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_package &lt;chr&gt;, source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

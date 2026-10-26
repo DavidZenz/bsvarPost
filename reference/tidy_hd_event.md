@@ -138,6 +138,10 @@ A `bsvar_post_tbl` with columns `model`, `object_type`, `variable`,
 and `upper`. When `draws = TRUE`, columns `draw` and `value` replace the
 summary statistics.
 
+## See also
+
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+
 ## Examples
 
 ``` r
@@ -148,14 +152,17 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.5")
 head(hd_event)
-#> # A tibble: 6 × 11
-#>   model  object_type variable shock event_start event_end    mean   median    sd
-#>   <chr>  <chr>       <chr>    <chr> <chr>       <chr>       <dbl>    <dbl> <dbl>
-#> 1 model1 hd_event    gdp      gdp   1948.25     1948.5     4.53    6.53e+0 4.01 
-#> 2 model1 hd_event    gs       gdp   1948.25     1948.5    -0.104  -4.66e-2 0.127
-#> 3 model1 hd_event    ttr      gdp   1948.25     1948.5     1.15    1.37e+0 1.15 
-#> 4 model1 hd_event    gdp      gs    1948.25     1948.5    -0.0497 -5.64e-4 0.236
-#> 5 model1 hd_event    gs       gs    1948.25     1948.5     0.0151 -1.33e+0 3.36 
-#> 6 model1 hd_event    ttr      gs    1948.25     1948.5    -0.0442  2.34e-3 0.136
-#> # ℹ 2 more variables: lower <dbl>, upper <dbl>
+#> # A tibble: 6 × 21
+#>   model  object_type variable shock    mean   median    sd  lower    upper
+#>   <chr>  <chr>       <chr>    <chr>   <dbl>    <dbl> <dbl>  <dbl>    <dbl>
+#> 1 model1 hd_event    ttr      ttr   -4.24   -5.01    2.21  -5.68  -1.27   
+#> 2 model1 hd_event    ttr      gs    -0.0442  0.00234 0.136 -0.228  0.0400 
+#> 3 model1 hd_event    ttr      gdp    1.15    1.37    1.15  -0.336  2.25   
+#> 4 model1 hd_event    gs       ttr    0.300   0.335   0.450 -0.226  0.805  
+#> 5 model1 hd_event    gs       gs     0.0151 -1.33    3.36  -1.97   4.59   
+#> 6 model1 hd_event    gs       gdp   -0.104  -0.0466  0.127 -0.247  0.00602
+#> # ℹ 12 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>,
+#> #   event_start <chr>, event_end <chr>
 ```

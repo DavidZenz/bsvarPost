@@ -100,7 +100,7 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 comp <- compare_duration_response(m1 = post1, m2 = post2, horizon = 3,
                                    relation = ">", value = 0)
 head(comp)
-#> # A tibble: 6 × 12
+#> # A tibble: 6 × 22
 #>   model object_type  variable shock relation threshold mode        mean_duration
 #>   <chr> <chr>        <chr>    <chr> <chr>        <dbl> <chr>               <dbl>
 #> 1 m1    duration_irf ttr      ttr   >                0 consecutive           2.2
@@ -109,6 +109,9 @@ head(comp)
 #> 4 m1    duration_irf gs       ttr   >                0 consecutive           1.8
 #> 5 m1    duration_irf gs       gs    >                0 consecutive           4  
 #> 6 m1    duration_irf gs       gdp   >                0 consecutive           0  
-#> # ℹ 4 more variables: median_duration <dbl>, sd_duration <dbl>,
-#> #   lower_duration <dbl>, upper_duration <dbl>
+#> # ℹ 14 more variables: median_duration <dbl>, sd_duration <dbl>,
+#> #   lower_duration <dbl>, upper_duration <dbl>, analysis_type <chr>,
+#> #   interval_probability <dbl>, interval_method <chr>, scale_by <chr>,
+#> #   scale_var <chr>, scale_factor <dbl>, units <chr>, source_package <chr>,
+#> #   source_version <chr>, n_draws <int>
 ```

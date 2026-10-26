@@ -15,6 +15,16 @@ simulation in the parent packages. Precomputed posterior draws reduce
 computation time, while the same functions apply directly to posterior
 objects obtained in empirical analyses.
 
+Posterior tables include explicit provenance columns: analysis type,
+interval mass and method, scaling, known units, current upstream
+software versions and draw count. Draw-level tables preserve source
+labels in `draw_id` alongside positional `draw`. See
+[`help("posterior_provenance")`](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md).
+Default reports and CSV exports include these columns; use explicit
+selection or a compact report when a narrower table is needed. Software
+versions describe the present computation, not a reconstruction of the
+original estimation environment.
+
 ## Posterior distributions from bsvars and bsvarSIGNs
 
 The analysis starts from a posterior distribution estimated by either
@@ -276,9 +286,9 @@ subset(event_tbl, variable == "gdp",
 #> # A tibble: 3 × 5
 #>   variable shock event_start event_end median
 #>   <chr>    <chr> <chr>       <chr>      <dbl>
-#> 1 gdp      gdp   1958        1958.75   -14.9 
+#> 1 gdp      ttr   1958        1958.75    -1.23
 #> 2 gdp      gs    1958        1958.75    -3.15
-#> 3 gdp      ttr   1958        1958.75    -1.23
+#> 3 gdp      gdp   1958        1958.75   -14.9
 
 ranking <- shock_ranking(hd_draws, start = "1958", end = "1958.75",
                          variables = "gdp")

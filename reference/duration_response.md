@@ -249,7 +249,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 dur <- duration_response(post, horizon = 3, relation = ">", value = 0)
 print(dur)
-#> # A tibble: 9 × 12
+#> # A tibble: 9 × 22
 #>   model  object_type  variable shock relation threshold mode       mean_duration
 #>   <chr>  <chr>        <chr>    <chr> <chr>        <dbl> <chr>              <dbl>
 #> 1 model1 duration_irf ttr      ttr   >                0 consecuti…           1.6
@@ -261,6 +261,9 @@ print(dur)
 #> 7 model1 duration_irf gdp      ttr   >                0 consecuti…           1.6
 #> 8 model1 duration_irf gdp      gs    >                0 consecuti…           1  
 #> 9 model1 duration_irf gdp      gdp   >                0 consecuti…           3.8
-#> # ℹ 4 more variables: median_duration <dbl>, sd_duration <dbl>,
-#> #   lower_duration <dbl>, upper_duration <dbl>
+#> # ℹ 14 more variables: median_duration <dbl>, sd_duration <dbl>,
+#> #   lower_duration <dbl>, upper_duration <dbl>, analysis_type <chr>,
+#> #   interval_probability <dbl>, interval_method <chr>, scale_by <chr>,
+#> #   scale_var <chr>, scale_factor <dbl>, units <chr>, source_package <chr>,
+#> #   source_version <chr>, n_draws <int>
 ```

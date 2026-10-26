@@ -43,7 +43,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 # Posterior summaries of structural shocks
 result <- tidy_shocks(post)
 head(result)
-#> # A tibble: 6 × 9
+#> # A tibble: 6 × 19
 #>   model  object_type variable time      mean   median    sd   lower   upper
 #>   <chr>  <chr>       <chr>    <chr>    <dbl>    <dbl> <dbl>   <dbl>   <dbl>
 #> 1 model1 shocks      ttr      1948.25 -0.777 -0.824   0.270 -1.01   -0.421 
@@ -52,4 +52,7 @@ head(result)
 #> 4 model1 shocks      ttr      1949     0.156 -0.00716 0.376 -0.181   0.653 
 #> 5 model1 shocks      ttr      1949.25 -0.105 -0.225   0.351 -0.437   0.355 
 #> 6 model1 shocks      ttr      1949.5  -0.424 -0.557   0.365 -0.804   0.0254
+#> # ℹ 10 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

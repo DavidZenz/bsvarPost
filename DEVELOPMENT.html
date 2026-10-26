@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,13 +43,41 @@
 <div id="development-notes" class="section level1">
 
 <div class="section level2">
+<h2 id="hardening-checks">Hardening checks<a class="anchor" aria-label="anchor" href="#hardening-checks"></a></h2>
+<p>The GitHub check workflow includes the existing platform matrix, R 4.1 and release jobs without the optional integration packages, and an instrumented test job with all optional integrations installed. Runtime coverage is saved as an artifact. <code>release_qa_check()</code> checks documentation, registrations and assets; it does not infer test coverage from function names appearing in test files.</p>
+<p>Run <code>tools/benchmark-hardening.R</code> against the installed development build to compare selected-window array aggregation with full-sample long-table aggregation. The script checks numerical equivalence and records median elapsed time and allocated bytes for fixed fixtures. Timings are evidence, not CI gates.</p>
+<p>For the 1.1.0 hardening run (R 4.6.1, Apple Silicon, macOS 26.6.2), medians over three iterations were:</p>
+<table class="table"><colgroup><col width="15%"><col width="21%"><col width="21%"><col width="21%"><col width="21%"></colgroup><thead><tr><th>HD dimensions (variables, shocks, periods, draws)</th>
+<th align="right">Full-table event, seconds</th>
+<th align="right">Array-window event, seconds</th>
+<th align="right">Full-table allocated bytes</th>
+<th align="right">Array-window allocated bytes</th>
+</tr></thead><tbody><tr><td>2, 2, 100, 100</td>
+<td align="right">0.641</td>
+<td align="right">0.005</td>
+<td align="right">73,573,632</td>
+<td align="right">421,216</td>
+</tr><tr><td>2, 2, 100, 1,000</td>
+<td align="right">3.812</td>
+<td align="right">0.009</td>
+<td align="right">717,532,600</td>
+<td align="right">3,913,152</td>
+</tr><tr><td>5, 5, 200, 100</td>
+<td align="right">5.924</td>
+<td align="right">0.027</td>
+<td align="right">925,548,696</td>
+<td align="right">4,491,152</td>
+</tr></tbody></table><p>Both paths used the same fixed draws and two-period window; summaries matched. The reference intentionally calls <code>tidy_hd(draws = TRUE)</code> before selecting the event. Allocations are cumulative bytes from <code>Rprofmem</code>, not peak memory. The script also measures ordinary HD summaries, grouped plots and representative selection. These measurements compare two paths in the current code, rather than claiming a package-wide speedup over a previous release.</p>
+<p>When testing HD reconciliation with a tiny fitted posterior, account for floating-point cancellation relative to component magnitudes: unfiltered explosive VAR draws can be much larger than the observed series. Use bounded constructed fixtures to verify the exact aggregation invariant separately.</p>
+</div>
+<div class="section level2">
 <h2 id="bsvarsigns-native-bridge">bsvarSIGNs native bridge<a class="anchor" aria-label="anchor" href="#bsvarsigns-native-bridge"></a></h2>
 <p><code>bsvarPost</code> depends on <code>bsvarSIGNs</code> for estimation, and part of the v0.2 post-estimation layer currently reuses native routines exposed by <code>bsvarSIGNs</code>. This affects:</p>
 <ul><li>representative-model scoring for <code>most_likely_admissible_*()</code>
 </li>
 <li>narrative restriction auditing</li>
 <li>zero-restriction weighting helpers used in the reconstructed sign score</li>
-</ul><p>The bridge lives in <a href="R/v2-utils.R">R/v2-utils.R</a>. It resolves registered native symbols from the loaded <code>bsvarSIGNs</code> DLL at runtime.</p>
+</ul><p>The bridge lives in <a href="R/v2-utils.R">R/v2-utils.R</a>. It resolves registered native symbols from the loaded <code>bsvarSIGNs</code> DLL at runtime. For bsvarSIGNs 3.0 and later, the bridge converts upstream log importance weights to the weight scale used by the existing diagnostics and representative selection APIs. Version 2.0 uses the original weight symbols. Symbol arity is checked before invocation, and unknown interfaces produce versioned errors.</p>
 <p>Why this exists: - <code>bsvarSIGNs</code> does not currently expose an R-level API for these internals - reusing the upstream routines keeps the post-estimation semantics aligned with the package that produced the posterior object</p>
 <p>Trade-off: - this creates tighter coupling to <code>bsvarSIGNs</code> internals than the rest of the package - if upstream changes the native interface, this layer may need to be updated</p>
 <p>If <code>bsvarSIGNs</code> later exposes stable R wrappers for these operations, <code>bsvarPost</code> should switch to those wrappers and remove the native bridge.</p>
@@ -74,7 +102,7 @@
 <li>Review the staged diff:
 <ul><li>make sure only the intended feature, tests, and docs are included</li>
 </ul></li>
-<li>Push only after GitHub <code>R-CMD-check</code> is green.</li>
+<li>Push the feature branch and require GitHub <code>R-CMD-check</code> to be green before merging or releasing.</li>
 <li>If you changed vignette/showcase visuals, verify that committed files under <a href="vignettes/figures">vignettes/figures</a> are only the images actually referenced by articles and README content.</li>
 </ol><p>Additional rules:</p>
 <ul><li>Do not assume suggested packages are installed.</li>

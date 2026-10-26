@@ -45,7 +45,7 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 comp <- compare_fevd(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 20
 #>   model object_type variable shock horizon   mean median    sd  lower  upper
 #>   <chr> <chr>       <chr>    <chr>   <dbl>  <dbl>  <dbl> <dbl>  <dbl>  <dbl>
 #> 1 m1    fevd        ttr      ttr         0 100    100     0    100    100   
@@ -54,4 +54,7 @@ head(comp)
 #> 4 m1    fevd        ttr      ttr         3  46.2   45.7   3.08  43.1   50.2 
 #> 5 m1    fevd        ttr      gs          0   0      0     0      0      0   
 #> 6 m1    fevd        ttr      gs          1   5.60   5.45  2.63   2.38   8.37
+#> # ℹ 10 more variables: analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

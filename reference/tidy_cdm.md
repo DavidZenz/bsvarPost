@@ -80,7 +80,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 # Posterior summaries of cumulative dynamic multipliers
 result <- tidy_cdm(post, horizon = 3)
 head(result)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 20
 #>   model  object_type variable shock horizon     mean    median      sd   lower
 #>   <chr>  <chr>       <chr>    <chr>   <dbl>    <dbl>     <dbl>   <dbl>   <dbl>
 #> 1 model1 cdm         ttr      ttr         0  0.0468   0.0442   0.00556  0.0425
@@ -89,5 +89,8 @@ head(result)
 #> 4 model1 cdm         ttr      ttr         3  0.184    0.159    0.0543   0.151 
 #> 5 model1 cdm         ttr      gs          0  0        0        0        0     
 #> 6 model1 cdm         ttr      gs          1 -0.00431 -0.000791 0.00897 -0.0165
-#> # ℹ 1 more variable: upper <dbl>
+#> # ℹ 11 more variables: upper <dbl>, analysis_type <chr>,
+#> #   interval_probability <dbl>, interval_method <chr>, scale_by <chr>,
+#> #   scale_var <chr>, scale_factor <dbl>, units <chr>, source_package <chr>,
+#> #   source_version <chr>, n_draws <int>
 ```

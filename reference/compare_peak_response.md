@@ -84,7 +84,7 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 comp <- compare_peak_response(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
-#> # A tibble: 6 × 14
+#> # A tibble: 6 × 24
 #>   model object_type variable shock mean_value median_value sd_value lower_value
 #>   <chr> <chr>       <chr>    <chr>      <dbl>        <dbl>    <dbl>       <dbl>
 #> 1 m1    peak_irf    ttr      ttr     0.532         0.0823   0.984      0.0327  
@@ -93,7 +93,9 @@ head(comp)
 #> 4 m1    peak_irf    gs       ttr     0.308         0.0124   0.670     -0.000665
 #> 5 m1    peak_irf    gs       gs      0.0576        0.0328   0.0585     0.0281  
 #> 6 m1    peak_irf    gs       gdp     0.000469      0        0.00105    0       
-#> # ℹ 6 more variables: upper_value <dbl>, mean_horizon <dbl>,
+#> # ℹ 16 more variables: upper_value <dbl>, mean_horizon <dbl>,
 #> #   median_horizon <dbl>, sd_horizon <dbl>, lower_horizon <dbl>,
-#> #   upper_horizon <dbl>
+#> #   upper_horizon <dbl>, analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

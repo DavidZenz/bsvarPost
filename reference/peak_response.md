@@ -202,6 +202,10 @@ A `bsvar_post_tbl` with columns `model`, `object_type`, `variable`,
 `upper_value`, `mean_horizon`, `median_horizon`, `sd_horizon`,
 `lower_horizon`, and `upper_horizon`.
 
+## See also
+
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+
 ## Examples
 
 ``` r
@@ -212,7 +216,7 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 pk <- peak_response(post, horizon = 3)
 print(pk)
-#> # A tibble: 9 × 14
+#> # A tibble: 9 × 24
 #>   model  object_type variable shock mean_value median_value sd_value lower_value
 #>   <chr>  <chr>       <chr>    <chr>      <dbl>        <dbl>    <dbl>       <dbl>
 #> 1 model1 peak_irf    ttr      ttr       0.641        0.343    0.669     0.336   
@@ -224,7 +228,9 @@ print(pk)
 #> 7 model1 peak_irf    gdp      ttr       1.50         0.992    1.24      0.891   
 #> 8 model1 peak_irf    gdp      gs        0.941        0.337    1.53      0.105   
 #> 9 model1 peak_irf    gdp      gdp       0.120        0.0976   0.0600    0.0831  
-#> # ℹ 6 more variables: upper_value <dbl>, mean_horizon <dbl>,
+#> # ℹ 16 more variables: upper_value <dbl>, mean_horizon <dbl>,
 #> #   median_horizon <dbl>, sd_horizon <dbl>, lower_horizon <dbl>,
-#> #   upper_horizon <dbl>
+#> #   upper_horizon <dbl>, analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

@@ -16,6 +16,17 @@ the models.
 
 ## Posterior draws
 
+Whenever a plot combines multiple shocks, including a collapsed
+`"Other"` category, it also needs posterior draws. Marginal medians and
+interval bounds cannot be added to obtain a grouped posterior summary.
+Summary-table input remains supported for ungrouped displays and
+one-to-one shock renaming.
+
+The non-shock baseline is computed from all shock contributions before
+display filtering. A decomposition total is summarized after summing its
+draws; displayed marginal component medians need not add up to the
+median total.
+
 Event-specific analysis requires posterior draws of historical
 decompositions, not only pointwise posterior summaries. Obtain these
 draws with
@@ -89,9 +100,9 @@ subset(
 #> # A tibble: 3 × 7
 #>   variable shock event_start event_end median  lower  upper
 #>   <chr>    <chr> <chr>       <chr>      <dbl>  <dbl>  <dbl>
-#> 1 gdp      gdp   1958        1958.75   -14.9  -53.5  24.4  
+#> 1 gdp      ttr   1958        1958.75    -1.23  -5.86  4.48 
 #> 2 gdp      gs    1958        1958.75    -3.15 -11.9   0.435
-#> 3 gdp      ttr   1958        1958.75    -1.23  -5.86  4.48
+#> 3 gdp      gdp   1958        1958.75   -14.9  -53.5  24.4
 ```
 
 [`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md)
@@ -192,12 +203,12 @@ comparison_gdp
 #> # A tibble: 6 × 7
 #>   model       shock event_start event_end    median  lower  upper
 #>   <chr>       <chr> <chr>       <chr>         <dbl>  <dbl>  <dbl>
-#> 1 baseline    gdp   1958        1958.75   -14.9     -53.5  24.4  
+#> 1 baseline    ttr   1958        1958.75    -1.23     -5.86  4.48 
 #> 2 baseline    gs    1958        1958.75    -3.15    -11.9   0.435
-#> 3 baseline    ttr   1958        1958.75    -1.23     -5.86  4.48 
-#> 4 alternative gdp   1958        1958.75   -19.1     -51.5  17.0  
+#> 3 baseline    gdp   1958        1958.75   -14.9     -53.5  24.4  
+#> 4 alternative ttr   1958        1958.75    -1.62     -6.60  4.49 
 #> 5 alternative gs    1958        1958.75    -0.00276  -6.11  3.89 
-#> 6 alternative ttr   1958        1958.75    -1.62     -6.60  4.49
+#> 6 alternative gdp   1958        1958.75   -19.1     -51.5  17.0
 ```
 
 The comparison is descriptive. Similar posterior summaries across
@@ -226,12 +237,12 @@ as_kable(
 
 | Model       | Shock | Event start | Event end | Median |  Lower | Upper |
 |:------------|:------|:------------|:----------|-------:|-------:|------:|
-| baseline    | gdp   | 1958        | 1958.75   | -14.95 | -53.50 | 24.36 |
-| baseline    | gs    | 1958        | 1958.75   |  -3.15 | -11.87 |  0.43 |
 | baseline    | ttr   | 1958        | 1958.75   |  -1.23 |  -5.86 |  4.48 |
-| alternative | gdp   | 1958        | 1958.75   | -19.05 | -51.50 | 16.99 |
-| alternative | gs    | 1958        | 1958.75   |   0.00 |  -6.11 |  3.89 |
+| baseline    | gs    | 1958        | 1958.75   |  -3.15 | -11.87 |  0.43 |
+| baseline    | gdp   | 1958        | 1958.75   | -14.95 | -53.50 | 24.36 |
 | alternative | ttr   | 1958        | 1958.75   |  -1.62 |  -6.60 |  4.49 |
+| alternative | gs    | 1958        | 1958.75   |   0.00 |  -6.11 |  3.89 |
+| alternative | gdp   | 1958        | 1958.75   | -19.05 | -51.50 | 16.99 |
 
 GDP shock contributions in the selected event window {.table}
 

@@ -37,6 +37,10 @@ A list of class `bsvar_post_irf_restriction` (inheriting from
 `bsvar_post_restriction`) with elements `variable`, `shock`, `horizon`,
 `sign`, and `zero`.
 
+## See also
+
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md)
+
 ## Examples
 
 ``` r

@@ -2,7 +2,12 @@
 
 Transforms posterior draws of selected impulse responses into
 simultaneous credible bands using the empirical sup-norm around the
-posterior median response path.
+posterior median response path. The empirical order statistic covers at
+least the requested fraction of retained draws over the complete
+selection. Ties can increase coverage. This is not a guarantee of exact
+population posterior coverage. Boundaries are rounded outward when
+necessary to retain the empirical guarantee in floating-point
+arithmetic.
 
 ## Usage
 
@@ -144,8 +149,10 @@ simultaneous_irf(
 ## Value
 
 A `bsvar_post_tbl` with columns `model`, `object_type`, `variable`,
-`shock`, `horizon`, `median`, `lower`, `upper`, `simultaneous_prob`, and
-`critical_value`.
+`shock`, `horizon`, `median`, `lower`, `upper`, `simultaneous_prob`,
+`achieved_coverage`, and `critical_value`. Additional provenance columns
+are described in
+[posterior_provenance](https://davidzenz.github.io/bsvarPost/reference/posterior_provenance.md).
 
 ## Examples
 
@@ -157,14 +164,17 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
 sb <- simultaneous_irf(post, horizon = 3)
 head(sb)
-#> # A tibble: 6 × 10
+#> # A tibble: 6 × 21
 #>   model  object_type      variable shock horizon  median   lower  upper
 #>   <chr>  <chr>            <chr>    <chr>   <dbl>   <dbl>   <dbl>  <dbl>
-#> 1 model1 simultaneous_irf ttr      ttr         0  0.0561 -0.0470 0.159 
-#> 2 model1 simultaneous_irf gs       ttr         0 -0.0523 -0.155  0.0508
-#> 3 model1 simultaneous_irf gdp      ttr         0  0.0841 -0.0189 0.187 
-#> 4 model1 simultaneous_irf ttr      gs          0  0      -0.103  0.103 
-#> 5 model1 simultaneous_irf gs       gs          0  0.0432 -0.0598 0.146 
-#> 6 model1 simultaneous_irf gdp      gs          0 -0.0402 -0.143  0.0629
-#> # ℹ 2 more variables: simultaneous_prob <dbl>, critical_value <dbl>
+#> 1 model1 simultaneous_irf ttr      ttr         0  0.0561 -0.0892 0.201 
+#> 2 model1 simultaneous_irf gs       ttr         0 -0.0523 -0.198  0.0930
+#> 3 model1 simultaneous_irf gdp      ttr         0  0.0841 -0.0612 0.229 
+#> 4 model1 simultaneous_irf ttr      gs          0  0      -0.145  0.145 
+#> 5 model1 simultaneous_irf gs       gs          0  0.0432 -0.102  0.188 
+#> 6 model1 simultaneous_irf gdp      gs          0 -0.0402 -0.185  0.105 
+#> # ℹ 13 more variables: simultaneous_prob <dbl>, achieved_coverage <dbl>,
+#> #   critical_value <dbl>, analysis_type <chr>, interval_probability <dbl>,
+#> #   interval_method <chr>, scale_by <chr>, scale_var <chr>, scale_factor <dbl>,
+#> #   units <chr>, source_package <chr>, source_version <chr>, n_draws <int>
 ```

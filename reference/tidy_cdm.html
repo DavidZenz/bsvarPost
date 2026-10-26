@@ -11,7 +11,7 @@ credible intervals, or retains the individual draws when requested."></head><bod
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,7 +128,7 @@ posterior summaries.</p></dd>
 <span class="r-in"><span><span class="co"># Posterior summaries of cumulative dynamic multipliers</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">tidy_cdm</span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 20</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model  object_type variable shock horizon     mean    median      sd   lower</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> model1 cdm         ttr      ttr         0  0.046<span style="text-decoration: underline;">8</span>   0.044<span style="text-decoration: underline;">2</span>   0.005<span style="text-decoration: underline;">56</span>  0.042<span style="text-decoration: underline;">5</span></span>
@@ -137,7 +137,10 @@ posterior summaries.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> model1 cdm         ttr      ttr         3  0.184    0.159    0.054<span style="text-decoration: underline;">3</span>   0.151 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> model1 cdm         ttr      gs          0  0        0        0        0     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> model1 cdm         ttr      gs          1 -<span style="color: #BB0000;">0.004</span><span style="color: #BB0000; text-decoration: underline;">31</span> -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">791</span> 0.008<span style="text-decoration: underline;">97</span> -<span style="color: #BB0000;">0.016</span><span style="color: #BB0000; text-decoration: underline;">5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: upper &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 11 more variables: upper &lt;dbl&gt;, analysis_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   interval_probability &lt;dbl&gt;, interval_method &lt;chr&gt;, scale_by &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;, units &lt;chr&gt;, source_package &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -11,7 +11,7 @@ and horizons."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">bsvarPost</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,12 +90,15 @@ and horizons.</p>
 <span class="r-in"><span><span class="va">jh</span> <span class="op">&lt;-</span> <span class="fu">joint_hypothesis_irf</span><span class="op">(</span><span class="va">post</span>, variable <span class="op">=</span> <span class="st">"gdp"</span>, shock <span class="op">=</span> <span class="st">"gdp"</span>,</span></span>
 <span class="r-in"><span>                           horizon <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">jh</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 13</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 23</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model object_type relation posterior_prob n_constraints variable shock horizon</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> mode… joint_irf   &gt;                     1             3 gdp      gdp   0,1,2  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: rhs_variable &lt;chr&gt;, rhs_shock &lt;chr&gt;, rhs_horizon &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rhs_value &lt;dbl&gt;, absolute &lt;lgl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 15 more variables: rhs_variable &lt;chr&gt;, rhs_shock &lt;chr&gt;, rhs_horizon &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   rhs_value &lt;dbl&gt;, absolute &lt;lgl&gt;, analysis_type &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   interval_probability &lt;dbl&gt;, interval_method &lt;chr&gt;, scale_by &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;, units &lt;chr&gt;, source_package &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   source_version &lt;chr&gt;, n_draws &lt;int&gt;</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
