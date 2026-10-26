@@ -140,17 +140,31 @@ dynamic multipliers by summing responses from horizon zero onwards.</p>
 
 
 <dt id="arg-scale-by">scale_by<a class="anchor" aria-label="anchor" href="#arg-scale-by"></a></dt>
-<dd><p>Optional scaling mode for CDMs.</p></dd>
+<dd><p>Either <code>"none"</code> or <code>"shock_sd"</code>. The latter divides each
+cumulative response by the selected observed variable's sample standard
+deviation, computed from the fitted sample.</p></dd>
 
 
 <dt id="arg-scale-var">scale_var<a class="anchor" aria-label="anchor" href="#arg-scale-var"></a></dt>
-<dd><p>Optional scaling variable specification.</p></dd>
+<dd><p>Observed variable name or index used for <code>shock_sd</code> scaling;
+a scalar applies to every shock, or supply one entry per shock. With <code>NULL</code>,
+variables are matched to shocks by position.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A 4-dimensional array of class <code>PosteriorCDM</code> with dimensions
 <code>[variables x shocks x (horizon + 1) x draws]</code>.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="interpretation">Interpretation<a class="anchor" aria-label="anchor" href="#interpretation"></a></h2>
+
+
+<p>The cumulative response at horizon <code>H</code> sums draw-level impulse responses
+from zero through <code>H</code> (inclusive). Units follow the input transformations
+and fitted structural-shock normalization. For log-level data this is a
+cumulative log response, not a dollar-per-dollar fiscal multiplier.
+<code>shock_sd</code> scaling does not form an output-to-spending response ratio.</p>
     </div>
 
     <div class="section level2">

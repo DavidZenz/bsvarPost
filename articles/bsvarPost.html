@@ -69,346 +69,550 @@
 
     
     
-<!-- generated-by: gsd-doc-writer -->
-<p><strong>bsvarPost</strong> provides posterior analyses for Bayesian
-Structural Vector Autoregressions estimated with <strong>bsvars</strong>
-and <strong>bsvarSIGNs</strong>. It computes posterior summaries,
-cumulative dynamic responses, comparisons across model specifications,
-posterior probabilities of hypotheses, representative draws,
-response-timing measures, and historical-shock contributions.</p>
-<p>The examples examine the response of US GDP (<code>gdp</code>) to a
-government-spending shock (<code>gs</code>) using the
-<code><a href="https://bsvars.org/bsvars/reference/us_fiscal_lsuw.html" class="external-link">bsvars::us_fiscal_lsuw</a></code> data. They assume familiarity with
-model specification and posterior simulation in the parent packages.
-Precomputed posterior draws reduce computation time, while the same
-functions apply directly to posterior objects obtained in empirical
-analyses.</p>
-<p>Posterior tables include explicit provenance columns: analysis type,
-interval mass and method, scaling, known units, current upstream
-software versions and draw count. Draw-level tables preserve source
-labels in <code>draw_id</code> alongside positional <code>draw</code>.
-See <code><a href="../reference/posterior_provenance.html">help("posterior_provenance")</a></code>. Default reports and CSV
-exports include these columns; use explicit selection or a compact
-report when a narrower table is needed. Software versions describe the
-present computation, not a reconstruction of the original estimation
-environment.</p>
+<p>This article follows one fiscal analysis from posterior draws to an
+exported comparison table. It assumes familiarity with R and structural
+VARs. The demo models use <strong>bsvars</strong> default
+identification; economic shock interpretations must follow the
+restrictions used in your own model.</p>
 <div class="section level2">
-<h2 id="posterior-distributions-from-bsvars-and-bsvarsigns">Posterior distributions from bsvars and bsvarSIGNs<a class="anchor" aria-label="anchor" href="#posterior-distributions-from-bsvars-and-bsvarsigns"></a>
+<h2 id="load-the-demonstration-models">Load the demonstration models<a class="anchor" aria-label="anchor" href="#load-the-demonstration-models"></a>
 </h2>
-<p>The analysis starts from a posterior distribution estimated by either
-parent package. The following code specifies a Bayesian Structural
-Vector Autoregression with <strong>bsvars</strong> and simulates draws
-from its posterior distribution:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"us_fiscal_lsuw"</span>, package <span class="op">=</span> <span class="st">"bsvars"</span><span class="op">)</span></span>
-<span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">us_fiscal_lsuw</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">2000</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                         show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>The remaining examples use the precomputed <code>post</code> object
-loaded above. This <code>PosteriorBSVAR</code> object can be passed
-directly to <strong>bsvarPost</strong> functions.</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidzenz.github.io/bsvarPost/">bsvarPost</a></span><span class="op">)</span></span>
+<span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"fiscal_post_bsvar.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">post_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"fiscal_post_bsvar_alt.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"demo-metadata.csv"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">metadata</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"file"</span>, <span class="st">"p"</span>, <span class="st">"seed"</span>, <span class="st">"draws"</span>, <span class="st">"sample_start"</span>, <span class="st">"sample_end"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                        file p seed draws sample_start sample_end</span></span>
+<span><span class="co">#&gt; 1     fiscal_post_bsvar.rds 1  123   200         1948       2026</span></span>
+<span><span class="co">#&gt; 2 fiscal_post_bsvar_alt.rds 3  456   200         1948       2026</span></span></code></pre></div>
+<p>The baseline has one lag and the alternative three. Both contain 200
+retained draws, a small demonstration sample rather than evidence of
+sampling adequacy. The installed metadata records estimation software
+versions, transformations, sample ranges and checksums. The frozen input
+data travel with these fits. Results obtained by re-estimating may
+differ across software versions.</p>
 </div>
 <div class="section level2">
-<h2 id="posterior-summaries">Posterior summaries<a class="anchor" aria-label="anchor" href="#posterior-summaries"></a>
+<h2 id="gdps-response-to-government-spending">GDP’s response to government spending<a class="anchor" aria-label="anchor" href="#gdps-response-to-government-spending"></a>
 </h2>
-<p>The <code>tidy_*()</code> functions transform posterior quantities
-into long-format tibbles. Here, <code><a href="../reference/tidy_irf.html">tidy_irf()</a></code> computes
-posterior medians and 90% pointwise credible intervals for impulse
-responses. The reported values correspond to four horizons of the GDP
-response to a government-spending shock.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">irf_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_irf.html">tidy_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
-<span><span class="va">irf_focus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">irf_tbl</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span> <span class="op">&amp;</span></span>
-<span>                    <span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
-<span>                    select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">shock</span>, <span class="va">horizon</span>, <span class="va">median</span>, <span class="va">lower</span>, <span class="va">upper</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">irf_focus</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
-<span><span class="co">#&gt;   variable shock horizon     median    lower    upper</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gs          0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">093</span><span style="color: #BB0000;">5</span> -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">15</span> 0.000<span style="text-decoration: underline;">901</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs          4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">91</span> 0.000<span style="text-decoration: underline;">522</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">01</span> 0.000<span style="text-decoration: underline;">284</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">94</span> 0.000<span style="text-decoration: underline;">289</span></span></span></code></pre></div>
-<p>The same representation applies to other posterior quantities.
-Summary tables contain posterior location and credible-interval columns,
-whereas <code>draws = TRUE</code> returns the individual posterior
-draws.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>       <span class="co"># cumulative responses</span></span>
-<span><span class="fu"><a href="../reference/tidy_fevd.html">tidy_fevd</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span>      <span class="co"># variance shares</span></span>
-<span><span class="fu"><a href="../reference/tidy_hd.html">tidy_hd</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span>                      <span class="co"># historical contributions</span></span>
-<span><span class="fu"><a href="../reference/tidy_forecast.html">tidy_forecast</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>   <span class="co"># predictive paths</span></span>
-<span><span class="fu"><a href="../reference/tidy_shocks.html">tidy_shocks</a></span><span class="op">(</span><span class="va">post</span><span class="op">)</span>                  <span class="co"># structural shocks</span></span></code></pre></div>
-<p>These tables can be filtered, combined with other variables, or
-visualised without direct manipulation of the posterior arrays.</p>
-</div>
-<div class="section level2">
-<h2 id="cumulative-dynamic-responses">Cumulative dynamic responses<a class="anchor" aria-label="anchor" href="#cumulative-dynamic-responses"></a>
-</h2>
-<p><code><a href="../reference/cdm.html">cdm()</a></code> accumulates the impulse response through each
-horizon separately for every posterior draw. The resulting posterior
-distribution describes cumulative dynamic responses, and
-<code><a href="../reference/tidy_cdm.html">tidy_cdm()</a></code> reports its posterior summaries and credible
-intervals.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cdm_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cdm.html">cdm</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="va">cdm_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">cdm_draws</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
-<span><span class="va">cdm_focus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">cdm_tbl</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span> <span class="op">&amp;</span></span>
-<span>                    <span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
-<span>                    select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">shock</span>, <span class="va">horizon</span>, <span class="va">median</span>, <span class="va">lower</span>, <span class="va">upper</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">cdm_focus</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
-<span><span class="co">#&gt;   variable shock horizon     median    lower    upper</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gs          0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">093</span><span style="color: #BB0000;">5</span> -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">15</span> 0.000<span style="text-decoration: underline;">901</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs          4 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">11</span>   -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">17</span> 0.003<span style="text-decoration: underline;">44</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8 -<span style="color: #BB0000;">0.006</span><span style="color: #BB0000; text-decoration: underline;">18</span>   -<span style="color: #BB0000;">0.016</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.004<span style="text-decoration: underline;">87</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12 -<span style="color: #BB0000;">0.012</span><span style="color: #BB0000; text-decoration: underline;">1</span>    -<span style="color: #BB0000;">0.031</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.005<span style="text-decoration: underline;">47</span></span></span></code></pre></div>
-<p>Interpretation of cumulative dynamic responses as economic
-multipliers depends on the transformations and scaling used in the
-model. See <code><a href="../reference/cdm.html">?cdm</a></code> for the <code>scale_by</code> and
-<code>scale_var</code> arguments.</p>
-<p><img src="figures/cdm-showcase.png" class="r-plt" alt="Posterior cumulative dynamic responses with pointwise credible bands" width="100%"></p>
-</div>
-<div class="section level2">
-<h2 id="comparison-of-model-specifications">Comparison of model specifications<a class="anchor" aria-label="anchor" href="#comparison-of-model-specifications"></a>
-</h2>
-<p>The second posterior distribution corresponds to the same
-three-variable system with a longer lag order.
-<code><a href="../reference/compare_cdm.html">compare_cdm()</a></code> computes posterior summaries of cumulative
-dynamic responses under both specifications. Names assigned to the
-posterior arguments identify the specifications in the
-<code>model</code> column.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cdm_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_cdm.html">compare_cdm</a></span><span class="op">(</span></span>
-<span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
-<span>  longer_lag <span class="op">=</span> <span class="va">post_alt</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  probability <span class="op">=</span> <span class="fl">0.90</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">cdm_comparison</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span> <span class="op">&amp;</span></span>
-<span>       <span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
-<span>       select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">horizon</span>, <span class="va">median</span>, <span class="va">lower</span>, <span class="va">upper</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
-<span><span class="co">#&gt;   model      horizon   median    lower   upper</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> baseline         4 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">11</span> -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">17</span> 0.003<span style="text-decoration: underline;">44</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> baseline         8 -<span style="color: #BB0000;">0.006</span><span style="color: #BB0000; text-decoration: underline;">18</span> -<span style="color: #BB0000;">0.016</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.004<span style="text-decoration: underline;">87</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> baseline        12 -<span style="color: #BB0000;">0.012</span><span style="color: #BB0000; text-decoration: underline;">1</span>  -<span style="color: #BB0000;">0.031</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.005<span style="text-decoration: underline;">47</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> longer_lag       4 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">77</span> -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">34</span> 0.006<span style="text-decoration: underline;">35</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> longer_lag       8 -<span style="color: #BB0000;">0.008</span><span style="color: #BB0000; text-decoration: underline;">66</span> -<span style="color: #BB0000;">0.026</span><span style="color: #BB0000; text-decoration: underline;">2</span>  0.013<span style="text-decoration: underline;">4</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> longer_lag      12 -<span style="color: #BB0000;">0.015</span><span style="color: #BB0000; text-decoration: underline;">0</span>  -<span style="color: #BB0000;">0.047</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.020<span style="text-decoration: underline;">9</span></span></span></code></pre></div>
-<p>The functions <code><a href="../reference/compare_irf.html">compare_irf()</a></code>,
-<code><a href="../reference/compare_fevd.html">compare_fevd()</a></code>, and the remaining <code>compare_*()</code>
-methods provide the same comparison for other posterior quantities. They
-report corresponding posterior summaries across specifications without
-selecting a preferred model.</p>
-<p><img src="figures/compare-irf-showcase.png" class="r-plt" alt="Posterior impulse responses under two model specifications" width="100%"></p>
-</div>
-<div class="section level2">
-<h2 id="posterior-probabilities-of-hypotheses">Posterior probabilities of hypotheses<a class="anchor" aria-label="anchor" href="#posterior-probabilities-of-hypotheses"></a>
-</h2>
-<p><code><a href="../reference/hypothesis_irf.html">hypothesis_irf()</a></code> computes the posterior probability that
-an impulse response satisfies a specified inequality. The following
-hypothesis states that the GDP response to the government-spending shock
-is positive at each selected horizon.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">prob_positive</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span></span>
-<span>  <span class="va">post</span>,</span>
-<span>  variables <span class="op">=</span> <span class="st">"gdp"</span>,</span>
-<span>  shocks <span class="op">=</span> <span class="st">"gs"</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
-<span>  relation <span class="op">=</span> <span class="st">"&gt;"</span>,</span>
-<span>  value <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">prob_positive</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"shock"</span>, <span class="st">"horizon"</span>, <span class="st">"posterior_prob"</span><span class="op">)</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_irf.html">tidy_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
+<span><span class="va">gdp_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">responses</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span><span class="op">)</span></span>
+<span><span class="va">gdp_irf</span><span class="op">[</span><span class="va">gdp_irf</span><span class="op">$</span><span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
-<span><span class="co">#&gt;   variable shock horizon posterior_prob</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gs          0          0.47 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs          4          0.185</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8          0.11 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12          0.09</span></span></code></pre></div>
-<p><code>posterior_prob</code> is the model-conditional posterior
-probability of the stated inequality, rather than a frequentist p-value.
-<code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code> computes the probability that a
-condition holds jointly across several horizons,
-<code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> evaluates economically meaningful
-thresholds, and <code><a href="../reference/simultaneous_irf.html">simultaneous_irf()</a></code> constructs a credible
-band for an entire selected response path. The <a href="inference-and-comparison.html">Inference and Comparison</a>
-article develops these distinctions.</p>
+<span><span class="co">#&gt;   horizon     median    lower    upper</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">033</span><span style="color: #BB0000;">7</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">07</span> 0.001<span style="text-decoration: underline;">12</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">686</span>  -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">22</span> 0.000<span style="text-decoration: underline;">949</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">17</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">06</span> 0.001<span style="text-decoration: underline;">01</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">60</span>   -<span style="color: #BB0000;">0.004</span><span style="color: #BB0000; text-decoration: underline;">10</span> 0.001<span style="text-decoration: underline;">14</span></span></span></code></pre></div>
+<p>Horizon zero is impact; horizon 12 is twelve quarters later, giving
+thirteen reported horizons. Bounds are pointwise 90% equal-tailed
+credible intervals, not a simultaneous band over the entire path. The
+response is in the data’s log units under the fitted structural-shock
+normalization. It is not implicitly normalized to a one-dollar or
+one-percent spending increase.</p>
 </div>
 <div class="section level2">
-<h2 id="representative-posterior-draws-and-response-timing">Representative posterior draws and response timing<a class="anchor" aria-label="anchor" href="#representative-posterior-draws-and-response-timing"></a>
+<h2 id="cumulative-responses-and-units">Cumulative responses and units<a class="anchor" aria-label="anchor" href="#cumulative-responses-and-units"></a>
 </h2>
-<p>Pointwise medians need not correspond to any single posterior draw.
-<code><a href="../reference/median_target_irf.html">median_target_irf()</a></code> selects the posterior draw whose
-response path is closest to the pointwise posterior median over the
-requested variables, shocks, and horizons. The selected path therefore
-preserves the joint dependence within a single draw.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">representative</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/median_target_irf.html">median_target_irf</a></span><span class="op">(</span></span>
-<span>  <span class="va">post</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  variables <span class="op">=</span> <span class="st">"gdp"</span>,</span>
-<span>  shocks <span class="op">=</span> <span class="st">"gs"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">representative_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">representative</span><span class="op">)</span>,</span>
-<span>                              <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">representative_path</span>, <span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
-<span>       select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">shock</span>, <span class="va">horizon</span>, <span class="va">median</span>, <span class="va">draw_index</span>, <span class="va">method</span><span class="op">)</span><span class="op">)</span></span>
+<p>For draw
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>,
+the cumulative response through horizon
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
+is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>C</mi><mrow><mi>i</mi><mi>j</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>H</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>h</mi><mo>=</mo><mn>0</mn></mrow><mi>H</mi></munderover><mi>I</mi><mi>R</mi><msubsup><mi>F</mi><mrow><mi>i</mi><mi>j</mi></mrow><mrow><mo stretchy="false" form="prefix">(</mo><mi>s</mi><mo stretchy="false" form="postfix">)</mo></mrow></msubsup><mo stretchy="false" form="prefix">(</mo><mi>h</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+C^{(s)}_{ij}(H) = \sum_{h=0}^{H} IRF^{(s)}_{ij}(h).
+</annotation></semantics></math></p>
+<p>Summation happens within each draw, before posterior summaries are
+computed. The cumulative posterior median need not equal the sum of
+marginal medians.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cumulative</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
+<span><span class="va">gdp_cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">cumulative</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span><span class="op">)</span></span>
+<span><span class="va">gdp_cdm</span><span class="op">[</span><span class="va">gdp_cdm</span><span class="op">$</span><span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span>, <span class="st">"scale_by"</span>, <span class="st">"scale_factor"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
-<span><span class="co">#&gt;   variable shock horizon    median draw_index method       </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gs          0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">148</span>        144 median_target</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs          4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">712</span>        144 median_target</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gs          8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>         144 median_target</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> gdp      gs         12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">60</span>         144 median_target</span></span></code></pre></div>
-<p><code><a href="../reference/peak_response.html">peak_response()</a></code> computes the magnitude and horizon of
-the peak response in every posterior draw and reports posterior
-summaries of both quantities.</p>
-<p><img src="figures/representative-showcase.png" class="r-plt" alt="Representative posterior draw and pointwise posterior summary" width="100%"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">peak</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peak_response.html">peak_response</a></span><span class="op">(</span></span>
-<span>  <span class="va">post</span>,</span>
-<span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
-<span>  variables <span class="op">=</span> <span class="st">"gdp"</span>,</span>
-<span>  shocks <span class="op">=</span> <span class="st">"gs"</span>,</span>
-<span>  absolute <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">peak</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"shock"</span>, <span class="st">"median_value"</span>, <span class="st">"median_horizon"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;   horizon     median    lower   upper scale_by scale_factor</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">033</span><span style="color: #BB0000;">7</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">07</span> 0.001<span style="text-decoration: underline;">12</span> none                1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">75</span>   -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">98</span> 0.004<span style="text-decoration: underline;">87</span> none                1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.005</span><span style="color: #BB0000; text-decoration: underline;">87</span>   -<span style="color: #BB0000;">0.019</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.008<span style="text-decoration: underline;">80</span> none                1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.010</span><span style="color: #BB0000; text-decoration: underline;">4</span>    -<span style="color: #BB0000;">0.031</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.013<span style="text-decoration: underline;">1</span>  none                1</span></span></code></pre></div>
+<p>These inputs are log real per capita levels, without multiplication
+by 100. For example, an IRF of <code>0.001</code> log units is
+approximately a 0.1% change (exactly <code>100 * (exp(0.001) - 1)</code>
+percent). For one hypothetical draw with responses <code>0.001</code>,
+<code>0.002</code>, and <code>0.001</code>, the cumulative response at
+horizon 2 is <code>0.004</code> log units summed across three quarters.
+This is not the endpoint percentage change or a dollar-per-dollar fiscal
+multiplier.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">example_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.001</span>, <span class="fl">0.002</span>, <span class="fl">0.001</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>impact_percent <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">expm1</a></span><span class="op">(</span><span class="va">example_irf</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  cumulative_log_response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">example_irf</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          impact_percent cumulative_log_response </span></span>
+<span><span class="co">#&gt;                 0.10005                 0.00400</span></span>
+<span><span class="va">scaled</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_cdm.html">tidy_cdm</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span>,</span>
+<span>  scale_by <span class="op">=</span> <span class="st">"shock_sd"</span>, scale_var <span class="op">=</span> <span class="st">"gs"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">scaled</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span> <span class="op">&amp;</span> <span class="va">horizon</span> <span class="op">==</span> <span class="fl">12</span>,</span>
+<span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">median</span>, <span class="va">scale_by</span>, <span class="va">scale_var</span>, <span class="va">scale_factor</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
-<span><span class="co">#&gt;   variable shock median_value median_horizon</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gs        -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>             12</span></span></code></pre></div>
-<p>For analyses of response persistence,
-<code><a href="../reference/duration_response.html">duration_response()</a></code>, <code><a href="../reference/half_life_response.html">half_life_response()</a></code>, and
-<code><a href="../reference/time_to_threshold.html">time_to_threshold()</a></code> compute related quantities for the
-posterior distribution without reducing it to a single response
-path.</p>
+<span><span class="co">#&gt;    median scale_by scale_var scale_factor</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> -<span style="color: #BB0000;">0.058</span><span style="color: #BB0000; text-decoration: underline;">9</span> shock_sd gs               0.177</span></span></code></pre></div>
+<p><code>shock_sd</code> divides each cumulative response by the
+reported sample standard deviation of the selected observed variable
+(<code>gs</code> here). It does not set the shock’s impact spending
+response to one. A fiscal multiplier requires the output and spending
+responses expressed in compatible levels and their appropriate
+cumulative ratio. The package does not infer that conversion from these
+log series. See <code><a href="../reference/cdm.html">?cdm</a></code> and <code><a href="../reference/posterior_provenance.html">?posterior_provenance</a></code>
+in R.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">gdp_cdm</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Quarters after shock"</span>, y <span class="op">=</span> <span class="st">"Cumulative log response"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/cdm-showcase.png" class="r-plt" alt="GDP cumulative response to government spending over horizons zero to twelve" width="100%"><p class="caption">
+GDP response to the gs shock, summed from impact through each horizon.
+Line: posterior median; ribbon: pointwise 90% equal-tailed interval.
+Original log units; no additional scaling.
+</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="historical-decompositions-for-selected-periods">Historical decompositions for selected periods<a class="anchor" aria-label="anchor" href="#historical-decompositions-for-selected-periods"></a>
+<h2 id="compare-lag-specifications">Compare lag specifications<a class="anchor" aria-label="anchor" href="#compare-lag-specifications"></a>
 </h2>
-<p><code>tidy_hd(draws = TRUE)</code> returns the contribution of each
-structural shock to each observed variable in every posterior draw.
-<code><a href="../reference/tidy_hd_event.html">tidy_hd_event()</a></code> aggregates these contributions over a
-selected period, while <code><a href="../reference/shock_ranking.html">shock_ranking()</a></code> orders the shocks by
-their contributions. The following example considers an illustrative
-four-quarter period.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_cdm.html">compare_cdm</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post</span>, longer_lag <span class="op">=</span> <span class="va">post_alt</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span>
+<span><span class="va">comparison_gdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">comparison</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span><span class="op">)</span></span>
+<span><span class="va">comparison_gdp</span><span class="op">[</span><span class="va">comparison_gdp</span><span class="op">$</span><span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"model"</span>, <span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span></span>
+<span><span class="co">#&gt;   model      horizon     median    lower    upper</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> baseline         0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">033</span><span style="color: #BB0000;">7</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">07</span> 0.001<span style="text-decoration: underline;">12</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> baseline         4 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">75</span>   -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">98</span> 0.004<span style="text-decoration: underline;">87</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> baseline         8 -<span style="color: #BB0000;">0.005</span><span style="color: #BB0000; text-decoration: underline;">87</span>   -<span style="color: #BB0000;">0.019</span><span style="color: #BB0000; text-decoration: underline;">0</span>  0.008<span style="text-decoration: underline;">80</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> baseline        12 -<span style="color: #BB0000;">0.010</span><span style="color: #BB0000; text-decoration: underline;">4</span>    -<span style="color: #BB0000;">0.031</span><span style="color: #BB0000; text-decoration: underline;">8</span>  0.013<span style="text-decoration: underline;">1</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> longer_lag       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">023</span><span style="color: #BB0000;">0</span> -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">29</span> 0.000<span style="text-decoration: underline;">971</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> longer_lag       4 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">36</span>   -<span style="color: #BB0000;">0.010</span><span style="color: #BB0000; text-decoration: underline;">7</span>  0.006<span style="text-decoration: underline;">17</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> longer_lag       8 -<span style="color: #BB0000;">0.009</span><span style="color: #BB0000; text-decoration: underline;">25</span>   -<span style="color: #BB0000;">0.028</span><span style="color: #BB0000; text-decoration: underline;">9</span>  0.010<span style="text-decoration: underline;">6</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> longer_lag      12 -<span style="color: #BB0000;">0.016</span><span style="color: #BB0000; text-decoration: underline;">5</span>    -<span style="color: #BB0000;">0.051</span><span style="color: #BB0000; text-decoration: underline;">1</span>  0.013<span style="text-decoration: underline;">9</span></span></span></code></pre></div>
+<p>The names identify models in tables and legends. This is a
+sensitivity comparison, not a model-selection criterion or a posterior
+probability that one model’s response exceeds the other’s.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison_gdp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Quarters after shock"</span>, y <span class="op">=</span> <span class="st">"Cumulative log response"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/compare-cdm-showcase.png" class="r-plt" alt="Cumulative GDP response under one-lag and three-lag specifications" width="100%"><p class="caption">
+GDP cumulative response to gs: baseline p=1 and longer_lag p=3. Lines
+and ribbons show medians and pointwise 90% equal-tailed intervals in
+original log units, without additional scaling.
+</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="select-one-representative-draw">Select one representative draw<a class="anchor" aria-label="anchor" href="#select-one-representative-draw"></a>
+</h2>
+<p>A path of marginal medians need not correspond to a single retained
+structural model. Select one draw closest to the GDP response’s median
+target over 0–12:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">representative</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/median_target_irf.html">median_target_irf</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>, probability <span class="op">=</span> <span class="fl">0.90</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"gdp"</span>, shocks <span class="op">=</span> <span class="st">"gs"</span>, horizons <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span>
+<span><span class="va">representative</span><span class="op">$</span><span class="va">draw_index</span></span>
+<span><span class="co">#&gt; [1] 28</span></span>
+<span><span class="va">representative_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">representative</span><span class="op">)</span>,</span>
+<span>  <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span><span class="op">)</span></span>
+<span><span class="va">representative_path</span><span class="op">[</span><span class="va">representative_path</span><span class="op">$</span><span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"draw_index"</span>, <span class="st">"selected_draw_id"</span>, <span class="st">"method"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
+<span><span class="co">#&gt;   horizon    median draw_index selected_draw_id method       </span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">121</span>         28 28               median_target</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">638</span>         28 28               median_target</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">13</span>          28 28               median_target</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">60</span>          28 28               median_target</span></span></code></pre></div>
+<p>Here <code>median</code> is the selected draw’s response, not the
+posterior median. The selected draw provides a coherent model, not an
+uncertainty interval. The representative object retains the full array,
+so explicitly filter the plot to match the selected target:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">hd_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd.html">tidy_hd</a></span><span class="op">(</span><span class="va">post</span>, draws <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">event_tbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/tidy_hd_event.html">tidy_hd_event</a></span><span class="op">(</span></span>
-<span>  <span class="va">hd_draws</span>,</span>
-<span>  start <span class="op">=</span> <span class="st">"1958"</span>,</span>
-<span>  end <span class="op">=</span> <span class="st">"1958.75"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">event_tbl</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span>,</span>
-<span>       select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">shock</span>, <span class="va">event_start</span>, <span class="va">event_end</span>, <span class="va">median</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 5</span></span></span>
-<span><span class="co">#&gt;   variable shock event_start event_end median</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      ttr   1958        1958.75    -<span style="color: #BB0000;">1.23</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs    1958        1958.75    -<span style="color: #BB0000;">3.15</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      gdp   1958        1958.75   -<span style="color: #BB0000;">14.9</span></span></span>
-<span></span>
-<span><span class="va">ranking</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/shock_ranking.html">shock_ranking</a></span><span class="op">(</span><span class="va">hd_draws</span>, start <span class="op">=</span> <span class="st">"1958"</span>, end <span class="op">=</span> <span class="st">"1958.75"</span>,</span>
-<span>                         variables <span class="op">=</span> <span class="st">"gdp"</span><span class="op">)</span></span>
-<span><span class="va">ranking</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"shock"</span>, <span class="st">"median"</span>, <span class="st">"rank"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span></span>
-<span><span class="co">#&gt;   variable shock median  rank</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> gdp      gdp   -<span style="color: #BB0000;">14.9</span>      1</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gdp      gs     -<span style="color: #BB0000;">3.15</span>     2</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> gdp      ttr    -<span style="color: #BB0000;">1.23</span>     3</span></span></code></pre></div>
-<p>These functions transform the historical decompositions computed by
-the parent package into posterior summaries for selected periods. The
-choice of period and the interpretation of structural-shock
-contributions are discussed in <a href="historical-decomposition-events.html">Historical
-Decompositions</a>.</p>
-<p><img src="figures/hd-overlay-showcase.png" class="r-plt" alt="Structural-shock contributions to GDP over the full sample" width="100%"></p>
+<code class="sourceCode R"><span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">gdp_irf</span>, <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">horizon</span>, <span class="va">median</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">lower</span>, ymax <span class="op">=</span> <span class="va">upper</span><span class="op">)</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"#6baed6"</span>, alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Posterior median"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">representative_path</span>,</span>
+<span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"Selected draw"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Posterior median"</span> <span class="op">=</span> <span class="st">"#2171b5"</span>,</span>
+<span>    <span class="st">"Selected draw"</span> <span class="op">=</span> <span class="st">"#cb181d"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Quarters after shock"</span>, y <span class="op">=</span> <span class="st">"GDP log response"</span>, colour <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/representative-showcase.png" class="r-plt" alt="Selected GDP response draw compared with the posterior median and interval" width="100%"><p class="caption">
+GDP IRF to gs in original log units. Red: one draw selected over this
+response at horizons 0–12. Blue: posterior median; ribbon: pointwise 90%
+equal-tailed interval. No additional scaling.
+</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="figures-and-tables">Figures and tables<a class="anchor" aria-label="anchor" href="#figures-and-tables"></a>
+<h2 id="export-results-with-provenance">Export results with provenance<a class="anchor" aria-label="anchor" href="#export-results-with-provenance"></a>
 </h2>
-<p><code><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code> displays the representative
-posterior draw using a consistent <code>ggplot2</code> style. The
-returned <code>ggplot</code> object can be annotated or modified before
-saving.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">representative_path</span>, family <span class="op">=</span> <span class="st">"irf"</span>, preset <span class="op">=</span> <span class="st">"paper"</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"GDP response to a government-spending shock"</span>,</span>
-<span>  caption <span class="op">=</span> <span class="st">"Median-target posterior draw"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="bsvarPost_files/figure-html/publication-plot-1.png" class="r-plt" alt="" width="672"></p>
-<p><code><a href="../reference/as_kable.html">as_kable()</a></code> presents the selected posterior summary as a
-formatted table:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span><span class="va">peak</span>, caption <span class="op">=</span> <span class="st">"Signed GDP response at the peak absolute magnitude"</span>,</span>
-<span>         digits <span class="op">=</span> <span class="fl">3</span>, preset <span class="op">=</span> <span class="st">"compact"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/as_kable.html">as_kable</a></span><span class="op">(</span><span class="va">comparison_gdp</span>, preset <span class="op">=</span> <span class="st">"compact"</span>, digits <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  caption <span class="op">=</span> <span class="st">"GDP cumulative response to government spending"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<caption>Signed GDP response at the peak absolute magnitude</caption>
-<colgroup>
-<col width="5%">
-<col width="7%">
-<col width="4%">
-<col width="8%">
-<col width="10%">
-<col width="9%">
-<col width="9%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-<col width="11%">
-</colgroup>
+<caption>GDP cumulative response to government spending</caption>
 <thead><tr class="header">
 <th align="left">Model</th>
 <th align="left">Variable</th>
 <th align="left">Shock</th>
-<th align="right">Mean value</th>
-<th align="right">Median value</th>
-<th align="right">Lower value</th>
-<th align="right">Upper value</th>
-<th align="right">Mean horizon</th>
-<th align="right">Median horizon</th>
-<th align="right">Lower horizon</th>
-<th align="right">Upper horizon</th>
+<th align="right">Horizon</th>
+<th align="right">Mean</th>
+<th align="right">Median</th>
+<th align="right">Lower</th>
+<th align="right">Upper</th>
 </tr></thead>
-<tbody><tr class="odd">
-<td align="left">model1</td>
+<tbody>
+<tr class="odd">
+<td align="left">baseline</td>
 <td align="left">gdp</td>
 <td align="left">gs</td>
-<td align="right">-0.017</td>
-<td align="right">-0.002</td>
-<td align="right">-0.004</td>
-<td align="right">0.001</td>
-<td align="right">10.44</td>
-<td align="right">12</td>
 <td align="right">0</td>
+<td align="right">-0.001</td>
+<td align="right">0.000</td>
+<td align="right">-0.002</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="even">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">1</td>
+<td align="right">-0.001</td>
+<td align="right">0.000</td>
+<td align="right">-0.004</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="odd">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">2</td>
+<td align="right">-0.002</td>
+<td align="right">-0.001</td>
+<td align="right">-0.006</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="even">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">3</td>
+<td align="right">-0.003</td>
+<td align="right">-0.001</td>
+<td align="right">-0.008</td>
+<td align="right">0.004</td>
+</tr>
+<tr class="odd">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">4</td>
+<td align="right">-0.004</td>
+<td align="right">-0.002</td>
+<td align="right">-0.010</td>
+<td align="right">0.005</td>
+</tr>
+<tr class="even">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">5</td>
+<td align="right">-0.005</td>
+<td align="right">-0.002</td>
+<td align="right">-0.015</td>
+<td align="right">0.006</td>
+</tr>
+<tr class="odd">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">6</td>
+<td align="right">-0.008</td>
+<td align="right">-0.004</td>
+<td align="right">-0.014</td>
+<td align="right">0.007</td>
+</tr>
+<tr class="even">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">7</td>
+<td align="right">-0.011</td>
+<td align="right">-0.005</td>
+<td align="right">-0.016</td>
+<td align="right">0.008</td>
+</tr>
+<tr class="odd">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">8</td>
+<td align="right">-0.016</td>
+<td align="right">-0.006</td>
+<td align="right">-0.019</td>
+<td align="right">0.009</td>
+</tr>
+<tr class="even">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">9</td>
+<td align="right">-0.022</td>
+<td align="right">-0.007</td>
+<td align="right">-0.022</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="odd">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">10</td>
+<td align="right">-0.032</td>
+<td align="right">-0.008</td>
+<td align="right">-0.025</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="even">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">11</td>
+<td align="right">-0.045</td>
+<td align="right">-0.010</td>
+<td align="right">-0.028</td>
+<td align="right">0.012</td>
+</tr>
+<tr class="odd">
+<td align="left">baseline</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
 <td align="right">12</td>
-</tr></tbody>
+<td align="right">-0.064</td>
+<td align="right">-0.010</td>
+<td align="right">-0.032</td>
+<td align="right">0.013</td>
+</tr>
+<tr class="even">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">0</td>
+<td align="right">-0.001</td>
+<td align="right">0.000</td>
+<td align="right">-0.001</td>
+<td align="right">0.001</td>
+</tr>
+<tr class="odd">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">1</td>
+<td align="right">-0.003</td>
+<td align="right">0.000</td>
+<td align="right">-0.003</td>
+<td align="right">0.002</td>
+</tr>
+<tr class="even">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">2</td>
+<td align="right">-0.006</td>
+<td align="right">-0.001</td>
+<td align="right">-0.005</td>
+<td align="right">0.003</td>
+</tr>
+<tr class="odd">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">3</td>
+<td align="right">-0.010</td>
+<td align="right">-0.001</td>
+<td align="right">-0.007</td>
+<td align="right">0.005</td>
+</tr>
+<tr class="even">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">4</td>
+<td align="right">-0.015</td>
+<td align="right">-0.002</td>
+<td align="right">-0.011</td>
+<td align="right">0.006</td>
+</tr>
+<tr class="odd">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">5</td>
+<td align="right">-0.023</td>
+<td align="right">-0.004</td>
+<td align="right">-0.015</td>
+<td align="right">0.007</td>
+</tr>
+<tr class="even">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">6</td>
+<td align="right">-0.038</td>
+<td align="right">-0.006</td>
+<td align="right">-0.020</td>
+<td align="right">0.008</td>
+</tr>
+<tr class="odd">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">7</td>
+<td align="right">-0.072</td>
+<td align="right">-0.007</td>
+<td align="right">-0.023</td>
+<td align="right">0.010</td>
+</tr>
+<tr class="even">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">8</td>
+<td align="right">-0.160</td>
+<td align="right">-0.009</td>
+<td align="right">-0.029</td>
+<td align="right">0.011</td>
+</tr>
+<tr class="odd">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">9</td>
+<td align="right">-0.398</td>
+<td align="right">-0.011</td>
+<td align="right">-0.033</td>
+<td align="right">0.012</td>
+</tr>
+<tr class="even">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">10</td>
+<td align="right">-1.052</td>
+<td align="right">-0.013</td>
+<td align="right">-0.039</td>
+<td align="right">0.012</td>
+</tr>
+<tr class="odd">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">11</td>
+<td align="right">-2.864</td>
+<td align="right">-0.015</td>
+<td align="right">-0.044</td>
+<td align="right">0.013</td>
+</tr>
+<tr class="even">
+<td align="left">longer_lag</td>
+<td align="left">gdp</td>
+<td align="left">gs</td>
+<td align="right">12</td>
+<td align="right">-7.897</td>
+<td align="right">-0.016</td>
+<td align="right">-0.051</td>
+<td align="right">0.014</td>
+</tr>
+</tbody>
 </table>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/write_bsvar_csv.html">write_bsvar_csv</a></span><span class="op">(</span><span class="va">comparison_gdp</span>, file <span class="op">=</span> <span class="va">output</span><span class="op">)</span></span>
+<span><span class="va">exported</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">output</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">exported</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Model"</span>, <span class="st">"Horizon"</span>, <span class="st">"Median"</span>, <span class="st">"Interval probability"</span>,</span>
+<span>  <span class="st">"Interval method"</span>, <span class="st">"Scaling"</span>, <span class="st">"Source package"</span>, <span class="st">"Source version"</span>, <span class="st">"Draw count"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;      Model Horizon        Median Interval probability Interval method Scaling</span></span>
+<span><span class="co">#&gt; 1 baseline       0 -3.370222e-05                  0.9    equal_tailed    none</span></span>
+<span><span class="co">#&gt; 2 baseline       1 -2.287561e-04                  0.9    equal_tailed    none</span></span>
+<span><span class="co">#&gt;   Source package Source version Draw count</span></span>
+<span><span class="co">#&gt; 1         bsvars              4        200</span></span>
+<span><span class="co">#&gt; 2         bsvars              4        200</span></span></code></pre></div>
+<p>Replace <code>output</code> with your chosen path to keep the file.
+The default export retains provenance with readable column labels; the
+compact table is for presentation. <code>source_version</code>
+identifies software used for the current calculation; estimation history
+is in the demo metadata. Economic <code>units</code> can be unknown
+because arbitrary transformations cannot be reconstructed from a
+posterior object.</p>
+<p>For scripts that require fixed column names, select a schema
+explicitly and use the standard CSV writer:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">schema</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"model"</span>, <span class="st">"variable"</span>, <span class="st">"shock"</span>, <span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span>,</span>
+<span>  <span class="st">"interval_probability"</span>, <span class="st">"interval_method"</span>, <span class="st">"scale_by"</span>, <span class="st">"scale_factor"</span>,</span>
+<span>  <span class="st">"source_package"</span>, <span class="st">"source_version"</span>, <span class="st">"n_draws"</span><span class="op">)</span></span>
+<span><span class="va">machine_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">comparison_gdp</span><span class="op">)</span><span class="op">[</span>, <span class="va">schema</span><span class="op">]</span>, <span class="va">machine_output</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="related-analyses">Related analyses<a class="anchor" aria-label="anchor" href="#related-analyses"></a>
+<h2 id="supported-plotting-inputs">Supported plotting inputs<a class="anchor" aria-label="anchor" href="#supported-plotting-inputs"></a>
 </h2>
-<ul>
-<li>
-<a href="inference-and-comparison.html">Inference and Comparison</a>
-covers joint and magnitude hypotheses, simultaneous credible bands, and
-model comparisons.</li>
-<li>
-<a href="historical-decomposition-events.html">Historical
-Decompositions</a> covers selected historical periods, structural-shock
-contributions, and shock rankings.</li>
-<li>
-<a href="sign-restricted-workflows.html">Analysis of Sign-Restricted
-Models</a> covers <code>most_likely_admissible_*()</code>,
-<code><a href="../reference/restriction_audit.html">restriction_audit()</a></code>, <code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code>,
-and sign-model comparisons.</li>
-</ul>
-<p>The <a href="https://davidzenz.github.io/bsvarPost/reference/index.html">reference
-index</a> documents all functions and their arguments.</p>
+<p><code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">ggplot2::autoplot()</a></code> handles response summaries and
+supported draw-level paths; <code><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot()</a></code> adds
+publication styling for supported families. Individual timing summaries
+and draw-level hypothesis or event tables do not have an automatic plot.
+Summarize first or use a suitable comparison/family plot; passing
+unsupported inputs raises an explicit error.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">probabilities</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span><span class="va">post</span>, variables <span class="op">=</span> <span class="st">"gdp"</span>, shocks <span class="op">=</span> <span class="st">"gs"</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">12</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">probability_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hypothesis.html">plot_hypothesis</a></span><span class="op">(</span><span class="va">probabilities</span><span class="op">)</span></span></code></pre></div>
+<p>For grouped historical decompositions, consult the <a href="historical-decomposition-events.html#grouped-and-summary-inputs">draw-level
+input recipe</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="estimate-your-own-models">Estimate your own models<a class="anchor" aria-label="anchor" href="#estimate-your-own-models"></a>
+</h2>
+<p>This optional recipe uses the same frozen input, seeds and 200-draw
+settings as the demo generator. For research, choose an appropriate
+model, sampling length and diagnostic strategy; 200 draws is only an
+illustration.</p>
+<!-- documentation-skip: estimation -->
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fiscal_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"us_fiscal_lsuw.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fiscal_data</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec</span>, S <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">1</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">456</span><span class="op">)</span></span>
+<span><span class="va">spec_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvars/reference/specify_bsvar.html" class="external-link">specify_bsvar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fiscal_data</span>, p <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">post_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_alt</span>, S <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">1</span>, show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>For other posterior quantities use <code><a href="../reference/tidy_fevd.html">tidy_fevd()</a></code>,
+<code><a href="../reference/tidy_shocks.html">tidy_shocks()</a></code>, <code><a href="../reference/tidy_forecast.html">tidy_forecast()</a></code> and
+<code><a href="../reference/tidy_hd.html">tidy_hd()</a></code>. Continue with <a href="inference-and-comparison.html">inference and comparison</a>, <a href="historical-decomposition-events.html">historical
+decompositions</a>, or <a href="sign-restricted-workflows.html">sign-restricted workflows</a>. The
+<a href="https://davidzenz.github.io/bsvarPost/reference/index.html">reference
+index</a> and <code><a href="https://davidzenz.github.io/bsvarPost/reference">help(package = "bsvarPost")</a></code> document
+supported inputs.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

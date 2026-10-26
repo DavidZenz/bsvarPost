@@ -1,120 +1,103 @@
-An **R** package for posterior analysis of Bayesian Structural Vector
-Autoregressions estimated with
-[`bsvars`](https://cran.r-project.org/package=bsvars) and
-[`bsvarSIGNs`](https://cran.r-project.org/package=bsvarSIGNs).
+# bsvarPost
 
-Provides posterior summaries and inference for empirical analyses based
-on impulse responses, cumulative dynamic multipliers, forecast error
-variance decompositions, historical decompositions, forecasts, and
-structural shocks. The package also compares model specifications,
-evaluates identifying restrictions, and reports posterior results in
-figures and tables.
+**bsvarPost** turns posterior draws from **bsvars** and **bsvarSIGNs**
+into response summaries, model comparisons, posterior probability
+statements, historical decompositions, and publication tables and plots.
 
-Use `bsvars` or `bsvarSIGNs` to specify and estimate the Bayesian VAR.
-Use `bsvarPost` to analyse its posterior distribution.
+## Installation
 
-## Posterior summaries of structural quantities
+Install from GitHub (R \>= 4.1):
 
-Summarise impulse responses from an existing `bsvars` or `bsvarSIGNs`
-posterior with
-[`tidy_irf()`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md):
+``` r
+
+install.packages("remotes")
+remotes::install_github("DavidZenz/bsvarPost")
+```
+
+The online
+[articles](https://davidzenz.github.io/bsvarPost/articles/index.html)
+are available without building vignettes. To install local HTML articles
+as well:
+
+``` r
+
+install.packages(c("knitr", "rmarkdown"))
+remotes::install_github("DavidZenz/bsvarPost", build_vignettes = TRUE)
+```
+
+## A complete first analysis
+
+These installed demo fits use US log real per capita GDP, government
+spending (`gs`), and tax revenue (`ttr`). The baseline has one lag; the
+alternative has three. Each has **200 retained draws for
+demonstration**, which does not establish sampling adequacy for an
+empirical study. The introduction supplies the seeded [estimation
+recipe](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.html#estimate-your-own-models).
 
 ``` r
 
 library(bsvarPost)
+post <- readRDS(system.file("extdata", "fiscal_post_bsvar.rds",
+  package = "bsvarPost", mustWork = TRUE))
+post_alt <- readRDS(system.file("extdata", "fiscal_post_bsvar_alt.rds",
+  package = "bsvarPost", mustWork = TRUE))
 
-responses <- tidy_irf(posterior, horizon = 12, probability = 0.90)
-head(responses)
+responses <- tidy_irf(post, horizon = 12, probability = 0.90)
+gdp <- subset(responses, variable == "gdp" & shock == "gs")
+gdp[gdp$horizon %in% c(0, 4, 8, 12),
+    c("horizon", "median", "lower", "upper")]
 ```
 
-Represent cumulative dynamic multipliers, forecast error variance
-decompositions, historical decompositions, forecasts, and structural
-shocks in the same tabular form. Filter, visualise, join, or report
-these posterior quantities with standard R functions.
-
-Compute posterior cumulative effects explicitly with
-[`cdm()`](https://davidzenz.github.io/bsvarPost/reference/cdm.md):
+Horizons are quarters after the shock, including impact at zero. Bounds
+are pointwise 90% equal-tailed credible intervals. Responses use the
+fitted model’s structural-shock normalization and the original log
+units.
 
 ``` r
 
-multipliers <- cdm(posterior, horizon = 12)
-tidy_cdm(multipliers)
+comparison <- compare_cdm(baseline = post, longer_lag = post_alt,
+  horizon = 12, probability = 0.90)
+comparison_gdp <- subset(comparison, variable == "gdp" & shock == "gs")
+comparison_plot <- ggplot2::autoplot(comparison_gdp) +
+  ggplot2::labs(y = "Cumulative log response", x = "Quarters after shock")
+comparison_plot
+
+output <- tempfile(fileext = ".csv")
+write_bsvar_csv(comparison_gdp, file = output)
+read.csv(output, check.names = FALSE)[1:2,
+  c("Model", "Horizon", "Median", "Interval method", "Draw count")]
 ```
 
-See [Post-estimation Analysis with
-bsvarPost](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.md)
-for a reproducible introduction to posterior summaries, cumulative
-effects, and their graphical presentation.
+A cumulative dynamic multiplier (CDM) sums each draw’s responses from
+impact through the selected horizon. With these data it is a cumulative
+log response; a dollar-per-dollar fiscal multiplier requires additional
+conversion and a spending-response denominator. `scale_by = "shock_sd"`
+divides by an observed variable’s sample standard deviation and does not
+perform that conversion.
 
-## Features
+The default CSV export preserves provenance columns, including interval
+mass and method, scaling, upstream computation version and draw count.
+Keep these columns when passing results to collaborators. This exporter
+uses readable column labels; the introduction also shows a fixed-schema
+export. Economic units require your knowledge of the model’s
+transformations.
 
-### Comparison of model specifications
+## Choose a workflow
 
-Compare impulse responses, cumulative effects, decompositions,
-forecasts, response-timing summaries, and diagnostics across named
-posterior objects in one table.
+| Research question | Start here |
+|----|----|
+| How do I summarize, compare and export responses? | [Complete fiscal analysis](https://davidzenz.github.io/bsvarPost/articles/bsvarPost.html) |
+| How probable is a sign, magnitude or complete response path? | [Inference and comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.html) |
+| Which shocks contributed during an event? | [Historical decompositions](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.html) |
+| How do restrictions, representative draws and importance weights relate? | [Sign-restricted workflows](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.html) |
 
-[Inference and
-Comparison](https://davidzenz.github.io/bsvarPost/articles/inference-and-comparison.md)
-shows how to compare specifications, compute posterior probabilities and
-magnitudes, evaluate joint hypotheses, construct simultaneous credible
-bands, and select representative posterior draws. It also describes
-response characteristics such as peaks, duration, half-life, and time to
-a threshold.
-
-### Historical decompositions and shock contributions
-
-Summarise the posterior contribution of each structural shock over a
-selected event window. Rank these contributions and compare the same
-historical episode across model specifications.
-
-[Historical
-Decompositions](https://davidzenz.github.io/bsvarPost/articles/historical-decomposition-events.md)
-describes event-specific analysis with
-[`tidy_hd_event()`](https://davidzenz.github.io/bsvarPost/reference/tidy_hd_event.md),
-[`shock_ranking()`](https://davidzenz.github.io/bsvarPost/reference/shock_ranking.md),
-and graphical summaries of shock contributions.
-
-### Analysis of sign-restricted models
-
-Select an admissible draw that represents the posterior distribution,
-verify whether retained draws satisfy the imposed restrictions, and
-examine whether admissibility weights indicate weak or sparse posterior
-support.
-
-[Analysis of Sign-Restricted
-Models](https://davidzenz.github.io/bsvarPost/articles/sign-restricted-workflows.md)
-describes `most_likely_admissible_*()`,
-[`restriction_audit()`](https://davidzenz.github.io/bsvarPost/reference/restriction_audit.md),
-[`acceptance_diagnostics()`](https://davidzenz.github.io/bsvarPost/reference/acceptance_diagnostics.md),
-and the corresponding comparison and plotting methods.
-
-### Figures and tables
-
-Plot tidy posterior summaries directly with `ggplot2` or present them
-with table-generation packages. Use
-[`ggplot2::autoplot()`](https://ggplot2.tidyverse.org/reference/autoplot.html)
-for a default graphical summary and the publication-graphics functions
-for consistent styling and annotations. Convert the same results into
-labelled tables so that figures and tables report identical posterior
-quantities.
-
-## Integration with bsvars and bsvarSIGNs
-
-Use `bsvars` or `bsvarSIGNs` to specify, estimate, and inspect the
-underlying model. Use `bsvarPost` to:
-
-- represent posterior quantities as tidy data sets;
-- compute cumulative effects, compare specifications, evaluate posterior
-  hypotheses, or summarise response timing;
-- analyse structural-shock contributions during a historical episode or
-  assess sign restrictions; or
-- report a selected posterior result in a figure or table.
-
-Consult the [reference
-index](https://davidzenz.github.io/bsvarPost/reference/index.md) for
-definitions, arguments, and return values. The articles above introduce
-the principal forms of posterior analysis.
+The [function
+reference](https://davidzenz.github.io/bsvarPost/reference/index.html)
+covers arguments and supported inputs, including FEVDs, forecasts and
+structural shocks. In R, use
+[`help(package = "bsvarPost")`](https://davidzenz.github.io/bsvarPost/reference),
+[`?tidy_irf`](https://davidzenz.github.io/bsvarPost/reference/tidy_irf.md)
+or `vignette(package = "bsvarPost")` for installed documentation.
 
 # Package index
 

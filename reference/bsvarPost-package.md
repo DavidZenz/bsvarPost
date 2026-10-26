@@ -14,6 +14,15 @@ definitions. Default reports and CSV exports include these columns;
 compact reports omit most provenance columns. Select columns explicitly
 when a fixed schema is needed.
 
+## Demonstration assets
+
+Small posterior fits (200 retained draws each), frozen inputs and
+estimation metadata are installed under
+`system.file("extdata", package = "bsvarPost")`. The introduction and
+sign-restricted article show loading and estimation recipes. These
+samples illustrate the API and do not establish sampling adequacy for an
+empirical study.
+
 ## Vignettes
 
 Use

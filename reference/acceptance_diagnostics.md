@@ -4,7 +4,11 @@ Summarises the stored effective sample size and admissibility weights
 recomputed from posterior draws and identification restrictions. These
 diagnostics do not reconstruct the full proposal/rejection history of
 the sampler. They report quantities obtained from the stored posterior
-distribution and its identification restrictions.
+distribution and its identification restrictions. The upstream stored
+ESS is an importance-weight ESS, computed before weighted resampling,
+not an autocorrelation-based MCMC convergence diagnostic. Recomputed
+kernel weights describe the stored draws and need not reproduce the
+original weight vector.
 
 ## Usage
 

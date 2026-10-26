@@ -69,7 +69,19 @@
 
     
     
-<!-- generated-by: gsd-doc-writer -->
+<div class="section level2">
+<h2 id="load-the-demonstration-models">Load the demonstration models<a class="anchor" aria-label="anchor" href="#load-the-demonstration-models"></a>
+</h2>
+<p>These fits contain 200 retained draws each, for illustration rather
+than sampling-adequacy claims. Use <code><a href="../reference/posterior_provenance.html">?posterior_provenance</a></code>
+for column definitions; use <code><a href="https://davidzenz.github.io/bsvarPost/reference">help(package = "bsvarPost")</a></code> for
+offline function documentation.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidzenz.github.io/bsvarPost/">bsvarPost</a></span><span class="op">)</span></span>
+<span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"fiscal_post_bsvar.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">post_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"fiscal_post_bsvar_alt.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This vignette presents posterior inference and model comparison for
 quantities obtained from Bayesian structural vector autoregressions. The
 empirical example compares two lag orders for models estimated using
@@ -79,6 +91,7 @@ sign or magnitude.</p>
 <p>The precomputed posterior objects contain 200 retained draws. Any
 compatible posterior object estimated with <code>bsvars</code> or
 <code>bsvarSIGNs</code> can be used instead.</p>
+</div>
 <div class="section level2">
 <h2 id="comparison-of-model-specifications">Comparison of model specifications<a class="anchor" aria-label="anchor" href="#comparison-of-model-specifications"></a>
 </h2>
@@ -88,7 +101,7 @@ this example, the comparison assesses sensitivity of the impulse
 responses to the lag order. Named arguments identify the specifications,
 while the remaining columns have the same interpretation as in
 <code><a href="../reference/tidy_irf.html">tidy_irf()</a></code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_irf.html">compare_irf</a></span><span class="op">(</span></span>
 <span>  baseline <span class="op">=</span> <span class="va">post</span>,</span>
 <span>  longer_lag <span class="op">=</span> <span class="va">post_alt</span>,</span>
@@ -103,19 +116,32 @@ while the remaining columns have the same interpretation as in
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 5</span></span></span>
 <span><span class="co">#&gt;   model      horizon     median    lower    upper</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> baseline         0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">093</span><span style="color: #BB0000;">5</span> -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">15</span> 0.000<span style="text-decoration: underline;">901</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> baseline         4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">91</span> 0.000<span style="text-decoration: underline;">522</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> baseline         8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">01</span> 0.000<span style="text-decoration: underline;">284</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> baseline        12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">94</span> 0.000<span style="text-decoration: underline;">289</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> longer_lag       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">111</span>  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">17</span> 0.000<span style="text-decoration: underline;">898</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> longer_lag       4 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">00</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">16</span> 0.001<span style="text-decoration: underline;">85</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> longer_lag       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">63</span>   -<span style="color: #BB0000;">0.004</span><span style="color: #BB0000; text-decoration: underline;">53</span> 0.002<span style="text-decoration: underline;">06</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> longer_lag      12 -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">20</span>   -<span style="color: #BB0000;">0.005</span><span style="color: #BB0000; text-decoration: underline;">44</span> 0.002<span style="text-decoration: underline;">27</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> baseline         0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">033</span><span style="color: #BB0000;">7</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">07</span> 0.001<span style="text-decoration: underline;">12</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> baseline         4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">686</span>  -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">22</span> 0.000<span style="text-decoration: underline;">949</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> baseline         8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">17</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">06</span> 0.001<span style="text-decoration: underline;">01</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> baseline        12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">60</span>   -<span style="color: #BB0000;">0.004</span><span style="color: #BB0000; text-decoration: underline;">10</span> 0.001<span style="text-decoration: underline;">14</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> longer_lag       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">023</span><span style="color: #BB0000;">0</span> -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">29</span> 0.000<span style="text-decoration: underline;">971</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> longer_lag       4 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">06</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">42</span> 0.001<span style="text-decoration: underline;">54</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> longer_lag       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">68</span>   -<span style="color: #BB0000;">0.005</span><span style="color: #BB0000; text-decoration: underline;">12</span> 0.001<span style="text-decoration: underline;">11</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> longer_lag      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">87</span>   -<span style="color: #BB0000;">0.005</span><span style="color: #BB0000; text-decoration: underline;">81</span> 0.001<span style="text-decoration: underline;">17</span></span></span></code></pre></div>
 <p>Differences in posterior medians or credible intervals describe
 sensitivity to the model specification. They do not provide a formal
-model-selection criterion. The corresponding functions compare <a href="../reference/compare_cdm.html">CDMs</a>, <a href="../reference/compare_fevd.html">FEVDs</a>, <a href="../reference/compare_forecast.html">forecasts</a>, and <a href="../reference/compare_hd_event.html">historical-decomposition
+model-selection criterion. The corresponding functions compare <a href="https://davidzenz.github.io/bsvarPost/reference/compare_cdm.html">CDMs</a>,
+<a href="https://davidzenz.github.io/bsvarPost/reference/compare_fevd.html">FEVDs</a>,
+<a href="https://davidzenz.github.io/bsvarPost/reference/compare_forecast.html">forecasts</a>,
+and <a href="https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.html">historical-decomposition
 events</a>.</p>
-<p><img src="figures/compare-irf-showcase.png" class="r-plt" alt="Posterior impulse responses under two model specifications" width="100%"></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">comparison_gdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">comparison</span>, <span class="va">variable</span> <span class="op">==</span> <span class="st">"gdp"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"gs"</span><span class="op">)</span></span>
+<span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">comparison_gdp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Quarters after shock"</span>, y <span class="op">=</span> <span class="st">"GDP log response"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/compare-irf-showcase.png" class="r-plt" alt="Posterior impulse responses under two model specifications" width="100%"><p class="caption">
+GDP IRF to gs, horizons 0–12. Baseline p=1 and longer_lag p=3; lines and
+ribbons are medians and pointwise 90% equal-tailed intervals in original
+log units, without additional scaling.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="posterior-probabilities-of-hypotheses">Posterior probabilities of hypotheses<a class="anchor" aria-label="anchor" href="#posterior-probabilities-of-hypotheses"></a>
@@ -127,7 +153,7 @@ events</a>.</p>
 posterior draws that satisfy a specified inequality at selected
 horizons. The hypothesis below states that the response of GDP is
 positive.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">positive_gdp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hypothesis_irf.html">hypothesis_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
 <span>  variables <span class="op">=</span> <span class="st">"gdp"</span>,</span>
@@ -142,18 +168,27 @@ positive.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">#&gt;   horizon posterior_prob median_gap lower_gap upper_gap</span></span>
 <span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0          0.47  -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">093</span><span style="color: #BB0000;">5</span>  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">15</span>  0.000<span style="text-decoration: underline;">901</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4          0.185 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>   -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">91</span>  0.000<span style="text-decoration: underline;">522</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8          0.11  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>    -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">01</span>  0.000<span style="text-decoration: underline;">284</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12          0.09  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>    -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">94</span>  0.000<span style="text-decoration: underline;">289</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0          0.485 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">033</span><span style="color: #BB0000;">7</span>  -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">07</span>  0.001<span style="text-decoration: underline;">12</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4          0.225 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">686</span>   -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">22</span>  0.000<span style="text-decoration: underline;">949</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8          0.18  -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">17</span>    -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">06</span>  0.001<span style="text-decoration: underline;">01</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12          0.155 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">60</span>    -<span style="color: #BB0000;">0.004</span><span style="color: #BB0000; text-decoration: underline;">10</span>  0.001<span style="text-decoration: underline;">14</span></span></span></code></pre></div>
 <p>The <code>posterior_prob</code> column gives the posterior
 probability of the inequality, conditional on the model specification;
 it is not a p-value. The gap columns summarise the posterior
 distribution of the response minus the threshold and retain information
-about the magnitude of the response. The <a href="../reference/hypothesis_cdm.html"><code>hypothesis_cdm()</code></a>
+about the magnitude of the response. The <a href="https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.html"><code>hypothesis_cdm()</code></a>
 function provides the corresponding inference for cumulative
 responses.</p>
-<p><img src="figures/hypothesis-showcase.png" class="r-plt" alt="Posterior probability that an impulse response is positive at each horizon" width="100%"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hypothesis.html">plot_hypothesis</a></span><span class="op">(</span><span class="va">post</span>, type <span class="op">=</span> <span class="st">"irf"</span>, variable <span class="op">=</span> <span class="st">"gdp"</span>, shock <span class="op">=</span> <span class="st">"gs"</span>,</span>
+<span>  horizon <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">12</span>, relation <span class="op">=</span> <span class="st">"&gt;"</span>, value <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/hypothesis-showcase.png" class="r-plt" alt="Posterior probability that an impulse response is positive at each horizon" width="100%"><p class="caption">
+Posterior probability that the GDP response to gs is above zero at each
+horizon 0–12. These are probabilities, not response magnitudes or
+credible intervals.
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="joint-posterior-probabilities">Joint posterior probabilities<a class="anchor" aria-label="anchor" href="#joint-posterior-probabilities"></a>
@@ -163,7 +198,7 @@ conditions are satisfied simultaneously. The
 <code><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf()</a></code> function evaluates the intersection
 of the inequalities within each posterior draw. The hypothesis below
 requires a positive response from impact through horizon 8.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">positive_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/joint_hypothesis_irf.html">joint_hypothesis_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
 <span>  variable <span class="op">=</span> <span class="st">"gdp"</span>,</span>
@@ -177,10 +212,10 @@ requires a positive response from impact through horizon 8.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
 <span><span class="co">#&gt;   posterior_prob n_constraints</span></span>
 <span><span class="co">#&gt;            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          0.095             9</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          0.145             9</span></span></code></pre></div>
 <p>The joint posterior probability can be considerably smaller than the
 pointwise probabilities because all nine inequalities must hold in the
-same posterior draw. The <a href="../reference/joint_hypothesis_cdm.html"><code>joint_hypothesis_cdm()</code></a>
+same posterior draw. The <a href="https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_cdm.html"><code>joint_hypothesis_cdm()</code></a>
 function provides the corresponding inference for cumulative response
 paths.</p>
 </div>
@@ -188,12 +223,13 @@ paths.</p>
 <h3 id="posterior-probabilities-for-response-magnitudes">Posterior probabilities for response magnitudes<a class="anchor" aria-label="anchor" href="#posterior-probabilities-for-response-magnitudes"></a>
 </h3>
 <p>A sign hypothesis does not describe the magnitude of the response.
-Suppose <code>0.001</code> is a prespecified, economically meaningful
-value on the scale used to estimate the model. The
-<code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> function reports the posterior
-probability that the absolute response exceeds this threshold at horizon
-8.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+Suppose <code>0.001</code> log units (approximately a 0.1% change in
+GDP) is a prespecified threshold for illustration. Its economic
+relevance must be justified for the application, rather than inferred
+from this example. The <code><a href="../reference/magnitude_audit.html">magnitude_audit()</a></code> function reports
+the posterior probability that the absolute response exceeds this
+threshold at horizon 8.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">material_response</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/magnitude_audit.html">magnitude_audit</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"irf"</span>,</span>
@@ -210,12 +246,12 @@ probability that the absolute response exceeds this threshold at horizon
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 4</span></span></span>
 <span><span class="co">#&gt;   posterior_prob median_gap lower_gap upper_gap</span></span>
 <span><span class="co">#&gt;            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          0.595   0.000<span style="text-decoration: underline;">229</span> -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">818</span>   0.002<span style="text-decoration: underline;">01</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          0.605   0.000<span style="text-decoration: underline;">285</span> -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">897</span>   0.002<span style="text-decoration: underline;">42</span></span></span></code></pre></div>
 <p>The threshold should be determined by the variable transformation and
 the empirical application rather than selected from the posterior
 results. Setting <code>type = "cdm"</code> gives the corresponding
 probability for cumulative dynamic multipliers. The available scaling
-options are documented in <a href="../reference/magnitude_audit.html"><code>magnitude_audit()</code></a>.</p>
+options are documented in <a href="https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.html"><code>magnitude_audit()</code></a>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -229,7 +265,7 @@ value is an empirical order statistic; ties can increase the coverage.
 <code>achieved_coverage</code> reports the fraction actually covered.
 This is a finite-sample statement, not an exact guarantee about the
 underlying posterior distribution.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gdp_band</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simultaneous_irf.html">simultaneous_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>,</span>
 <span>  horizon <span class="op">=</span> <span class="fl">12</span>,</span>
@@ -241,16 +277,16 @@ underlying posterior distribution.</p>
 <span><span class="va">gdp_band</span><span class="op">[</span><span class="va">gdp_band</span><span class="op">$</span><span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
 <span>         <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"horizon"</span>, <span class="st">"median"</span>, <span class="st">"lower"</span>, <span class="st">"upper"</span>, <span class="st">"simultaneous_prob"</span>, <span class="st">"achieved_coverage"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 6</span></span></span>
-<span><span class="co">#&gt;   horizon     median    lower    upper simultaneous_prob achieved_coverage</span></span>
-<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">093</span><span style="color: #BB0000;">5</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">18</span> 0.002<span style="text-decoration: underline;">00</span>                0.9               0.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">702</span>  -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">79</span> 0.001<span style="text-decoration: underline;">39</span>                0.9               0.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">19</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">28</span> 0.000<span style="text-decoration: underline;">903</span>               0.9               0.9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">58</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">67</span> 0.000<span style="text-decoration: underline;">512</span>               0.9               0.9</span></span></code></pre></div>
+<span><span class="co">#&gt;   horizon     median    lower   upper simultaneous_prob achieved_coverage</span></span>
+<span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">033</span><span style="color: #BB0000;">7</span> -<span style="color: #BB0000;">0.002</span><span style="color: #BB0000; text-decoration: underline;">70</span> 0.002<span style="text-decoration: underline;">64</span>               0.9               0.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">686</span>  -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">36</span> 0.001<span style="text-decoration: underline;">98</span>               0.9               0.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">17</span>   -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">84</span> 0.001<span style="text-decoration: underline;">50</span>               0.9               0.9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">60</span>   -<span style="color: #BB0000;">0.004</span><span style="color: #BB0000; text-decoration: underline;">27</span> 0.001<span style="text-decoration: underline;">07</span>               0.9               0.9</span></span></code></pre></div>
 <p>The band is conditional on the response variables, structural shocks,
 and horizons used in its construction. Expanding this set generally
-widens the band. The <a href="../reference/simultaneous_cdm.html"><code>simultaneous_cdm()</code></a>
-function constructs simultaneous bands for cumulative responses, and <a href="../reference/plot_simultaneous.html"><code>plot_simultaneous()</code></a>
+widens the band. The <a href="https://davidzenz.github.io/bsvarPost/reference/simultaneous_cdm.html"><code>simultaneous_cdm()</code></a>
+function constructs simultaneous bands for cumulative responses, and <a href="https://davidzenz.github.io/bsvarPost/reference/plot_simultaneous.html"><code>plot_simultaneous()</code></a>
 plots the resulting response paths.</p>
 </div>
 <div class="section level2">
@@ -262,7 +298,7 @@ correspond to a retained parameter draw. The
 the median target over the specified responses and horizons. Including
 both GDP and government spending in the target ensures that both
 reported paths correspond to the same structural model draw.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">representative</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/median_target_irf.html">median_target_irf</a></span><span class="op">(</span></span>
 <span>  <span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gdp"</span>, <span class="st">"gs"</span><span class="op">)</span>,</span>
@@ -270,7 +306,7 @@ reported paths correspond to the same structural model draw.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">representative</span><span class="op">$</span><span class="va">draw_index</span></span>
-<span><span class="co">#&gt; [1] 70</span></span>
+<span><span class="co">#&gt; [1] 186</span></span>
 <span></span>
 <span><span class="va">rep_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">representative</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span>
@@ -280,18 +316,20 @@ reported paths correspond to the same structural model draw.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 4</span></span></span>
 <span><span class="co">#&gt;   horizon    median draw_index method       </span></span>
 <span><span class="co">#&gt;     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">268</span>         70 median_target</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">827</span>         70 median_target</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">31</span>          70 median_target</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">72</span>          70 median_target</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       0 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">460</span>        186 median_target</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>       4 -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">863</span>        186 median_target</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>       8 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">29</span>         186 median_target</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>      12 -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">72</span>         186 median_target</span></span></code></pre></div>
 <p>This selection provides one internally consistent structural model
 for calculations that require a single draw. It is not a measure of
 posterior uncertainty; the posterior distribution and its credible
 intervals should be reported separately. The same selection is available
-for <a href="../reference/median_target_cdm.html">CDMs</a>. For
-sign-restricted models, the <a href="../reference/most_likely_admissible_irf.html">most-likely
+for <a href="https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.html">CDMs</a>.
+For sign-restricted models, the <a href="https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.html">most-likely
 admissible draw</a> provides a distinct representative selection.</p>
-<p><img src="figures/representative-showcase.png" class="r-plt" alt="Representative posterior draw and pointwise posterior summary" width="100%"></p>
+<p>The introduction shows a <a href="bsvarPost.html#select-one-representative-draw">filtered
+representative-path plot</a>. Here the selection includes both GDP and
+spending; it can therefore select a different draw.</p>
 </div>
 <div class="section level2">
 <h2 id="timing-and-persistence-of-responses">Timing and persistence of responses<a class="anchor" aria-label="anchor" href="#timing-and-persistence-of-responses"></a>
@@ -300,8 +338,13 @@ admissible draw</a> provides a distinct representative selection.</p>
 posterior draw and then summarise its posterior distribution. Thus,
 inference about timing does not rely on a single posterior median
 response. The example below analyses persistence in the response of
-government spending to its own shock over 20 quarters.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+government spending to its own shock over 20 quarters. This longer
+horizon is chosen to examine persistence beyond the introductory
+12-quarter window. The threshold <code>0.015</code> is in log spending
+units (approximately 1.5%), under the model’s structural-shock
+normalization; it is an illustrative cutoff rather than a generally
+meaningful benchmark.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">peak</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/peak_response.html">peak_response</a></span><span class="op">(</span><span class="va">post</span>, horizon <span class="op">=</span> <span class="fl">20</span>, variables <span class="op">=</span> <span class="st">"gs"</span>, shocks <span class="op">=</span> <span class="st">"gs"</span>,</span>
 <span>                      absolute <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">duration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/duration_response.html">duration_response</a></span><span class="op">(</span></span>
@@ -325,18 +368,18 @@ government spending to its own shock over 20 quarters.</p>
 <span>  reached_prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span>, <span class="va">half_life</span><span class="op">$</span><span class="va">reached_prob</span>, <span class="va">threshold</span><span class="op">$</span><span class="va">reached_prob</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;         question posterior_median               unit reached_prob</span></span>
-<span><span class="co">#&gt; 1  absolute peak                0            horizon           NA</span></span>
-<span><span class="co">#&gt; 2 positive spell               21            periods           NA</span></span>
-<span><span class="co">#&gt; 3      half-life               14 periods after peak        0.900</span></span>
-<span><span class="co">#&gt; 4    below 0.015               11            horizon        0.975</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  absolute peak              0.0            horizon           NA</span></span>
+<span><span class="co">#&gt; 2 positive spell             21.0            periods           NA</span></span>
+<span><span class="co">#&gt; 3      half-life             15.0 periods after peak         0.85</span></span>
+<span><span class="co">#&gt; 4    below 0.015             11.5            horizon         0.98</span></span></code></pre></div>
 <p>For the half-life and threshold summaries, <code>reached_prob</code>
 gives the posterior probability that the event occurs within the
 selected horizon. The conditional median should be interpreted together
 with this probability. <code><a href="../reference/peak_response.html">peak_response()</a></code> also reports the
 posterior distribution of the peak value. Alternative definitions are
-available for <a href="../reference/duration_response.html"><code>duration_response()</code></a>,
-<a href="../reference/half_life_response.html"><code>half_life_response()</code></a>,
-and <a href="../reference/time_to_threshold.html"><code>time_to_threshold()</code></a>.</p>
+available for <a href="https://davidzenz.github.io/bsvarPost/reference/duration_response.html"><code>duration_response()</code></a>,
+<a href="https://davidzenz.github.io/bsvarPost/reference/half_life_response.html"><code>half_life_response()</code></a>,
+and <a href="https://davidzenz.github.io/bsvarPost/reference/time_to_threshold.html"><code>time_to_threshold()</code></a>.</p>
 </div>
 <div class="section level2">
 <h2 id="summary-of-posterior-inference">Summary of posterior inference<a class="anchor" aria-label="anchor" href="#summary-of-posterior-inference"></a>

@@ -69,7 +69,6 @@
 
     
     
-<!-- generated-by: gsd-doc-writer -->
 <p>This article presents posterior analyses for a
 <code>PosteriorBSVARSIGN</code> object estimated with <a href="https://bsvars.org/bsvarSIGNs/" class="external-link"><code>bsvarSIGNs</code></a>. The
 identifying scheme can combine sign and zero restrictions on impulse
@@ -120,6 +119,27 @@ imply high posterior probabilities for all restrictions. Similarly, high
 restriction probabilities do not imply a large effective sample size or
 a dispersed distribution of admissibility weights.</p>
 <div class="section level2">
+<h2 id="load-demonstration-draws">Load demonstration draws<a class="anchor" aria-label="anchor" href="#load-demonstration-draws"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://davidzenz.github.io/bsvarPost/">bsvarPost</a></span><span class="op">)</span></span>
+<span><span class="va">post_sign</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sign_post.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">post_sign_alt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"sign_post_alt.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"demo-metadata.csv"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">metadata</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"file"</span>, <span class="st">"p"</span>, <span class="st">"seed"</span>, <span class="st">"draws"</span>, <span class="st">"bsvarSIGNs_version"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;                file p seed draws bsvarSIGNs_version</span></span>
+<span><span class="co">#&gt; 3     sign_post.rds 4  123   200                  3</span></span>
+<span><span class="co">#&gt; 4 sign_post_alt.rds 2  456   200                  3</span></span></code></pre></div>
+<p>Each model contains 200 retained draws for demonstration; this does
+not establish sampling adequacy. The baseline has four lags and the
+alternative two. All analysis chunks below execute using these installed
+assets. See <code><a href="../reference/acceptance_diagnostics.html">?acceptance_diagnostics</a></code> or
+<code><a href="https://davidzenz.github.io/bsvarPost/reference">help(package = "bsvarPost")</a></code> for offline help.</p>
+</div>
+<div class="section level2">
 <h2 id="posterior-distribution">Posterior distribution<a class="anchor" aria-label="anchor" href="#posterior-distribution"></a>
 </h2>
 <p>The example uses the <code>optimism</code> data from
@@ -129,19 +149,10 @@ the sign restriction imposes a positive contemporaneous response of
 stock prices. The model is specified with
 <code>specify_bsvarSIGN$new()</code> and its posterior distribution is
 estimated with <code>estimate()</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"optimism"</span>, package <span class="op">=</span> <span class="st">"bsvarSIGNs"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sign_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA_real_</span>, <span class="fl">23</span><span class="op">)</span><span class="op">)</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="va">spec_sign</span> <span class="op">&lt;-</span> <span class="fu">bsvarSIGNs</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimism</span> <span class="op">*</span> <span class="fl">100</span>, p <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  sign_irf <span class="op">=</span> <span class="va">sign_irf</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">post_sign</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_sign</span>, S <span class="op">=</span> <span class="fl">2000</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>The remaining examples can be evaluated after estimating
-<code>post_sign</code>. They are not evaluated when building the article
-because a sign-restricted posterior is not stored in the package.</p>
+<p>The frozen input is multiplied by 100 before estimation. Seeds,
+versions, restrictions and sample ranges are recorded in
+<code>demo-metadata.csv</code>. The <a href="#estimate-your-own-sign-models">estimation recipe</a> appears at
+the end; it is optional when using the bundled draws.</p>
 </div>
 <div class="section level2">
 <h2 id="representative-admissible-draws">Representative admissible draws<a class="anchor" aria-label="anchor" href="#representative-admissible-draws"></a>
@@ -154,27 +165,56 @@ responses associated with one joint posterior draw rather than pointwise
 marginal quantiles.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rep_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/most_likely_admissible_irf.html">most_likely_admissible_irf</a></span><span class="op">(</span><span class="va">post_sign</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
 <span></span>
 <span><span class="va">rep_irf</span><span class="op">$</span><span class="va">draw_index</span></span>
+<span><span class="co">#&gt; [1] 4</span></span>
 <span><span class="va">rep_irf</span><span class="op">$</span><span class="va">score</span></span>
+<span><span class="co">#&gt; [1] 0.0131408</span></span>
 <span></span>
 <span><span class="va">rep_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_irf</span><span class="op">)</span>,</span>
 <span>  <span class="va">variable</span> <span class="op">==</span> <span class="st">"productivity"</span> <span class="op">&amp;</span> <span class="va">shock</span> <span class="op">==</span> <span class="st">"productivity"</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">horizon</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">8</span>, <span class="fl">12</span><span class="op">)</span>,</span>
 <span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">variable</span>, <span class="va">shock</span>, <span class="va">horizon</span>, <span class="va">median</span>, <span class="va">draw_index</span>, <span class="va">method</span>, <span class="va">score</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">rep_path</span></span></code></pre></div>
+<span><span class="va">rep_path</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 7</span></span></span>
+<span><span class="co">#&gt;   variable     shock        horizon  median draw_index method              score</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> productivity productivity       0  0               4 most_likely_admis… 0.013<span style="text-decoration: underline;">1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> productivity productivity       4 -<span style="color: #BB0000;">0.138</span>           4 most_likely_admis… 0.013<span style="text-decoration: underline;">1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> productivity productivity       8 -<span style="color: #BB0000;">0.112</span>           4 most_likely_admis… 0.013<span style="text-decoration: underline;">1</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> productivity productivity      12 -<span style="color: #BB0000;">0.072</span><span style="color: #BB0000; text-decoration: underline;">9</span>          4 most_likely_admis… 0.013<span style="text-decoration: underline;">1</span></span></span></code></pre></div>
 <p>The <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method displays the selected impulse
 responses together with their pointwise posterior summaries. The red
 line represents the selected posterior draw. It is neither a credible
 interval nor a comparison of model specifications.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rep_irf</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">representative_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">rep_irf</span>, preset <span class="op">=</span> <span class="st">"paper"</span><span class="op">)</span></span></code></pre></div>
+<p>This plot object contains all response panels retained in
+<code>rep_irf</code>. The selected table above is only the
+productivity-to-productivity panel.</p>
 <p><code><a href="../reference/most_likely_admissible_cdm.html">most_likely_admissible_cdm()</a></code> applies the same criterion
 to cumulative dynamic responses computed for each posterior draw.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rep_cdm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/most_likely_admissible_cdm.html">most_likely_admissible_cdm</a></span><span class="op">(</span><span class="va">post_sign</span>, horizon <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_cdm</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rep_cdm</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rep_cdm</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 24</span></span></span>
+<span><span class="co">#&gt;   model object_type variable shock horizon    mean  median    sd   lower   upper</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> mode… cdm         product… prod…       0  0       0         <span style="color: #BB0000;">NA</span>  0       0     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> mode… cdm         product… prod…       1 -<span style="color: #BB0000;">0.028</span><span style="color: #BB0000; text-decoration: underline;">3</span> -<span style="color: #BB0000;">0.028</span><span style="color: #BB0000; text-decoration: underline;">3</span>    <span style="color: #BB0000;">NA</span> -<span style="color: #BB0000;">0.028</span><span style="color: #BB0000; text-decoration: underline;">3</span> -<span style="color: #BB0000;">0.028</span><span style="color: #BB0000; text-decoration: underline;">3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> mode… cdm         product… prod…       2 -<span style="color: #BB0000;">0.096</span><span style="color: #BB0000; text-decoration: underline;">5</span> -<span style="color: #BB0000;">0.096</span><span style="color: #BB0000; text-decoration: underline;">5</span>    <span style="color: #BB0000;">NA</span> -<span style="color: #BB0000;">0.096</span><span style="color: #BB0000; text-decoration: underline;">5</span> -<span style="color: #BB0000;">0.096</span><span style="color: #BB0000; text-decoration: underline;">5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> mode… cdm         product… prod…       3 -<span style="color: #BB0000;">0.233</span>  -<span style="color: #BB0000;">0.233</span>     <span style="color: #BB0000;">NA</span> -<span style="color: #BB0000;">0.233</span>  -<span style="color: #BB0000;">0.233</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> mode… cdm         product… prod…       4 -<span style="color: #BB0000;">0.371</span>  -<span style="color: #BB0000;">0.371</span>     <span style="color: #BB0000;">NA</span> -<span style="color: #BB0000;">0.371</span>  -<span style="color: #BB0000;">0.371</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> mode… cdm         product… prod…       5 -<span style="color: #BB0000;">0.511</span>  -<span style="color: #BB0000;">0.511</span>     <span style="color: #BB0000;">NA</span> -<span style="color: #BB0000;">0.511</span>  -<span style="color: #BB0000;">0.511</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: analysis_type &lt;chr&gt;, interval_probability &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   interval_method &lt;chr&gt;, scale_by &lt;chr&gt;, scale_var &lt;chr&gt;, scale_factor &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   units &lt;chr&gt;, source_package &lt;chr&gt;, source_version &lt;chr&gt;, n_draws &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   draw_index &lt;int&gt;, selected_draw_id &lt;chr&gt;, method &lt;chr&gt;, score &lt;dbl&gt;</span></span></span>
+<span><span class="va">representative_cdm_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/publish_bsvar_plot.html">publish_bsvar_plot</a></span><span class="op">(</span><span class="va">rep_cdm</span>, preset <span class="op">=</span> <span class="st">"paper"</span><span class="op">)</span></span></code></pre></div>
 <p>The two functions answer different empirical questions. The first
 selects a draw using impulse responses, whereas the second uses
 cumulative dynamic responses. Therefore, they need not select the same
@@ -190,9 +230,15 @@ posterior probability is estimated by the proportion of stored posterior
 draws that satisfy it.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">audit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/restriction_audit.html">restriction_audit</a></span><span class="op">(</span><span class="va">post_sign</span>, zero_tol <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
 <span><span class="va">audit_focus</span> <span class="op">&lt;-</span> <span class="va">audit</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"restriction_type"</span>, <span class="st">"restriction"</span>, <span class="st">"relation"</span>,</span>
 <span>                         <span class="st">"posterior_prob"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="va">audit_focus</span></span></code></pre></div>
+<span><span class="va">audit_focus</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt;   restriction_type restriction                         relation posterior_prob</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> irf_zero         irf[productivity,productivity,0]==0 ==0                   1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> irf_sign         irf[stock_prices,productivity,0]&gt;0  &gt;0                    1</span></span></code></pre></div>
 <p>The argument <code>zero_tol</code> sets the numerical tolerance for
 zero restrictions. Its value should be chosen with respect to the scale
 of the responses and reported with the results.</p>
@@ -202,6 +248,14 @@ their presentation but not their definitions.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_restriction_audit.html">plot_restriction_audit</a></span><span class="op">(</span><span class="va">audit</span>, label_style <span class="op">=</span> <span class="st">"pretty"</span>,</span>
 <span>  restriction_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf_sign"</span>, <span class="st">"irf_zero"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="sign-restricted-workflows_files/figure-html/plot-restrictions-1.png" class="r-plt" alt="" width="672"></p>
+<p>Restrictions imposed during estimation should generally have
+satisfaction probabilities near one, allowing for numerical precision
+and the chosen zero tolerance. A low value calls for investigation of
+the restriction definition, response scale and tolerance; it is not
+automatically evidence against the identifying assumption. A fitted
+restricted posterior cannot independently validate assumptions already
+imposed on it.</p>
 <p>These probabilities are conditional on the estimated posterior
 distribution and, for zero restrictions, on the chosen tolerance. They
 are not sampler acceptance rates and do not describe the concentration
@@ -211,34 +265,54 @@ of admissible posterior draws.</p>
 <h2 id="posterior-sample-diagnostics">Posterior sample diagnostics<a class="anchor" aria-label="anchor" href="#posterior-sample-diagnostics"></a>
 </h2>
 <p><code><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics()</a></code> summarises the stored posterior
-sample. It reports the number of draws, effective sample size,
-<code>max_tries</code>, the numbers of restrictions, and the
-distribution of admissibility weights.</p>
+sample. It reports the number of draws, importance-weight effective
+sample size, <code>max_tries</code>, the numbers of restrictions, and
+the distribution of admissibility weights.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">diag</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/acceptance_diagnostics.html">acceptance_diagnostics</a></span><span class="op">(</span><span class="va">post_sign</span>, ess_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  sparse_threshold <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">diag</span>,</span>
 <span>  <span class="va">metric</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="st">"posterior_draws"</span>, <span class="st">"effective_sample_size"</span>, <span class="st">"max_tries"</span>,</span>
 <span>    <span class="st">"kernel_zero_share"</span>, <span class="st">"kernel_cv"</span><span class="op">)</span>,</span>
-<span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">metric</span>, <span class="va">value</span>, <span class="va">flag</span>, <span class="va">message</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code>effective_sample_size</code> measures the effective number of
-posterior draws. <code>kernel_zero_share</code> is the proportion of
-approximately zero admissibility weights, and <code>kernel_cv</code>
-measures their relative dispersion. The restriction counts and
-<code>max_tries</code> describe the search for admissible rotations.</p>
+<span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">metric</span>, <span class="va">value</span>, <span class="va">flag</span>, <span class="va">message</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 4</span></span></span>
+<span><span class="co">#&gt;   metric                  value flag  message                                   </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> posterior_draws       200     FALSE <span style="color: #949494;">""</span>                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> effective_sample_size  72.3   TRUE  <span style="color: #949494;">"</span>ESS below threshold.<span style="color: #949494;">"</span>                    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> max_tries             <span style="color: #BB0000;">Inf</span>     FALSE <span style="color: #949494;">""</span>                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> kernel_zero_share       0.11  TRUE  <span style="color: #949494;">"</span>Large share of near-zero admissibility w…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> kernel_cv               0.715 FALSE <span style="color: #949494;">""</span></span></span></code></pre></div>
+<p><code>effective_sample_size</code> reports the upstream
+importance-weight ESS,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mo>∑</mo><mi>s</mi></msub><msub><mi>w</mi><mi>s</mi></msub><msup><mo stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi>/</mi><msub><mo>∑</mo><mi>s</mi></msub><msubsup><mi>w</mi><mi>s</mi><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">(\sum_s w_s)^2 / \sum_s w_s^2</annotation></semantics></math>,
+computed before weighted resampling. It describes concentration of
+importance weights, not an autocorrelation-based MCMC convergence
+diagnostic. It cannot establish convergence or mixing.
+<code>kernel_zero_share</code> is the proportion of approximately zero
+admissibility weights, and <code>kernel_cv</code> measures their
+relative dispersion. The restriction counts and <code>max_tries</code>
+describe the search for admissible rotations.</p>
 <p>The thresholds indicate a small effective sample or limited
 admissibility support. They are not general decision rules. Moreover,
 the stored posterior object does not contain the complete sequence of
 proposed and rejected draws.</p>
-<p>The following figure presents these diagnostics for the
-sign-restricted model above using 200 retained posterior draws.</p>
-<p><img src="figures/diagnostics-showcase.png" class="r-plt" alt="Posterior-sample and admissibility diagnostics for a sign-restricted model" width="100%"></p>
+<p>The following plot uses exactly the loaded 200-draw baseline.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span><span class="va">diag</span>,</span>
+<code class="sourceCode R"><span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span><span class="va">diag</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span>, <span class="st">"kernel_cv"</span><span class="op">)</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Stored-sample diagnostics"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/diagnostics-showcase.png" class="r-plt" alt="Importance-weight ESS and stored-sample weight concentration" width="100%"><p class="caption">
+Baseline p=4, 200 retained draws: upstream importance-weight ESS and
+reconstructed admissibility-weight concentration. Red markers flag the
+illustrative diagnostic thresholds. These metrics are neither an MCMC
+convergence check nor sampler acceptance rates.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="historical-decompositions">Historical decompositions<a class="anchor" aria-label="anchor" href="#historical-decompositions"></a>
@@ -246,10 +320,34 @@ sign-restricted model above using 200 retained posterior draws.</p>
 <p>Historical decompositions attribute the observed series to the
 estimated structural shocks. For a selected period, the posterior
 contributions can be reported in levels or as proportions of their total
-magnitude. The figures below present both summaries over observations 1
-to 4.</p>
-<p><img src="figures/hd-event-showcase.png" class="r-plt" alt="Posterior structural-shock contributions over observations one to four" width="100%"></p>
-<p><img src="figures/hd-event-share-showcase.png" class="r-plt" alt="Proportional structural-shock contributions over observations one to four" width="100%"></p>
+magnitude. The figures below focus on productivity and present both
+summaries over observations 1 to 4.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hd_event.html">plot_hd_event</a></span><span class="op">(</span><span class="va">post_sign</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"productivity"</span>, probability <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Productivity contribution (model units)"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Event start (observations 1–4)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/hd-event-showcase.png" class="r-plt" alt="Posterior structural-shock contributions over observations one to four" width="100%"><p class="caption">
+Structural-shock contributions summed within each draw over observations
+1–4. Productivity is in the transformed model-data units (optimism
+multiplied by 100). Points and intervals show posterior medians and 90%
+equal-tailed intervals.
+</p>
+</div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">figure</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_hd_event_share.html">plot_hd_event_share</a></span><span class="op">(</span><span class="va">post_sign</span>, start <span class="op">=</span> <span class="fl">1</span>, end <span class="op">=</span> <span class="fl">4</span>, top_n <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  variables <span class="op">=</span> <span class="st">"productivity"</span>,</span>
+<span>  probability <span class="op">=</span> <span class="fl">0.90</span>, share <span class="op">=</span> <span class="st">"absolute"</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="figures/hd-event-share-showcase.png" class="r-plt" alt="Proportional structural-shock contributions over observations one to four" width="100%"><p class="caption">
+Absolute shares of event productivity contributions over observations
+1–4: four contributors and Other. Shares are unitless and describe
+absolute magnitude rather than signed net contributions; the plot shows
+the absolute value of each median contribution divided by their sum.
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="comparison-of-model-specifications">Comparison of model specifications<a class="anchor" aria-label="anchor" href="#comparison-of-model-specifications"></a>
@@ -259,37 +357,62 @@ across alternative sign-restricted specifications. The specifications
 should contain the same variables and comparable identifying
 restrictions. The argument names identify the specifications in the
 resulting tables.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spec_sign_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvarSIGNs</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimism</span> <span class="op">*</span> <span class="fl">100</span>, p <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>  sign_irf <span class="op">=</span> <span class="va">sign_irf</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">456</span><span class="op">)</span></span>
-<span><span class="va">post_sign_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_sign_alt</span>, S <span class="op">=</span> <span class="fl">2000</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>The loaded <code>post_sign_alt</code> uses the same restrictions and
+input with two lags.</p>
 <p>The restriction probabilities and posterior sample diagnostics are
 computed separately.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">restriction_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_restrictions.html">compare_restrictions</a></span><span class="op">(</span>baseline <span class="op">=</span> <span class="va">post_sign</span>,</span>
 <span>  shorter_lag <span class="op">=</span> <span class="va">post_sign_alt</span>, zero_tol <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
 <span></span>
 <span><span class="va">diagnostic_comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics</a></span><span class="op">(</span></span>
 <span>  baseline <span class="op">=</span> <span class="va">post_sign</span>,</span>
 <span>  shorter_lag <span class="op">=</span> <span class="va">post_sign_alt</span>,</span>
 <span>  ess_threshold <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  sparse_threshold <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span></code></pre></div>
+<span>  sparse_threshold <span class="op">=</span> <span class="fl">0.10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span>
+<span><span class="co">#&gt; Argument standardise is forcibly set to FALSE due to zero restrictions imposed on the diagonal element(s) of the on-impact impulse response matrix.</span></span></code></pre></div>
 <p><code><a href="../reference/compare_restrictions.html">compare_restrictions()</a></code> reports posterior restriction
 probabilities for each specification.
 <code><a href="../reference/compare_acceptance_diagnostics.html">compare_acceptance_diagnostics()</a></code> reports the corresponding
 posterior sample diagnostics. These comparisons describe the estimated
 posterior distributions and do not rank the economic plausibility of the
 identifying assumptions.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_compare_restrictions.html">plot_compare_restrictions</a></span><span class="op">(</span><span class="va">restriction_comparison</span>,</span>
-<span>  restriction_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf_sign"</span>, <span class="st">"irf_zero"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
+<span>  restriction_types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"irf_sign"</span>, <span class="st">"irf_zero"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="sign-restricted-workflows_files/figure-html/plot-sign-comparisons-1.png" class="r-plt" alt="" width="672"></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/plot_acceptance_diagnostics.html">plot_acceptance_diagnostics</a></span><span class="op">(</span></span>
 <span>  <span class="va">diagnostic_comparison</span>,</span>
 <span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"effective_sample_size"</span>, <span class="st">"kernel_zero_share"</span>, <span class="st">"kernel_cv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="sign-restricted-workflows_files/figure-html/plot-sign-comparisons-2.png" class="r-plt" alt="" width="672"></p>
+</div>
+<div class="section level2">
+<h2 id="estimate-your-own-sign-models">Estimate your own sign models<a class="anchor" aria-label="anchor" href="#estimate-your-own-sign-models"></a>
+</h2>
+<p>This recipe matches the bundled settings and frozen input. The
+demonstration sampling length is not a research recommendation.
+Numerical results can change with R or upstream versions even with the
+same seeds.</p>
+<!-- documentation-skip: estimation -->
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">optimism_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"optimism.rds"</span>,</span>
+<span>  package <span class="op">=</span> <span class="st">"bsvarPost"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">sign_irf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA_real_</span>, <span class="fl">23</span><span class="op">)</span><span class="op">)</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span><span class="va">spec_sign</span> <span class="op">&lt;-</span> <span class="fu">bsvarSIGNs</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimism_data</span> <span class="op">*</span> <span class="fl">100</span>, p <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>  sign_irf <span class="op">=</span> <span class="va">sign_irf</span><span class="op">)</span></span>
+<span><span class="va">post_sign</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_sign</span>, S <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">456</span><span class="op">)</span></span>
+<span><span class="va">spec_sign_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvarSIGNs</span><span class="fu">::</span><span class="va"><a href="https://bsvars.org/bsvarSIGNs/reference/specify_bsvarSIGN.html" class="external-link">specify_bsvarSIGN</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">optimism_data</span> <span class="op">*</span> <span class="fl">100</span>, p <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  sign_irf <span class="op">=</span> <span class="va">sign_irf</span><span class="op">)</span></span>
+<span><span class="va">post_sign_alt</span> <span class="op">&lt;-</span> <span class="fu">bsvars</span><span class="fu">::</span><span class="fu"><a href="https://bsvars.org/bsvars/reference/estimate.html" class="external-link">estimate</a></span><span class="op">(</span><span class="va">spec_sign_alt</span>, S <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  show_progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
