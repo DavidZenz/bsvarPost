@@ -78,9 +78,13 @@ cdm(object, ...)
 
 \item{probability}{Probability mass of the equal-tailed credible interval.}
 
-\item{scale_by}{Optional scaling mode for CDMs.}
+\item{scale_by}{Either \code{"none"} or \code{"shock_sd"}. The latter divides each
+cumulative response by the selected observed variable's sample standard
+deviation, computed from the fitted sample.}
 
-\item{scale_var}{Optional scaling variable specification.}
+\item{scale_var}{Observed variable name or index used for \code{shock_sd} scaling;
+a scalar applies to every shock, or supply one entry per shock. With \code{NULL},
+variables are matched to shocks by position.}
 }
 \value{
 A 4-dimensional array of class \code{PosteriorCDM} with dimensions
@@ -91,6 +95,15 @@ Each draw from the posterior distribution of the impulse responses is
 transformed into a draw from the posterior distribution of cumulative
 dynamic multipliers by summing responses from horizon zero onwards.
 }
+\section{Interpretation}{
+
+The cumulative response at horizon \code{H} sums draw-level impulse responses
+from zero through \code{H} (inclusive). Units follow the input transformations
+and fitted structural-shock normalization. For log-level data this is a
+cumulative log response, not a dollar-per-dollar fiscal multiplier.
+\code{shock_sd} scaling does not form an output-to-spending response ratio.
+}
+
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

@@ -6,13 +6,22 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-<!-- generated-by: gsd-doc-writer -->
-
-```{r, include = FALSE}
+```{r formatting, include=FALSE, purl=FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+## Load the demonstration models
+
+These fits contain 200 retained draws each, for illustration rather than
+sampling-adequacy claims. Use `?posterior_provenance` for column definitions;
+use `help(package = "bsvarPost")` for offline function documentation.
+
+```{r load-fiscal}
 library(bsvarPost)
-post <- readRDS("fixtures/fiscal_post_bsvar.rds")
-post_alt <- readRDS("fixtures/fiscal_post_bsvar_alt.rds")
+post <- readRDS(system.file("extdata", "fiscal_post_bsvar.rds",
+  package = "bsvarPost", mustWork = TRUE))
+post_alt <- readRDS(system.file("extdata", "fiscal_post_bsvar_alt.rds",
+  package = "bsvarPost", mustWork = TRUE))
 ```
 
 This vignette presents posterior inference and model comparison for quantities
@@ -49,12 +58,18 @@ subset(
 Differences in posterior medians or credible intervals describe sensitivity to
 the model specification. They do not provide a formal model-selection
 criterion. The corresponding functions compare
-[CDMs](../reference/compare_cdm.html),
-[FEVDs](../reference/compare_fevd.html),
-[forecasts](../reference/compare_forecast.html), and
-[historical-decomposition events](../reference/compare_hd_event.html).
+[CDMs](https://davidzenz.github.io/bsvarPost/reference/compare_cdm.html),
+[FEVDs](https://davidzenz.github.io/bsvarPost/reference/compare_fevd.html),
+[forecasts](https://davidzenz.github.io/bsvarPost/reference/compare_forecast.html), and
+[historical-decomposition events](https://davidzenz.github.io/bsvarPost/reference/compare_hd_event.html).
 
-```{r comparison-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior impulse responses under two model specifications"}
+```{r fig-compare-irf}
+comparison_gdp <- subset(comparison, variable == "gdp" & shock == "gs")
+figure <- ggplot2::autoplot(comparison_gdp) +
+  ggplot2::labs(x = "Quarters after shock", y = "GDP log response")
+```
+
+```{r comparison-figure, fig.cap="GDP IRF to gs, horizons 0–12. Baseline p=1 and longer_lag p=3; lines and ribbons are medians and pointwise 90% equal-tailed intervals in original log units, without additional scaling.", echo = FALSE, purl=FALSE, out.width = "100%", fig.alt = "Posterior impulse responses under two model specifications"}
 knitr::include_graphics("figures/compare-irf-showcase.png")
 ```
 
@@ -84,10 +99,15 @@ The `posterior_prob` column gives the posterior probability of the inequality,
 conditional on the model specification; it is not a p-value. The gap columns
 summarise the posterior distribution of the response minus the threshold and
 retain information about the magnitude of the response. The
-[`hypothesis_cdm()`](../reference/hypothesis_cdm.html) function provides the
+[`hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/hypothesis_cdm.html) function provides the
 corresponding inference for cumulative responses.
 
-```{r hypothesis-figure, echo = FALSE, out.width = "100%", fig.alt = "Posterior probability that an impulse response is positive at each horizon"}
+```{r fig-hypothesis}
+figure <- plot_hypothesis(post, type = "irf", variable = "gdp", shock = "gs",
+  horizon = 0:12, relation = ">", value = 0)
+```
+
+```{r hypothesis-figure, fig.cap="Posterior probability that the GDP response to gs is above zero at each horizon 0–12. These are probabilities, not response magnitudes or credible intervals.", echo = FALSE, purl=FALSE, out.width = "100%", fig.alt = "Posterior probability that an impulse response is positive at each horizon"}
 knitr::include_graphics("figures/hypothesis-showcase.png")
 ```
 
@@ -114,14 +134,15 @@ positive_path[, c("posterior_prob", "n_constraints")]
 The joint posterior probability can be considerably smaller than the pointwise
 probabilities because all nine inequalities must hold in the same posterior
 draw. The
-[`joint_hypothesis_cdm()`](../reference/joint_hypothesis_cdm.html) function
+[`joint_hypothesis_cdm()`](https://davidzenz.github.io/bsvarPost/reference/joint_hypothesis_cdm.html) function
 provides the corresponding inference for cumulative response paths.
 
 ### Posterior probabilities for response magnitudes
 
 A sign hypothesis does not describe the magnitude of the response. Suppose
-`0.001` is a prespecified, economically meaningful value on the scale used to
-estimate the model. The `magnitude_audit()` function reports the posterior
+`0.001` log units (approximately a 0.1% change in GDP) is a
+prespecified threshold for illustration. Its economic relevance must be justified
+for the application, rather than inferred from this example. The `magnitude_audit()` function reports the posterior
 probability that the absolute response exceeds this threshold at horizon 8.
 
 ```{r magnitude-question, warning = FALSE}
@@ -144,7 +165,7 @@ The threshold should be determined by the variable transformation and the
 empirical application rather than selected from the posterior results. Setting
 `type = "cdm"` gives the corresponding probability for cumulative dynamic
 multipliers. The available scaling options are documented in
-[`magnitude_audit()`](../reference/magnitude_audit.html).
+[`magnitude_audit()`](https://davidzenz.github.io/bsvarPost/reference/magnitude_audit.html).
 
 ## Simultaneous credible bands
 
@@ -171,9 +192,9 @@ gdp_band[gdp_band$horizon %in% c(0, 4, 8, 12),
 
 The band is conditional on the response variables, structural shocks, and
 horizons used in its construction. Expanding this set generally widens the
-band. The [`simultaneous_cdm()`](../reference/simultaneous_cdm.html) function
+band. The [`simultaneous_cdm()`](https://davidzenz.github.io/bsvarPost/reference/simultaneous_cdm.html) function
 constructs simultaneous bands for cumulative responses, and
-[`plot_simultaneous()`](../reference/plot_simultaneous.html) plots the resulting
+[`plot_simultaneous()`](https://davidzenz.github.io/bsvarPost/reference/plot_simultaneous.html) plots the resulting
 response paths.
 
 ## Representative posterior draws
@@ -204,13 +225,13 @@ This selection provides one internally consistent structural model for
 calculations that require a single draw. It is not a measure of posterior
 uncertainty; the posterior distribution and its credible intervals should be
 reported separately. The same selection is available for
-[CDMs](../reference/median_target_cdm.html). For sign-restricted models, the
-[most-likely admissible draw](../reference/most_likely_admissible_irf.html)
+[CDMs](https://davidzenz.github.io/bsvarPost/reference/median_target_cdm.html). For sign-restricted models, the
+[most-likely admissible draw](https://davidzenz.github.io/bsvarPost/reference/most_likely_admissible_irf.html)
 provides a distinct representative selection.
 
-```{r representative-figure, echo = FALSE, out.width = "100%", fig.alt = "Representative posterior draw and pointwise posterior summary"}
-knitr::include_graphics("figures/representative-showcase.png")
-```
+The introduction shows a [filtered representative-path plot](bsvarPost.html#select-one-representative-draw).
+Here the selection includes both GDP and spending; it can therefore select a
+different draw.
 
 ## Timing and persistence of responses
 
@@ -218,7 +239,10 @@ The response-timing functions compute each timing quantity for every posterior
 draw and then summarise its posterior distribution. Thus, inference about
 timing does not rely on a single posterior median response. The example below
 analyses persistence in the response of government spending to its own shock
-over 20 quarters.
+over 20 quarters. This longer horizon is chosen to examine persistence beyond
+the introductory 12-quarter window. The threshold `0.015` is in log spending
+units (approximately 1.5%), under the model's structural-shock normalization;
+it is an illustrative cutoff rather than a generally meaningful benchmark.
 
 ```{r response-timing}
 peak <- peak_response(post, horizon = 20, variables = "gs", shocks = "gs",
@@ -250,9 +274,9 @@ probability that the event occurs within the selected horizon. The conditional
 median should be interpreted together with this probability.
 `peak_response()` also reports the posterior distribution of the peak value.
 Alternative definitions are available for
-[`duration_response()`](../reference/duration_response.html),
-[`half_life_response()`](../reference/half_life_response.html), and
-[`time_to_threshold()`](../reference/time_to_threshold.html).
+[`duration_response()`](https://davidzenz.github.io/bsvarPost/reference/duration_response.html),
+[`half_life_response()`](https://davidzenz.github.io/bsvarPost/reference/half_life_response.html), and
+[`time_to_threshold()`](https://davidzenz.github.io/bsvarPost/reference/time_to_threshold.html).
 
 ## Summary of posterior inference
 

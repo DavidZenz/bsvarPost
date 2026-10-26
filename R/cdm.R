@@ -4,11 +4,22 @@
 #' transformed into a draw from the posterior distribution of cumulative
 #' dynamic multipliers by summing responses from horizon zero onwards.
 #'
+#' @section Interpretation:
+#' The cumulative response at horizon `H` sums draw-level impulse responses
+#' from zero through `H` (inclusive). Units follow the input transformations
+#' and fitted structural-shock normalization. For log-level data this is a
+#' cumulative log response, not a dollar-per-dollar fiscal multiplier.
+#' `shock_sd` scaling does not form an output-to-spending response ratio.
+#'
 #' @param object A posterior model object.
 #' @param horizon Forecast horizon.
 #' @param probability Probability mass of the equal-tailed credible interval.
-#' @param scale_by Optional scaling mode for CDMs.
-#' @param scale_var Optional scaling variable specification.
+#' @param scale_by Either `"none"` or `"shock_sd"`. The latter divides each
+#'   cumulative response by the selected observed variable's sample standard
+#'   deviation, computed from the fitted sample.
+#' @param scale_var Observed variable name or index used for `shock_sd` scaling;
+#'   a scalar applies to every shock, or supply one entry per shock. With `NULL`,
+#'   variables are matched to shocks by position.
 #' @param ... Additional arguments passed to methods.
 #' @return A 4-dimensional array of class \code{PosteriorCDM} with dimensions
 #'   \code{[variables x shocks x (horizon + 1) x draws]}.

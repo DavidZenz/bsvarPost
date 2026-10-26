@@ -6,7 +6,6 @@
 ^tools$
 ^tools/
 ^_pkgdown\.yml$
-^index\.md$
 ^\.planning$
 ^\.planning/
 ^\.claude$
@@ -15,3 +14,4 @@
 ^\.git/
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^Rplots\.pdf$
