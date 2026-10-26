@@ -150,8 +150,11 @@ multipliers. The available scaling options are documented in
 
 Ordinary credible intervals provide pointwise coverage. A 90% simultaneous
 credible band uses one sup-norm critical value for the selected response path,
-such that 90% of posterior draws lie within the band over the complete
-selection.
+such that at least 90% of retained posterior draws lie within the band over the
+complete selection. The critical value is an empirical order statistic; ties
+can increase the coverage. `achieved_coverage` reports the fraction actually
+covered. This is a finite-sample statement, not an exact guarantee about the
+underlying posterior distribution.
 
 ```{r simultaneous-band}
 gdp_band <- simultaneous_irf(
@@ -163,7 +166,7 @@ gdp_band <- simultaneous_irf(
 )
 
 gdp_band[gdp_band$horizon %in% c(0, 4, 8, 12),
-         c("horizon", "median", "lower", "upper", "simultaneous_prob")]
+         c("horizon", "median", "lower", "upper", "simultaneous_prob", "achieved_coverage")]
 ```
 
 The band is conditional on the response variables, structural shocks, and

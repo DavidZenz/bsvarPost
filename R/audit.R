@@ -14,8 +14,14 @@
 #' @examples
 #' r <- irf_restriction("gdp", "gdp", 0, sign = 1)
 #' print(r)
+#' @seealso [posterior_provenance]
 #' @export
 irf_restriction <- function(variable, shock, horizon, sign = NULL, zero = FALSE) {
+  validate_selector(variable, "variable")
+  validate_selector(shock, "shock")
+  validate_horizon(horizon)
+  validate_flag(zero, "zero")
+  if (!zero) validate_restriction_sign(sign)
   structure(
     list(variable = variable, shock = shock, horizon = horizon, sign = sign, zero = zero),
     class = c("bsvar_post_irf_restriction", "bsvar_post_restriction")
@@ -38,6 +44,9 @@ irf_restriction <- function(variable, shock, horizon, sign = NULL, zero = FALSE)
 #' print(r)
 #' @export
 structural_restriction <- function(variable, shock, sign) {
+  validate_selector(variable, "variable")
+  validate_selector(shock, "shock")
+  validate_restriction_sign(sign)
   structure(
     list(variable = variable, shock = shock, sign = sign),
     class = c("bsvar_post_structural_restriction", "bsvar_post_restriction")
@@ -63,6 +72,15 @@ structural_restriction <- function(variable, shock, sign) {
 #' print(r)
 #' @export
 narrative_restriction <- function(start, periods = 1, type = c("S", "A", "B"), sign = 1, shock = 1, var = NA) {
+  type <- match.arg(type)
+  validate_horizon(start, "start", allow_zero = FALSE)
+  validate_horizon(periods, "periods", allow_zero = FALSE)
+  validate_horizon(shock, "shock", allow_zero = FALSE)
+  validate_restriction_sign(sign)
+  if (length(var) != 1L || (!identical(type, "S") && is.na(var))) {
+    stop("Narrative types A and B require a single variable index.", call. = FALSE)
+  }
+  if (!is.na(var)) validate_horizon(var, "var", allow_zero = FALSE)
   structure(
     list(start = start, periods = periods, type = match.arg(type), sign = sign, shock = shock, var = var),
     class = c("bsvar_post_narrative_restriction", "bsvar_post_restriction")
@@ -164,7 +182,7 @@ extract_default_restrictions <- function(object) {
 
 normalise_restrictions <- function(object, restrictions = NULL) {
   restrictions <- restrictions %||% extract_default_restrictions(object)
-  if (!is.list(restrictions) || !all(vapply(restrictions, inherits, logical(1), what = "bsvar_post_restriction"))) {
+  if (!is.list(restrictions) || !length(restrictions) || !all(vapply(restrictions, inherits, logical(1), what = "bsvar_post_restriction"))) {
     stop("`restrictions` must be a list of bsvarPost restriction helper objects.", call. = FALSE)
   }
   restrictions
@@ -181,6 +199,13 @@ restriction_max_horizon <- function(restrictions) {
 }
 
 prepare_audit_context <- function(object, restrictions, probability = 0.90) {
+  validate_posterior_object(object)
+  validate_probability(probability)
+  for (item in restrictions) {
+    if (inherits(item, "bsvar_post_narrative_restriction")) {
+      validate_narrative_bounds(item, object)
+    }
+  }
   needs_irf <- any(vapply(restrictions, inherits, logical(1), what = "bsvar_post_irf_restriction")) ||
     any(vapply(restrictions, inherits, logical(1), what = "bsvar_post_narrative_restriction"))
   needs_structural <- any(vapply(restrictions, inherits, logical(1), what = "bsvar_post_structural_restriction"))
@@ -192,6 +217,13 @@ prepare_audit_context <- function(object, restrictions, probability = 0.90) {
   }
   if (needs_structural) {
     out$structural <- object$posterior$B
+    d <- dim(out$structural)
+    labels <- infer_model_variable_names(object, n = d[1])
+    if (!is.null(labels) && length(labels) == d[1] && d[1] == d[2]) {
+      dimnames(out$structural) <- resolve_array_dimnames(out$structural, list(
+        labels, labels, as.character(seq_len(d[3]))
+      ))
+    }
   }
   if (needs_narrative) {
     if (!inherits(object, "PosteriorBSVARSIGN")) {
@@ -318,6 +350,7 @@ audit_narrative_restriction <- function(restriction, shocks, reduced_irf, p = 0L
 #' @export
 restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
                               probability = 0.90, model = "model1", ...) {
+  validate_scalar_number(zero_tol, "zero_tol", lower = 0)
   restrictions <- normalise_restrictions(object, restrictions)
   ctx <- prepare_audit_context(object, restrictions, probability = probability)
 
@@ -337,7 +370,7 @@ restriction_audit <- function(object, restrictions = NULL, zero_tol = 1e-8,
 
   out <- do.call(rbind, rows)
   out <- out[, c("model", "restriction_type", "restriction", "variable", "shock", "horizon", "relation", "posterior_prob", "mean", "median", "lower", "upper")]
-  new_bsvar_post_tbl(out, object_type = "restriction_audit", draws = FALSE)
+  with_post_provenance(new_bsvar_post_tbl(out, object_type = "restriction_audit", draws = FALSE), source = object, probability = probability)
 }
 
 #' Evaluates magnitude hypotheses for impulse responses or cumulative multipliers
@@ -370,8 +403,8 @@ magnitude_audit <- function(object, type = c("irf", "cdm"), variable, shock, hor
   out <- if (identical(type, "irf")) {
     hypothesis_irf(
       object,
-      variable = variable,
-      shock = shock,
+      variables = variable,
+      shocks = shock,
       horizon = horizon,
       relation = relation,
       value = value,
@@ -385,8 +418,8 @@ magnitude_audit <- function(object, type = c("irf", "cdm"), variable, shock, hor
   } else {
     hypothesis_cdm(
       object,
-      variable = variable,
-      shock = shock,
+      variables = variable,
+      shocks = shock,
       horizon = horizon,
       relation = relation,
       value = value,

@@ -80,3 +80,72 @@ jobs:
             *.Rcheck/00check.log
             *.Rcheck/00install.out
           if-no-files-found: warn
+
+  minimum-and-minimal:
+    name: R ${{ matrix.r }} with minimal optional dependencies
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        r: ['4.1', 'release']
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      _R_CHECK_FORCE_SUGGESTS_: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r }}
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache: false
+          dependencies: '"hard"'
+          extra-packages: |
+            any::tinytest
+            any::knitr
+      - name: Confirm integration packages are absent
+        shell: Rscript {0}
+        run: |
+          optional <- c("APRScenario", "flextable", "gt", "tsibble")
+          stopifnot(!any(vapply(optional, requireNamespace, logical(1), quietly = TRUE)))
+      - name: Install and test
+        shell: bash
+        run: |
+          R CMD INSTALL .
+          Rscript --vanilla -e 'tinytest::test_package("bsvarPost")'
+
+  optional-integrations-and-coverage:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          dependencies: '"all"'
+          extra-packages: any::covr
+      - name: Confirm integration packages are installed
+        shell: Rscript {0}
+        run: |
+          optional <- c("APRScenario", "flextable", "gt", "tsibble")
+          stopifnot(all(vapply(optional, requireNamespace, logical(1), quietly = TRUE)))
+      - name: Run instrumented tests and save coverage
+        shell: Rscript {0}
+        run: |
+          coverage <- covr::package_coverage(type = "tests")
+          output <- file.path(Sys.getenv("RUNNER_TEMP"), "coverage")
+          dir.create(output, recursive = TRUE, showWarnings = FALSE)
+          covr::to_cobertura(coverage, filename = file.path(output, "cobertura.xml"))
+          utils::write.csv(as.data.frame(coverage), file.path(output, "coverage.csv"), row.names = FALSE)
+          print(coverage)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: runtime-coverage
+          path: ${{ runner.temp }}/coverage
+          if-no-files-found: warn

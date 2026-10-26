@@ -28,6 +28,7 @@
 #'
 #' rep_irf <- representative_irf(post, horizon = 3)
 #' rep_irf$draw_index
+#' @seealso [posterior_provenance]
 #' @export
 representative_irf <- function(object, ...) {
   UseMethod("representative_irf")
@@ -282,6 +283,9 @@ summary_representative <- function(object) {
     draws = FALSE
   )
   tbl$draw_index <- object$draw_index
+  labels <- dimnames(object$posterior_draws)[[4]] %||% as.character(seq_len(dim(object$posterior_draws)[4]))
+  tbl$selected_draw_id <- labels[object$draw_index]
+  tbl$n_draws <- rep(as.integer(dim(object$posterior_draws)[4]), nrow(tbl))
   tbl$method <- object$method
   tbl$score <- object$score
   new_bsvar_post_tbl(tbl, object_type = object$object_type, draws = FALSE)

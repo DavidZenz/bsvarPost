@@ -2,7 +2,11 @@
 #'
 #' Transforms posterior draws of selected impulse responses into simultaneous
 #' credible bands using the empirical sup-norm around the posterior median
-#' response path.
+#' response path. The empirical order statistic covers at least the requested
+#' fraction of retained draws over the complete selection. Ties can increase
+#' coverage. This is not a guarantee of exact population posterior coverage.
+#' Boundaries are rounded outward when necessary to retain the empirical
+#' guarantee in floating-point arithmetic.
 #'
 #' @param object A posterior model object or a `PosteriorIR` object.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
@@ -17,7 +21,8 @@
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
 #'   \code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
-#'   and \code{critical_value}.
+#'   \code{achieved_coverage}, and \code{critical_value}. Additional provenance
+#'   columns are described in [posterior_provenance].
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -42,11 +47,26 @@ simultaneous_irf.default <- function(object, ...) {
 
 simultaneous_band_impl <- function(draws, object_type, probability = 0.90,
                                    variables = NULL, shocks = NULL, model = "model1") {
+  validate_probability(probability)
   subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
   mat <- draw_matrix(subset$draws)
   target <- apply(mat, 1, stats::median)
   max_dev <- apply(abs(mat - target), 2, max)
-  crit <- stats::quantile(max_dev, probs = probability, names = FALSE)
+  # The type-1 empirical quantile is the ceiling(p * S)-th order statistic.
+  # Selecting it explicitly avoids version-dependent quantile fuzz policies.
+  index <- ceiling(probability * ncol(mat))
+  crit <- sort(max_dev, partial = index)[index]
+  lower <- target - crit
+  upper <- target + crit
+  coverage <- mean(colSums(mat < lower | mat > upper) == 0L)
+  if (coverage < probability) {
+    # Subtraction and addition need not round in opposite directions. Retain
+    # every draw selected by the empirical critical value at actual boundaries.
+    selected <- mat[, max_dev <= crit, drop = FALSE]
+    lower <- pmin(lower, apply(selected, 1L, min))
+    upper <- pmax(upper, apply(selected, 1L, max))
+    coverage <- mean(colSums(mat < lower | mat > upper) == 0L)
+  }
 
   labels <- selection_combinations(subset$labels)
   out <- tibble::tibble(
@@ -56,13 +76,14 @@ simultaneous_band_impl <- function(draws, object_type, probability = 0.90,
     shock = labels$shock,
     horizon = labels$horizon,
     median = target,
-    lower = target - crit,
-    upper = target + crit,
+    lower = lower,
+    upper = upper,
     simultaneous_prob = probability,
+    achieved_coverage = coverage,
     critical_value = crit
   )
 
-  new_bsvar_post_tbl(out, object_type = paste0("simultaneous_", object_type), draws = FALSE)
+  with_post_provenance(new_bsvar_post_tbl(out, object_type = paste0("simultaneous_", object_type), draws = FALSE), source = draws, probability = probability)
 }
 
 #' @rdname simultaneous_irf
@@ -111,6 +132,8 @@ simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 #' Transforms posterior draws of selected cumulative dynamic multipliers into
 #' simultaneous credible bands using the empirical sup-norm around the
 #' posterior median response path.
+#' The empirical order statistic covers at least the requested fraction of
+#' retained draws; ties can increase coverage.
 #'
 #' @inheritParams simultaneous_irf
 #' @param object A posterior model object or a `PosteriorCDM` array.
@@ -123,7 +146,8 @@ simultaneous_irf.PosteriorBSVARSIGN <- simultaneous_irf_model
 #' @return A \code{bsvar_post_tbl} with columns \code{model},
 #'   \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
 #'   \code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
-#'   and \code{critical_value}.
+#'   \code{achieved_coverage}, and \code{critical_value}. Additional provenance
+#'   columns are described in [posterior_provenance].
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -221,8 +245,13 @@ joint_hypothesis_impl <- function(draws, object_type, variable, shock, horizon,
     horizon = paste(unique(combos$horizon), collapse = ",")
   )
 
-  out <- append_hypothesis_rhs(out, compare_to = predicate$rhs_labels, value = value, absolute = absolute)
-  new_bsvar_post_tbl(out, object_type = paste0("joint_", object_type), draws = FALSE)
+  rhs <- predicate$rhs_labels
+  out$rhs_variable <- if (is.null(rhs)) NA_character_ else paste(unique(rhs$variable), collapse = ",")
+  out$rhs_shock <- if (is.null(rhs)) NA_character_ else paste(unique(rhs$shock), collapse = ",")
+  out$rhs_horizon <- if (is.null(rhs)) NA_character_ else paste(unique(rhs$horizon), collapse = ",")
+  out$rhs_value <- if (is.null(rhs)) value else NA_real_
+  out$absolute <- absolute
+  with_post_provenance(new_bsvar_post_tbl(out, object_type = paste0("joint_", object_type), draws = FALSE), source = draws)
 }
 
 #' Evaluates joint posterior probability statements for impulse responses

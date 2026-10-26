@@ -132,3 +132,6 @@ post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 hd_event <- tidy_hd_event(post, start = "1948.25", end = "1948.5")
 head(hd_event)
 }
+\seealso{
+\link{posterior_provenance}
+}

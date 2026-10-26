@@ -31,6 +31,7 @@
 #' diag <- acceptance_diagnostics(post_s)
 #' print(diag)
 #' }
+#' @seealso [posterior_provenance]
 #' @export
 acceptance_diagnostics <- function(object, ...) {
   UseMethod("acceptance_diagnostics")
@@ -146,6 +147,9 @@ acceptance_diagnostics.PosteriorBSVARSIGN <- function(object, kernel_tol = 1e-12
                                                       ess_threshold = 20,
                                                       sparse_threshold = 0.1,
                                                       model = "model1", ...) {
+  validate_scalar_number(kernel_tol, "kernel_tol", lower = 0)
+  validate_scalar_number(ess_threshold, "ess_threshold", lower = .Machine$double.eps)
+  validate_scalar_number(sparse_threshold, "sparse_threshold", lower = 0, upper = 1)
   identification <- object$last_draw$identification
   posterior <- object$posterior
   scores <- compute_posterior_kernel(object)
@@ -178,7 +182,7 @@ acceptance_diagnostics.PosteriorBSVARSIGN <- function(object, kernel_tol = 1e-12
     diag_row(model, "kernel_cv", kernel_cv)
   )
 
-  new_bsvar_post_tbl(do.call(rbind, rows), object_type = "acceptance_diagnostics", draws = FALSE)
+  with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = "acceptance_diagnostics", draws = FALSE), source = object)
 }
 
 #' @rdname acceptance_diagnostics

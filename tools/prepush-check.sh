@@ -7,6 +7,9 @@ cd "$ROOT"
 echo "==> Regenerating documentation"
 Rscript --vanilla -e 'roxygen2::roxygenise(".")'
 
+echo "==> Checking release documentation, registrations and assets"
+Rscript --vanilla -e 'source("tools/release-qa.R"); release_qa_check(".")'
+
 echo "==> Building source tarball"
 rm -f bsvarPost_*.tar.gz
 R CMD build .

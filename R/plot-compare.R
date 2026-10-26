@@ -130,7 +130,7 @@ plot_compare_restrictions <- function(object, models = NULL, restriction_types =
 
   if (!is.null(top_n)) {
     top_n <- validate_positive_count(top_n, "plot_compare_restrictions()", arg = "top_n")
-    pieces <- split(df, interaction(df$model, drop = TRUE))
+    pieces <- split(df, tuple_group(df$model, drop = TRUE))
     df <- do.call(rbind, lapply(pieces, function(part) {
       ord <- order(part$posterior_prob, decreasing = TRUE)
       utils::head(part[ord, , drop = FALSE], top_n)

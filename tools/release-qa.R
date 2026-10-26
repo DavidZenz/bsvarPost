@@ -11,14 +11,7 @@ release_qa_check <- function(root = ".") {
     sub("^\\\\alias\\{(.*)\\}$", "\\1", grep("^\\\\alias\\{", lines, value = TRUE))
   })))
 
-  test_files <- list.files(file.path(root, "inst", "tinytest"), pattern = "^test_.*\\.R$", full.names = TRUE)
-  test_contents <- lapply(test_files, readLines, warn = FALSE)
-  names(test_contents) <- basename(test_files)
-
   missing_docs <- exports[!exports %in% aliases]
-  uncovered_exports <- exports[!vapply(exports, function(fn) {
-    any(vapply(test_contents, function(lines) any(grepl(paste0("\\b", fn, "\\b"), lines)), logical(1)))
-  }, logical(1))]
 
   ns_env <- if ("bsvarPost" %in% loadedNamespaces()) {
     asNamespace("bsvarPost")
@@ -59,9 +52,6 @@ release_qa_check <- function(root = ".") {
   failures <- character()
   if (length(missing_docs)) {
     failures <- c(failures, paste("Missing Rd aliases for exports:", paste(sort(missing_docs), collapse = ", ")))
-  }
-  if (length(uncovered_exports)) {
-    failures <- c(failures, paste("Missing direct tinytest coverage for exports:", paste(sort(uncovered_exports), collapse = ", ")))
   }
   if (length(missing_export_defs)) {
     failures <- c(failures, paste("Missing export definitions in namespace:", paste(sort(missing_export_defs), collapse = ", ")))

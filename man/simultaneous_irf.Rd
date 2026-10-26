@@ -123,12 +123,17 @@ credible band.}
 A \code{bsvar_post_tbl} with columns \code{model},
 \code{object_type}, \code{variable}, \code{shock}, \code{horizon},
 \code{median}, \code{lower}, \code{upper}, \code{simultaneous_prob},
-and \code{critical_value}.
+\code{achieved_coverage}, and \code{critical_value}. Additional provenance
+columns are described in \link{posterior_provenance}.
 }
 \description{
 Transforms posterior draws of selected impulse responses into simultaneous
 credible bands using the empirical sup-norm around the posterior median
-response path.
+response path. The empirical order statistic covers at least the requested
+fraction of retained draws over the complete selection. Ties can increase
+coverage. This is not a guarantee of exact population posterior coverage.
+Boundaries are rounded outward when necessary to retain the empirical
+guarantee in floating-point arithmetic.
 }
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")

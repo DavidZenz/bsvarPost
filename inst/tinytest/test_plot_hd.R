@@ -25,6 +25,7 @@ expect_true(inherits(p_overlay_intervals, "ggplot"))
 expect_true(inherits(p_stacked, "ggplot"))
 expect_true(inherits(p_stacked_baseline, "ggplot"))
 expect_true(inherits(p_total, "ggplot"))
+expect_true("Displayed component total" %in% p_total$data$series)
 expect_true(inherits(p_share, "ggplot"))
 expect_true(inherits(p_cum, "ggplot"))
 expect_true(inherits(p_dist, "ggplot"))
@@ -54,28 +55,29 @@ baseline_rows <- prepared_baseline$components[prepared_baseline$components$compo
 expect_true(any(baseline_rows$component == "Baseline"))
 expect_true(!any(baseline_rows$component == "Other"))
 
-component_total <- do.call(
-  rbind,
-  lapply(
-    split(prepared_baseline$components, interaction(prepared_baseline$components$model, prepared_baseline$components$variable, prepared_baseline$components$time, drop = TRUE)),
-    function(part) {
-      data.frame(
-        model = part$model[1],
-        variable = part$variable[1],
-        time = part$time[1],
-        total = sum(part$median, na.rm = TRUE)
-      )
-    }
-  )
-)
-reconciled_summary <- merge(
-  component_total,
-  prepared_baseline$observed,
-  by = c("model", "variable", "time"),
-  all = TRUE,
-  sort = FALSE
-)
-expect_true(isTRUE(all.equal(reconciled_summary$total, reconciled_summary$observed, tolerance = 1e-8)))
+# Reconciliation is an identity for each draw, not for marginal medians.
+decomposition <- bsvarPost:::prepare_hd_decomposition_draws(post, variables = "gdp", top_n = 2)
+reconstruction <- decomposition$components
+reconstruction$component <- "Total"
+reconstruction <- bsvarPost:::aggregate_hd_draw_rows(reconstruction)
+observed <- decomposition$observed
+key <- c("model", "variable", "time")
+matched <- vctrs::vec_match(as.data.frame(reconstruction[key]), as.data.frame(observed[key]))
+# This deliberately tiny estimation can contain explosive VAR draws. Allow
+# cancellation error relative to the contributions, rather than the observed
+# series, whose scale can be many orders of magnitude smaller.
+scale <- decomposition$components
+scale$value <- abs(scale$value)
+scale$component <- "Total"
+scale <- bsvarPost:::aggregate_hd_draw_rows(scale)
+expect_true(all(abs(reconstruction$value - observed$observed[matched]) <=
+                  pmax(1e-8, 64 * .Machine$double.eps * scale$value)))
+filtered <- bsvarPost:::prepare_hd_decomposition_draws(post, variables = "gdp", shocks = "gs")
+all_baseline <- subset(decomposition$components, component == "Baseline")
+filtered_baseline <- subset(filtered$components, component == "Baseline")
+key <- c("model", "variable", "time", "draw")
+matched <- vctrs::vec_match(as.data.frame(all_baseline[key]), as.data.frame(filtered_baseline[key]))
+expect_equal(all_baseline$value, filtered_baseline$value[matched], tolerance = 1e-8)
 
 baseline_overlay <- plot_hd_overlay(post, variables = "gdp", top_n = 2, include_baseline = TRUE)
 overlay_data <- ggplot2::ggplot_build(baseline_overlay)$plot$data

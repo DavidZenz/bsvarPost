@@ -65,7 +65,7 @@ data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
 post <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 
-h <- hypothesis_irf(post, variable = "gdp", shock = "gdp",
+h <- hypothesis_irf(post, variables = "gdp", shocks = "gdp",
                     horizon = 0:2, relation = ">", value = 0)
 p <- plot_hypothesis(h)
 }

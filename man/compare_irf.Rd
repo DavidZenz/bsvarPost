@@ -34,3 +34,6 @@ post2 <- bsvars::estimate(spec, S = 5, show_progress = FALSE)
 comp <- compare_irf(m1 = post1, m2 = post2, horizon = 3)
 head(comp)
 }
+\seealso{
+\link{posterior_provenance}
+}

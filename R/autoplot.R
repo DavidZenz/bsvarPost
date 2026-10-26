@@ -26,9 +26,28 @@ autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, mod
   if (!is.null(variables) && "variable" %in% names(df)) df <- df[df$variable %in% variables, , drop = FALSE]
   if (!is.null(shocks) && "shock" %in% names(df)) df <- df[df$shock %in% shocks, , drop = FALSE]
   if (!is.null(models) && "model" %in% names(df)) df <- df[df$model %in% models, , drop = FALSE]
+  if (!nrow(df)) stop("No posterior rows remain after filtering.", call. = FALSE)
 
   object_type <- attr(object, "object_type") %||% "value"
   multi_model <- length(unique(df$model)) > 1L
+  family <- posterior_plot_family(object)
+  if (identical(family, "hypothesis")) return(plot_hypothesis(df))
+  if (identical(family, "joint_hypothesis")) return(plot_joint_hypothesis(df))
+  if (identical(family, "acceptance_diagnostics")) return(plot_acceptance_diagnostics(df))
+  if (identical(family, "restriction_audit")) return(plot_restriction_audit(df))
+  if (identical(family, "restriction_comparison")) return(plot_compare_restrictions(df))
+  if (identical(family, "response_comparison")) return(plot_compare_response(df, facet_scales = facet_scales))
+  if ("gap" %in% names(df) && "satisfied" %in% names(df)) {
+    stop("Draw-level hypotheses do not have a supported automatic plot. Summarise them first.", call. = FALSE)
+  }
+  if (is.null(family)) {
+    stop("This posterior table has no supported automatic plot; use a family-specific plot or a summary table.", call. = FALSE)
+  }
+  has_draws <- isTRUE(attr(object, "draws")) || "draw" %in% names(df)
+  required <- c("model", "variable", if (has_draws) "value" else c("median", "lower", "upper"))
+  if (!all(required %in% names(df))) {
+    stop("Posterior plot input is missing required response columns.", call. = FALSE)
+  }
 
   if (identical(object_type, "hd_event")) {
     x_var <- if ("event_start" %in% names(df)) "event_start" else names(df)[1]
@@ -79,7 +98,7 @@ autoplot.bsvar_post_tbl <- function(object, variables = NULL, shocks = NULL, mod
   has_draws <- isTRUE(attr(object, "draws")) || "draw" %in% names(df)
 
   if (has_draws) {
-    df$group_id <- interaction(df$model, df$draw, drop = TRUE)
+    df$group_id <- tuple_group(df$model, df$draw, drop = TRUE)
     p <- ggplot2::ggplot(
       df,
       ggplot2::aes(

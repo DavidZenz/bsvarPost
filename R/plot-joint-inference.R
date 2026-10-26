@@ -34,11 +34,18 @@ plot_simultaneous <- function(object, type = c("irf", "cdm"), horizon = NULL, pr
     tbl <- object
   } else if (identical(type, "irf")) {
     tbl <- simultaneous_irf(object, horizon = horizon, probability = probability,
-                            variable = variable, shock = shock, ...)
+                            variables = variable, shocks = shock, ...)
   } else {
     tbl <- simultaneous_cdm(object, horizon = horizon, probability = probability,
-                            variable = variable, shock = shock,
+                            variables = variable, shocks = shock,
                             scale_by = scale_by, scale_var = scale_var, ...)
+  }
+
+  # Computation has already resolved numeric selectors against the full array.
+  # Only a supplied table needs its labels filtered here.
+  if (!inherits(object, "bsvar_post_tbl")) {
+    variable <- NULL
+    shock <- NULL
   }
 
   if (!grepl("^simultaneous_", attr(tbl, "object_type"))) {

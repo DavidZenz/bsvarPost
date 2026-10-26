@@ -196,6 +196,13 @@ Transforms posterior draws of impulse responses or cumulative dynamic
 multipliers into summaries of the first horizon at which a response satisfies
 a threshold condition.
 }
+\details{
+\code{reached_prob} is the fraction of stored draws that reach the
+threshold within the available horizon. Timing summaries condition on
+those draws; they are \code{NA} when none reach it. The standard deviation is
+\code{NA} with one qualifying draw. Missing or nonfinite input responses are
+rejected.
+}
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

@@ -26,6 +26,10 @@ p_joint_model <- plot_joint_hypothesis(post, type = "irf", variable = 1, shock =
 
 expect_true(inherits(p_sim_model, "ggplot"))
 expect_true(inherits(p_joint_model, "ggplot"))
+expect_true(nrow(ggplot2::ggplot_build(p_sim_model)$data[[1]]) > 0L)
+p_sim_cdm <- plot_simultaneous(post, type = "cdm", horizon = 4, variable = 2, shock = 2)
+expect_true(nrow(ggplot2::ggplot_build(p_sim_cdm)$data[[1]]) > 0L)
+expect_equal(unique(p_sim_cdm$data$variable), rownames(post$last_draw$data_matrices$Y)[2])
 
 expect_error(
   plot_simultaneous(joint_tbl),

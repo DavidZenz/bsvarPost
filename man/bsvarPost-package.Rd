@@ -10,6 +10,15 @@ Posterior summaries, inference, model comparison, and visualisation for
 Bayesian structural vector autoregressions estimated with the \code{bsvars} and
 \code{bsvarSIGNs} packages.
 }
+\section{Result tables}{
+
+Posterior tables include provenance as ordinary columns, alongside the
+estimates and identifiers. See \link{posterior_provenance} for probability,
+scaling, units, software versions and draw-identity definitions. Default
+reports and CSV exports include these columns; compact reports omit most
+provenance columns. Select columns explicitly when a fixed schema is needed.
+}
+
 \section{Vignettes}{
 
 Use \code{\link[utils:browseVignettes]{utils::browseVignettes()}} to open the package articles:
@@ -32,8 +41,18 @@ The package includes the following articles:
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://davidzenz.github.io/bsvarPost/}
   \item \url{https://github.com/DavidZenz/bsvarPost}
   \item Report bugs at \url{https://github.com/DavidZenz/bsvarPost/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: David Zenz \email{office@davidzenz.com} [copyright holder]
+
+Authors:
+\itemize{
+  \item David Zenz \email{office@davidzenz.com} [copyright holder]
 }
 
 }

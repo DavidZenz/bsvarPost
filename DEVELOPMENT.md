@@ -1,5 +1,39 @@
 # Development Notes
 
+## Hardening checks
+
+The GitHub check workflow includes the existing platform matrix, R 4.1 and
+release jobs without the optional integration packages, and an instrumented
+test job with all optional integrations installed. Runtime coverage is saved as
+an artifact. `release_qa_check()` checks documentation, registrations and assets;
+it does not infer test coverage from function names appearing in test files.
+
+Run `tools/benchmark-hardening.R` against the installed development build to
+compare selected-window array aggregation with full-sample long-table
+aggregation. The script checks numerical equivalence and records median elapsed
+time and allocated bytes for fixed fixtures. Timings are evidence, not CI gates.
+
+For the 1.1.0 hardening run (R 4.6.1, Apple Silicon, macOS 26.6.2), medians
+over three iterations were:
+
+| HD dimensions (variables, shocks, periods, draws) | Full-table event, seconds | Array-window event, seconds | Full-table allocated bytes | Array-window allocated bytes |
+| --- | ---: | ---: | ---: | ---: |
+| 2, 2, 100, 100 | 0.641 | 0.005 | 73,573,632 | 421,216 |
+| 2, 2, 100, 1,000 | 3.812 | 0.009 | 717,532,600 | 3,913,152 |
+| 5, 5, 200, 100 | 5.924 | 0.027 | 925,548,696 | 4,491,152 |
+
+Both paths used the same fixed draws and two-period window; summaries matched.
+The reference intentionally calls `tidy_hd(draws = TRUE)` before selecting the
+event. Allocations are cumulative bytes from `Rprofmem`, not peak memory.
+The script also measures ordinary HD summaries, grouped plots and representative
+selection. These measurements compare two paths in the current code, rather
+than claiming a package-wide speedup over a previous release.
+
+When testing HD reconciliation with a tiny fitted posterior, account for
+floating-point cancellation relative to component magnitudes: unfiltered
+explosive VAR draws can be much larger than the observed series. Use bounded
+constructed fixtures to verify the exact aggregation invariant separately.
+
 ## bsvarSIGNs native bridge
 
 `bsvarPost` depends on `bsvarSIGNs` for estimation, and part of the v0.2
@@ -12,6 +46,10 @@ This affects:
 
 The bridge lives in [R/v2-utils.R](R/v2-utils.R). It resolves registered native
 symbols from the loaded `bsvarSIGNs` DLL at runtime.
+For bsvarSIGNs 3.0 and later, the bridge converts upstream log importance
+weights to the weight scale used by the existing diagnostics and representative
+selection APIs. Version 2.0 uses the original weight symbols. Symbol arity is
+checked before invocation, and unknown interfaces produce versioned errors.
 
 Why this exists:
 - `bsvarSIGNs` does not currently expose an R-level API for these internals
@@ -44,7 +82,8 @@ Minimum pre-push checklist:
    - `Rscript --vanilla -e 'source("tools/release-qa.R"); release_qa_check(".")'`
 6. Review the staged diff:
    - make sure only the intended feature, tests, and docs are included
-7. Push only after GitHub `R-CMD-check` is green.
+7. Push the feature branch and require GitHub `R-CMD-check` to be green before
+   merging or releasing.
 8. If you changed vignette/showcase visuals, verify that committed files under
    [vignettes/figures](vignettes/figures) are only the images actually
    referenced by articles and README content.

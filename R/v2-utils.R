@@ -21,12 +21,19 @@ bsvarsigns_native_symbol <- function(symbol) {
       )
     }
   )
-  bsvarsigns_native_cache[[symbol]] <- resolved$address
-  resolved$address
+  bsvarsigns_native_cache[[symbol]] <- resolved
+  resolved
 }
 
 bsvarsigns_native <- function(symbol, ...) {
-  do.call(base::.Call, c(list(bsvarsigns_native_symbol(symbol)), list(...)))
+  info <- bsvarsigns_native_symbol(symbol)
+  args <- list(...)
+  if (!is.null(info$numParameters) && info$numParameters >= 0L && length(args) != info$numParameters) {
+    stop("Native symbol `", symbol, "` in bsvarSIGNs ", utils::packageVersion("bsvarSIGNs"),
+         " expects ", info$numParameters, " arguments; received ", length(args),
+         ". The upstream native interface may have changed.", call. = FALSE)
+  }
+  do.call(base::.Call, c(list(info), args))
 }
 
 bsvarsigns_match_sign <- function(A, sign) {
@@ -42,10 +49,16 @@ bsvarsigns_match_sign_narrative <- function(epsilon, sign_narrative, irf) {
 }
 
 bsvarsigns_weight_narrative <- function(n_obs, sign_narrative, irf) {
+  if (utils::packageVersion("bsvarSIGNs") >= "3.0") {
+    return(exp(bsvarsigns_native("_bsvarSIGNs_log_weight_narrative", as.integer(n_obs), sign_narrative, irf)))
+  }
   bsvarsigns_native("_bsvarSIGNs_weight_narrative", as.integer(n_obs), sign_narrative, irf)
 }
 
 bsvarsigns_weight_zero <- function(Z, B, h_inv, Q) {
+  if (utils::packageVersion("bsvarSIGNs") >= "3.0") {
+    return(exp(bsvarsigns_native("_bsvarSIGNs_log_weight_zero", Z, B, h_inv, Q)))
+  }
   bsvarsigns_native("_bsvarSIGNs_weight_zero", Z, B, h_inv, Q)
 }
 
@@ -55,12 +68,21 @@ bsvarsigns_hd1 <- function(var_i, t, h, epsilon, irf) {
 
 get_irf_draws <- function(object, horizon = NULL, ...) {
   if (inherits(object, "PosteriorIR")) {
+    validate_draw_array(object, 4L, "get_irf_draws()")
     return(object)
   }
-  set_response_dimnames(
-    bsvars::compute_impulse_responses(object, horizon = resolve_horizon(horizon), ...),
+  if (inherits(object, "PosteriorBSVARSIGN")) validate_sign_posterior(object)
+  horizon <- resolve_horizon(horizon)
+  out <- set_response_dimnames(
+    bsvars::compute_impulse_responses(object, horizon = max(1L, horizon), ...),
     model = object
   )
+  if (horizon == 0L) {
+    saved_class <- class(out)
+    out <- copy_posterior_attributes(out[, , 1L, , drop = FALSE], out)
+    class(out) <- saved_class
+  }
+  out
 }
 
 get_cdm_draws <- function(object, horizon = NULL, probability = 0.90,
@@ -85,7 +107,7 @@ resolve_selection <- function(values, labels) {
   if (!is.numeric(values)) {
     stop("Selections must use character labels or numeric indices.", call. = FALSE)
   }
-  if (anyNA(values) || any(!is.finite(values)) || any(values != floor(values))) {
+  if (anyNA(values) || any(!is.finite(values)) || any(values != floor(values)) || any(values > .Machine$integer.max)) {
     stop("Selection indices must be finite whole numbers.", call. = FALSE)
   }
   idx <- as.integer(values)
@@ -96,6 +118,7 @@ resolve_selection <- function(values, labels) {
 }
 
 subset_response_draws <- function(draws, variables = NULL, shocks = NULL, horizons = NULL) {
+  validate_draw_array(draws, 4L, "response selection")
   dns <- resolve_array_dimnames(draws, list(
     paste0("variable", seq_len(dim(draws)[1])),
     paste0("shock", seq_len(dim(draws)[2])),
@@ -106,14 +129,25 @@ subset_response_draws <- function(draws, variables = NULL, shocks = NULL, horizo
   var_idx <- resolve_selection(variables, dns[[1]])
   shock_idx <- resolve_selection(shocks, dns[[2]])
   hor_idx <- resolve_selection(if (is.null(horizons)) NULL else as.character(horizons), dns[[3]])
+  if (!length(var_idx) || !length(shock_idx) || !length(hor_idx)) {
+    stop("Response selections must not be empty.", call. = FALSE)
+  }
 
-  out <- draws[var_idx, shock_idx, hor_idx, , drop = FALSE]
+  out <- copy_posterior_attributes(draws[var_idx, shock_idx, hor_idx, , drop = FALSE], draws)
   dimnames(out) <- list(dns[[1]][var_idx], dns[[2]][shock_idx], dns[[3]][hor_idx], dns[[4]])
+  factors <- attr(draws, "scale_factors", exact = TRUE)
+  if (!is.null(factors)) attr(out, "scale_factors") <- factors[shock_idx]
+  scale_var <- attr(draws, "scale_var", exact = TRUE)
+  if (length(scale_var) > 1L) attr(out, "scale_var") <- scale_var[shock_idx]
+  if (is.null(scale_var) && identical(attr(draws, "scale_by", exact = TRUE), "shock_sd") &&
+      length(dns[[1]]) == length(dns[[2]])) {
+    attr(out, "scale_var") <- dns[[1]][shock_idx]
+  }
 
   list(
     draws = out,
     indices = list(variable = var_idx, shock = shock_idx, horizon = hor_idx),
-    labels = list(variable = dns[[1]][var_idx], shock = dns[[2]][shock_idx], horizon = dns[[3]][hor_idx])
+    labels = list(variable = dns[[1]][var_idx], shock = dns[[2]][shock_idx], horizon = dns[[3]][hor_idx], draw = dns[[4]])
   )
 }
 
@@ -236,6 +270,8 @@ compute_posterior_kernel <- function(object) {
     stop("Malformed `PosteriorBSVARSIGN` object: missing identification or data matrices in `last_draw`.", call. = FALSE)
   }
 
+  validate_sign_posterior(object)
+
   posterior <- object$posterior
   identification <- object$last_draw$identification
   Y <- t(object$last_draw$data_matrices$Y)
@@ -263,7 +299,7 @@ compute_posterior_kernel <- function(object) {
     sign_narrative <- matrix(c(0, 1, 1, 1, 1, 1), nrow = 1)
   }
 
-  irf <- get_irf_draws(object, horizon = max(dim(sign_irf)[3] - 1L, sign_narrative[, 6], 0), standardise = FALSE)
+  irf <- get_irf_draws(object, horizon = max(dim(sign_irf)[3] - 1L, sign_narrative[, 6], 1L), standardise = FALSE)
   scores <- rep(1, S)
 
   has_narrative <- sign_narrative[1, 1] != 0
@@ -317,7 +353,7 @@ compute_representative_draw <- function(draws, method = c("median_target", "most
     }
   }
 
-  representative_draw <- draws[, , , draw_index, drop = FALSE]
+  representative_draw <- copy_posterior_attributes(draws[, , , draw_index, drop = FALSE], draws)
   dns <- resolve_array_dimnames(draws, list(
     paste0("variable", seq_len(dim(draws)[1])),
     paste0("shock", seq_len(dim(draws)[2])),
@@ -344,10 +380,6 @@ compute_representative_draw <- function(draws, method = c("median_target", "most
   )
 }
 
-make_comparison_key <- function(variable, shock, horizon) {
-  paste(variable, shock, horizon, sep = "\r")
-}
-
 selection_combinations <- function(labels) {
   expand.grid(
     variable = labels$variable,
@@ -360,6 +392,8 @@ selection_combinations <- function(labels) {
 evaluate_draw_predicate <- function(draws, variable, shock, horizon, relation = c("<", "<=", ">", ">=", "=="),
                                     value = 0, compare_to = NULL, absolute = FALSE) {
   relation <- match.arg(relation)
+  validate_scalar_number(value, "value")
+  validate_flag(absolute, "absolute")
   dns <- resolve_array_dimnames(draws, list(
     paste0("variable", seq_len(dim(draws)[1])),
     paste0("shock", seq_len(dim(draws)[2])),
@@ -434,6 +468,7 @@ summarise_gap_matrix <- function(gap, indicator, labels, object_type, relation, 
         horizon = combos$horizon[i],
         relation = relation,
         draw = seq_len(ncol(gap)),
+        draw_id = as.character(labels$draw %||% seq_len(ncol(gap))),
         gap = as.numeric(gap[i, ]),
         satisfied = as.logical(indicator[i, ])
       )

@@ -1,3 +1,60 @@
+# bsvarPost 1.1.0
+
+- Support bsvarSIGNs 3.0 log-weight native helpers while retaining compatibility
+  with 2.0. Narrow upstream namespace imports to avoid forecast-class name
+  collisions with bsvars 4.0.
+
+## Correct posterior aggregation and inference
+
+* Grouped historical decompositions and event distributions now aggregate
+  within each posterior draw before computing medians and credible intervals.
+  Combining multiple shocks, including an `Other` category, requires draw-level
+  input. Ungrouped summary-table plots remain supported.
+* The baseline uses all shock contributions before display filtering. Totals
+  are computed from draw-level sums; marginal component medians need not add
+  up to the median total.
+* Event and cumulative plots use the same event-based contributor ranking.
+  Array event summaries select and aggregate the window before constructing
+  a long table.
+* Model comparisons reject duplicate explicit names and generate collision-free
+  missing names. Tuple grouping keeps dotted and delimiter-containing labels
+  distinct.
+* Forecast horizons are numeric, so periods beyond nine plot in temporal order.
+  Nonnumeric original labels are retained as `horizon_label`.
+* Pairwise draw-level hypotheses now align RHS labels with each draw. Structural
+  restrictions accept model variable labels, and one-period narrative
+  diagnostics request a valid upstream computation horizon.
+* Hypothesis results render correctly through automatic plotting, report
+  bundles and publication helpers. Unsupported draw-level hypothesis plots fail
+  immediately; report bundles retain their table with a `NULL` plot.
+* Simultaneous bands use an empirical order statistic covering at least the
+  requested fraction of stored draws. `achieved_coverage` reports empirical
+  coverage, which can exceed the requested probability when draws tie. This
+  does not guarantee exact coverage of the underlying posterior distribution.
+  Floating-point boundaries are adjusted outward when necessary to retain the
+  promised empirical coverage.
+
+## Provenance, validation and compatibility
+
+* Posterior tables expose analysis type, interval probability and method,
+  normalisation, known units, current upstream software versions and draw count
+  as ordinary columns. Unknown values are typed `NA`. See
+  `help("posterior_provenance")` for column definitions.
+* `draw_id` preserves original posterior labels alongside positional `draw`.
+  Representative summaries add `selected_draw_id` alongside `draw_index`.
+* Default reports and CSV exports include provenance columns. Existing
+  estimate columns, function names and object-type attributes are retained.
+  Code relying on an exact column list should select columns explicitly or use
+  compact reports. APRScenario adapters retain their external column schema.
+* Restriction constructors and native-bridge operations validate scalar
+  parameters, effective-sample bounds and posterior dimensions. Native calls
+  verify registered argument counts and report actionable compatibility errors.
+* R 4.1 remains supported. Minimum dependencies are bsvars 3.2, bsvarSIGNs 2.0,
+  ggplot2 3.4.0 and vctrs 0.5.0.
+* CI exercises minimum R, absent/present optional integrations and runtime
+  coverage. Static release QA no longer treats function-name mentions in tests
+  as proof of coverage.
+
 # bsvarPost 1.0.0
 
 Initial CRAN release.
@@ -33,7 +90,7 @@ Initial CRAN release.
   testing to joint constraints across multiple variable–shock–horizon
   combinations.
 * `simultaneous_irf()` and `simultaneous_cdm()` compute simultaneous credible
-  bands with exact joint coverage.
+  bands over selected response paths.
 
 ## Representative model selection
 

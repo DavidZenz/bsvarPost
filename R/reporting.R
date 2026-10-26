@@ -35,7 +35,8 @@ report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
       table = table_data,
       plot = bundle_plot,
       caption = bundle_caption,
-      object_type = attr(object, "object_type") %||% NULL
+      object_type = attr(object, "object_type") %||% NULL,
+      plot_family = posterior_plot_family(object)
     ),
     class = "bsvar_report_bundle"
   )
@@ -348,50 +349,23 @@ ensure_namespace <- function(pkg, caller) {
 }
 
 infer_report_plot <- function(object, ...) {
-  if (inherits(object, "bsvar_report_bundle")) {
-    return(object$plot %||% NULL)
-  }
-  if (inherits(object, "RepresentativeResponse")) {
-    return(build_representative_plot(object))
-  }
-  if (!inherits(object, "bsvar_post_tbl")) {
-    return(NULL)
-  }
-
-  object_type <- attr(object, "object_type") %||% ""
-  if (identical(object_type, "hd")) {
-    return(plot_hd_overlay(object, ...))
-  }
-  if (identical(object_type, "acceptance_diagnostics")) {
-    return(plot_acceptance_diagnostics(object, ...))
-  }
-  if (identical(object_type, "hd_event")) {
-    return(plot_hd_event(object, ...))
-  }
-  if (identical(object_type, "shock_ranking")) {
-    return(plot_shock_ranking(object, ...))
-  }
-  if (grepl("^simultaneous_", object_type)) {
-    return(plot_simultaneous(object, ...))
-  }
-  if (grepl("^joint_", object_type)) {
-    return(plot_joint_hypothesis(object, ...))
-  }
-  if (isTRUE(attr(object, "compare"))) {
-    if (identical(object_type, "restriction_audit")) {
-      return(plot_compare_restrictions(object, ...))
-    }
-    if (object_type %in% c(
-      "peak_irf", "peak_cdm",
-      "duration_irf", "duration_cdm",
-      "half_life_irf", "half_life_cdm",
-      "time_to_threshold_irf", "time_to_threshold_cdm"
-    )) {
-      return(plot_compare_response(object, ...))
-    }
-  }
-
-  ggplot2::autoplot(object, ...)
+  if (inherits(object, "bsvar_report_bundle")) return(object$plot %||% NULL)
+  family <- posterior_plot_family(object)
+  if (is.null(family)) return(NULL)
+  switch(family,
+    representative = build_representative_plot(object),
+    hypothesis = plot_hypothesis(object, ...),
+    hd = plot_hd_overlay(object, ...),
+    hd_event = plot_hd_event(object, ...),
+    shock_ranking = plot_shock_ranking(object, ...),
+    acceptance_diagnostics = plot_acceptance_diagnostics(object, ...),
+    restriction_audit = plot_restriction_audit(object, ...),
+    restriction_comparison = plot_compare_restrictions(object, ...),
+    response_comparison = plot_compare_response(object, ...),
+    simultaneous = plot_simultaneous(object, ...),
+    joint_hypothesis = plot_joint_hypothesis(object, ...),
+    ggplot2::autoplot(object, ...)
+  )
 }
 
 default_report_caption <- function(object) {
@@ -424,7 +398,8 @@ format_report_columns <- function(x, preset = c("default", "compact")) {
   preferred <- c(
     "model", "variable", "shock", "horizon", "time", "event_start", "event_end",
     "restriction_type", "restriction", "relation", "value", "threshold", "mode", "baseline",
-    "posterior_prob", "reached_prob", "n_constraints", "critical_value",
+    "metric", "flag", "message", "rank", "rank_score", "ranking",
+    "posterior_prob", "reached_prob", "n_constraints", "critical_value", "simultaneous_prob", "achieved_coverage",
     "mean", "median", "lower", "upper",
     "mean_gap", "median_gap", "lower_gap", "upper_gap",
     "mean_value", "median_value", "lower_value", "upper_value",
@@ -450,6 +425,19 @@ format_report_columns <- function(x, preset = c("default", "compact")) {
 pretty_report_names <- function(x) {
   map <- c(
     model = "Model",
+    analysis_type = "Analysis type",
+    interval_probability = "Interval probability",
+    interval_method = "Interval method",
+    scale_by = "Scaling",
+    scale_var = "Scaling variable",
+    scale_factor = "Scaling factor",
+    units = "Units",
+    source_package = "Source package",
+    source_version = "Source version",
+    n_draws = "Draw count",
+    draw_id = "Draw ID",
+    selected_draw_id = "Selected draw ID",
+    achieved_coverage = "Empirical coverage",
     variable = "Variable",
     shock = "Shock",
     horizon = "Horizon",

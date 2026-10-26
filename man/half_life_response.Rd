@@ -197,6 +197,14 @@ Transforms posterior draws of impulse responses or cumulative dynamic
 multipliers into summaries of the first horizon at which a response falls to
 a chosen fraction of its initial or peak level.
 }
+\details{
+\code{reached_prob} is the fraction of stored draws with a defined
+half-life within the available horizon. A draw has no defined half-life
+when its reference response is nonpositive or it never reaches the target.
+Timing summaries condition on draws with a defined half-life; they are
+\code{NA} when none qualify. The standard deviation is \code{NA} with one qualifying
+draw. Missing or nonfinite input responses are rejected.
+}
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

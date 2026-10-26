@@ -18,12 +18,12 @@ write_bsvar_csv(
 \item{file}{Path of the CSV file.}
 
 \item{row.names}{Whether row names are written; passed to
-\code{\link[utils:write.table]{utils::write.csv()}}.}
+\code{\link[utils:write.csv]{utils::write.csv()}}.}
 
 \item{preset}{Table specification. Use \code{"compact"} for a narrower selection
 of columns.}
 
-\item{...}{Additional arguments passed to \code{\link[utils:write.table]{utils::write.csv()}}.}
+\item{...}{Additional arguments passed to \code{\link[utils:write.csv]{utils::write.csv()}}.}
 }
 \value{
 The normalized file path, invisibly.
