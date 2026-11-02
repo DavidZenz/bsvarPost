@@ -189,10 +189,19 @@ build_acceptance_diagnostics_panel <- function(df, preset, base_size, base_famil
 }
 
 extract_acceptance_diagnostics_legend <- function(plot) {
-  grob <- ggplot2::ggplotGrob(plot)
-  idx <- which(grob$layout$name == "guide-box")
-  if (!length(idx)) return(NULL)
-  grob$grobs[[idx[1]]]
+  acceptance_diagnostics_legend_grob(ggplot2::ggplotGrob(plot))
+}
+
+acceptance_diagnostics_legend_grob <- function(grob) {
+  # ggplot2 >= 3.5 provides one slot per position, including empty zeroGrobs.
+  idx <- which(grepl("^guide-box($|-)", grob$layout$name))
+  for (i in idx) {
+    candidate <- grob$grobs[[i]]
+    if (inherits(candidate, "gtable") && length(candidate$grobs) &&
+        any(!vapply(candidate$grobs, inherits, logical(1), "zeroGrob")))
+      return(candidate)
+  }
+  NULL
 }
 
 align_acceptance_diagnostics_widths <- function(grobs) {

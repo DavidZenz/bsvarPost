@@ -4,8 +4,25 @@
 #' structural-shock contributions over a selected historical period and reports
 #' their posterior summaries.
 #'
-#' @param object A posterior model object, `PosteriorHD`, or a posterior-summary
+#' @param object A posterior model object, `PosteriorHD`, or a draw-level
 #'   table of historical decompositions.
+#' @section Event windows:
+#' Periods are ordered chronologically, independently of row order. Numeric
+#' times, ISO dates/UTC timestamps, Date and POSIXt values are supported. Other
+#' labels require an ordered factor with chronological levels. Different labels
+#' for the same period are rejected as ambiguous. Bounds are inclusive.
+#' Each model-variable-shock series must have the same draws within its model,
+#' and every draw must cover every observed period in the requested window.
+#' Missing cells and duplicate keys are errors; zero contributions remain valid.
+#' A period absent from every series cannot be inferred without an explicit
+#' time axis. Otherwise, the result sums observed periods only, which can
+#' understate a complete-window contribution. Declare ordered factor levels
+#' from the known full time axis before filtering; levels inferred from an
+#' already incomplete table cannot recover omitted periods.
+#' POSIXt periods are matched as instants; cumulative plots label them in UTC.
+#' Ambiguous local clock-time bounds during daylight-saving fallback are
+#' rejected; supply POSIXt bounds or UTC timestamps ending in `Z` instead.
+#'
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.
 #' @param probability Probability mass of the equal-tailed credible interval.
@@ -38,27 +55,153 @@
   )
  }
 
+# Resolve an intrinsic period order, independent of table row order. Arbitrary
+# text needs ordered factor levels; guessing lexical or arrival order is unsafe.
+hd_time_labels <- function(times) {
+  if (inherits(times, "POSIXt"))
+    format(times, "%Y-%m-%dT%H:%M:%OS6Z", tz = "UTC")
+  else as.character(times)
+}
+
+canonical_hd_time <- function(times) {
+  labels <- hd_time_labels(times)
+  if (!length(labels) || anyNA(labels) || any(!nzchar(labels)))
+    stop("HD periods must be non-missing and nonempty.", call. = FALSE)
+  # Retain explicitly declared periods even when all their rows are missing.
+  if (is.ordered(times)) labels <- levels(times)
+  if (anyNA(labels) || any(!nzchar(labels)))
+    stop("HD periods must be non-missing and nonempty.", call. = FALSE)
+  if (inherits(times, "Date")) {
+    values <- as.numeric(times)
+    kind <- "date"
+  } else if (inherits(times, "POSIXt")) {
+    values <- as.numeric(as.POSIXct(times))
+    kind <- "datetime"
+  } else {
+    suppressWarnings(values <- as.numeric(labels))
+    kind <- "numeric"
+    if (!all(is.finite(values))) {
+      if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", labels))) {
+        parsed <- suppressWarnings(as.Date(labels, format = "%Y-%m-%d"))
+        if (anyNA(parsed) || any(format(parsed, "%Y-%m-%d") != labels))
+          stop("HD periods contain invalid ISO dates.", call. = FALSE)
+        values <- as.numeric(parsed)
+        kind <- "date"
+      } else if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}[ T][0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z?$", labels))) {
+        normalized <- sub("Z$", "", gsub("T", " ", labels, fixed = TRUE))
+        parsed <- suppressWarnings(as.POSIXct(normalized,
+          format = "%Y-%m-%d %H:%M:%OS", tz = "UTC"))
+        if (anyNA(parsed) || any(format(parsed, "%Y-%m-%d %H:%M:%S", tz = "UTC") != substr(normalized, 1, 19)))
+          stop("HD periods contain invalid ISO timestamps.", call. = FALSE)
+        values <- as.numeric(parsed)
+        kind <- "datetime"
+      } else if (is.ordered(times)) {
+        values <- seq_along(labels)
+        kind <- "ordered"
+      } else {
+        stop("Cannot determine chronological HD periods; use numeric times, ISO dates/timestamps, or an ordered factor.", call. = FALSE)
+      }
+    }
+  }
+  if (any(!is.finite(values))) stop("HD periods must be finite and valid.", call. = FALSE)
+  pairs <- unique(data.frame(label = labels, value = values))
+  if (anyDuplicated(pairs$label) || anyDuplicated(pairs$value))
+    stop("Ambiguous HD periods: distinct labels and chronological periods must correspond one-to-one.", call. = FALSE)
+  pairs <- pairs[order(pairs$value), , drop = FALSE]
+  list(labels = pairs$label, values = pairs$value, kind = kind)
+}
+
 event_window_labels <- function(times, start, end = start) {
-  if (length(start) != 1L || length(end) != 1L || anyNA(start) || anyNA(end)) {
+  if (length(start) != 1L || length(end) != 1L || anyNA(start) || anyNA(end))
     stop("Event start and end must be single non-missing time labels.", call. = FALSE)
+  axis <- canonical_hd_time(times)
+  locate <- function(value) {
+    # Exact labels retain compatibility with numeric and ISO string bounds.
+    index <- match(hd_time_labels(value), axis$labels)
+    if (!is.na(index)) return(index)
+    coordinate <- if (axis$kind == "numeric") suppressWarnings(as.numeric(as.character(value))) else
+      if (axis$kind == "date" && inherits(value, "Date")) as.numeric(value) else
+      if (axis$kind == "datetime") {
+        if (inherits(value, "POSIXt")) as.numeric(as.POSIXct(value)) else {
+          tz <- if (inherits(times, "POSIXt")) attr(as.POSIXct(times), "tzone") else "UTC"
+          if (!length(tz)) tz <- ""
+          label <- gsub("T", " ", as.character(value), fixed = TRUE)
+          utc <- grepl("Z$", label)
+          if (utc) tz <- "UTC"
+          label <- sub("Z$", "", label)
+          date_only <- grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", label)
+          if (!date_only && !grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?$", label))
+            return(NA_integer_)
+          time_format <- if (date_only) "%Y-%m-%d" else "%Y-%m-%d %H:%M:%OS"
+          # Parse civil fields in UTC, then match local labels to observed
+          # instants. Local DST parsing is platform dependent at transitions.
+          parsed <- suppressWarnings(as.POSIXct(label, format = time_format, tz = "UTC"))
+          check_format <- if (date_only) "%Y-%m-%d" else "%Y-%m-%d %H:%M:%S"
+          if (is.na(parsed) || format(parsed, check_format, tz = "UTC") != substr(label, 1, if (date_only) 10 else 19))
+            return(NA_integer_)
+          if (inherits(times, "POSIXt") && !utc) {
+            # Both occurrences of a repeated local clock time are valid
+            # instants. Do not let the platform's DST parser pick one.
+            instants <- as.POSIXct(axis$values, origin = "1970-01-01", tz = tz[1])
+            local <- format(instants, "%Y-%m-%d %H:%M:%OS6", tz = tz[1])
+            candidates <- which(local == format(parsed, "%Y-%m-%d %H:%M:%OS6", tz = "UTC"))
+            if (length(candidates) > 1L)
+              stop("Ambiguous HD time bound during daylight-saving fallback; use a POSIXt value or UTC timestamp ending in Z.", call. = FALSE)
+            return(if (length(candidates)) candidates else NA_integer_)
+          }
+          as.numeric(parsed)
+        }
+      } else NA_real_
+    match(coordinate, axis$values)
   }
-  labels <- unique(as.character(times))
-  start_chr <- as.character(start)
-  end_chr <- as.character(end)
-  start_idx <- match(start_chr, labels)
-  end_idx <- match(end_chr, labels)
-  if (is.na(start_idx) || is.na(end_idx)) {
+  start_idx <- locate(start)
+  end_idx <- locate(end)
+  if (is.na(start_idx) || is.na(end_idx))
     stop("No historical decomposition observations found in the requested event window.", call. = FALSE)
+  if (start_idx > end_idx) stop("Event start must not follow event end.", call. = FALSE)
+  axis$labels[seq.int(start_idx, end_idx)]
+}
+
+validate_hd_event_table <- function(object, start, end) {
+  required <- c("model", "variable", "shock", "time", "draw", "value")
+  if (!all(required %in% names(object)) || !nrow(object) ||
+      !is.numeric(object$value) || any(!is.finite(object$value)) ||
+      !is.numeric(object$draw) || anyNA(object$draw) ||
+      any(object$draw < 1 | object$draw > .Machine$integer.max | object$draw != floor(object$draw)))
+    stop("Event summaries require finite draw-level values and positive integer draw identifiers.", call. = FALSE)
+  for (name in c("model", "variable", "shock")) {
+    if (anyNA(object[[name]]) || any(!nzchar(as.character(object[[name]]))))
+      stop("HD model, variable and shock labels must be non-missing and nonempty.", call. = FALSE)
   }
-  if (start_idx > end_idx) {
-    stop("Event start must not follow event end.", call. = FALSE)
+  window <- event_window_labels(object$time, start, end)
+  keys <- c("model", "variable", "shock", "time", "draw")
+  if (anyDuplicated(vctrs::vec_group_id(as.data.frame(object[keys]))))
+    stop("Historical decomposition tables must have unique model-variable-shock-time-draw keys (duplicate periods found).", call. = FALSE)
+  groups <- vctrs::vec_group_id(as.data.frame(object[c("model", "variable", "shock", "draw")]))
+  first <- match(seq_len(attr(groups, "n")), groups)
+  counts <- tabulate(groups[hd_time_labels(object$time) %in% window], nbins = length(first))
+  bad <- which(counts != length(window))
+  if (length(bad)) {
+    i <- bad[1]
+    row <- first[i]
+    missing <- setdiff(window, hd_time_labels(object$time[groups == i]))
+    stop("Incomplete HD event window for model '", object$model[row], "', variable '",
+      object$variable[row], "', shock '", object$shock[row], "', draw ", object$draw[row],
+      ": missing period(s) ", paste(missing, collapse = ", "), ".", call. = FALSE)
   }
-  labels[seq.int(start_idx, end_idx)]
+  # A completely absent draw/series combination must not disappear either.
+  series <- vctrs::vec_group_id(as.data.frame(object[c("model", "variable", "shock")]))
+  series_first <- match(seq_len(attr(series, "n")), series)
+  model_draws <- unique(as.data.frame(object[c("model", "draw")]))
+  expected <- table(as.character(model_draws$model))[as.character(object$model[series_first])]
+  if (any(tabulate(series[first], nbins = length(series_first)) != as.integer(expected)))
+    stop("Incomplete HD draw coverage: every series in a model must contain the same draws.", call. = FALSE)
+  window
 }
 
 summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, draws = FALSE) {
   window_labels <- event_window_labels(tbl$time, start = start, end = end)
-  time_chr <- as.character(tbl$time)
+  time_chr <- hd_time_labels(tbl$time)
   keep <- time_chr %in% window_labels
   df <- tbl[keep, , drop = FALSE]
 
@@ -77,7 +220,7 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, 
         event_end = as.character(end),
         draw = part$draw[1],
         draw_id = if ("draw_id" %in% names(part)) part$draw_id[1] else as.character(part$draw[1]),
-        value = sum(part$value)
+        value = sum(part$value[order(match(hd_time_labels(part$time), window_labels))])
       )
     })
     return(with_post_provenance(new_bsvar_post_tbl(do.call(rbind, rows), object_type = "hd_event", draws = TRUE), source = tbl))
@@ -96,16 +239,9 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, 
   if (!isTRUE(attr(object, "draws")) && !"draw" %in% names(object)) {
     stop("`tidy_hd_event()` requires either a posterior model object, `PosteriorHD`, or a draw-level tidy HD table.", call. = FALSE)
   }
-  required <- c("model", "variable", "shock", "time", "draw", "value")
-  if (!all(required %in% names(object)) || !is.numeric(object$value) || any(!is.finite(object$value)) ||
-      !is.numeric(object$draw) || anyNA(object$draw) ||
-      any(object$draw < 1 | object$draw > .Machine$integer.max | object$draw != floor(object$draw))) {
-    stop("Event summaries require finite draw-level values and positive integer draw identifiers.", call. = FALSE)
-  }
-  keys <- c("model", "variable", "shock", "time", "draw")
-  if (anyDuplicated(vctrs::vec_group_id(as.data.frame(object[keys])))) {
-    stop("Historical decomposition tables must have unique model-variable-shock-time-draw keys.", call. = FALSE)
-  }
+  validate_probability(probability)
+  validate_flag(draws, "draws")
+  validate_hd_event_table(object, start, end)
   event_tbl <- summarise_hd_event_tbl(object, start = start, end = end, probability = probability, draws = TRUE)
   if (draws) {
     return(event_tbl)
@@ -185,7 +321,7 @@ summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, 
 #' ranks structural shocks by the absolute or signed magnitude of their
 #' contributions.
 #'
-#' @param object A posterior model object, `PosteriorHD`, or a posterior-summary
+#' @param object A posterior model object, `PosteriorHD`, or a draw-level
 #'   table of historical decompositions.
 #' @param start First time index to include.
 #' @param end Last time index to include. Defaults to `start`.

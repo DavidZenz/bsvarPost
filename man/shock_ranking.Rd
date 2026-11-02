@@ -16,7 +16,7 @@ shock_ranking(
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or a posterior-summary
+\item{object}{A posterior model object, \code{PosteriorHD}, or a draw-level
 table of historical decompositions.}
 
 \item{start}{First time index to include.}

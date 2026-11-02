@@ -6,6 +6,19 @@
 
 ## Correct posterior aggregation and inference
 
+* HD event windows follow chronological periods independently of row order.
+  Draw tables reject duplicate periods, ambiguous time labels and incomplete
+  windows instead of silently returning partial contributions. Ordered factor
+  levels can declare periods that are missing from every series; without a
+  declared axis only observed periods can be summed. Ambiguous local clock-time
+  bounds during daylight-saving fallback require POSIXt values or UTC timestamps.
+* APR forecast dates preserve month and quarter ends and handle leap years.
+  Other origins retain their calendar day, clamped to shorter months without
+  shifting subsequent dates. APR conversion requires forecast summaries with
+  finite values and unique model-variable-horizon keys; non-forecast tables
+  and draw/shock identifiers are rejected.
+* Acceptance-diagnostics legends retain model labels and warning markers with
+  both legacy and position-specific ggplot2 guide layouts.
 * Grouped historical decompositions and event distributions now aggregate
   within each posterior draw before computing medians and credible intervals.
   Combining multiple shocks, including an `Other` category, requires draw-level

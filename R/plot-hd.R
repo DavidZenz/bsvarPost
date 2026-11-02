@@ -613,8 +613,8 @@ compute_hd_event_cumulative <- function(object, start, end = start, probability 
     stop("No historical decomposition draw rows remain after filtering.", call. = FALSE)
   }
 
-  window_labels <- event_window_labels(draw_tbl$time, start = start, end = end)
-  draw_tbl <- draw_tbl[as.character(draw_tbl$time) %in% window_labels, , drop = FALSE]
+  window_labels <- validate_hd_event_table(draw_tbl, start = start, end = end)
+  draw_tbl <- draw_tbl[hd_time_labels(draw_tbl$time) %in% window_labels, , drop = FALSE]
   draw_tbl <- prepare_hd_component_draws(
     draw_tbl,
     shock_groups = shock_groups,
@@ -636,7 +636,7 @@ compute_hd_event_cumulative <- function(object, start, end = start, probability 
     draw_tbl <- aggregate_hd_draw_rows(draw_tbl)
   }
 
-  time_order <- match(as.character(draw_tbl$time), window_labels)
+  time_order <- match(hd_time_labels(draw_tbl$time), window_labels)
   draw_tbl$time_order <- time_order
   pieces <- split(draw_tbl, tuple_group(draw_tbl$model, draw_tbl$variable, draw_tbl$component, draw_tbl$draw, drop = TRUE))
   cumulative_draws <- do.call(rbind, lapply(pieces, function(part) {
@@ -644,7 +644,7 @@ compute_hd_event_cumulative <- function(object, start, end = start, probability 
     part$value <- cumsum(part$value)
     part
   }))
-  cumulative_draws$time <- factor(as.character(cumulative_draws$time), levels = window_labels, ordered = TRUE)
+  cumulative_draws$time <- factor(hd_time_labels(cumulative_draws$time), levels = window_labels, ordered = TRUE)
 
   summary_tbl <- summarise_hd_draw_table(cumulative_draws, probability = probability)
   list(draws = cumulative_draws, summary = summary_tbl)

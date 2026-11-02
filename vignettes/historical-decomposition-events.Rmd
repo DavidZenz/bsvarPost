@@ -158,6 +158,30 @@ each shock over the inclusive period for every posterior draw and then reports
 posterior summaries. Set `draws = TRUE` to retain the aggregated draws for
 subsequent calculations.
 
+For draw-table inputs, periods are ordered chronologically rather than by row
+appearance. Numeric periods, dates and timestamps are supported; other labels
+need an ordered factor with chronological levels. Every draw in each
+model-variable-shock series must cover the full window. Missing cells and
+duplicate periods cause an error, while a recorded zero remains valid. If a
+period is absent from every series, a table without a declared time axis sums
+only the remaining observations. This can understate the complete-window
+contribution. Declare all expected periods **before filtering or importing
+incomplete data**; levels reconstructed from a gapped table cannot recover
+missing periods. For these quarterly data, the known event axis is:
+
+```{r explicit-event-axis}
+expected_periods <- c("1958", "1958.25", "1958.5", "1958.75")
+event_draws_checked <- hd_draws[as.character(hd_draws$time) %in% expected_periods, ]
+event_draws_checked$time <- ordered(as.character(event_draws_checked$time),
+  levels = expected_periods)
+event_checked <- tidy_hd_event(event_draws_checked, event_start, event_end)
+```
+
+Dropping all rows for `1958.25` now causes a missing-period error. Do not fill
+missing contributions with zero unless zero is the actual stored contribution.
+For POSIXt data, pass POSIXt bounds or UTC timestamps ending in `Z` when a local
+clock time is repeated during daylight-saving fallback.
+
 The largest posterior median does not establish that a shock was the dominant
 historical source of variation. Credible intervals describe posterior
 uncertainty about the aggregated contribution, while the economic meaning of

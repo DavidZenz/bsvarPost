@@ -40,7 +40,8 @@ as_apr_cond_forc(object, ...)
 }
 \arguments{
 \item{object}{A posterior model object, a \code{Forecasts} object, or a posterior
-forecast table returned by \code{\link[=tidy_forecast]{tidy_forecast()}}.}
+forecast summary table returned by \code{\link[=tidy_forecast]{tidy_forecast()}}. Draw-level tables
+must be summarised first.}
 
 \item{...}{Additional arguments passed to \code{\link[=tidy_forecast]{tidy_forecast()}}.}
 
@@ -61,7 +62,7 @@ style \code{hor} dates.}
 }
 \value{
 A data frame with columns \code{hor}, \code{variable},
-\code{lower}, \code{center}, and \code{upper}, suitable for use with
+\code{lower}, \code{center}, \code{upper}, and \code{model}, suitable for use with
 conditional forecast analysis with APRScenario.
 }
 \description{
@@ -69,6 +70,24 @@ Transforms draws or summaries from the posterior predictive distribution into
 the lower, centre, and upper paths used for conditional forecast analysis by
 \code{APRScenario}.
 }
+\section{Forecast identity and dates}{
+
+Tables must describe forecasts, with finite numeric summary values and
+unique model-variable-horizon keys. Draw and shock identifiers are rejected
+because APRScenario's summary format cannot retain those dimensions.
+Horizons are non-negative integer offsets when converted using \code{origin};
+zero denotes the origin itself. Without \code{origin}, numeric offsets or
+nonempty character time labels are retained. Date/POSIXt indices are
+retained as supplied.
+
+Month, quarter and year steps are anchored to the origin's calendar day.
+An origin at month end stays at month end. Otherwise, the day is clamped to
+the target month's last day when necessary, without shifting later dates.
+For example, quarterly steps from 2024-03-31 give 2024-06-30 and 2024-09-30;
+monthly steps from 2024-01-30 give 2024-02-29 and 2024-03-30. Calendar
+conversion supports target years 1 through 9999.
+}
+
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
