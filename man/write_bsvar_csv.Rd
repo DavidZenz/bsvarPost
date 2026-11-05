@@ -32,6 +32,10 @@ The normalized file path, invisibly.
 Writes a table of posterior summaries to disk as a comma-separated-values
 file.
 }
+\details{
+Compact CSVs retain \code{draw} and \code{draw_id} when present, so draws can
+be paired between responses. Column labels follow \code{\link[=report_table]{report_table()}}.
+}
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

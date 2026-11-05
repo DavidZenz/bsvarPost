@@ -108,3 +108,24 @@ expect_error(
   "supports bsvarPost tables and data frames only",
   info = "report_table: rejects unsupported objects."
 )
+
+# A compact table is still a keyed posterior sample, including after CSV export.
+raw <- array(seq_len(12), c(2, 1, 2, 3),
+  dimnames = list(c("y1", "y2"), "s", c("0", "1"), c("id.a", "id.b", "id.c")))
+class(raw) <- c("PosteriorIR", "array")
+raw <- tidy_irf(raw, draws = TRUE)
+compact <- report_table(raw, preset = "compact")
+expect_equal(compact$draw, raw$draw)
+expect_equal(compact[["Draw ID"]], raw$draw_id)
+rounded <- report_table(raw, preset = "compact", digits = -1)
+expect_equal(rounded$draw, raw$draw)
+expect_equal(rounded$Horizon, raw$horizon)
+compact_file <- tempfile(fileext = ".csv")
+write_bsvar_csv(raw, compact_file, preset = "compact")
+roundtrip <- read.csv(compact_file, check.names = FALSE)
+paired <- merge(subset(roundtrip, Variable == "y1"), subset(roundtrip, Variable == "y2"),
+  by = c("Model", "Shock", "Horizon", "draw", "Draw ID"))
+expect_equal(nrow(paired), 6L)
+expect_equal(paired$Value.y - paired$Value.x, rep(1, 6))
+expect_true(all(c("id.a", "id.b", "id.c") %in% compact[["Draw ID"]]))
+expect_true(grepl("Draw ID", paste(as_kable(raw, preset = "compact"), collapse = ""), fixed = TRUE))

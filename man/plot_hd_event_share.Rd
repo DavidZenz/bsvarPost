@@ -26,7 +26,12 @@ plot_hd_event_share(
 historical decompositions. Plots that reconstruct the observed series
 require a posterior model. Combining multiple shocks, including an
 \code{"Other"} component, requires draw-level input: marginal medians and
-interval bounds cannot be added. Ungrouped summary tables remain supported.}
+interval bounds cannot be added. Ungrouped summary tables remain supported.
+Draw tables must contain one finite value per model-variable-shock-period-
+draw cell. Missing cells and duplicate keys are errors; actual zeros are
+retained. Each model is validated on its own time axis and draw set.
+Declare ordered factor levels to detect periods absent from every series.
+Date and POSIXt axes are chronological; POSIXt labels use UTC.}
 
 \item{start, end}{Event-window start and end indexes for event-specific plots.}
 

@@ -2,6 +2,14 @@
 #'
 #' Transforms posterior draws of impulse responses or cumulative dynamic
 #' multipliers into summaries of peak response magnitudes and their horizons.
+#' @section Horizon order and gaps:
+#' Horizon labels must represent unique, finite, non-negative integers. All
+#' timing summaries use numeric horizon order, regardless of array-slice order.
+#' Gaps are allowed and are not interpolated. Peak ties use the earliest
+#' observed horizon; threshold times use the first observed satisfying horizon.
+#' Half-lives measure elapsed horizons from the reference response. Durations
+#' count observed satisfying periods, including horizon zero when present,
+#' rather than imputing the condition in missing periods.
 #'
 #' @param object A posterior model object, `PosteriorIR`, or `PosteriorCDM`.
 #' @param horizon Maximum horizon used when `object` is a posterior model object.
@@ -52,9 +60,20 @@ resolve_peak <- function(path, horizons, absolute = FALSE) {
   c(value = path[idx], horizon = horizons[idx])
 }
 
+subset_timing_draws <- function(draws, variables, shocks) {
+  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
+  suppressWarnings(horizons <- as.numeric(subset$labels$horizon))
+  if (any(!is.finite(horizons)) || any(horizons < 0 | horizons != floor(horizons)) || anyDuplicated(horizons))
+    stop("Timing summaries require unique, finite, non-negative integer horizon labels.", call. = FALSE)
+  order <- order(horizons)
+  subset$draws <- subset$draws[, , order, , drop = FALSE]
+  subset$labels$horizon <- subset$labels$horizon[order]
+  subset
+}
+
 summarise_peak_draws <- function(draws, object_type, variables = NULL, shocks = NULL,
                                  absolute = FALSE, probability = 0.90, model = "model1") {
-  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
+  subset <- subset_timing_draws(draws, variables, shocks)
   dims <- dim(subset$draws)
   horizons <- as.numeric(subset$labels$horizon)
 
@@ -151,6 +170,7 @@ peak_response.PosteriorCDM <- function(object, variables = NULL, shocks = NULL,
 #' Transforms posterior draws of impulse responses or cumulative dynamic
 #' multipliers into summaries of how long a response satisfies a threshold
 #' condition over the available horizons.
+#' @inheritSection peak_response Horizon order and gaps
 #'
 #' @param mode Either `"consecutive"` for the duration until first violation or
 #'   `"total"` for the total count of satisfying horizons.
@@ -218,7 +238,7 @@ summarise_duration_draws <- function(draws, object_type, variables = NULL, shock
                                      probability = 0.90, model = "model1") {
   relation <- match.arg(relation)
   mode <- match.arg(mode)
-  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
+  subset <- subset_timing_draws(draws, variables, shocks)
   dims <- dim(subset$draws)
 
   rows <- vector("list", dims[1] * dims[2])
@@ -341,6 +361,7 @@ summarise_optional_timing <- function(x, probability) {
 #' Transforms posterior draws of impulse responses or cumulative dynamic
 #' multipliers into summaries of the first horizon at which a response falls to
 #' a chosen fraction of its initial or peak level.
+#' @inheritSection peak_response Horizon order and gaps
 #'
 #' @param fraction Fraction of the reference level used to define the half-life.
 #' @param baseline Reference level: `"peak"` uses the largest response over the
@@ -360,7 +381,10 @@ summarise_optional_timing <- function(x, probability) {
 #'   when its reference response is nonpositive or it never reaches the target.
 #'   Timing summaries condition on draws with a defined half-life; they are
 #'   `NA` when none qualify. The standard deviation is `NA` with one qualifying
-#'   draw. Missing or nonfinite input responses are rejected.
+#'   draw. An `initial` baseline requires horizon zero. For signed responses
+#'   (`absolute = FALSE`), a zero crossing can satisfy the target; a nonpositive
+#'   reference has no defined half-life. Missing or nonfinite input responses
+#'   are rejected.
 #' @examples
 #' data(us_fiscal_lsuw, package = "bsvars")
 #' spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)
@@ -416,7 +440,9 @@ summarise_half_life_draws <- function(draws, object_type, variables = NULL, shoc
                                       fraction = 0.5, baseline = c("peak", "initial"),
                                       absolute = TRUE, probability = 0.90, model = "model1") {
   baseline <- match.arg(baseline)
-  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
+  subset <- subset_timing_draws(draws, variables, shocks)
+  if (baseline == "initial" && !any(as.numeric(subset$labels$horizon) == 0))
+    stop("The initial half-life baseline requires horizon zero.", call. = FALSE)
   dims <- dim(subset$draws)
   horizons <- as.numeric(subset$labels$horizon)
 
@@ -518,6 +544,7 @@ half_life_response.PosteriorCDM <- function(object, variables = NULL, shocks = N
 #' Transforms posterior draws of impulse responses or cumulative dynamic
 #' multipliers into summaries of the first horizon at which a response satisfies
 #' a threshold condition.
+#' @inheritSection peak_response Horizon order and gaps
 #'
 #' @inheritParams duration_response
 #' @inheritParams peak_response
@@ -581,7 +608,7 @@ summarise_threshold_draws <- function(draws, object_type, variables = NULL, shoc
                                       relation = c(">", ">=", "<", "<="), value = 0,
                                       absolute = FALSE, probability = 0.90, model = "model1") {
   relation <- match.arg(relation)
-  subset <- subset_response_draws(draws, variables = variables, shocks = shocks, horizons = NULL)
+  subset <- subset_timing_draws(draws, variables, shocks)
   dims <- dim(subset$draws)
   horizons <- as.numeric(subset$labels$horizon)
 

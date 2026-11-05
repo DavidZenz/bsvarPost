@@ -12,6 +12,8 @@
 #'   rendering.
 #' @param preset Table specification. Use `"compact"` for a narrower selection
 #'   of columns.
+#' @details Compact tables retain draw identifiers and other structural keys.
+#'   Numeric key columns are preserved exactly when `digits` rounds estimates.
 #' @param ... Additional arguments passed to the corresponding plotting
 #'   function.
 #' @return A list of class `bsvar_report_bundle` with elements `table`, `plot`,
@@ -46,6 +48,8 @@ report_bundle <- function(object, plot = NULL, caption = NULL, digits = NULL,
 #'
 #' Arranges posterior summaries in data frames with a consistent column order
 #' and descriptive column names.
+#' @details Both presets retain structural draw identifiers. `digits` rounds
+#'   estimates while leaving horizon, time, draw and other key columns exact.
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param digits Optional number of digits used to round numeric columns before
@@ -270,6 +274,8 @@ as_flextable.default <- function(x, ...) {
 #'
 #' Writes a table of posterior summaries to disk as a comma-separated-values
 #' file.
+#' @details Compact CSVs retain `draw` and `draw_id` when present, so draws can
+#'   be paired between responses. Column labels follow [report_table()].
 #'
 #' @param x A `bsvar_post_tbl`, data frame, or `bsvar_report_bundle`.
 #' @param file Path of the CSV file.
@@ -332,6 +338,10 @@ prepare_report_table <- function(x, digits = NULL, preset = c("default", "compac
   }
   if (!is.null(digits)) {
     numeric_cols <- vapply(out, is.numeric, logical(1))
+    keys <- c("model", "variable", "shock", "horizon", "time", "event_start", "event_end",
+      "draw", "draw_id", "draw_index", "selected_draw_id", "rhs_variable", "rhs_shock", "rhs_horizon",
+      "rhs_value", "threshold")
+    numeric_cols[names(out) %in% c(keys, pretty_report_names(keys))] <- FALSE
     out[numeric_cols] <- lapply(out[numeric_cols], round, digits = digits)
   }
   out <- format_report_columns(out, preset = preset)
@@ -397,6 +407,8 @@ format_report_columns <- function(x, preset = c("default", "compact")) {
 
   preferred <- c(
     "model", "variable", "shock", "horizon", "time", "event_start", "event_end",
+    "draw", "draw_id", "draw_index", "selected_draw_id",
+    "rhs_variable", "rhs_shock", "rhs_horizon", "rhs_value", "absolute", "gap", "satisfied",
     "restriction_type", "restriction", "relation", "value", "threshold", "mode", "baseline",
     "metric", "flag", "message", "rank", "rank_score", "ranking",
     "posterior_prob", "reached_prob", "n_constraints", "critical_value", "simultaneous_prob", "achieved_coverage",
@@ -414,7 +426,11 @@ format_report_columns <- function(x, preset = c("default", "compact")) {
       x <- x[, keep, drop = FALSE]
     }
   } else {
-    lead <- intersect(preferred, names(x))
+    # Preserve the existing default schema; the extra leading key columns are
+    # needed only by the compact selection that previously dropped them.
+    compact_keys <- c("draw", "draw_id", "draw_index", "selected_draw_id",
+      "rhs_variable", "rhs_shock", "rhs_horizon", "rhs_value", "absolute", "gap", "satisfied")
+    lead <- intersect(setdiff(preferred, compact_keys), names(x))
     tail <- setdiff(names(x), lead)
     x <- x[, c(lead, tail), drop = FALSE]
   }

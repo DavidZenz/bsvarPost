@@ -8,7 +8,7 @@ tidy_apr_forecast(data, model = "apr")
 }
 \arguments{
 \item{data}{A data frame with APRScenario columns \code{hor}, \code{variable},
-\code{lower}, \code{center}, and \code{upper}.}
+\code{lower}, \code{center}, and \code{upper}, and optionally \code{model}.}
 
 \item{model}{Label identifying the model specification.}
 }
@@ -20,6 +20,15 @@ A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
 \description{
 Transforms lower, centre, and upper APRScenario forecast paths into the
 posterior-summary table format used by \code{bsvarPost}.
+}
+\details{
+Both APR adapters require finite numeric summaries, nonempty
+model/variable labels, valid horizons and unique model-variable-horizon
+keys. Lower bounds cannot exceed upper bounds. The centre may lie outside
+the interval, for example when it represents a skewed forecast's mean.
+Draw and shock dimensions are unsupported in this summary format. Other
+extra columns are rejected on import; encode additional series identities
+in \code{model} explicitly. Date/POSIXt indices retain their supplied values.
 }
 \examples{
 \dontrun{

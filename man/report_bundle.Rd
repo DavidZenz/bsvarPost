@@ -39,6 +39,10 @@ A list of class \code{bsvar_report_bundle} with elements \code{table}, \code{plo
 Combines a table of posterior summaries, its corresponding figure, and a
 caption in a single object.
 }
+\details{
+Compact tables retain draw identifiers and other structural keys.
+Numeric key columns are preserved exactly when \code{digits} rounds estimates.
+}
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

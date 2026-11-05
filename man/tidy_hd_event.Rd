@@ -97,7 +97,7 @@ tidy_hd_event(object, ...)
 )
 }
 \arguments{
-\item{object}{A posterior model object, \code{PosteriorHD}, or a posterior-summary
+\item{object}{A posterior model object, \code{PosteriorHD}, or a draw-level
 table of historical decompositions.}
 
 \item{...}{Additional arguments passed to computation methods.}
@@ -124,6 +124,25 @@ Transforms posterior draws of historical decompositions into cumulative
 structural-shock contributions over a selected historical period and reports
 their posterior summaries.
 }
+\section{Event windows}{
+
+Periods are ordered chronologically, independently of row order. Numeric
+times, ISO dates/UTC timestamps, Date and POSIXt values are supported. Other
+labels require an ordered factor with chronological levels. Different labels
+for the same period are rejected as ambiguous. Bounds are inclusive.
+Each model-variable-shock series must have the same draws within its model,
+and every draw must cover every observed period in the requested window.
+Missing cells and duplicate keys are errors; zero contributions remain valid.
+A period absent from every series cannot be inferred without an explicit
+time axis. Otherwise, the result sums observed periods only, which can
+understate a complete-window contribution. Declare ordered factor levels
+from the known full time axis before filtering; levels inferred from an
+already incomplete table cannot recover omitted periods.
+POSIXt periods are matched as instants; cumulative plots label them in UTC.
+Ambiguous local clock-time bounds during daylight-saving fallback are
+rejected; supply POSIXt bounds or UTC timestamps ending in \code{Z} instead.
+}
+
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

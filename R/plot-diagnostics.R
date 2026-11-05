@@ -56,6 +56,9 @@ plot_acceptance_diagnostics <- function(object, metrics = NULL, models = NULL, s
   }
 
   df <- attach_acceptance_diagnostic_metadata(df)
+  # Retain the same model slots in every family panel, even when a metric is
+  # unavailable for one model. Character labels give input-order invariance.
+  df$model <- factor(as.character(df$model), levels = sort(unique(as.character(df$model))))
   family_levels <- unique(df[order(df$family_order), "family"])
   legend_plot <- build_acceptance_diagnostics_panel(
     df,
@@ -97,34 +100,33 @@ build_acceptance_diagnostics_panel <- function(df, preset, base_size, base_famil
                                                show_flags, show_legend) {
   label_levels <- unique(df[order(df$metric_order), "label"])
   df$label <- factor(df$label, levels = rev(label_levels))
-
-  dodge <- ggplot2::position_dodge(width = 0.6)
+  if (!is.factor(df$model)) df$model <- factor(df$model, levels = sort(unique(df$model)))
+  n_models <- nlevels(df$model)
+  offset <- 0.6 * ((as.integer(df$model) - 0.5) / n_models - 0.5)
+  df$diagnostic_y <- as.integer(df$label) + offset
   p <- ggplot2::ggplot(
     df,
-    ggplot2::aes(x = .data[["value"]], y = .data[["label"]], colour = .data[["model"]])
+    ggplot2::aes(x = .data[["value"]], y = .data[["diagnostic_y"]], colour = .data[["model"]])
   )
   p <- p +
     ggplot2::geom_segment(
-      ggplot2::aes(x = 0, xend = .data[["value"]], yend = .data[["label"]]),
+      ggplot2::aes(x = 0, xend = .data[["value"]], yend = .data[["diagnostic_y"]]),
       linewidth = 0.6,
-      position = dodge,
       alpha = 0.8
     ) +
     ggplot2::geom_point(
-      size = 2.4,
-      position = dodge
+      size = 2.4
     )
 
   if (isTRUE(show_flags) && any(df$flag)) {
     p <- p + ggplot2::geom_point(
       data = df[df$flag, , drop = FALSE],
-      ggplot2::aes(x = .data[["value"]], y = .data[["label"]], shape = "Warning flag"),
+      ggplot2::aes(x = .data[["value"]], y = .data[["diagnostic_y"]], shape = "Warning flag"),
       inherit.aes = FALSE,
       size = 3.2,
       stroke = 0.7,
       fill = "#e45756",
-      colour = "#7f1d1d",
-      position = dodge
+      colour = "#7f1d1d"
     )
   }
 
@@ -134,6 +136,8 @@ build_acceptance_diagnostics_panel <- function(df, preset, base_size, base_famil
       breaks = function(x) pretty(x, n = 5),
       expand = ggplot2::expansion(mult = c(0.02, 0.16))
     ) +
+    ggplot2::scale_y_continuous(breaks = seq_along(label_levels), labels = rev(label_levels),
+      limits = c(0.5, length(label_levels) + 0.5)) +
     theme_bsvarpost(
       preset = preset,
       base_size = base_size,
@@ -189,10 +193,19 @@ build_acceptance_diagnostics_panel <- function(df, preset, base_size, base_famil
 }
 
 extract_acceptance_diagnostics_legend <- function(plot) {
-  grob <- ggplot2::ggplotGrob(plot)
-  idx <- which(grob$layout$name == "guide-box")
-  if (!length(idx)) return(NULL)
-  grob$grobs[[idx[1]]]
+  acceptance_diagnostics_legend_grob(ggplot2::ggplotGrob(plot))
+}
+
+acceptance_diagnostics_legend_grob <- function(grob) {
+  # ggplot2 >= 3.5 provides one slot per position, including empty zeroGrobs.
+  idx <- which(grepl("^guide-box($|-)", grob$layout$name))
+  for (i in idx) {
+    candidate <- grob$grobs[[i]]
+    if (inherits(candidate, "gtable") && length(candidate$grobs) &&
+        any(!vapply(candidate$grobs, inherits, logical(1), "zeroGrob")))
+      return(candidate)
+  }
+  NULL
 }
 
 align_acceptance_diagnostics_widths <- function(grobs) {

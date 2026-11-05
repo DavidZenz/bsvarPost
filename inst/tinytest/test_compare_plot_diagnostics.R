@@ -20,6 +20,52 @@ expect_true(inherits(p2, "bsvar_diagnostics_plot"))
 expect_true(inherits(p1, "grob"))
 expect_true(inherits(p2, "grob"))
 
+# Assert visible legend content, rather than only the composite's grob class.
+legend_labels <- function(grob) {
+  c(if (inherits(grob, "text")) as.character(grob$label),
+    unlist(lapply(grob$grobs, legend_labels), use.names = FALSE),
+    unlist(lapply(grob$children, legend_labels), use.names = FALSE))
+}
+expect_true(all(c("base", "alt") %in% legend_labels(p1)))
+legend_data <- bsvarPost:::new_bsvar_post_tbl(data.frame(
+  model = c("baseline", "alternative"), metric = "effective_sample_size",
+  value = c(10, 30), flag = c(TRUE, FALSE), message = c("low ESS", "ok")),
+  "acceptance_diagnostics", compare = TRUE)
+legend_df <- bsvarPost:::attach_acceptance_diagnostic_metadata(legend_data)
+for (flags in c(TRUE, FALSE)) {
+  panel <- bsvarPost:::build_acceptance_diagnostics_panel(legend_df,
+    preset = "default", base_size = 11, base_family = "",
+    show_flags = flags, show_legend = TRUE)
+  legend <- bsvarPost:::extract_acceptance_diagnostics_legend(panel)
+  expect_true(all(c("baseline", "alternative") %in% legend_labels(legend)))
+  if (flags) expect_true("Warning threshold exceeded" %in% legend_labels(legend))
+}
+# Legacy ggplot2 used a single guide-box; newer layouts include empty slots.
+legacy <- list(layout = data.frame(name = "guide-box"), grobs = list(legend))
+expect_identical(bsvarPost:::acceptance_diagnostics_legend_grob(legacy), legend)
+positioned <- list(layout = data.frame(name = c("guide-box-right", "guide-box-bottom")),
+  grobs = list(ggplot2::zeroGrob(), legend))
+expect_identical(bsvarPost:::acceptance_diagnostics_legend_grob(positioned), legend)
+positioned$grobs[[2]] <- ggplot2::zeroGrob()
+expect_null(bsvarPost:::acceptance_diagnostics_legend_grob(positioned))
+
+# All model glyphs share positions; subsets of flagged rows cannot re-dodge.
+for (n in 1:3) {
+  data <- data.frame(model = c("base", "alt", "third")[seq_len(n)],
+    metric = "effective_sample_size", value = 10 * seq_len(n),
+    flag = seq_len(n) == 1, message = "")
+  df <- bsvarPost:::attach_acceptance_diagnostic_metadata(data)
+  layers <- function(x) ggplot2::ggplot_build(bsvarPost:::build_acceptance_diagnostics_panel(x,
+    preset = "default", base_size = 11, base_family = "", show_flags = TRUE, show_legend = TRUE))$data
+  built <- layers(df)
+  segments <- built[[1]]; points <- built[[2]]; flags <- built[[3]]
+  expect_equal(segments$yend, segments$y)
+  expect_equal(segments$yend, points$y[match(segments$xend, points$x)])
+  expect_equal(flags$y, points$y[match(flags$x, points$x)])
+  reordered <- layers(df[rev(seq_len(nrow(df))), ])[[2]]
+  expect_equal(reordered$y[match(points$x, reordered$x)], points$y)
+}
+
 cmp_summary <- summary(cmp_diag)
 draw_rows <- cmp_diag[cmp_diag$metric == "posterior_draws", , drop = FALSE]
 expected_draws <- stats::setNames(draw_rows$value, draw_rows$model)
