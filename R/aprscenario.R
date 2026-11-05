@@ -1,3 +1,41 @@
+# Shared schema for forecast summaries and the documented APR summary format.
+validate_forecast_summary <- function(x, center, index) {
+  if (!is.data.frame(x) || !nrow(x))
+    stop("Forecast summaries require a nonempty data frame.", call. = FALSE)
+  if (isTRUE(attr(x, "draws")) || any(c("draw", "draw_id", "shock") %in% names(x)))
+    stop("APRScenario requires forecast summaries without draw or shock identifiers; summarise forecasts first.", call. = FALSE)
+  required <- c("model", "variable", "lower", "upper", center, index)
+  if (!all(required %in% names(x)))
+    stop("`object` must contain forecast summary columns: ", paste(required, collapse = ", "), ".", call. = FALSE)
+  fields <- unique(c(required, intersect(c("horizon", "time"), names(x))))
+  if (anyDuplicated(names(x)) || any(vapply(x[fields], function(column) !is.null(dim(column)), logical(1))))
+    stop("Forecast fields must be uniquely named, one-dimensional columns.", call. = FALSE)
+  for (name in c("model", "variable")) {
+    if (!(is.character(x[[name]]) || is.factor(x[[name]])) ||
+        anyNA(x[[name]]) || any(!nzchar(trimws(as.character(x[[name]])))))
+      stop("Forecast model and variable labels must be non-missing, nonempty text.", call. = FALSE)
+  }
+  for (name in c("lower", "upper", center)) {
+    if (!is.numeric(x[[name]]) || any(!is.finite(x[[name]])))
+      stop("Forecast summary values must be finite and numeric.", call. = FALSE)
+  }
+  if (any(x$lower > x$upper)) stop("Forecast lower bounds must not exceed upper bounds.", call. = FALSE)
+  horizon <- x[[index]]
+  if (inherits(horizon, "Date") || inherits(horizon, "POSIXt")) {
+    valid <- all(is.finite(as.numeric(horizon)))
+  } else if (is.numeric(horizon)) {
+    valid <- all(is.finite(horizon) & horizon >= 0 & horizon == floor(horizon))
+  } else if (is.character(horizon) || is.factor(horizon)) {
+    valid <- !anyNA(horizon) && all(nzchar(trimws(as.character(horizon))))
+  } else valid <- FALSE
+  if (!valid) stop("Forecast horizons must be valid dates, non-negative integer offsets, or nonempty time labels.", call. = FALSE)
+  duplicate <- anyDuplicated(vctrs::vec_group_id(as.data.frame(x[c("model", "variable", index)])))
+  if (duplicate)
+    stop("APR forecast output must have unique model-variable-horizon keys: duplicate model '", x$model[duplicate],
+      "', variable '", x$variable[duplicate], "', horizon '", as.character(horizon[duplicate]), "'.", call. = FALSE)
+  invisible(x)
+}
+
 #' Converts posterior forecasts to APRScenario format
 #'
 #' Transforms draws or summaries from the posterior predictive distribution into
@@ -58,37 +96,11 @@ as_apr_cond_forc.bsvar_post_tbl <- function(object, center = c("median", "mean")
       ("object_type" %in% names(x) && anyNA(match(x$object_type, "forecast")))) {
     stop("`object` must be a forecast-type table returned by tidy_forecast() or tidy_apr_forecast().", call. = FALSE)
   }
-  if (isTRUE(attr(x, "draws")) || any(c("draw", "draw_id", "shock") %in% names(x))) {
-    stop("APRScenario requires forecast summaries without draw or shock identifiers; summarise forecasts first.", call. = FALSE)
-  }
-  if (!nrow(x) || !all(c("model", "variable", "lower", "upper", center) %in% names(x))) {
-    stop("`object` must contain forecast summary columns.", call. = FALSE)
-  }
-  fields <- intersect(c("model", "variable", "lower", "upper", center, "horizon", "time"), names(x))
-  if (anyDuplicated(names(x)) || any(vapply(x[fields], function(column) !is.null(dim(column)), logical(1))))
-    stop("Forecast fields must be uniquely named, one-dimensional columns.", call. = FALSE)
-  for (name in c("model", "variable")) {
-    if (!(is.character(x[[name]]) || is.factor(x[[name]])) ||
-        anyNA(x[[name]]) || any(!nzchar(trimws(as.character(x[[name]])))))
-      stop("Forecast model and variable labels must be non-missing, nonempty text.", call. = FALSE)
-  }
-  for (name in c("lower", "upper", center)) {
-    if (!is.numeric(x[[name]]) || any(!is.finite(x[[name]])))
-      stop("Forecast summary values must be finite and numeric.", call. = FALSE)
-  }
-  if (any(x$lower > x$upper)) stop("Forecast lower bounds must not exceed upper bounds.", call. = FALSE)
-  if (!("horizon" %in% names(x) || "time" %in% names(x))) {
+  if (!("horizon" %in% names(x) || "time" %in% names(x)))
     stop("`object` must contain a `horizon` or `time` column.", call. = FALSE)
-  }
-  hor_value <- if ("horizon" %in% names(x)) x$horizon else x$time
-  if (inherits(hor_value, "Date") || inherits(hor_value, "POSIXt")) {
-    valid_hor <- all(is.finite(as.numeric(hor_value)))
-  } else if (is.numeric(hor_value)) {
-    valid_hor <- all(is.finite(hor_value) & hor_value >= 0 & hor_value == floor(hor_value))
-  } else if (is.character(hor_value) || is.factor(hor_value)) {
-    valid_hor <- !anyNA(hor_value) && all(nzchar(trimws(as.character(hor_value))))
-  } else valid_hor <- FALSE
-  if (!valid_hor) stop("Forecast horizons must be valid dates, non-negative integer offsets, or nonempty time labels.", call. = FALSE)
+  index <- if ("horizon" %in% names(x)) "horizon" else "time"
+  validate_forecast_summary(x, center, index)
+  hor_value <- x[[index]]
   hor <- build_apr_hor(hor_value, origin = origin, frequency = frequency)
   out <- data.frame(
     hor = hor,
@@ -145,7 +157,14 @@ as_apr_cond_forc.PosteriorBSVARSIGN <- as_apr_cond_forc.PosteriorBSVAR
 #' posterior-summary table format used by `bsvarPost`.
 #'
 #' @param data A data frame with APRScenario columns `hor`, `variable`,
-#'   `lower`, `center`, and `upper`.
+#'   `lower`, `center`, and `upper`, and optionally `model`.
+#' @details Both APR adapters require finite numeric summaries, nonempty
+#'   model/variable labels, valid horizons and unique model-variable-horizon
+#'   keys. Lower bounds cannot exceed upper bounds. The centre may lie outside
+#'   the interval, for example when it represents a skewed forecast's mean.
+#'   Draw and shock dimensions are unsupported in this summary format. Other
+#'   extra columns are rejected on import; encode additional series identities
+#'   in `model` explicitly. Date/POSIXt indices retain their supplied values.
 #' @param model Label identifying the model specification.
 #' @return A \code{bsvar_post_tbl} with columns \code{model}, \code{object_type},
 #'   \code{variable}, \code{time}, \code{mean}, \code{median}, \code{sd},
@@ -165,11 +184,17 @@ as_apr_cond_forc.PosteriorBSVARSIGN <- as_apr_cond_forc.PosteriorBSVAR
 #' }
 #' @export
 tidy_apr_forecast <- function(data, model = "apr") {
-  required <- c("hor", "variable", "lower", "center", "upper")
-  missing <- setdiff(required, names(data))
-  if (length(missing) > 0) {
-    stop("APR forecast data is missing required columns: ", paste(missing, collapse = ", "), call. = FALSE)
+  if (!is.data.frame(data)) stop("APR forecast data must be a data frame.", call. = FALSE)
+  if (!"model" %in% names(data)) {
+    if (!(is.character(model) || is.factor(model)) || length(model) != 1L || is.na(model) || !nzchar(trimws(as.character(model))))
+      stop("`model` must be a single nonempty text label.", call. = FALSE)
+    data$model <- rep(model, nrow(data))
   }
+  validate_forecast_summary(data, "center", "hor")
+  extra <- setdiff(names(data), c("model", "hor", "variable", "lower", "center", "upper"))
+  if (length(extra))
+    stop("Unsupported APR forecast column(s): ", paste(extra, collapse = ", "),
+      ". Encode additional series identities in `model` before conversion.", call. = FALSE)
   tbl <- tibble::tibble(
     model = if ("model" %in% names(data)) data$model else model,
     object_type = "forecast",

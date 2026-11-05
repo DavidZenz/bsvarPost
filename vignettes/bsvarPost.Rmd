@@ -179,6 +179,16 @@ identifies software used for the current calculation; estimation history is
 in the demo metadata. Economic `units` can be unknown because arbitrary
 transformations cannot be reconstructed from a posterior object.
 
+Compact draw tables still retain the structural draw keys needed to pair
+responses. Numeric horizon and draw keys are preserved when display estimates
+are rounded:
+
+```{r compact-draw-keys}
+draw_table <- report_table(tidy_irf(post, horizon = 1, draws = TRUE),
+  preset = "compact", digits = 3)
+head(draw_table[c("Model", "Variable", "Shock", "Horizon", "draw", "Draw ID", "Value")])
+```
+
 For scripts that require fixed column names, select a schema explicitly and
 use the standard CSV writer:
 

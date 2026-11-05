@@ -6,6 +6,20 @@
 
 ## Correct posterior aggregation and inference
 
+* Full-sample grouped HD plots validate complete model-variable-shock-time-draw
+  grids before aggregation. Missing and duplicate cells raise coordinate-based
+  errors; genuine zeros remain valid. Date, POSIXt and ordered-factor axes are
+  chronological, with POSIXt labels in UTC.
+* Response timing follows numeric horizon labels rather than slice order.
+  Invalid or ambiguous labels are rejected. Gaps remain unfilled, duration
+  counts observed periods, and an initial half-life requires horizon zero.
+* Diagnostic model points, warning markers and segment endpoints share the
+  same positions, including when models or flagged rows are reordered.
+* Reverse APR conversion shares forecast validation with the forward adapter:
+  finite values, ordered interval bounds and unique series/horizon keys are
+  required. Unsupported extra dimensions are rejected rather than dropped.
+* Compact reports and CSVs retain draw identifiers and pairwise statement keys.
+  Numeric structural keys are not rounded with posterior estimates.
 * HD event windows follow chronological periods independently of row order.
   Draw tables reject duplicate periods, ambiguous time labels and incomplete
   windows instead of silently returning partial contributions. Ordered factor

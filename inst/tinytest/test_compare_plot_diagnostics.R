@@ -49,6 +49,23 @@ expect_identical(bsvarPost:::acceptance_diagnostics_legend_grob(positioned), leg
 positioned$grobs[[2]] <- ggplot2::zeroGrob()
 expect_null(bsvarPost:::acceptance_diagnostics_legend_grob(positioned))
 
+# All model glyphs share positions; subsets of flagged rows cannot re-dodge.
+for (n in 1:3) {
+  data <- data.frame(model = c("base", "alt", "third")[seq_len(n)],
+    metric = "effective_sample_size", value = 10 * seq_len(n),
+    flag = seq_len(n) == 1, message = "")
+  df <- bsvarPost:::attach_acceptance_diagnostic_metadata(data)
+  layers <- function(x) ggplot2::ggplot_build(bsvarPost:::build_acceptance_diagnostics_panel(x,
+    preset = "default", base_size = 11, base_family = "", show_flags = TRUE, show_legend = TRUE))$data
+  built <- layers(df)
+  segments <- built[[1]]; points <- built[[2]]; flags <- built[[3]]
+  expect_equal(segments$yend, segments$y)
+  expect_equal(segments$yend, points$y[match(segments$xend, points$x)])
+  expect_equal(flags$y, points$y[match(flags$x, points$x)])
+  reordered <- layers(df[rev(seq_len(nrow(df))), ])[[2]]
+  expect_equal(reordered$y[match(points$x, reordered$x)], points$y)
+}
+
 cmp_summary <- summary(cmp_diag)
 draw_rows <- cmp_diag[cmp_diag$metric == "posterior_draws", , drop = FALSE]
 expected_draws <- stats::setNames(draw_rows$value, draw_rows$model)

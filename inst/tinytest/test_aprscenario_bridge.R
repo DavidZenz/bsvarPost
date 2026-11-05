@@ -78,6 +78,37 @@ apr_comparison <- as_apr_cond_forc(comparison)
 expect_equal(unique(apr_comparison$model), c("base", "alt"))
 expect_equal(nrow(apr_comparison), 4L)
 
+# Both adapters enforce the same summary contract and preserve series identity.
+external <- as_apr_cond_forc(forecast)
+expect_equal(as_apr_cond_forc(tidy_apr_forecast(external)), external)
+bad <- external; bad$lower <- bad$upper + 1
+expect_error(tidy_apr_forecast(bad), "lower bounds")
+bad <- external; bad$hor <- rep(1, nrow(bad))
+expect_error(tidy_apr_forecast(bad), "unique model-variable-horizon.*model1.*variable1.*1")
+for (column in c("lower", "upper", "center", "hor", "variable", "model")) {
+  bad <- external; bad[[column]][1] <- NA
+  expect_error(tidy_apr_forecast(bad), "finite|labels|horizons")
+}
+bad <- external; bad$center[1] <- Inf
+expect_error(tidy_apr_forecast(bad), "finite and numeric")
+bad <- external; bad$hor[1] <- 1.5
+expect_error(tidy_apr_forecast(bad), "integer offsets")
+for (column in c("draw", "draw_id", "shock")) {
+  bad <- external; bad[[column]] <- "extra"
+  expect_error(tidy_apr_forecast(bad), "draw or shock identifiers")
+}
+bad <- external; bad$scenario <- "extra"
+expect_error(tidy_apr_forecast(bad), "Unsupported APR forecast column.*scenario")
+expect_error(tidy_apr_forecast(external[FALSE, ]), "nonempty data frame")
+expect_error(tidy_apr_forecast(external[setdiff(names(external), "model")], model = c("a", "b")), "single nonempty")
+for (time in list(as.Date("2024-01-01") + 0:1,
+                 as.POSIXct("2024-01-01", tz = "UTC") + c(0, 3600))) {
+  dated <- external; dated$hor <- time
+  expect_equal(as_apr_cond_forc(tidy_apr_forecast(dated))$hor, time)
+}
+external$model <- c("base", "alt"); external$hor <- c(1, 1)
+expect_equal(as_apr_cond_forc(tidy_apr_forecast(external))$model, c("base", "alt"))
+
 expect_error(
   as_apr_cond_forc(data.frame(variable = "y", lower = 0, upper = 1)),
   pattern = "no applicable method|forecast summary columns",

@@ -203,8 +203,22 @@ half-life within the available horizon. A draw has no defined half-life
 when its reference response is nonpositive or it never reaches the target.
 Timing summaries condition on draws with a defined half-life; they are
 \code{NA} when none qualify. The standard deviation is \code{NA} with one qualifying
-draw. Missing or nonfinite input responses are rejected.
+draw. An \code{initial} baseline requires horizon zero. For signed responses
+(\code{absolute = FALSE}), a zero crossing can satisfy the target; a nonpositive
+reference has no defined half-life. Missing or nonfinite input responses
+are rejected.
 }
+\section{Horizon order and gaps}{
+
+Horizon labels must represent unique, finite, non-negative integers. All
+timing summaries use numeric horizon order, regardless of array-slice order.
+Gaps are allowed and are not interpolated. Peak ties use the earliest
+observed horizon; threshold times use the first observed satisfying horizon.
+Half-lives measure elapsed horizons from the reference response. Durations
+count observed satisfying periods, including horizon zero when present,
+rather than imputing the condition in missing periods.
+}
+
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

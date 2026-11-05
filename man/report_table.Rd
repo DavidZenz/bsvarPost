@@ -36,6 +36,10 @@ A data frame containing the selected posterior summaries.
 Arranges posterior summaries in data frames with a consistent column order
 and descriptive column names.
 }
+\details{
+Both presets retain structural draw identifiers. \code{digits} rounds
+estimates while leaving horizon, time, draw and other key columns exact.
+}
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

@@ -10,6 +10,11 @@
 #'   require a posterior model. Combining multiple shocks, including an
 #'   `"Other"` component, requires draw-level input: marginal medians and
 #'   interval bounds cannot be added. Ungrouped summary tables remain supported.
+#'   Draw tables must contain one finite value per model-variable-shock-period-
+#'   draw cell. Missing cells and duplicate keys are errors; actual zeros are
+#'   retained. Each model is validated on its own time axis and draw set.
+#'   Declare ordered factor levels to detect periods absent from every series.
+#'   Date and POSIXt axes are chronological; POSIXt labels use UTC.
 #' @param probability Probability mass of the equal-tailed credible interval
 #'   computed when \code{object} is not already a summary table.
 #' @param variables Variables whose historical decompositions are included.
@@ -180,26 +185,10 @@ filter_hd_rows <- function(df, variables = NULL, shocks = NULL, models = NULL) {
 }
 
 normalise_hd_time_axis <- function(df, column = "time") {
-  values <- unique(as.character(df[[column]]))
-  suppressWarnings(numeric_values <- as.numeric(values))
-  if (all(!is.na(numeric_values))) {
-    ordered <- order(numeric_values)
-    axis <- data.frame(
-      label = values[ordered],
-      position = numeric_values[ordered],
-      stringsAsFactors = FALSE
-    )
-    df[[paste0(column, "_plot")]] <- numeric_values[match(as.character(df[[column]]), values)]
-    return(list(data = df, axis = axis, numeric = TRUE))
-  }
-
-  axis <- data.frame(
-    label = values,
-    position = seq_along(values),
-    stringsAsFactors = FALSE
-  )
-  df[[paste0(column, "_plot")]] <- axis$position[match(as.character(df[[column]]), axis$label)]
-  list(data = df, axis = axis, numeric = FALSE)
+  time <- canonical_hd_time(df[[column]])
+  axis <- data.frame(label = time$labels, position = time$values, stringsAsFactors = FALSE)
+  df[[paste0(column, "_plot")]] <- axis$position[match(hd_time_labels(df[[column]]), axis$label)]
+  list(data = df, axis = axis, numeric = identical(time$kind, "numeric"))
 }
 
 apply_hd_time_scale <- function(plot, axis, numeric_axis) {
@@ -320,6 +309,7 @@ prepare_hd_component_summary <- function(df, shock_groups = NULL, top_n = NULL, 
 }
 
 prepare_hd_component_draws <- function(df, shock_groups = NULL, top_n = NULL, collapse_other = TRUE) {
+  validate_hd_draw_grid(df)
   df$component <- map_hd_component(df$shock, shock_groups = shock_groups, collapse_other = collapse_other)
   summary_like <- aggregate_hd_draw_rows(df, group_cols = c("model", "variable", "time", "component", "draw"))
   summary_like <- apply_hd_top_n(summary_like, top_n = top_n, collapse_other = collapse_other, value_col = "value")
@@ -369,6 +359,7 @@ compute_hd_baseline_draws <- function(shock_draws, observed_tbl, include_baselin
   if (is.null(observed_tbl)) {
     stop("A coherent HD decomposition requires an observed series from a posterior model object.", call. = FALSE)
   }
+  validate_hd_draw_grid(shock_draws)
 
   draw_ids <- sort(unique(shock_draws$draw))
   observed_draws <- expand_hd_observed_draws(observed_tbl, draw_ids)
@@ -554,7 +545,7 @@ prepare_hd_event_components <- function(object, start = NULL, end = start, proba
   if (!nrow(tbl)) stop("No event-window historical decomposition rows remain after filtering.", call. = FALSE)
   window <- unique(as.data.frame(tbl[c("event_start", "event_end")]))
   if (nrow(window) != 1L) stop("Plot one event window at a time.", call. = FALSE)
-  tbl$time <- "event"
+  tbl$time <- ordered(rep("event", nrow(tbl)), levels = "event")
   tbl$component <- map_hd_component(tbl$shock, shock_groups, collapse_other)
   if (summary_input) {
     tbl <- apply_hd_top_n(tbl, top_n, collapse_other)
@@ -615,6 +606,7 @@ compute_hd_event_cumulative <- function(object, start, end = start, probability 
 
   window_labels <- validate_hd_event_table(draw_tbl, start = start, end = end)
   draw_tbl <- draw_tbl[hd_time_labels(draw_tbl$time) %in% window_labels, , drop = FALSE]
+  draw_tbl$time <- ordered(hd_time_labels(draw_tbl$time), levels = window_labels)
   draw_tbl <- prepare_hd_component_draws(
     draw_tbl,
     shock_groups = shock_groups,

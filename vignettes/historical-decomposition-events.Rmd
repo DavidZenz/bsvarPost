@@ -69,6 +69,15 @@ draw. Aggregation is performed separately for every draw. Posterior summaries
 therefore account for uncertainty in the contribution accumulated over the
 entire event period.
 
+Draw-table plots check the complete grid within each model before merging
+shocks: each response, shock, period and draw must have exactly one finite
+contribution. Missing cells and duplicate rows raise an error; a stored zero
+is valid. This also applies to grouped and cumulative plots. Date and POSIXt
+axes follow chronological instants, with POSIXt labels in UTC. Explicit ordered
+factor levels preserve the chronological order of other labels. Preserve a
+known full axis to detect periods that are absent from every series, as shown
+in the event-period recipe below.
+
 The full-sample historical decomposition provides the context for the event
 analysis. The figures show the main shock contributions as separate paths and
 as stacked contributions.

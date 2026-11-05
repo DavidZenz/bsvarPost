@@ -207,6 +207,17 @@ Transforms posterior draws of impulse responses or cumulative dynamic
 multipliers into summaries of how long a response satisfies a threshold
 condition over the available horizons.
 }
+\section{Horizon order and gaps}{
+
+Horizon labels must represent unique, finite, non-negative integers. All
+timing summaries use numeric horizon order, regardless of array-slice order.
+Gaps are allowed and are not interpolated. Peak ties use the earliest
+observed horizon; threshold times use the first observed satisfying horizon.
+Half-lives measure elapsed horizons from the reference response. Durations
+count observed satisfying periods, including horizon zero when present,
+rather than imputing the condition in missing periods.
+}
+
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

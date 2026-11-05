@@ -272,6 +272,13 @@ data.frame(
 For the half-life and threshold summaries, `reached_prob` gives the posterior
 probability that the event occurs within the selected horizon. The conditional
 median should be interpreted together with this probability.
+For supplied response arrays, horizons are ordered numerically, independently
+of slice order. Horizon labels must be unique non-negative integers. Missing
+horizons are not interpolated: threshold times use the first observed crossing,
+half-lives use elapsed horizon values, and durations count observed satisfying
+periods. An initial half-life requires horizon zero; a nonpositive reference or
+an unreached target has no defined half-life. Signed zero crossings can satisfy
+the target when `absolute = FALSE`.
 `peak_response()` also reports the posterior distribution of the peak value.
 Alternative definitions are available for
 [`duration_response()`](https://davidzenz.github.io/bsvarPost/reference/duration_response.html),

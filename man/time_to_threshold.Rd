@@ -203,6 +203,17 @@ those draws; they are \code{NA} when none reach it. The standard deviation is
 \code{NA} with one qualifying draw. Missing or nonfinite input responses are
 rejected.
 }
+\section{Horizon order and gaps}{
+
+Horizon labels must represent unique, finite, non-negative integers. All
+timing summaries use numeric horizon order, regardless of array-slice order.
+Gaps are allowed and are not interpolated. Peak ties use the earliest
+observed horizon; threshold times use the first observed satisfying horizon.
+Half-lives measure elapsed horizons from the reference response. Durations
+count observed satisfying periods, including horizon zero when present,
+rather than imputing the condition in missing periods.
+}
+
 \examples{
 data(us_fiscal_lsuw, package = "bsvars")
 spec <- bsvars::specify_bsvar$new(us_fiscal_lsuw, p = 1)

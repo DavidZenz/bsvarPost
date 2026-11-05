@@ -173,10 +173,13 @@ validate_hd_event_table <- function(object, start, end) {
     if (anyNA(object[[name]]) || any(!nzchar(as.character(object[[name]]))))
       stop("HD model, variable and shock labels must be non-missing and nonempty.", call. = FALSE)
   }
-  window <- event_window_labels(object$time, start, end)
+  window <- if (is.null(start)) canonical_hd_time(object$time)$labels else event_window_labels(object$time, start, end)
   keys <- c("model", "variable", "shock", "time", "draw")
-  if (anyDuplicated(vctrs::vec_group_id(as.data.frame(object[keys]))))
-    stop("Historical decomposition tables must have unique model-variable-shock-time-draw keys (duplicate periods found).", call. = FALSE)
+  duplicate <- anyDuplicated(vctrs::vec_group_id(as.data.frame(object[keys])))
+  if (duplicate)
+    stop("Historical decomposition tables must have unique model-variable-shock-time-draw keys (duplicate periods found): model '",
+      object$model[duplicate], "', variable '", object$variable[duplicate], "', shock '", object$shock[duplicate],
+      "', time '", hd_time_labels(object$time[duplicate]), "', draw ", object$draw[duplicate], ".", call. = FALSE)
   groups <- vctrs::vec_group_id(as.data.frame(object[c("model", "variable", "shock", "draw")]))
   first <- match(seq_len(attr(groups, "n")), groups)
   counts <- tabulate(groups[hd_time_labels(object$time) %in% window], nbins = length(first))
@@ -194,9 +197,41 @@ validate_hd_event_table <- function(object, start, end) {
   series_first <- match(seq_len(attr(series, "n")), series)
   model_draws <- unique(as.data.frame(object[c("model", "draw")]))
   expected <- table(as.character(model_draws$model))[as.character(object$model[series_first])]
-  if (any(tabulate(series[first], nbins = length(series_first)) != as.integer(expected)))
-    stop("Incomplete HD draw coverage: every series in a model must contain the same draws.", call. = FALSE)
+  bad_series <- which(tabulate(series[first], nbins = length(series_first)) != as.integer(expected))
+  if (length(bad_series)) {
+    row <- series_first[bad_series[1]]
+    missing <- setdiff(object$draw[object$model == object$model[row]], object$draw[series == bad_series[1]])
+    stop("Incomplete HD draw coverage for model '", object$model[row], "', variable '", object$variable[row],
+      "', shock '", object$shock[row], "': missing draw(s) ", paste(unique(missing), collapse = ", "), ".", call. = FALSE)
+  }
   window
+}
+
+validate_hd_draw_grid <- function(object) {
+  # Validate before components are merged: duplicates would otherwise become
+  # sums, and missing shocks would otherwise look like zero contributions.
+  if (!all(c("model", "variable", "shock", "time", "draw", "value") %in% names(object)))
+    stop("HD draw tables require model, variable, shock, time, draw and value columns.", call. = FALSE)
+  parts <- split(object, tuple_group(object$model))
+  for (part in parts) {
+    validate_hd_event_table(part, start = NULL, end = NULL)
+    series <- unique(as.data.frame(part[c("variable", "shock")]))
+    expected <- expand.grid(variable = unique(as.character(part$variable)),
+      shock = unique(as.character(part$shock)), stringsAsFactors = FALSE)
+    missing <- which(is.na(vctrs::vec_match(expected, series)))
+    if (length(missing)) {
+      row <- expected[missing[1], ]
+      stop("Incomplete HD cell grid for model '", part$model[1], "': missing variable '", row$variable,
+        "', shock '", row$shock, "' for all periods and draws.", call. = FALSE)
+    }
+    if ("draw_id" %in% names(part)) {
+      ids <- as.character(part$draw_id)
+      pairs <- unique(data.frame(draw = part$draw, draw_id = ids))
+      if (anyNA(ids) || any(!nzchar(ids)) || anyDuplicated(pairs$draw) || anyDuplicated(pairs$draw_id))
+        stop("HD draw and draw_id identifiers must correspond one-to-one within model '", part$model[1], "'.", call. = FALSE)
+    }
+  }
+  invisible(object)
 }
 
 summarise_hd_event_tbl <- function(tbl, start, end = start, probability = 0.90, draws = FALSE) {
